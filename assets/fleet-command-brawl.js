@@ -513,10 +513,10 @@ function startCombatLoop(engine) {
       if (target?.item !== attacker.target) {
         attacker.target = target?.item || null;
       }
+      if (now < attacker.actionUntil) return;
       if (target) aimWeaponAt(attacker, target.item);
       hopFighter(attacker, now, target);
       if (target) chaseTarget(attacker, target, now);
-      if (now < attacker.actionUntil) return;
       if (now < attacker.nextAttackAt) return;
       if (!target || target.distance > attacker.weapon.range) return;
       beginAttack(engine, attacker, target.item, now);

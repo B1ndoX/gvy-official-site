@@ -313,7 +313,7 @@ select:focus-visible,
   --intro-dark: 0.26;
   --intro-blackout: 0;
   position: relative;
-  height: clamp(2100px, 300vh, 2850px);
+  height: clamp(2500px, 360vh, 3400px);
   min-height: 0;
   background: #030508;
   isolation: isolate;
@@ -1867,9 +1867,7 @@ select:focus-visible,
   filter: drop-shadow(4px 4px 0 rgba(5, 5, 26, 0.72));
   transform: rotate(var(--weapon-angle, -28deg));
   transform-origin: 22% 78%;
-  transition:
-    scale 160ms ease,
-    transform 190ms cubic-bezier(0.2, 0.74, 0.3, 1);
+  transition: scale 160ms ease;
   will-change: transform;
 }
 
@@ -2741,9 +2739,9 @@ select:focus-visible,
     --max: min(100vw - 32px, 760px);
     --nav-h: 66px;
     --brand-size: clamp(42px, 10vw, 52px);
-    --nav-control-h: clamp(32px, 8vw, 40px);
-    --nav-control-x: clamp(10px, 3vw, 14px);
-    --nav-control-font: clamp(10px, 2.8vw, 12px);
+    --nav-control-h: clamp(30px, 7vw, 36px);
+    --nav-control-x: clamp(7px, 1.8vw, 10px);
+    --nav-control-font: clamp(9px, 2.45vw, 11px);
     --section-title-size: clamp(2rem, 10vw, 3.1rem);
     --operation-card-w: 100%;
   }
@@ -2757,6 +2755,8 @@ select:focus-visible,
   }
 
   .nav-links {
+    flex-wrap: nowrap;
+    gap: 4px;
     justify-content: flex-start;
     overflow-x: auto;
     padding-bottom: 2px;
@@ -2764,10 +2764,6 @@ select:focus-visible,
 
   .nav-links a {
     flex: 0 0 auto;
-  }
-
-  .nav-links .nav-blueprint-link {
-    order: -1;
   }
 
   .reveal {
@@ -3014,8 +3010,8 @@ select:focus-visible,
   }
 
   .intro-sequence {
-    height: 175vh;
-    min-height: 1040px;
+    height: 260vh;
+    min-height: 1480px;
   }
 
   .intro-title {
@@ -3153,9 +3149,7 @@ select:focus-visible,
     width: calc(var(--fighter-size, 54px) * 0.9);
     height: calc(var(--fighter-size, 54px) * 0.9);
     filter: drop-shadow(2px 2px 0 rgba(5, 5, 26, 0.58));
-    transition:
-      scale 150ms ease,
-      transform 180ms cubic-bezier(0.2, 0.74, 0.3, 1);
+    transition: scale 150ms ease;
     backface-visibility: hidden;
     transform: translateZ(0) rotate(var(--weapon-angle, -28deg));
     will-change: transform;
