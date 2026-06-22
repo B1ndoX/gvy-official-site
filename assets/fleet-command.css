@@ -338,8 +338,9 @@ select:focus-visible,
   object-fit: cover;
   object-position: 50% 50%;
   opacity: var(--intro-video-opacity, 0.98);
+  filter: brightness(var(--intro-video-brightness, 1));
   transform: translateZ(0);
-  will-change: opacity;
+  will-change: opacity, filter;
 }
 
 .intro-sequence.video-failed .intro-media video,
@@ -397,10 +398,10 @@ select:focus-visible,
   background:
     linear-gradient(
       180deg,
-      rgba(3, 5, 8, var(--intro-blackout, 0)) 0%,
-      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.92)) 42%,
-      rgba(3, 5, 8, calc(0.06 + var(--intro-blackout, 0) * 0.72)) 78%,
-      rgba(3, 5, 8, calc(0.14 + var(--intro-blackout, 0) * 0.82)) 100%
+      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.34)) 0%,
+      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.48)) 48%,
+      rgba(3, 5, 8, calc(0.08 + var(--intro-blackout, 0) * 0.5)) 76%,
+      rgba(3, 5, 8, calc(0.44 + var(--intro-blackout, 0) * 0.24)) 100%
     );
   content: "";
   pointer-events: none;
@@ -1310,6 +1311,7 @@ select:focus-visible,
   cursor: grab;
   user-select: none;
   contain: layout paint;
+  transform: translateZ(0);
 }
 
 .archive-wall.is-dragging {
@@ -1425,11 +1427,14 @@ select:focus-visible,
   cursor: zoom-in;
   opacity: 0;
   transform: translate3d(-50%, -50%, 0) scale(0.82);
-  transition: box-shadow 180ms ease;
+  transition:
+    box-shadow 180ms ease,
+    filter 180ms ease;
   backface-visibility: hidden;
   contain: layout paint style;
   isolation: isolate;
   transform-style: preserve-3d;
+  will-change: transform, opacity;
 }
 
 .archive-frame::before {
@@ -1842,7 +1847,9 @@ select:focus-visible,
   filter: drop-shadow(4px 4px 0 rgba(5, 5, 26, 0.72));
   transform: rotate(var(--weapon-angle, -28deg));
   transform-origin: 22% 78%;
-  transition: transform 90ms linear;
+  transition:
+    scale 160ms ease,
+    transform 190ms cubic-bezier(0.2, 0.74, 0.3, 1);
   will-change: transform;
 }
 
@@ -3122,7 +3129,9 @@ select:focus-visible,
     width: calc(var(--fighter-size, 54px) * 0.9);
     height: calc(var(--fighter-size, 54px) * 0.9);
     filter: drop-shadow(2px 2px 0 rgba(5, 5, 26, 0.58));
-    transition: none;
+    transition:
+      scale 150ms ease,
+      transform 180ms cubic-bezier(0.2, 0.74, 0.3, 1);
     backface-visibility: hidden;
     transform: translateZ(0) rotate(var(--weapon-angle, -28deg));
     will-change: transform;

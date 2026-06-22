@@ -361,6 +361,7 @@ function updateIntroProgress() {
     intro.style.setProperty("--intro-dark", "0.82");
     intro.style.setProperty("--intro-blackout", "0");
     intro.style.setProperty("--intro-video-opacity", "0.96");
+    intro.style.setProperty("--intro-video-brightness", "0.86");
     intro.style.setProperty("--intro-shade-mid", "0.32");
     intro.style.setProperty("--intro-vignette-bottom", "0.28");
     intro.style.setProperty("--intro-scan-opacity", "0.36");
@@ -389,23 +390,24 @@ function updateIntroProgress() {
 
   const rect = intro.getBoundingClientRect();
   const scrollable = Math.max(1, rect.height - window.innerHeight);
-  const progress = clamp((0 - rect.top) / scrollable, 0, 1);
-  const titleExit = 1 - smoothRange(progress, 0.96, 1);
-  const titleLabel = smoothRange(progress, 0.04, 0.24) * titleExit;
-  const titleMain = smoothRange(progress, 0.12, 0.62) * titleExit;
-  const titleSub = smoothRange(progress, 0.24, 0.68) * titleExit;
-  const titleMark = smoothRange(progress, 0.34, 0.76) * titleExit;
-  const title = smoothRange(progress, 0.06, 0.76) * titleExit;
-  const motto = smoothRange(progress, 0.48, 0.86) * titleExit;
+  const rawProgress = (0 - rect.top) / scrollable;
+  const progress = clamp(rawProgress, 0, 1);
+  const titleExit = 1 - smoothRange(rawProgress, 1.18, 1.54);
+  const titleLabel = smoothRange(progress, 0.015, 0.15) * titleExit;
+  const titleMain = smoothRange(progress, 0.045, 0.32) * titleExit;
+  const titleSub = smoothRange(progress, 0.11, 0.4) * titleExit;
+  const titleMark = smoothRange(progress, 0.16, 0.46) * titleExit;
+  const title = smoothRange(progress, 0.025, 0.48) * titleExit;
+  const motto = smoothRange(progress, 0.24, 0.58) * titleExit;
   const hud = smoothRange(progress, 0.56, 0.76);
   const actions = smoothRange(progress, 0.7, 0.86);
-  const exit = smoothRange(progress, 0.86, 1);
+  const exit = smoothRange(rawProgress, 1.18, 1.54);
   const navReveal = smoothRange(progress, 0.5, 0.68);
   const scrollCue = 1 - smoothRange(progress, 0.035, 0.18);
-  const videoFade = smoothRange(progress, 0.72, 1);
-  const blackout = smoothRange(progress, 0.86, 1) * 0.58;
-  const dark = clamp(0.2 + motto * 0.06 + hud * 0.04 + exit * 0.22, 0.2, 0.52);
-  const videoOpacity = clamp(1 - videoFade * 0.88, 0.12, 1);
+  const videoFade = smoothRange(rawProgress, 0.64, 1.42);
+  const blackout = smoothRange(rawProgress, 0.76, 1.5) * 0.34;
+  const dark = clamp(0.2 + motto * 0.05 + hud * 0.035 + videoFade * 0.18, 0.2, 0.46);
+  const videoOpacity = clamp(1 - videoFade * 0.8, 0.2, 1);
   const scanY = -26 + progress * 520;
   const scanOpacity = clamp(0.16 + title * 0.18 + actions * 0.12, 0.12, 0.46);
   const fleetOpacity = clamp(0.06 + hud * 0.15 - exit * 0.08, 0.03, 0.21);
@@ -425,6 +427,7 @@ function updateIntroProgress() {
   intro.style.setProperty("--intro-dark", dark.toFixed(4));
   intro.style.setProperty("--intro-blackout", blackout.toFixed(4));
   intro.style.setProperty("--intro-video-opacity", videoOpacity.toFixed(4));
+  intro.style.setProperty("--intro-video-brightness", clamp(1 - videoFade * 0.8, 0.2, 1).toFixed(4));
   intro.style.setProperty("--intro-shade-mid", clamp(0.22 + dark * 0.32, 0.22, 0.46).toFixed(4));
   intro.style.setProperty("--intro-vignette-bottom", clamp(0.26 + exit * 0.44, 0.26, 0.7).toFixed(4));
   intro.style.setProperty("--intro-scan-opacity", scanOpacity.toFixed(4));
@@ -748,6 +751,8 @@ function initArchiveOrbit() {
   const orbitItems = frames.map((frame, index) => ({
     frame,
     angle: (index / frames.length) * Math.PI * 2,
+    opacity: "",
+    transform: "",
     zIndex: "",
     pointerEvents: "",
   }));
@@ -783,18 +788,26 @@ function initArchiveOrbit() {
       const depth = Math.cos(angle);
       const depth01 = (depth + 1) / 2;
       const y = Math.sin(angle * 1.7 + index * 0.48) * size.radiusY;
-      const scale = 0.58 + depth01 * 0.48;
-      const opacity = 0.26 + depth01 * 0.7;
+      const scale = Math.round((0.58 + depth01 * 0.48) * 1000) / 1000;
+      const opacity = Math.round((0.26 + depth01 * 0.7) * 1000) / 1000;
       const zIndex = String(Math.round(8 + depth01 * 18));
-      const tilt = -Math.sin(angle) * 5;
+      const tilt = Math.round(-Math.sin(angle) * 50) / 10;
       const pointerEvents = depth01 > 0.18 ? "auto" : "none";
+      const nextOpacity = opacity.toFixed(3);
+      const nextTransform = `translate(-50%, -50%) translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) rotateY(${tilt.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
 
       if (item.zIndex !== zIndex) {
         frame.style.zIndex = zIndex;
         item.zIndex = zIndex;
       }
-      frame.style.opacity = opacity.toFixed(3);
-      frame.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotateY(${tilt.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      if (item.opacity !== nextOpacity) {
+        frame.style.opacity = nextOpacity;
+        item.opacity = nextOpacity;
+      }
+      if (item.transform !== nextTransform) {
+        frame.style.transform = nextTransform;
+        item.transform = nextTransform;
+      }
       if (item.pointerEvents !== pointerEvents) {
         frame.style.pointerEvents = pointerEvents;
         item.pointerEvents = pointerEvents;

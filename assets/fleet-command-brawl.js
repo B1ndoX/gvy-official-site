@@ -193,6 +193,10 @@ function randomRange(min, max) {
   return min + Math.random() * (max - min);
 }
 
+function normalizeAngleDelta(delta) {
+  return Math.atan2(Math.sin(delta), Math.cos(delta));
+}
+
 function clampInside(value, min, max) {
   if (min > max) return (min + max) / 2;
   return clamp(value, min, max);
@@ -373,11 +377,14 @@ function initMemberPhysics() {
       nextCollisionBounceAt: 0,
       nextStompReactionAt: 0,
       actionUntil: 0,
+      targetLockedUntil: 0,
       lastRenderAngle: null,
       lastRenderX: null,
       lastRenderY: null,
       lastWeaponAngle: null,
       lastWeaponAttackAngle: null,
+      weaponAimAngle: null,
+      weaponAttackAngle: null,
       weapon,
     };
     chip.style.setProperty("--hp", "100%");
@@ -502,8 +509,10 @@ function startCombatLoop(engine) {
     const now = performance.now();
     combatants.forEach((attacker) => {
       if (!attacker.alive || winnerDeclared) return;
-      const target = getCombatTarget(attacker);
-      attacker.target = target?.item || null;
+      const target = getCombatTarget(attacker, now);
+      if (target?.item !== attacker.target) {
+        attacker.target = target?.item || null;
+      }
       if (target) aimWeaponAt(attacker, target.item);
       hopFighter(attacker, now, target);
       if (target) chaseTarget(attacker, target, now);
@@ -515,17 +524,19 @@ function startCombatLoop(engine) {
   }, 220);
 }
 
-function getCombatTarget(attacker) {
+function getCombatTarget(attacker, now = performance.now()) {
   if (attacker.target?.alive) {
     const dx = attacker.target.body.position.x - attacker.body.position.x;
     const dy = attacker.target.body.position.y - attacker.body.position.y;
     const distance = Math.hypot(dx, dy);
-    const holdRange = Math.max(170, attacker.weapon.range * 1.35);
+    const holdRange = Math.max(260, attacker.weapon.range * 2.15);
 
-    if (distance <= holdRange) return { item: attacker.target, distance };
+    if (distance <= holdRange || now < attacker.targetLockedUntil) return { item: attacker.target, distance };
   }
 
-  return findNearestTarget(attacker);
+  const target = findNearestTarget(attacker);
+  if (target) attacker.targetLockedUntil = now + randomRange(2800, 4600);
+  return target;
 }
 
 function keepFighterInBounds(item, bounds, strict = false) {
@@ -609,15 +620,27 @@ function aimWeaponAt(attacker, target) {
   const dy = target.body.position.y - attacker.body.position.y;
   const targetAngle = Math.atan2(dy, dx);
   const relativeAngle = targetAngle - attacker.body.angle + ((attacker.weapon.aimOffset || 0) * Math.PI) / 180;
+  const aimEase = attacker.actionUntil > performance.now() ? 0.46 : 0.32;
+  const attackEase = attacker.actionUntil > performance.now() ? 0.5 : 0.34;
+  const nextWeaponAngle =
+    attacker.weaponAimAngle === null
+      ? relativeAngle
+      : attacker.weaponAimAngle + normalizeAngleDelta(relativeAngle - attacker.weaponAimAngle) * aimEase;
+  const nextAttackAngle =
+    attacker.weaponAttackAngle === null
+      ? targetAngle
+      : attacker.weaponAttackAngle + normalizeAngleDelta(targetAngle - attacker.weaponAttackAngle) * attackEase;
 
-  if (attacker.lastWeaponAngle === null || Math.abs(relativeAngle - attacker.lastWeaponAngle) > 0.025) {
-    attacker.chip.style.setProperty("--weapon-angle", `${relativeAngle}rad`);
-    attacker.lastWeaponAngle = relativeAngle;
+  if (attacker.lastWeaponAngle === null || Math.abs(normalizeAngleDelta(nextWeaponAngle - attacker.lastWeaponAngle)) > 0.012) {
+    attacker.chip.style.setProperty("--weapon-angle", `${nextWeaponAngle}rad`);
+    attacker.lastWeaponAngle = nextWeaponAngle;
   }
-  if (attacker.lastWeaponAttackAngle === null || Math.abs(targetAngle - attacker.lastWeaponAttackAngle) > 0.025) {
-    attacker.chip.style.setProperty("--weapon-attack-angle", `${targetAngle}rad`);
-    attacker.lastWeaponAttackAngle = targetAngle;
+  if (attacker.lastWeaponAttackAngle === null || Math.abs(normalizeAngleDelta(nextAttackAngle - attacker.lastWeaponAttackAngle)) > 0.012) {
+    attacker.chip.style.setProperty("--weapon-attack-angle", `${nextAttackAngle}rad`);
+    attacker.lastWeaponAttackAngle = nextAttackAngle;
   }
+  attacker.weaponAimAngle = nextWeaponAngle;
+  attacker.weaponAttackAngle = nextAttackAngle;
 }
 
 function hopFighter(fighter, now, target) {
