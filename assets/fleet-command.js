@@ -4,6 +4,7 @@ const introSticky = document.querySelector("[data-intro-sticky]");
 const navLinks = [...document.querySelectorAll("[data-scroll-link]")];
 const sections = [...document.querySelectorAll("main section[id]")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+let openArchiveFrame = () => {};
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -389,7 +390,7 @@ function updateIntroProgress() {
   const rect = intro.getBoundingClientRect();
   const scrollable = Math.max(1, rect.height - window.innerHeight);
   const progress = clamp((0 - rect.top) / scrollable, 0, 1);
-  const titleExit = 1 - smoothRange(progress, 0.88, 1);
+  const titleExit = 1 - smoothRange(progress, 0.96, 1);
   const titleLabel = smoothRange(progress, 0.04, 0.24) * titleExit;
   const titleMain = smoothRange(progress, 0.12, 0.62) * titleExit;
   const titleSub = smoothRange(progress, 0.24, 0.68) * titleExit;
@@ -436,8 +437,8 @@ function updateIntroProgress() {
   intro.style.setProperty("--intro-fleet-y", `${(-exit * 34).toFixed(2)}px`);
   intro.style.setProperty("--intro-fleet-scale", (1 + progress * 0.06).toFixed(4));
   intro.style.setProperty("--intro-title-clip", `${((1 - titleMain) * 100).toFixed(2)}%`);
-  intro.style.setProperty("--intro-title-y", `${((1 - title) * 24 - exit * 44).toFixed(2)}px`);
-  intro.style.setProperty("--intro-motto-y", `${((1 - motto) * 22 - exit * 38).toFixed(2)}px`);
+  intro.style.setProperty("--intro-title-y", `${((1 - title) * 24 - exit * 18).toFixed(2)}px`);
+  intro.style.setProperty("--intro-motto-y", `${((1 - motto) * 22 - exit * 16).toFixed(2)}px`);
   intro.style.setProperty("--intro-motto-clip", `${((1 - motto) * 100).toFixed(2)}%`);
   intro.style.setProperty("--intro-hud-left-x", `${((1 - hud) * -34).toFixed(2)}px`);
   intro.style.setProperty("--intro-hud-right-x", `${((1 - hud) * 34).toFixed(2)}px`);
@@ -659,24 +660,36 @@ function initArchiveLightbox() {
   const frames = [...document.querySelectorAll(".archive-frame[data-full]")];
   if (!dialog || !image || !caption || !frames.length) return;
 
+  openArchiveFrame = (frame) => {
+    const src = frame.dataset.full;
+    const label = frame.dataset.caption || frame.querySelector("img")?.alt || "GVY ARCHIVE";
+    if (!src) return;
+    image.src = src;
+    image.alt = label;
+    caption.textContent = `GVY ARCHIVE / FLEET MEMORY / ${label}`;
+    if (typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else {
+      window.open(src, "_blank", "noopener,noreferrer");
+    }
+  };
+
   frames.forEach((frame) => {
     frame.addEventListener("click", (event) => {
-      if (frame.closest("[data-orbit-gallery]")?.dataset.dragSuppressClick === "true") {
+      const orbitGallery = frame.closest("[data-orbit-gallery]");
+      if (orbitGallery && event.detail !== 0) {
         event.preventDefault();
         event.stopPropagation();
         return;
       }
-      const src = frame.dataset.full;
-      const label = frame.dataset.caption || frame.querySelector("img")?.alt || "GVY ARCHIVE";
-      if (!src) return;
-      image.src = src;
-      image.alt = label;
-      caption.textContent = `GVY ARCHIVE / FLEET MEMORY / ${label}`;
-      if (typeof dialog.showModal === "function") {
-        dialog.showModal();
-      } else {
-        window.open(src, "_blank", "noopener,noreferrer");
+
+      if (orbitGallery?.dataset.dragSuppressClick === "true") {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
       }
+
+      openArchiveFrame(frame);
     });
   });
 
@@ -727,6 +740,7 @@ function initArchiveOrbit() {
   let dragOffset = 0;
   let dragStartX = 0;
   let dragStartOffset = 0;
+  let dragFrame = null;
   let dragPointerId = null;
   let didDrag = false;
   let dragSuppressTimer = 0;
@@ -840,6 +854,11 @@ function initArchiveOrbit() {
 
   gallery.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 && event.pointerType === "mouse") return;
+    const frame = event.target.closest(".archive-frame");
+    if (!frame || !gallery.contains(frame)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    dragFrame = frame;
     dragPointerId = event.pointerId;
     dragStartX = event.clientX;
     dragStartOffset = dragOffset;
@@ -862,12 +881,20 @@ function initArchiveOrbit() {
 
   function endDrag(event) {
     if (dragPointerId !== event.pointerId) return;
+    const frame = dragFrame;
     if (didDrag) {
       gallery.dataset.dragSuppressClick = "true";
       dragSuppressTimer = window.setTimeout(() => {
         gallery.dataset.dragSuppressClick = "false";
       }, 320);
+    } else if (frame && event.type !== "pointercancel") {
+      gallery.dataset.dragSuppressClick = "true";
+      openArchiveFrame(frame);
+      dragSuppressTimer = window.setTimeout(() => {
+        gallery.dataset.dragSuppressClick = "false";
+      }, 320);
     }
+    dragFrame = null;
     dragPointerId = null;
     didDrag = false;
     gallery.classList.remove("is-dragging");
