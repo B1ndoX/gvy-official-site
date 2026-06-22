@@ -14,6 +14,119 @@ function smoothRange(progress, start, end) {
   return value * value * (3 - 2 * value);
 }
 
+function initSiteBackdrop() {
+  const canvas = document.querySelector("#siteBackdropCanvas");
+  if (!canvas) return;
+
+  const context = canvas.getContext("2d", { alpha: true });
+  let width = 0;
+  let height = 0;
+  let stars = [];
+  let pointerX = 0;
+  let pointerY = 0;
+  let targetX = 0;
+  let targetY = 0;
+  let pointerDown = false;
+  let frameId = 0;
+
+  function createStars() {
+    const compact = window.innerWidth < 720;
+    const count = compact ? 90 : 190;
+    stars = Array.from({ length: count }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      z: Math.random() * 0.85 + 0.15,
+      size: Math.random() * 1.25 + 0.25,
+      twinkle: Math.random() * Math.PI * 2,
+      warm: Math.random() > 0.86,
+    }));
+  }
+
+  function resize() {
+    const scale = Math.min(window.devicePixelRatio || 1, 2);
+    width = Math.max(1, Math.round(window.innerWidth));
+    height = Math.max(1, Math.round(window.innerHeight));
+    canvas.width = Math.round(width * scale);
+    canvas.height = Math.round(height * scale);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    context.setTransform(scale, 0, 0, scale, 0, 0);
+    createStars();
+  }
+
+  function requestRender() {
+    if (!frameId) frameId = requestAnimationFrame(render);
+  }
+
+  function render(time = 0) {
+    frameId = 0;
+    pointerX += (targetX - pointerX) * 0.055;
+    pointerY += (targetY - pointerY) * 0.055;
+    root.style.setProperty("--site-star-x", `${pointerX.toFixed(2)}px`);
+    root.style.setProperty("--site-star-y", `${pointerY.toFixed(2)}px`);
+
+    context.clearRect(0, 0, width, height);
+    context.fillStyle = "#030508";
+    context.fillRect(0, 0, width, height);
+
+    const glowA = context.createRadialGradient(width * 0.72 + pointerX * 0.08, height * 0.24 + pointerY * 0.05, 0, width * 0.72, height * 0.24, width * 0.7);
+    glowA.addColorStop(0, "rgba(95, 168, 211, 0.12)");
+    glowA.addColorStop(0.45, "rgba(95, 168, 211, 0.035)");
+    glowA.addColorStop(1, "rgba(95, 168, 211, 0)");
+    context.fillStyle = glowA;
+    context.fillRect(0, 0, width, height);
+
+    const glowB = context.createRadialGradient(width * 0.18 - pointerX * 0.06, height * 0.68 - pointerY * 0.04, 0, width * 0.18, height * 0.68, width * 0.48);
+    glowB.addColorStop(0, "rgba(200, 164, 93, 0.06)");
+    glowB.addColorStop(0.54, "rgba(200, 164, 93, 0.018)");
+    glowB.addColorStop(1, "rgba(200, 164, 93, 0)");
+    context.fillStyle = glowB;
+    context.fillRect(0, 0, width, height);
+
+    stars.forEach((star) => {
+      const strengthX = pointerDown ? 0.075 : 0.045;
+      const strengthY = pointerDown ? 0.06 : 0.036;
+      const x = star.x * width + pointerX * star.z * strengthX;
+      const y = star.y * height + pointerY * star.z * strengthY;
+      const alpha = clamp(0.22 + star.z * 0.62 + Math.sin(time * 0.0012 + star.twinkle) * 0.12, 0.16, 0.88);
+      context.beginPath();
+      context.fillStyle = star.warm ? `rgba(200, 164, 93, ${alpha})` : `rgba(222, 240, 248, ${alpha})`;
+      context.arc(x, y, star.size * star.z, 0, Math.PI * 2);
+      context.fill();
+    });
+
+    if (!prefersReducedMotion && (Math.abs(targetX - pointerX) > 0.45 || Math.abs(targetY - pointerY) > 0.45)) requestRender();
+  }
+
+  function updatePointer(event) {
+    targetX = event.clientX - width / 2;
+    targetY = event.clientY - height / 2;
+    requestRender();
+  }
+
+  resize();
+  render();
+  window.addEventListener("resize", () => {
+    resize();
+    requestRender();
+  }, { passive: true });
+  window.addEventListener("pointermove", updatePointer, { passive: true });
+  window.addEventListener("pointerdown", (event) => {
+    pointerDown = true;
+    updatePointer(event);
+  }, { passive: true });
+  window.addEventListener("pointerup", () => {
+    pointerDown = false;
+    requestRender();
+  }, { passive: true });
+  window.addEventListener("pointercancel", () => {
+    pointerDown = false;
+    requestRender();
+  }, { passive: true });
+
+  return () => cancelAnimationFrame(frameId);
+}
+
 function initStarfield() {
   const canvas = document.querySelector("#starfieldCanvas");
   if (!canvas || !introSticky) return;
@@ -115,19 +228,65 @@ function initHeroVideoFallback() {
   if (!video || !intro) return;
 
   let markedSlow = false;
-  const videoOptions = (video.dataset.heroVideos || "")
-    .split("|")
-    .map((path) => path.trim())
-    .filter((path) => path && !path.includes("operations-planet-video"));
-  const requestedVideo = Number(new URLSearchParams(window.location.search).get("heroVideo"));
+  let usingCdnFallback = false;
+  const parseVideoOptions = (value = "") =>
+    value
+      .split("|")
+      .map((path) => path.trim())
+      .filter((path) => path && !path.includes("operations-planet-video"));
+  const localVideoOptions = parseVideoOptions(video.dataset.heroVideos);
+  const cdnVideoOptions = parseVideoOptions(video.dataset.heroCdnVideos);
+  const query = new URLSearchParams(window.location.search);
+  const requestedVideo = Number(query.get("heroVideo"));
+  const forceLocalVideo = query.get("heroSource") === "local";
+  const preferredSource = cdnVideoOptions.length > 0 && !forceLocalVideo ? "cdn" : "local";
+  const videoOptions = preferredSource === "cdn" ? cdnVideoOptions : localVideoOptions;
+  const fallbackVideoOptions = preferredSource === "cdn" ? localVideoOptions : [];
+  const cacheSourceKey = `${video.dataset.heroCacheKey || "gvy-command-hero-video"}:${preferredSource}`;
+  const cacheTtl = 1000 * 60 * 60 * 24 * 7;
+
+  function readCachedVideoIndex(cacheKey) {
+    try {
+      const cached = JSON.parse(localStorage.getItem(cacheKey) || "null");
+      if (!cached || Date.now() - cached.time > cacheTtl) return -1;
+      return Number.isInteger(cached.index) ? cached.index : -1;
+    } catch {
+      return -1;
+    }
+  }
+
+  function writeCachedVideoIndex(cacheKey, index) {
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify({ index, time: Date.now() }));
+    } catch {
+      // Private browsing or restricted storage should not block video playback.
+    }
+  }
+
+  function chooseVideoIndex(options, cacheKey) {
+    const requestedIndex = Number.isInteger(requestedVideo) ? requestedVideo - 1 : -1;
+    const cachedIndex = readCachedVideoIndex(cacheKey);
+    const randomIndex = Math.floor(Math.random() * options.length);
+    return requestedIndex >= 0 && requestedIndex < options.length
+      ? requestedIndex
+      : cachedIndex >= 0 && cachedIndex < options.length
+        ? cachedIndex
+        : randomIndex;
+  }
+
+  function applyVideoSource(options, source, cacheKey) {
+    if (!options.length) return false;
+    const selectedIndex = chooseVideoIndex(options, cacheKey);
+    video.src = options[selectedIndex];
+    video.dataset.heroVideoSelected = String(selectedIndex + 1);
+    video.dataset.heroVideoSource = source;
+    writeCachedVideoIndex(cacheKey, selectedIndex);
+    video.load();
+    return true;
+  }
 
   if (videoOptions.length > 0) {
-    const requestedIndex = Number.isInteger(requestedVideo) ? requestedVideo - 1 : -1;
-    const randomIndex = Math.floor(Math.random() * videoOptions.length);
-    const selectedIndex = requestedIndex >= 0 && requestedIndex < videoOptions.length ? requestedIndex : randomIndex;
-    video.src = videoOptions[selectedIndex];
-    video.dataset.heroVideoSelected = String(selectedIndex + 1);
-    video.load();
+    applyVideoSource(videoOptions, preferredSource, cacheSourceKey);
   }
 
   function showPoster() {
@@ -140,6 +299,13 @@ function initHeroVideoFallback() {
   }
 
   function markFailed() {
+    if (!usingCdnFallback && preferredSource === "cdn" && fallbackVideoOptions.length > 0) {
+      usingCdnFallback = true;
+      if (applyVideoSource(fallbackVideoOptions, "local-fallback", `${video.dataset.heroCacheKey || "gvy-command-hero-video"}:local`)) {
+        tryPlay();
+        return;
+      }
+    }
     intro.classList.add("video-failed");
   }
 
@@ -223,21 +389,22 @@ function updateIntroProgress() {
   const rect = intro.getBoundingClientRect();
   const scrollable = Math.max(1, rect.height - window.innerHeight);
   const progress = clamp((0 - rect.top) / scrollable, 0, 1);
-  const titleExit = 1 - smoothRange(progress, 0.9, 1);
-  const titleLabel = smoothRange(progress, 0.018, 0.11) * titleExit;
-  const titleMain = smoothRange(progress, 0.055, 0.28) * titleExit;
-  const titleSub = smoothRange(progress, 0.14, 0.36) * titleExit;
-  const titleMark = smoothRange(progress, 0.22, 0.46) * titleExit;
-  const title = smoothRange(progress, 0.018, 0.46) * titleExit;
-  const motto = smoothRange(progress, 0.34, 0.62) * titleExit;
-  const hud = smoothRange(progress, 0.5, 0.68);
-  const actions = smoothRange(progress, 0.62, 0.8);
-  const exit = smoothRange(progress, 0.88, 1);
-  const navReveal = smoothRange(progress, 0.46, 0.62);
+  const titleExit = 1 - smoothRange(progress, 0.88, 1);
+  const titleLabel = smoothRange(progress, 0.04, 0.24) * titleExit;
+  const titleMain = smoothRange(progress, 0.12, 0.62) * titleExit;
+  const titleSub = smoothRange(progress, 0.24, 0.68) * titleExit;
+  const titleMark = smoothRange(progress, 0.34, 0.76) * titleExit;
+  const title = smoothRange(progress, 0.06, 0.76) * titleExit;
+  const motto = smoothRange(progress, 0.48, 0.86) * titleExit;
+  const hud = smoothRange(progress, 0.56, 0.76);
+  const actions = smoothRange(progress, 0.7, 0.86);
+  const exit = smoothRange(progress, 0.86, 1);
+  const navReveal = smoothRange(progress, 0.5, 0.68);
   const scrollCue = 1 - smoothRange(progress, 0.035, 0.18);
-  const blackout = smoothRange(progress, 0.9, 1);
-  const dark = clamp(0.28 + motto * 0.12 + hud * 0.08 + exit * 0.34, 0.28, 0.82);
-  const videoOpacity = clamp(0.98 - blackout * 0.9, 0.08, 0.98);
+  const videoFade = smoothRange(progress, 0.72, 1);
+  const blackout = smoothRange(progress, 0.86, 1) * 0.58;
+  const dark = clamp(0.2 + motto * 0.06 + hud * 0.04 + exit * 0.22, 0.2, 0.52);
+  const videoOpacity = clamp(1 - videoFade * 0.88, 0.12, 1);
   const scanY = -26 + progress * 520;
   const scanOpacity = clamp(0.16 + title * 0.18 + actions * 0.12, 0.12, 0.46);
   const fleetOpacity = clamp(0.06 + hud * 0.15 - exit * 0.08, 0.03, 0.21);
@@ -493,7 +660,12 @@ function initArchiveLightbox() {
   if (!dialog || !image || !caption || !frames.length) return;
 
   frames.forEach((frame) => {
-    frame.addEventListener("click", () => {
+    frame.addEventListener("click", (event) => {
+      if (frame.closest("[data-orbit-gallery]")?.dataset.dragSuppressClick === "true") {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
       const src = frame.dataset.full;
       const label = frame.dataset.caption || frame.querySelector("img")?.alt || "GVY ARCHIVE";
       if (!src) return;
@@ -543,6 +715,7 @@ function initArchiveOrbit() {
   const gallery = document.querySelector("[data-orbit-gallery]");
   const frames = [...document.querySelectorAll("[data-orbit-gallery] .archive-frame")];
   if (!gallery || !frames.length) return;
+  const planetVideo = gallery.querySelector(".archive-planet video");
 
   let frameId = 0;
   let active = false;
@@ -556,7 +729,7 @@ function initArchiveOrbit() {
   let dragStartOffset = 0;
   let dragPointerId = null;
   let didDrag = false;
-  let suppressClickUntil = 0;
+  let dragSuppressTimer = 0;
   let size = { width: 0, height: 0, radiusX: 0, radiusY: 0, radiusZ: 0 };
   const orbitItems = frames.map((frame, index) => ({
     frame,
@@ -633,6 +806,8 @@ function initArchiveOrbit() {
     active = true;
     paused = false;
     pausedAt = 0;
+    const playResult = planetVideo?.play?.();
+    if (playResult?.catch) playResult.catch(() => {});
     cancelAnimationFrame(frameId);
     frameId = requestAnimationFrame(tick);
   }
@@ -641,6 +816,7 @@ function initArchiveOrbit() {
     active = false;
     paused = false;
     pausedAt = 0;
+    planetVideo?.pause?.();
     cancelAnimationFrame(frameId);
   }
 
@@ -655,7 +831,7 @@ function initArchiveOrbit() {
   gallery.addEventListener(
     "click",
     (event) => {
-      if (performance.now() > suppressClickUntil) return;
+      if (gallery.dataset.dragSuppressClick !== "true") return;
       event.preventDefault();
       event.stopPropagation();
     },
@@ -668,6 +844,8 @@ function initArchiveOrbit() {
     dragStartX = event.clientX;
     dragStartOffset = dragOffset;
     didDrag = false;
+    window.clearTimeout(dragSuppressTimer);
+    gallery.dataset.dragSuppressClick = "false";
     gallery.classList.add("is-dragging");
     gallery.setPointerCapture?.(event.pointerId);
   });
@@ -684,7 +862,12 @@ function initArchiveOrbit() {
 
   function endDrag(event) {
     if (dragPointerId !== event.pointerId) return;
-    if (didDrag) suppressClickUntil = performance.now() + 180;
+    if (didDrag) {
+      gallery.dataset.dragSuppressClick = "true";
+      dragSuppressTimer = window.setTimeout(() => {
+        gallery.dataset.dragSuppressClick = "false";
+      }, 320);
+    }
     dragPointerId = null;
     didDrag = false;
     gallery.classList.remove("is-dragging");
@@ -732,6 +915,7 @@ function initScrollLoop() {
   window.addEventListener("resize", requestUpdate, { passive: true });
 }
 
+initSiteBackdrop();
 initStarfield();
 initHeroVideoFallback();
 initPointerParallax();

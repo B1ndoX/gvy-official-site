@@ -13,10 +13,11 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260622-video-fade-only" />
+    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260623-hero-fade-gallery-smooth" />
   </head>
   <body id="pageTop">
     <a class="skip-link" href="#doctrine">跳到舰队内容</a>
+    <canvas class="site-backdrop-canvas" id="siteBackdropCanvas" aria-hidden="true"></canvas>
 
     <header class="command-nav" aria-label="舰队主导航">
       <a class="fleet-brand" href="#pageTop" aria-label="星际远航者舰队首页">
@@ -49,6 +50,8 @@
               playsinline
               preload="metadata"
               data-hero-video
+              data-hero-cache-key="gvy-command-hero-video"
+              data-hero-cdn-videos=""
               data-hero-videos="./assets/hero-random/fleet-hero-01.mp4|./assets/hero-random/fleet-hero-02.mp4"
             >
               <source src="./assets/hero-random/fleet-hero-01.mp4" type="video/mp4" />
@@ -220,7 +223,9 @@
 
         <div class="archive-wall reveal" data-orbit-gallery aria-label="GVY 团建图册 3D 星球环绕照片墙">
           <div class="archive-planet" aria-hidden="true">
-            <span>GVY</span>
+            <video autoplay muted loop playsinline preload="metadata">
+              <source src="./assets/archive-planet-feed.mp4" type="video/mp4" />
+            </video>
           </div>
           <button class="archive-frame" type="button" data-full="./assets/gallery/team-01.jpg" data-caption="GVY 团建留影 01">
             <img src="./assets/gallery/thumbs/team-01.jpg" alt="GVY 团建留影 01" loading="lazy" decoding="async" />
@@ -335,6 +340,6 @@
 
     <script src="./assets/vendor/matter.min.js?v=0.20.0" defer></script>
     <script src="./assets/fleet-command-brawl.js?v=20260622-video-fade-only" defer></script>
-    <script src="./assets/fleet-command.js?v=20260622-video-fade-only" defer></script>
+    <script src="./assets/fleet-command.js?v=20260623-hero-fade-gallery-smooth" defer></script>
   </body>
 </html>
