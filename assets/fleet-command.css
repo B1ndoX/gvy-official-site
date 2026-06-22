@@ -313,7 +313,7 @@ select:focus-visible,
   --intro-dark: 0.26;
   --intro-blackout: 0;
   position: relative;
-  height: clamp(2500px, 360vh, 3400px);
+  height: clamp(2700px, 390vh, 3700px);
   min-height: 0;
   background: #030508;
   isolation: isolate;
@@ -407,7 +407,24 @@ select:focus-visible,
 }
 
 .intro-sticky::before {
-  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  z-index: 6;
+  display: block;
+  height: clamp(260px, 42vh, 520px);
+  background:
+    linear-gradient(
+      180deg,
+      rgba(3, 5, 8, 0) 0%,
+      rgba(3, 5, 8, 0.16) 18%,
+      rgba(3, 5, 8, 0.46) 42%,
+      rgba(3, 5, 8, 0.78) 68%,
+      rgba(3, 5, 8, 0.98) 100%
+    );
+  content: "";
+  pointer-events: none;
 }
 
 .intro-sticky::after {
@@ -418,10 +435,11 @@ select:focus-visible,
   background:
     linear-gradient(
       180deg,
-      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.34)) 0%,
-      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.48)) 48%,
-      rgba(3, 5, 8, calc(0.08 + var(--intro-blackout, 0) * 0.5)) 76%,
-      rgba(3, 5, 8, calc(0.44 + var(--intro-blackout, 0) * 0.24)) 100%
+      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.2)) 0%,
+      rgba(3, 5, 8, calc(var(--intro-blackout, 0) * 0.34)) 44%,
+      rgba(3, 5, 8, calc(0.18 + var(--intro-blackout, 0) * 0.46)) 68%,
+      rgba(3, 5, 8, calc(0.68 + var(--intro-blackout, 0) * 0.22)) 86%,
+      rgba(3, 5, 8, calc(0.92 + var(--intro-blackout, 0) * 0.08)) 100%
     );
   content: "";
   pointer-events: none;
@@ -2785,18 +2803,9 @@ select:focus-visible,
     --reveal-scale: 1.01;
   }
 
-  .intro-sequence {
-    height: clamp(1120px, 190vh, 1420px);
-    min-height: 0;
-  }
-
-  .intro-sticky::before {
-    display: none;
-  }
-
   .intro-sticky::after {
     inset: auto 0 0;
-    height: 38vh;
+    height: 52vh;
   }
 
   .intro-media video {
@@ -3010,8 +3019,8 @@ select:focus-visible,
   }
 
   .intro-sequence {
-    height: 260vh;
-    min-height: 1480px;
+    height: 300vh;
+    min-height: 1680px;
   }
 
   .intro-title {

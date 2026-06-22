@@ -385,6 +385,8 @@ function initMemberPhysics() {
       lastWeaponAttackAngle: null,
       weaponAimAngle: null,
       weaponAttackAngle: null,
+      desiredWeaponAngle: null,
+      desiredWeaponAttackAngle: null,
       weapon,
     };
     chip.style.setProperty("--hp", "100%");
@@ -469,6 +471,7 @@ function initMemberPhysics() {
         chip.style.setProperty("--body-rotation", `${nextAngle}rad`);
         item.lastRenderAngle = nextAngle;
       }
+      syncWeaponAim(item);
     });
     frame = requestAnimationFrame(syncDom);
   }
@@ -608,39 +611,50 @@ function beginAttack(engine, attacker, target, now) {
   attacker.actionUntil = now + windup + recovery;
   attacker.nextAttackAt = attacker.actionUntil + attacker.weapon.cooldown + randomRange(520, 1300);
   attacker.chip.classList.add("is-attacking");
-  aimWeaponAt(attacker, target);
+  aimWeaponAt(attacker, target, true);
   setTimeout(() => {
     if (target.alive) attackTarget(engine, attacker, target);
   }, windup);
   setTimeout(() => attacker.chip.classList.remove("is-attacking"), windup + recovery);
 }
 
-function aimWeaponAt(attacker, target) {
+function aimWeaponAt(attacker, target, immediate = false) {
   const dx = target.body.position.x - attacker.body.position.x;
   const dy = target.body.position.y - attacker.body.position.y;
   const targetAngle = Math.atan2(dy, dx);
   const relativeAngle = targetAngle - attacker.body.angle + ((attacker.weapon.aimOffset || 0) * Math.PI) / 180;
-  const aimEase = attacker.actionUntil > performance.now() ? 0.46 : 0.32;
-  const attackEase = attacker.actionUntil > performance.now() ? 0.5 : 0.34;
-  const nextWeaponAngle =
-    attacker.weaponAimAngle === null
-      ? relativeAngle
-      : attacker.weaponAimAngle + normalizeAngleDelta(relativeAngle - attacker.weaponAimAngle) * aimEase;
-  const nextAttackAngle =
-    attacker.weaponAttackAngle === null
-      ? targetAngle
-      : attacker.weaponAttackAngle + normalizeAngleDelta(targetAngle - attacker.weaponAttackAngle) * attackEase;
 
-  if (attacker.lastWeaponAngle === null || Math.abs(normalizeAngleDelta(nextWeaponAngle - attacker.lastWeaponAngle)) > 0.012) {
-    attacker.chip.style.setProperty("--weapon-angle", `${nextWeaponAngle}rad`);
-    attacker.lastWeaponAngle = nextWeaponAngle;
+  attacker.desiredWeaponAngle = relativeAngle;
+  attacker.desiredWeaponAttackAngle = targetAngle;
+
+  if (immediate || attacker.weaponAimAngle === null) {
+    setWeaponAimAngles(attacker, relativeAngle, targetAngle);
   }
-  if (attacker.lastWeaponAttackAngle === null || Math.abs(normalizeAngleDelta(nextAttackAngle - attacker.lastWeaponAttackAngle)) > 0.012) {
-    attacker.chip.style.setProperty("--weapon-attack-angle", `${nextAttackAngle}rad`);
-    attacker.lastWeaponAttackAngle = nextAttackAngle;
+}
+
+function syncWeaponAim(fighter) {
+  if (fighter.desiredWeaponAngle === null || fighter.desiredWeaponAttackAngle === null) return;
+  if (performance.now() < fighter.actionUntil) return;
+
+  const currentWeaponAngle = fighter.weaponAimAngle ?? fighter.desiredWeaponAngle;
+  const currentAttackAngle = fighter.weaponAttackAngle ?? fighter.desiredWeaponAttackAngle;
+  const nextWeaponAngle = currentWeaponAngle + normalizeAngleDelta(fighter.desiredWeaponAngle - currentWeaponAngle) * 0.18;
+  const nextAttackAngle = currentAttackAngle + normalizeAngleDelta(fighter.desiredWeaponAttackAngle - currentAttackAngle) * 0.2;
+
+  setWeaponAimAngles(fighter, nextWeaponAngle, nextAttackAngle);
+}
+
+function setWeaponAimAngles(fighter, weaponAngle, attackAngle) {
+  if (fighter.lastWeaponAngle === null || Math.abs(normalizeAngleDelta(weaponAngle - fighter.lastWeaponAngle)) > 0.004) {
+    fighter.chip.style.setProperty("--weapon-angle", `${weaponAngle}rad`);
+    fighter.lastWeaponAngle = weaponAngle;
   }
-  attacker.weaponAimAngle = nextWeaponAngle;
-  attacker.weaponAttackAngle = nextAttackAngle;
+  if (fighter.lastWeaponAttackAngle === null || Math.abs(normalizeAngleDelta(attackAngle - fighter.lastWeaponAttackAngle)) > 0.004) {
+    fighter.chip.style.setProperty("--weapon-attack-angle", `${attackAngle}rad`);
+    fighter.lastWeaponAttackAngle = attackAngle;
+  }
+  fighter.weaponAimAngle = weaponAngle;
+  fighter.weaponAttackAngle = attackAngle;
 }
 
 function hopFighter(fighter, now, target) {
