@@ -313,7 +313,7 @@ select:focus-visible,
   --intro-dark: 0.26;
   --intro-blackout: 0;
   position: relative;
-  height: clamp(2700px, 390vh, 3700px);
+  height: clamp(2700px, 390vh, 7600px);
   min-height: 0;
   background: #030508;
   isolation: isolate;
@@ -741,7 +741,27 @@ select:focus-visible,
 }
 
 .identity-section {
+  position: relative;
   margin-top: clamp(-56px, -3.5vh, -24px);
+}
+
+.identity-section::before {
+  position: absolute;
+  left: 50%;
+  top: clamp(-128px, -9vh, -54px);
+  z-index: 0;
+  width: 100vw;
+  height: clamp(220px, 28vh, 420px);
+  background:
+    linear-gradient(180deg, rgba(3, 5, 8, 0.99) 0%, rgba(3, 5, 8, 0.92) 24%, rgba(3, 5, 8, 0.68) 52%, rgba(3, 5, 8, 0.22) 82%, rgba(3, 5, 8, 0) 100%);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.identity-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .recruit-section {
@@ -839,6 +859,7 @@ select:focus-visible,
   padding: clamp(20px, 2.2vw, 34px);
   border: 1px solid rgba(95, 168, 211, 0.18);
   background:
+    linear-gradient(180deg, rgba(3, 5, 8, 0.94) 0%, rgba(3, 5, 8, 0.72) 46%, rgba(8, 13, 18, 0.56) 100%),
     radial-gradient(circle at 50% 45%, rgba(95, 168, 211, 0.12), transparent 38%),
     linear-gradient(135deg, rgba(255, 255, 255, 0.046), transparent 48%),
     rgba(8, 13, 18, 0.58);
@@ -987,6 +1008,7 @@ select:focus-visible,
   position: relative;
   min-height: clamp(600px, 36vw, 760px);
   overflow: hidden;
+  contain: layout paint;
   border: 1px solid rgba(95, 168, 211, 0.14);
   --route-focus-left: 50%;
   --route-focus-top: 50%;
@@ -1130,7 +1152,6 @@ select:focus-visible,
   width: min(96%, 1040px);
   border-color: rgba(200, 164, 93, 0.16);
   transform: translate(-50%, -50%) rotateX(66deg) rotateZ(19deg);
-  animation: planetRingSweep 20s linear infinite;
 }
 
 .planet-caption {
@@ -1161,7 +1182,7 @@ select:focus-visible,
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(95, 168, 211, 0.4), rgba(200, 164, 93, 0.32), transparent);
   transform-origin: left center;
-  animation: routePulse 4.6s ease-in-out infinite;
+  opacity: 0.68;
 }
 
 .route-focus {
@@ -2298,10 +2319,11 @@ select:focus-visible,
 
 .operation-map.reveal,
 .archive-wall.reveal {
-  --reveal-y: 64px;
-  --reveal-z: 260px;
-  --reveal-rotate-x: 8deg;
-  --reveal-scale: 1.07;
+  --reveal-y: 32px;
+  --reveal-z: 0px;
+  --reveal-rotate-x: 0deg;
+  --reveal-scale: 1.015;
+  filter: none;
 }
 
 .role-filter.reveal {
@@ -2774,14 +2796,17 @@ select:focus-visible,
 
   .nav-links {
     flex-wrap: nowrap;
-    gap: 4px;
-    justify-content: flex-start;
-    overflow-x: auto;
+    gap: 3px;
+    width: 100%;
+    justify-content: stretch;
+    overflow-x: hidden;
     padding-bottom: 2px;
   }
 
   .nav-links a {
-    flex: 0 0 auto;
+    flex: 1 1 0;
+    min-width: 0;
+    justify-content: center;
   }
 
   .reveal {

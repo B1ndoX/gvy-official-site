@@ -603,6 +603,23 @@ function initOperationMap() {
   const filters = [...document.querySelectorAll("[data-filter]")];
   const nodes = [...document.querySelectorAll(".operation-node")];
   if (!filters.length || !nodes.length) return;
+  const operationVideo = map?.querySelector(".operation-video-sphere video");
+
+  if (operationVideo && "IntersectionObserver" in window) {
+    const videoObserver = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry?.isIntersecting) {
+          const playResult = operationVideo.play?.();
+          if (playResult?.catch) playResult.catch(() => {});
+        } else {
+          operationVideo.pause?.();
+        }
+      },
+      { rootMargin: "180px 0px", threshold: 0.08 },
+    );
+    if (map) videoObserver.observe(map);
+  }
 
   function syncFilter(role) {
     filters.forEach((button) => {
@@ -740,6 +757,7 @@ function initArchiveOrbit() {
   let pausedAt = 0;
   let pausedDuration = 0;
   let lastTickTime = 0;
+  let lastOrbitFrameTime = 0;
   let dragOffset = 0;
   let dragStartX = 0;
   let dragStartOffset = 0;
@@ -756,6 +774,8 @@ function initArchiveOrbit() {
     zIndex: "",
     pointerEvents: "",
   }));
+
+  if (planetVideo) planetVideo.playbackRate = 0.68;
 
   function measure() {
     const box = gallery.getBoundingClientRect();
@@ -823,8 +843,12 @@ function initArchiveOrbit() {
 
   function tick(time) {
     if (!active || paused || prefersReducedMotion) return;
-    lastTickTime = time;
-    place(time);
+    const frameInterval = window.innerWidth < 720 ? 42 : 26;
+    if (!lastOrbitFrameTime || time - lastOrbitFrameTime >= frameInterval) {
+      lastTickTime = time;
+      lastOrbitFrameTime = time;
+      place(time);
+    }
     frameId = requestAnimationFrame(tick);
   }
 
@@ -833,6 +857,7 @@ function initArchiveOrbit() {
     active = true;
     paused = false;
     pausedAt = 0;
+    lastOrbitFrameTime = 0;
     const playResult = planetVideo?.play?.();
     if (playResult?.catch) playResult.catch(() => {});
     cancelAnimationFrame(frameId);
