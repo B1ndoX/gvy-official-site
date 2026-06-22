@@ -293,7 +293,7 @@ select:focus-visible,
   --intro-dark: 0.26;
   --intro-blackout: 0;
   position: relative;
-  height: clamp(1280px, 185vh, 1780px);
+  height: clamp(2100px, 300vh, 2850px);
   min-height: 0;
   background: #030508;
   isolation: isolate;
