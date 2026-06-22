@@ -1,6 +1,6 @@
 # GVY Official Site
 
-GitHub Pages site for `www.gvyvoyagers.vip`.
+Static site for the GVY official website. The formal production entry should be deployed through Tencent Cloud EdgeOne Pages / Makers at `www.gvyvoyagers.vip`.
 
 ## Local Preview
 
