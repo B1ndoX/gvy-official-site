@@ -32,14 +32,14 @@ function initSiteBackdrop() {
 
   function createStars() {
     const compact = window.innerWidth < 720;
-    const count = compact ? 90 : 190;
+    const count = compact ? 150 : 320;
     stars = Array.from({ length: count }, () => ({
       x: Math.random(),
       y: Math.random(),
       z: Math.random() * 0.85 + 0.15,
-      size: Math.random() * 1.25 + 0.25,
+      size: Math.random() * 1.15 + 0.22,
       twinkle: Math.random() * Math.PI * 2,
-      warm: Math.random() > 0.86,
+      warm: Math.random() > 0.9,
     }));
   }
 
@@ -70,16 +70,16 @@ function initSiteBackdrop() {
     context.fillStyle = "#030508";
     context.fillRect(0, 0, width, height);
 
-    const glowA = context.createRadialGradient(width * 0.72 + pointerX * 0.08, height * 0.24 + pointerY * 0.05, 0, width * 0.72, height * 0.24, width * 0.7);
-    glowA.addColorStop(0, "rgba(95, 168, 211, 0.12)");
-    glowA.addColorStop(0.45, "rgba(95, 168, 211, 0.035)");
+    const glowA = context.createRadialGradient(width * 0.72 + pointerX * 0.08, height * 0.24 + pointerY * 0.05, 0, width * 0.72, height * 0.24, width * 0.72);
+    glowA.addColorStop(0, "rgba(95, 168, 211, 0.1)");
+    glowA.addColorStop(0.45, "rgba(95, 168, 211, 0.028)");
     glowA.addColorStop(1, "rgba(95, 168, 211, 0)");
     context.fillStyle = glowA;
     context.fillRect(0, 0, width, height);
 
     const glowB = context.createRadialGradient(width * 0.18 - pointerX * 0.06, height * 0.68 - pointerY * 0.04, 0, width * 0.18, height * 0.68, width * 0.48);
-    glowB.addColorStop(0, "rgba(200, 164, 93, 0.06)");
-    glowB.addColorStop(0.54, "rgba(200, 164, 93, 0.018)");
+    glowB.addColorStop(0, "rgba(200, 164, 93, 0.045)");
+    glowB.addColorStop(0.54, "rgba(200, 164, 93, 0.014)");
     glowB.addColorStop(1, "rgba(200, 164, 93, 0)");
     context.fillStyle = glowB;
     context.fillRect(0, 0, width, height);
@@ -89,7 +89,7 @@ function initSiteBackdrop() {
       const strengthY = pointerDown ? 0.06 : 0.036;
       const x = star.x * width + pointerX * star.z * strengthX;
       const y = star.y * height + pointerY * star.z * strengthY;
-      const alpha = clamp(0.22 + star.z * 0.62 + Math.sin(time * 0.0012 + star.twinkle) * 0.12, 0.16, 0.88);
+      const alpha = clamp(0.3 + star.z * 0.58 + Math.sin(time * 0.0012 + star.twinkle) * 0.1, 0.2, 0.9);
       context.beginPath();
       context.fillStyle = star.warm ? `rgba(200, 164, 93, ${alpha})` : `rgba(222, 240, 248, ${alpha})`;
       context.arc(x, y, star.size * star.z, 0, Math.PI * 2);
@@ -677,20 +677,39 @@ function initArchiveLightbox() {
   const dialog = document.querySelector("#archiveDialog");
   const image = document.querySelector("#archiveDialogImage");
   const caption = document.querySelector("#archiveDialogCaption");
+  const previousButton = dialog?.querySelector(".archive-dialog-prev");
+  const nextButton = dialog?.querySelector(".archive-dialog-next");
   const frames = [...document.querySelectorAll(".archive-frame[data-full]")];
   if (!dialog || !image || !caption || !frames.length) return;
 
-  openArchiveFrame = (frame) => {
+  let activeIndex = 0;
+
+  function renderArchiveFrame(index) {
+    const nextIndex = (index + frames.length) % frames.length;
+    const frame = frames[nextIndex];
     const src = frame.dataset.full;
     const label = frame.dataset.caption || frame.querySelector("img")?.alt || "GVY ARCHIVE";
     if (!src) return;
+    activeIndex = nextIndex;
+    image.classList.remove("is-switching");
+    void image.offsetWidth;
     image.src = src;
     image.alt = label;
+    image.classList.add("is-switching");
     caption.textContent = `GVY ARCHIVE / FLEET MEMORY / ${label}`;
+  }
+
+  function shiftArchiveFrame(direction) {
+    renderArchiveFrame(activeIndex + direction);
+  }
+
+  openArchiveFrame = (frame) => {
+    const index = frames.indexOf(frame);
+    renderArchiveFrame(index >= 0 ? index : 0);
     if (typeof dialog.showModal === "function") {
       dialog.showModal();
     } else {
-      window.open(src, "_blank", "noopener,noreferrer");
+      window.open(image.src, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -717,8 +736,22 @@ function initArchiveLightbox() {
     if (event.target === dialog) dialog.close();
   });
 
+  previousButton?.addEventListener("click", () => shiftArchiveFrame(-1));
+  nextButton?.addEventListener("click", () => shiftArchiveFrame(1));
+
+  dialog.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      shiftArchiveFrame(-1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      shiftArchiveFrame(1);
+    }
+  });
+
   dialog.addEventListener("close", () => {
     image.removeAttribute("src");
+    image.classList.remove("is-switching");
   });
 }
 
@@ -748,7 +781,7 @@ function initArchiveOrbit() {
   const gallery = document.querySelector("[data-orbit-gallery]");
   const frames = [...document.querySelectorAll("[data-orbit-gallery] .archive-frame")];
   if (!gallery || !frames.length) return;
-  const planetVideo = gallery.querySelector(".archive-planet video");
+  const planetVideos = [...gallery.querySelectorAll(".archive-planet-video")];
 
   let frameId = 0;
   let active = false;
@@ -757,7 +790,6 @@ function initArchiveOrbit() {
   let pausedAt = 0;
   let pausedDuration = 0;
   let lastTickTime = 0;
-  let lastOrbitFrameTime = 0;
   let dragOffset = 0;
   let dragStartX = 0;
   let dragStartOffset = 0;
@@ -765,6 +797,9 @@ function initArchiveOrbit() {
   let dragPointerId = null;
   let didDrag = false;
   let dragSuppressTimer = 0;
+  let activePlanetVideo = 0;
+  let planetSwapTimer = 0;
+  let planetFadeTimer = 0;
   let size = { width: 0, height: 0, radiusX: 0, radiusY: 0, radiusZ: 0 };
   const orbitItems = frames.map((frame, index) => ({
     frame,
@@ -775,7 +810,74 @@ function initArchiveOrbit() {
     pointerEvents: "",
   }));
 
-  if (planetVideo) planetVideo.playbackRate = 0.68;
+  planetVideos.forEach((video, index) => {
+    video.playbackRate = 0.68;
+    video.loop = false;
+    video.muted = true;
+    video.classList.toggle("is-visible", index === activePlanetVideo);
+    video.addEventListener("ended", () => {
+      if (active && index === activePlanetVideo) swapPlanetVideo();
+    });
+  });
+
+  function clearPlanetTimers() {
+    window.clearTimeout(planetSwapTimer);
+    window.clearTimeout(planetFadeTimer);
+    planetSwapTimer = 0;
+    planetFadeTimer = 0;
+  }
+
+  function schedulePlanetSwap() {
+    clearPlanetTimers();
+    if (!active || planetVideos.length < 2 || prefersReducedMotion) return;
+    const current = planetVideos[activePlanetVideo];
+    const duration = Number.isFinite(current.duration) && current.duration > 1 ? current.duration : 8;
+    const fadeSeconds = 1.35;
+    const rate = Math.max(0.2, current.playbackRate || 1);
+    const remainingSeconds = Math.max(1.4, (duration - fadeSeconds - current.currentTime) / rate);
+    planetSwapTimer = window.setTimeout(swapPlanetVideo, remainingSeconds * 1000);
+  }
+
+  function swapPlanetVideo() {
+    if (!active || planetVideos.length < 2 || prefersReducedMotion) return;
+    const current = planetVideos[activePlanetVideo];
+    activePlanetVideo = (activePlanetVideo + 1) % planetVideos.length;
+    const next = planetVideos[activePlanetVideo];
+    try {
+      next.currentTime = 0;
+    } catch (_) {
+      // Safari may reject currentTime writes before metadata is ready.
+    }
+    const playResult = next.play?.();
+    if (playResult?.catch) playResult.catch(() => {});
+    next.classList.add("is-visible");
+    current.classList.remove("is-visible");
+    planetFadeTimer = window.setTimeout(() => {
+      if (current !== planetVideos[activePlanetVideo]) current.pause?.();
+      schedulePlanetSwap();
+    }, 1350);
+  }
+
+  function playPlanetVideos() {
+    if (!planetVideos.length || prefersReducedMotion) return;
+    const current = planetVideos[activePlanetVideo];
+    current.classList.add("is-visible");
+    const playResult = current.play?.();
+    if (playResult?.catch) playResult.catch(() => {});
+    if (current.readyState >= 1) {
+      schedulePlanetSwap();
+    } else {
+      current.addEventListener("loadedmetadata", schedulePlanetSwap, { once: true });
+    }
+  }
+
+  function pausePlanetVideos() {
+    clearPlanetTimers();
+    planetVideos.forEach((video, index) => {
+      video.pause?.();
+      video.classList.toggle("is-visible", index === activePlanetVideo);
+    });
+  }
 
   function measure() {
     const box = gallery.getBoundingClientRect();
@@ -843,12 +945,8 @@ function initArchiveOrbit() {
 
   function tick(time) {
     if (!active || paused || prefersReducedMotion) return;
-    const frameInterval = window.innerWidth < 720 ? 42 : 26;
-    if (!lastOrbitFrameTime || time - lastOrbitFrameTime >= frameInterval) {
-      lastTickTime = time;
-      lastOrbitFrameTime = time;
-      place(time);
-    }
+    lastTickTime = time;
+    place(time);
     frameId = requestAnimationFrame(tick);
   }
 
@@ -857,9 +955,7 @@ function initArchiveOrbit() {
     active = true;
     paused = false;
     pausedAt = 0;
-    lastOrbitFrameTime = 0;
-    const playResult = planetVideo?.play?.();
-    if (playResult?.catch) playResult.catch(() => {});
+    playPlanetVideos();
     cancelAnimationFrame(frameId);
     frameId = requestAnimationFrame(tick);
   }
@@ -868,7 +964,7 @@ function initArchiveOrbit() {
     active = false;
     paused = false;
     pausedAt = 0;
-    planetVideo?.pause?.();
+    pausePlanetVideos();
     cancelAnimationFrame(frameId);
   }
 

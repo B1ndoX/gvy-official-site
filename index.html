@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260623-large-display-perf-polish" />
+    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260623-gallery-nav-seam" />
   </head>
   <body id="pageTop">
     <a class="skip-link" href="#doctrine">跳到舰队内容</a>
@@ -223,7 +223,10 @@
 
         <div class="archive-wall reveal" data-orbit-gallery aria-label="GVY 团建图册 3D 星球环绕照片墙">
           <div class="archive-planet" aria-hidden="true">
-            <video autoplay muted loop playsinline preload="metadata">
+            <video class="archive-planet-video is-visible" autoplay muted playsinline preload="metadata">
+              <source src="./assets/archive-planet-feed.mp4" type="video/mp4" />
+            </video>
+            <video class="archive-planet-video" muted playsinline preload="metadata">
               <source src="./assets/archive-planet-feed.mp4" type="video/mp4" />
             </video>
           </div>
@@ -318,7 +321,9 @@
       <form method="dialog">
         <button class="archive-dialog-close" type="submit" aria-label="关闭照片预览">×</button>
       </form>
+      <button class="archive-dialog-nav archive-dialog-prev" type="button" aria-label="上一张团建照片">‹</button>
       <img id="archiveDialogImage" src="" alt="" />
+      <button class="archive-dialog-nav archive-dialog-next" type="button" aria-label="下一张团建照片">›</button>
       <p id="archiveDialogCaption">GVY ARCHIVE</p>
     </dialog>
 
@@ -339,7 +344,7 @@
     </footer>
 
     <script src="./assets/vendor/matter.min.js?v=0.20.0" defer></script>
-    <script src="./assets/fleet-command-brawl.js?v=20260623-large-display-perf-polish" defer></script>
-    <script src="./assets/fleet-command.js?v=20260623-large-display-perf-polish" defer></script>
+    <script src="./assets/fleet-command-brawl.js?v=20260623-gallery-nav-seam" defer></script>
+    <script src="./assets/fleet-command.js?v=20260623-gallery-nav-seam" defer></script>
   </body>
 </html>

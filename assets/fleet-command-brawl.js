@@ -595,12 +595,17 @@ function lockArenaBoundary(item) {
 }
 
 function getFighterLimits(item, bounds) {
-  const radius = item.radius;
+  const visualGutter = Math.max(6, Math.round(item.radius * 0.14));
+  const leftReach = item.avatarCenterX;
+  const rightReach = item.width - item.avatarCenterX;
+  const topReach = item.avatarCenterY;
+  const bottomReach = item.height - item.avatarCenterY;
+
   return {
-    minX: bounds.sideInset + radius,
-    maxX: bounds.width - bounds.sideInset - radius,
-    minY: bounds.topLimit + radius,
-    maxY: bounds.groundY - radius,
+    minX: bounds.sideInset + leftReach + visualGutter,
+    maxX: bounds.width - bounds.sideInset - rightReach - visualGutter,
+    minY: bounds.topLimit + topReach + visualGutter,
+    maxY: bounds.groundY - bottomReach - visualGutter,
   };
 }
 
