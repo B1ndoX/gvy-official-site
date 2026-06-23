@@ -164,16 +164,14 @@ select:focus-visible,
   height: var(--brand-size);
   place-items: center;
   border: 0;
-  background:
-    linear-gradient(135deg, rgba(200, 164, 93, 0.18), transparent 54%),
-    rgba(255, 255, 255, 0.03);
-  overflow: hidden;
+  background: transparent;
+  overflow: visible;
 }
 
 .brand-sigil img {
   display: block;
-  width: 118%;
-  height: 118%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 0 12px rgba(200, 164, 93, 0.24));
 }
@@ -1012,6 +1010,7 @@ select:focus-visible,
   overflow: hidden;
   border: 0;
   border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
   opacity: 1;
   transform: translate3d(-50%, -50%, 0);
   background:
@@ -1024,6 +1023,8 @@ select:focus-visible,
     0 0 58px rgba(95, 168, 211, 0.1);
   backface-visibility: hidden;
   isolation: isolate;
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 98%, transparent 100%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 0 98%, transparent 100%);
   transform-style: flat;
 }
 
@@ -1061,8 +1062,12 @@ select:focus-visible,
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
+  clip-path: circle(50% at 50% 50%);
   opacity: 0.58;
   filter: saturate(1.1) contrast(1.08) brightness(0.92);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0 98%, transparent 100%);
+  mask-image: radial-gradient(circle at 50% 50%, #000 0 98%, transparent 100%);
   transform: scale(1);
 }
 
@@ -2891,6 +2896,10 @@ select:focus-visible,
   }
 
   .operation-map::after {
+    display: none;
+  }
+
+  .operation-planet-net {
     display: none;
   }
 
