@@ -392,7 +392,7 @@ function updateIntroProgress() {
   const scrollable = Math.max(1, rect.height - window.innerHeight);
   const rawProgress = (0 - rect.top) / scrollable;
   const progress = clamp(rawProgress, 0, 1);
-  const titleExit = 1 - smoothRange(rawProgress, 1.95, 2.72);
+  const titleExit = 1 - smoothRange(rawProgress, 1.12, 1.42);
   const titleLabel = smoothRange(progress, 0.01, 0.3) * titleExit;
   const titleMain = smoothRange(progress, 0.02, 0.58) * titleExit;
   const titleSub = smoothRange(progress, 0.18, 0.68) * titleExit;
@@ -401,13 +401,13 @@ function updateIntroProgress() {
   const motto = smoothRange(progress, 0.46, 0.86) * titleExit;
   const hud = smoothRange(progress, 0.62, 0.82);
   const actions = smoothRange(progress, 0.76, 0.92);
-  const exit = smoothRange(rawProgress, 1.95, 2.72);
+  const exit = smoothRange(rawProgress, 1.12, 1.42);
   const navReveal = smoothRange(progress, 0.66, 0.84);
   const scrollCue = 1 - smoothRange(progress, 0.035, 0.18);
-  const videoFade = smoothRange(rawProgress, 1.34, 2.64);
-  const blackout = smoothRange(rawProgress, 1.5, 2.72) * 0.46;
-  const dark = clamp(0.2 + motto * 0.05 + hud * 0.035 + videoFade * 0.18, 0.2, 0.46);
-  const videoOpacity = clamp(1 - videoFade * 0.8, 0.2, 1);
+  const videoFade = smoothRange(rawProgress, 0.96, 1.34);
+  const blackout = smoothRange(rawProgress, 1.18, 1.58) * 0.42;
+  const dark = clamp(0.18 + motto * 0.04 + hud * 0.025 + videoFade * 0.18, 0.18, 0.44);
+  const videoOpacity = clamp(1 - videoFade * 0.88, 0.12, 1);
   const scanY = -26 + progress * 520;
   const scanOpacity = clamp(0.16 + title * 0.18 + actions * 0.12, 0.12, 0.46);
   const fleetOpacity = clamp(0.06 + hud * 0.15 - exit * 0.08, 0.03, 0.21);
@@ -427,7 +427,7 @@ function updateIntroProgress() {
   intro.style.setProperty("--intro-dark", dark.toFixed(4));
   intro.style.setProperty("--intro-blackout", blackout.toFixed(4));
   intro.style.setProperty("--intro-video-opacity", videoOpacity.toFixed(4));
-  intro.style.setProperty("--intro-video-brightness", clamp(1 - videoFade * 0.8, 0.2, 1).toFixed(4));
+  intro.style.setProperty("--intro-video-brightness", clamp(1 - videoFade * 0.88, 0.12, 1).toFixed(4));
   intro.style.setProperty("--intro-shade-mid", clamp(0.22 + dark * 0.32, 0.22, 0.46).toFixed(4));
   intro.style.setProperty("--intro-vignette-bottom", clamp(0.26 + exit * 0.44, 0.26, 0.7).toFixed(4));
   intro.style.setProperty("--intro-scan-opacity", scanOpacity.toFixed(4));
