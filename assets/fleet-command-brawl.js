@@ -44,7 +44,7 @@ const members = [
   ["humor0126", "星舰指挥官", "/media/irpx4n2q3sy7fr/avatar/CCA2190B343AAD2DF842DF29CEDE76B7.jpg"],
   ["Zack1982", "星舰指挥官", "/media/f27lo04cgmie2r/avatar/Ce7df7d1-5616-45c9-A2ee-4e9ac6faa842.jpg"],
   ["BookWorm", "深航舰长", defaultAvatar],
-  ["BindoX", "联邦元帅", "/media/uly7bcps1h3cnr/avatar/Death-Stranding-Cliff-Uhdpapercom-4K-61.jpg"],
+  ["BindoX", "远航玩家", "/media/uly7bcps1h3cnr/avatar/Death-Stranding-Cliff-Uhdpapercom-4K-61.jpg"],
   ["9523", "统御司令", "/media/gae24l3hu5nvmr/avatar/E6aa8464-C7de-4834-B9f5-Cc720e797296.jpg"],
 ];
 
