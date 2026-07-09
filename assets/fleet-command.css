@@ -2190,6 +2190,16 @@ select:focus-visible,
   font-size: clamp(0.78rem, 0.68vw, 0.94rem);
 }
 
+.site-registration {
+  grid-column: 1 / -1;
+  color: rgba(155, 166, 176, 0.76);
+  font-size: clamp(0.76rem, 0.64vw, 0.9rem);
+}
+
+.site-registration a {
+  color: rgba(200, 164, 93, 0.82);
+}
+
 .reveal {
   --reveal-x: 0px;
   --reveal-y: 70px;

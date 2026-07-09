@@ -696,7 +696,7 @@ function initArchiveLightbox() {
     image.src = src;
     image.alt = label;
     image.classList.add("is-switching");
-    caption.textContent = `GVY ARCHIVE / PLAYER MEMORY / ${label}`;
+    caption.textContent = `GVY ARCHIVE / FLEET MEMORY / ${label}`;
   }
 
   function shiftArchiveFrame(direction) {
