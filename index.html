@@ -9,19 +9,26 @@
       content="星际远航者 GVY 玩家舰队首页：玩家组织介绍、行动编队、活动图册与加入交流入口。"
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.gvyvoyagers.vip/" />
     <meta property="og:title" content="星际远航者 GVY | Galactic Voyagers" />
     <meta
       property="og:description"
       content="星际远航者 GVY 玩家舰队首页：玩家组织介绍、行动编队、活动图册与加入交流入口。"
     />
     <meta property="og:site_name" content="星际远航者" />
+    <meta property="og:image" content="https://www.gvyvoyagers.vip/assets/gallery/team-09.jpg" />
+    <meta property="og:image:alt" content="星际远航者 GVY 玩家舰队活动留影" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="星际远航者 GVY | Galactic Voyagers" />
+    <meta name="twitter:description" content="星际远航者 GVY 玩家舰队首页：玩家组织介绍、行动编队、活动图册与加入交流入口。" />
+    <meta name="twitter:image" content="https://www.gvyvoyagers.vip/assets/gallery/team-09.jpg" />
     <title>星际远航者 GVY | Galactic Voyagers</title>
+    <link rel="canonical" href="https://www.gvyvoyagers.vip/" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260623-mobile-logo-clip" />
+    <link rel="stylesheet" href="./assets/fleet-command.css?v=20260712-audit-fixes" />
   </head>
   <body id="pageTop">
     <a class="skip-link" href="#doctrine">跳到舰队内容</a>
@@ -69,8 +76,6 @@
 
           <div class="intro-shade" aria-hidden="true"></div>
           <div class="intro-vignette" aria-hidden="true"></div>
-          <div class="intro-grain" aria-hidden="true"></div>
-          <div class="intro-scanline" aria-hidden="true"></div>
 
           <div class="intro-title" aria-label="Galactic Voyagers GVY Fleet">
             <p class="system-label">GVY VOYAGERS / COMMAND WAKE</p>
@@ -155,11 +160,11 @@
         </div>
 
         <div class="role-filter reveal" aria-label="行动编队筛选">
-          <button type="button" class="filter-chip active" data-filter="all">全部</button>
-          <button type="button" class="filter-chip" data-filter="combat">战斗</button>
-          <button type="button" class="filter-chip" data-filter="industry">工业</button>
-          <button type="button" class="filter-chip" data-filter="support">后勤</button>
-          <button type="button" class="filter-chip" data-filter="explore">探索</button>
+          <button type="button" class="filter-chip active" data-filter="all" aria-pressed="true">全部</button>
+          <button type="button" class="filter-chip" data-filter="combat" aria-pressed="false">战斗</button>
+          <button type="button" class="filter-chip" data-filter="industry" aria-pressed="false">工业</button>
+          <button type="button" class="filter-chip" data-filter="support" aria-pressed="false">后勤</button>
+          <button type="button" class="filter-chip" data-filter="explore" aria-pressed="false">探索</button>
         </div>
 
         <div class="operation-map reveal" data-operation-map data-active-role="combat" aria-label="舰队行动编队星图">
@@ -231,10 +236,7 @@
 
         <div class="archive-wall reveal" data-orbit-gallery aria-label="GVY 团建图册 3D 星球环绕照片墙">
           <div class="archive-planet" aria-hidden="true">
-            <video class="archive-planet-video is-visible" autoplay muted playsinline preload="metadata">
-              <source src="./assets/archive-planet-feed.mp4" type="video/mp4" />
-            </video>
-            <video class="archive-planet-video" muted playsinline preload="metadata">
+            <video class="archive-planet-video is-visible" autoplay muted loop playsinline preload="metadata">
               <source src="./assets/archive-planet-feed.mp4" type="video/mp4" />
             </video>
           </div>
@@ -355,7 +357,7 @@
     </footer>
 
     <script src="./assets/vendor/matter.min.js?v=0.20.0" defer></script>
-    <script src="./assets/fleet-command-brawl.js?v=20260623-mobile-logo-clip" defer></script>
-    <script src="./assets/fleet-command.js?v=20260623-mobile-logo-clip" defer></script>
+    <script src="./assets/fleet-command-brawl.js?v=20260712-audit-fixes" defer></script>
+    <script src="./assets/fleet-command.js?v=20260712-audit-fixes" defer></script>
   </body>
 </html>

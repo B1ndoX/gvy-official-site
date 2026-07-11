@@ -437,11 +437,6 @@ function initMemberPhysics() {
   Composite.add(engine.world, [...walls, ...combatants.map((item) => item.body)]);
   const arenaBounds = { width, groundY, sideInset, topLimit };
   activeArenaBounds = arenaBounds;
-  Events.on(engine, "beforeUpdate", () => {
-    combatants.forEach((item) => {
-      if (item.alive) keepFighterInBounds(item, arenaBounds, true);
-    });
-  });
   Events.on(engine, "afterUpdate", () => {
     combatants.forEach((item) => {
       if (item.alive) keepFighterInBounds(item, arenaBounds, true);
@@ -455,7 +450,6 @@ function initMemberPhysics() {
     combatants.forEach((item) => {
       const { body, chip, alive } = item;
       if (!alive) return;
-      keepFighterInBounds(item, arenaBounds, true);
       const nextX = Math.round((body.position.x - item.avatarCenterX) * 10) / 10;
       const nextY = Math.round((body.position.y - item.avatarCenterY) * 10) / 10;
       const nextAngle = Math.round(body.angle * 1000) / 1000;

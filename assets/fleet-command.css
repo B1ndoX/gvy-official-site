@@ -277,11 +277,7 @@ select:focus-visible,
   --intro-progress: 0;
   --intro-title: 0;
   --intro-motto: 0;
-  --intro-hud: 0;
-  --intro-actions: 0;
   --intro-scroll-cue: 1;
-  --intro-exit: 0;
-  --intro-dark: 0.26;
   --intro-blackout: 0;
   position: relative;
   height: clamp(2700px, 390vh, 7600px);
@@ -303,9 +299,7 @@ select:focus-visible,
 .intro-media video,
 .intro-media .starfield-canvas,
 .intro-shade,
-.intro-vignette,
-.intro-grain,
-.intro-scanline {
+.intro-vignette {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -358,14 +352,6 @@ select:focus-visible,
     linear-gradient(180deg, transparent 0 58%, rgba(3, 5, 8, calc(var(--intro-vignette-bottom, 0.26) * 0.82)) 82%, rgba(3, 5, 8, 0.48) 100%);
 }
 
-.intro-grain {
-  display: none;
-}
-
-.intro-scanline {
-  display: none;
-}
-
 .intro-sticky::before {
   position: absolute;
   left: 0;
@@ -407,10 +393,7 @@ select:focus-visible,
 
 .intro-title,
 .intro-motto,
-.intro-scroll-indicator,
-.intro-actions,
-.intro-hud,
-.scroll-cue {
+.intro-scroll-indicator {
   transition: none;
   will-change: opacity, transform, clip-path;
 }
@@ -547,46 +530,6 @@ select:focus-visible,
   animation: scrollCueEcho 1.45s ease-in-out infinite reverse;
 }
 
-.intro-hud {
-  opacity: var(--intro-hud, 0);
-}
-
-.intro-hud-left {
-  left: clamp(20px, 4vw, 70px);
-  top: calc(var(--nav-h) + 78px);
-  transform: translate3d(var(--intro-hud-left-x, -34px), 0, 0);
-}
-
-.intro-hud-right {
-  right: clamp(20px, 4vw, 70px);
-  bottom: 118px;
-  text-align: right;
-  transform: translate3d(var(--intro-hud-right-x, 34px), 0, 0);
-}
-
-.intro-actions {
-  position: absolute;
-  left: clamp(20px, 6vw, 120px);
-  right: clamp(20px, 6vw, 120px);
-  bottom: 42px;
-  z-index: 12;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  opacity: var(--intro-actions, 0);
-  transform: translate3d(0, var(--intro-actions-y, 20px), 0);
-}
-
-.intro-actions .hud-button::before {
-  transform: translateX(var(--intro-actions-line-x, -100%));
-}
-
-.intro-sticky .scroll-cue {
-  z-index: 12;
-  opacity: var(--intro-actions, 0);
-  transform: translate3d(-50%, var(--intro-cue-y, 12px), 0);
-}
-
 .hud-button {
   position: relative;
   display: inline-grid;
@@ -654,33 +597,6 @@ select:focus-visible,
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.06), transparent 64%),
     rgba(8, 13, 18, 0.34);
-}
-
-.scroll-cue {
-  position: absolute;
-  left: 50%;
-  bottom: 28px;
-  z-index: 8;
-  display: grid;
-  justify-items: center;
-  gap: 8px;
-  color: rgba(242, 245, 247, 0.62);
-  font-family: var(--mono);
-  font-size: 10px;
-  text-align: center;
-  transform: translateX(-50%);
-}
-
-.scroll-cue::after {
-  width: 1px;
-  height: 58px;
-  background: linear-gradient(180deg, var(--gold), transparent);
-  content: "";
-  animation: scanPulse 2.8s ease-in-out infinite;
-}
-
-.scroll-cue small {
-  color: var(--muted);
 }
 
 .identity-section,
@@ -1358,7 +1274,6 @@ select:focus-visible,
   opacity: 0;
   filter: saturate(1.12) contrast(1.12) brightness(0.82);
   transition: opacity 1200ms linear;
-  will-change: opacity;
   -webkit-mask-image:
     radial-gradient(circle at 50% 50%, #000 0 46%, rgba(0, 0, 0, 0.78) 59%, rgba(0, 0, 0, 0.26) 72%, transparent 86%);
   mask-image:
@@ -1396,7 +1311,6 @@ select:focus-visible,
   contain: layout paint style;
   isolation: isolate;
   transform-style: preserve-3d;
-  will-change: transform, opacity;
 }
 
 .archive-frame::before {
@@ -2289,18 +2203,6 @@ select:focus-visible,
   --reveal-scale: 1.01;
 }
 
-@keyframes scanPulse {
-  0%,
-  100% {
-    opacity: 0.26;
-    transform: scaleY(0.6);
-  }
-  50% {
-    opacity: 0.92;
-    transform: scaleY(1);
-  }
-}
-
 @keyframes scrollCueFloat {
   0%,
   100% {
@@ -2320,25 +2222,6 @@ select:focus-visible,
   }
   50% {
     opacity: 0.48;
-  }
-}
-
-@keyframes routePulse {
-  0%,
-  100% {
-    opacity: 0.22;
-  }
-  50% {
-    opacity: 0.78;
-  }
-}
-
-@keyframes planetRingSweep {
-  0% {
-    transform: translate(-50%, -50%) rotateX(66deg) rotateZ(19deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotateX(66deg) rotateZ(379deg);
   }
 }
 
@@ -2611,8 +2494,7 @@ select:focus-visible,
     font-size: clamp(5rem, 4.6vw, 6.5rem);
   }
 
-  .intro-motto,
-  .intro-actions {
+  .intro-motto {
     left: clamp(72px, 8vw, 180px);
   }
 
@@ -2718,13 +2600,6 @@ select:focus-visible,
     bottom: 96px;
   }
 
-  .intro-hud-left {
-    top: calc(var(--nav-h) + 44px);
-  }
-
-  .intro-hud-right {
-    bottom: 94px;
-  }
 }
 
 @media (max-width: 980px) {
@@ -2811,23 +2686,6 @@ select:focus-visible,
 
   .intro-motto p {
     font-size: clamp(1.18rem, 5vw, 2rem);
-  }
-
-  .intro-hud-left {
-    top: auto;
-    bottom: 104px;
-    left: 18px;
-    width: min(260px, calc(100vw - 36px));
-  }
-
-  .intro-hud-right {
-    display: none;
-  }
-
-  .intro-actions {
-    left: 18px;
-    right: 18px;
-    bottom: 42px;
   }
 
   .section-kicker,
@@ -3028,25 +2886,8 @@ select:focus-visible,
     bottom: clamp(160px, 27vh, 226px);
   }
 
-  .intro-hud-left {
-    display: none;
-  }
-
-  .intro-actions,
-  .intro-actions .hud-button {
-    width: calc(100vw - 36px);
-  }
-
-  .intro-sticky .scroll-cue {
-    display: none;
-  }
-
   .hud-button {
     width: 100%;
-  }
-
-  .scroll-cue {
-    width: 90vw;
   }
 
   .identity-section,
@@ -3192,9 +3033,6 @@ select:focus-visible,
     --intro-progress: 1;
     --intro-title: 1;
     --intro-motto: 1;
-    --intro-hud: 1;
-    --intro-actions: 1;
-    --intro-exit: 0;
   }
 
   .intro-sticky {
@@ -3204,10 +3042,7 @@ select:focus-visible,
 
   .intro-title,
   .intro-motto,
-  .intro-scroll-indicator,
-  .intro-hud,
-  .intro-actions,
-  .intro-sticky .scroll-cue {
+  .intro-scroll-indicator {
     opacity: 1;
     clip-path: none;
     transform: none;

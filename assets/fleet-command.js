@@ -2,9 +2,9 @@ const root = document.documentElement;
 const intro = document.querySelector("[data-intro-sequence]");
 const introSticky = document.querySelector("[data-intro-sticky]");
 const navLinks = [...document.querySelectorAll("[data-scroll-link]")];
-const sections = [...document.querySelectorAll("main section[id]")];
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 let openArchiveFrame = () => {};
+let renderIntroStarfield = () => {};
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -136,8 +136,6 @@ function initStarfield() {
   let width = 0;
   let height = 0;
   let stars = [];
-  let animationFrame = 0;
-  let lastRender = 0;
 
   function createStars() {
     const compact = window.innerWidth < 720;
@@ -181,10 +179,7 @@ function initStarfield() {
     context.fillRect(0, 0, width, height);
   }
 
-  function render(time = 0) {
-    if (prefersReducedMotion && lastRender) return;
-    lastRender = time;
-    const progress = Number.parseFloat(intro?.style.getPropertyValue("--intro-progress")) || 0;
+  function render(progress = Number.parseFloat(intro?.style.getPropertyValue("--intro-progress")) || 0) {
 
     context.clearRect(0, 0, width, height);
     context.fillStyle = "#030508";
@@ -196,9 +191,8 @@ function initStarfield() {
 
     stars.forEach((star) => {
       const warp = progress * progress * 70 * star.z;
-      const drift = prefersReducedMotion ? 0 : (time * 0.000015 * star.drift) % 1;
       const x = (star.x - 0.5) * width * (1 + progress * 0.24) + (star.x - 0.5) * warp;
-      const y = (((star.y + drift) % 1) - 0.5) * height * (1 + progress * 0.18) + (star.y - 0.5) * warp * 0.72;
+      const y = (star.y - 0.5) * height * (1 + progress * 0.18) + (star.y - 0.5) * warp * 0.72;
       const alpha = clamp(0.28 + star.z * 0.75 + progress * 0.18, 0.18, 1);
       const length = 1 + progress * 18 * star.z;
 
@@ -212,16 +206,15 @@ function initStarfield() {
 
     context.restore();
 
-    if (!prefersReducedMotion) {
-      animationFrame = 0;
-    }
   }
 
+  renderIntroStarfield = render;
   resize();
   render();
-  window.addEventListener("resize", resize, { passive: true });
-
-  return () => cancelAnimationFrame(animationFrame);
+  window.addEventListener("resize", () => {
+    resize();
+    render();
+  }, { passive: true });
 }
 
 function initHeroVideoFallback() {
@@ -354,37 +347,20 @@ function updateIntroProgress() {
     intro.style.setProperty("--intro-title-sub", "1");
     intro.style.setProperty("--intro-title-mark", "1");
     intro.style.setProperty("--intro-motto", "1");
-    intro.style.setProperty("--intro-hud", "1");
-    intro.style.setProperty("--intro-actions", "1");
     intro.style.setProperty("--intro-scroll-cue", "1");
-    intro.style.setProperty("--intro-exit", "0");
-    intro.style.setProperty("--intro-dark", "0.82");
     intro.style.setProperty("--intro-blackout", "0");
     intro.style.setProperty("--intro-video-opacity", "0.96");
     intro.style.setProperty("--intro-video-brightness", "0.86");
     intro.style.setProperty("--intro-shade-mid", "0.32");
     intro.style.setProperty("--intro-vignette-bottom", "0.28");
-    intro.style.setProperty("--intro-scan-opacity", "0.36");
-    intro.style.setProperty("--intro-scan-y", "100%");
-    intro.style.setProperty("--intro-frame-opacity", "0.13");
-    intro.style.setProperty("--intro-frame-blue-opacity", "0.18");
-    intro.style.setProperty("--intro-minimal-opacity", "0.2");
-    intro.style.setProperty("--intro-fleet-opacity", "0.18");
-    intro.style.setProperty("--intro-mobile-fleet-opacity", "0.16");
-    intro.style.setProperty("--intro-fleet-y", "0px");
-    intro.style.setProperty("--intro-fleet-scale", "1");
     intro.style.setProperty("--intro-title-clip", "0%");
     intro.style.setProperty("--intro-title-y", "0px");
     intro.style.setProperty("--intro-motto-y", "0px");
     intro.style.setProperty("--intro-motto-clip", "0%");
-    intro.style.setProperty("--intro-hud-left-x", "0px");
-    intro.style.setProperty("--intro-hud-right-x", "0px");
-    intro.style.setProperty("--intro-actions-y", "0px");
-    intro.style.setProperty("--intro-actions-line-x", "0%");
-    intro.style.setProperty("--intro-cue-y", "0px");
     root.style.setProperty("--command-nav-opacity", "1");
     root.style.setProperty("--command-nav-y", "0px");
     root.style.setProperty("--command-nav-pointer", "auto");
+    renderIntroStarfield(1);
     return;
   }
 
@@ -400,7 +376,6 @@ function updateIntroProgress() {
   const title = smoothRange(progress, 0.01, 0.78) * titleExit;
   const motto = smoothRange(progress, 0.46, 0.86) * titleExit;
   const hud = smoothRange(progress, 0.62, 0.82);
-  const actions = smoothRange(progress, 0.76, 0.92);
   const exit = smoothRange(rawProgress, 1.12, 1.42);
   const navReveal = smoothRange(progress, 0.66, 0.84);
   const scrollCue = 1 - smoothRange(progress, 0.035, 0.18);
@@ -408,10 +383,6 @@ function updateIntroProgress() {
   const blackout = smoothRange(rawProgress, 1.18, 1.58) * 0.42;
   const dark = clamp(0.18 + motto * 0.04 + hud * 0.025 + videoFade * 0.18, 0.18, 0.44);
   const videoOpacity = clamp(1 - videoFade * 0.88, 0.12, 1);
-  const scanY = -26 + progress * 520;
-  const scanOpacity = clamp(0.16 + title * 0.18 + actions * 0.12, 0.12, 0.46);
-  const fleetOpacity = clamp(0.06 + hud * 0.15 - exit * 0.08, 0.03, 0.21);
-  const mobileFleetOpacity = clamp(0.04 + hud * 0.12 - exit * 0.05, 0.02, 0.16);
 
   intro.style.setProperty("--intro-progress", progress.toFixed(4));
   intro.style.setProperty("--intro-title", title.toFixed(4));
@@ -420,37 +391,20 @@ function updateIntroProgress() {
   intro.style.setProperty("--intro-title-sub", titleSub.toFixed(4));
   intro.style.setProperty("--intro-title-mark", titleMark.toFixed(4));
   intro.style.setProperty("--intro-motto", motto.toFixed(4));
-  intro.style.setProperty("--intro-hud", hud.toFixed(4));
-  intro.style.setProperty("--intro-actions", actions.toFixed(4));
   intro.style.setProperty("--intro-scroll-cue", scrollCue.toFixed(4));
-  intro.style.setProperty("--intro-exit", exit.toFixed(4));
-  intro.style.setProperty("--intro-dark", dark.toFixed(4));
   intro.style.setProperty("--intro-blackout", blackout.toFixed(4));
   intro.style.setProperty("--intro-video-opacity", videoOpacity.toFixed(4));
   intro.style.setProperty("--intro-video-brightness", clamp(1 - videoFade * 0.88, 0.12, 1).toFixed(4));
   intro.style.setProperty("--intro-shade-mid", clamp(0.22 + dark * 0.32, 0.22, 0.46).toFixed(4));
   intro.style.setProperty("--intro-vignette-bottom", clamp(0.26 + exit * 0.44, 0.26, 0.7).toFixed(4));
-  intro.style.setProperty("--intro-scan-opacity", scanOpacity.toFixed(4));
-  intro.style.setProperty("--intro-scan-y", `${scanY.toFixed(2)}%`);
-  intro.style.setProperty("--intro-frame-opacity", clamp(0.05 + hud * 0.08, 0.05, 0.13).toFixed(4));
-  intro.style.setProperty("--intro-frame-blue-opacity", clamp(0.06 + hud * 0.12, 0.06, 0.18).toFixed(4));
-  intro.style.setProperty("--intro-minimal-opacity", clamp(0.42 - title * 0.16, 0.18, 0.42).toFixed(4));
-  intro.style.setProperty("--intro-fleet-opacity", fleetOpacity.toFixed(4));
-  intro.style.setProperty("--intro-mobile-fleet-opacity", mobileFleetOpacity.toFixed(4));
-  intro.style.setProperty("--intro-fleet-y", `${(-exit * 34).toFixed(2)}px`);
-  intro.style.setProperty("--intro-fleet-scale", (1 + progress * 0.06).toFixed(4));
   intro.style.setProperty("--intro-title-clip", `${((1 - titleMain) * 100).toFixed(2)}%`);
   intro.style.setProperty("--intro-title-y", `${((1 - title) * 24 - exit * 18).toFixed(2)}px`);
   intro.style.setProperty("--intro-motto-y", `${((1 - motto) * 22 - exit * 16).toFixed(2)}px`);
   intro.style.setProperty("--intro-motto-clip", `${((1 - motto) * 100).toFixed(2)}%`);
-  intro.style.setProperty("--intro-hud-left-x", `${((1 - hud) * -34).toFixed(2)}px`);
-  intro.style.setProperty("--intro-hud-right-x", `${((1 - hud) * 34).toFixed(2)}px`);
-  intro.style.setProperty("--intro-actions-y", `${((1 - actions) * 20).toFixed(2)}px`);
-  intro.style.setProperty("--intro-actions-line-x", `${(-100 + actions * 100).toFixed(2)}%`);
-  intro.style.setProperty("--intro-cue-y", `${((1 - actions) * 12).toFixed(2)}px`);
   root.style.setProperty("--command-nav-opacity", navReveal.toFixed(4));
   root.style.setProperty("--command-nav-y", `${((1 - navReveal) * -12).toFixed(2)}px`);
   root.style.setProperty("--command-nav-pointer", navReveal > 0.95 ? "auto" : "none");
+  renderIntroStarfield(progress);
 }
 
 function initPointerParallax() {
@@ -623,7 +577,9 @@ function initOperationMap() {
 
   function syncFilter(role) {
     filters.forEach((button) => {
-      button.classList.toggle("active", button.dataset.filter === role);
+      const active = button.dataset.filter === role;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-pressed", String(active));
     });
   }
 
@@ -781,14 +737,11 @@ function initArchiveOrbit() {
   const gallery = document.querySelector("[data-orbit-gallery]");
   const frames = [...document.querySelectorAll("[data-orbit-gallery] .archive-frame")];
   if (!gallery || !frames.length) return;
-  const planetVideos = [...gallery.querySelectorAll(".archive-planet-video")];
+  const planetVideo = gallery.querySelector(".archive-planet-video");
 
   let frameId = 0;
   let active = false;
-  let paused = false;
   let orbitStartTime = 0;
-  let pausedAt = 0;
-  let pausedDuration = 0;
   let lastTickTime = 0;
   let dragOffset = 0;
   let dragStartX = 0;
@@ -797,9 +750,6 @@ function initArchiveOrbit() {
   let dragPointerId = null;
   let didDrag = false;
   let dragSuppressTimer = 0;
-  let activePlanetVideo = 0;
-  let planetSwapTimer = 0;
-  let planetFadeTimer = 0;
   let size = { width: 0, height: 0, radiusX: 0, radiusY: 0, radiusZ: 0 };
   const orbitItems = frames.map((frame, index) => ({
     frame,
@@ -810,73 +760,21 @@ function initArchiveOrbit() {
     pointerEvents: "",
   }));
 
-  planetVideos.forEach((video, index) => {
-    video.playbackRate = 0.68;
-    video.loop = false;
-    video.muted = true;
-    video.classList.toggle("is-visible", index === activePlanetVideo);
-    video.addEventListener("ended", () => {
-      if (active && index === activePlanetVideo) swapPlanetVideo();
-    });
-  });
-
-  function clearPlanetTimers() {
-    window.clearTimeout(planetSwapTimer);
-    window.clearTimeout(planetFadeTimer);
-    planetSwapTimer = 0;
-    planetFadeTimer = 0;
+  if (planetVideo) {
+    planetVideo.playbackRate = 0.68;
+    planetVideo.loop = true;
+    planetVideo.muted = true;
+    planetVideo.classList.add("is-visible");
   }
 
-  function schedulePlanetSwap() {
-    clearPlanetTimers();
-    if (!active || planetVideos.length < 2 || prefersReducedMotion) return;
-    const current = planetVideos[activePlanetVideo];
-    const duration = Number.isFinite(current.duration) && current.duration > 1 ? current.duration : 8;
-    const fadeSeconds = 1.35;
-    const rate = Math.max(0.2, current.playbackRate || 1);
-    const remainingSeconds = Math.max(1.4, (duration - fadeSeconds - current.currentTime) / rate);
-    planetSwapTimer = window.setTimeout(swapPlanetVideo, remainingSeconds * 1000);
-  }
-
-  function swapPlanetVideo() {
-    if (!active || planetVideos.length < 2 || prefersReducedMotion) return;
-    const current = planetVideos[activePlanetVideo];
-    activePlanetVideo = (activePlanetVideo + 1) % planetVideos.length;
-    const next = planetVideos[activePlanetVideo];
-    try {
-      next.currentTime = 0;
-    } catch (_) {
-      // Safari may reject currentTime writes before metadata is ready.
-    }
-    const playResult = next.play?.();
+  function playPlanetVideo() {
+    if (!planetVideo || prefersReducedMotion) return;
+    const playResult = planetVideo.play?.();
     if (playResult?.catch) playResult.catch(() => {});
-    next.classList.add("is-visible");
-    current.classList.remove("is-visible");
-    planetFadeTimer = window.setTimeout(() => {
-      if (current !== planetVideos[activePlanetVideo]) current.pause?.();
-      schedulePlanetSwap();
-    }, 1350);
   }
 
-  function playPlanetVideos() {
-    if (!planetVideos.length || prefersReducedMotion) return;
-    const current = planetVideos[activePlanetVideo];
-    current.classList.add("is-visible");
-    const playResult = current.play?.();
-    if (playResult?.catch) playResult.catch(() => {});
-    if (current.readyState >= 1) {
-      schedulePlanetSwap();
-    } else {
-      current.addEventListener("loadedmetadata", schedulePlanetSwap, { once: true });
-    }
-  }
-
-  function pausePlanetVideos() {
-    clearPlanetTimers();
-    planetVideos.forEach((video, index) => {
-      video.pause?.();
-      video.classList.toggle("is-visible", index === activePlanetVideo);
-    });
+  function pausePlanetVideo() {
+    planetVideo?.pause?.();
   }
 
   function measure() {
@@ -898,7 +796,7 @@ function initArchiveOrbit() {
   function getOrbitTime(time) {
     if (!orbitStartTime && time > 0) orbitStartTime = time;
     if (!orbitStartTime) return 0;
-    return Math.max(0, time - orbitStartTime - pausedDuration);
+    return Math.max(0, time - orbitStartTime);
   }
 
   function place(time = lastTickTime) {
@@ -944,27 +842,23 @@ function initArchiveOrbit() {
   }
 
   function tick(time) {
-    if (!active || paused || prefersReducedMotion) return;
+    if (!active || prefersReducedMotion) return;
     lastTickTime = time;
     place(time);
     frameId = requestAnimationFrame(tick);
   }
 
   function start() {
-    if (active && !paused) return;
+    if (active) return;
     active = true;
-    paused = false;
-    pausedAt = 0;
-    playPlanetVideos();
+    playPlanetVideo();
     cancelAnimationFrame(frameId);
     frameId = requestAnimationFrame(tick);
   }
 
   function stop() {
     active = false;
-    paused = false;
-    pausedAt = 0;
-    pausePlanetVideos();
+    pausePlanetVideo();
     cancelAnimationFrame(frameId);
   }
 
@@ -1010,7 +904,7 @@ function initArchiveOrbit() {
     if (!didDrag) return;
     event.preventDefault();
     dragOffset = dragStartOffset + deltaX * 0.006;
-    place(lastTickTime || performance.now());
+    if (!active || prefersReducedMotion) place(lastTickTime || performance.now());
   });
 
   function endDrag(event) {

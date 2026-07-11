@@ -9,11 +9,12 @@ Blueprint search belongs in the separate `gvy-lantu-site` project.
 ## Local Preview
 
 ```bash
-python3 -m http.server 8001
+npm run build
+python3 -m http.server 8001 --directory dist
 ```
 
-Open `http://127.0.0.1:8001/` from this directory.
+Open `http://127.0.0.1:8001/`.
 
 ## Build
 
-No build step. The repository root is the publish directory.
+`npm run build` creates a production-only `dist/` directory. `edgeone.json` configures Makers to publish that directory so repository documentation and build scripts are not exposed as site files.
