@@ -3,6 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node scripts/build-site.mjs"
+    "build": "node scripts/build-site.mjs",
+    "test": "node --test",
+    "check:js": "node scripts/check-js.mjs",
+    "verify": "npm run test && npm run check:js && npm run build"
+  },
+  "dependencies": {
+    "gsap": "3.15.0"
   }
 }

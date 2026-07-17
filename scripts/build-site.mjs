@@ -13,3 +13,14 @@ for (const file of ["index.html", "site.webmanifest", "robots.txt", "sitemap.xml
 }
 
 await cp(resolve(root, "assets"), resolve(output, "assets"), { recursive: true });
+
+const vendorOutput = resolve(output, "assets/vendor");
+await mkdir(vendorOutput, { recursive: true });
+await copyFile(
+  resolve(root, "node_modules/gsap/dist/gsap.min.js"),
+  resolve(output, "assets/vendor/gsap.min.js"),
+);
+await copyFile(
+  resolve(root, "node_modules/gsap/dist/ScrollTrigger.min.js"),
+  resolve(output, "assets/vendor/ScrollTrigger.min.js"),
+);
