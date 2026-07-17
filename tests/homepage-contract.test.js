@@ -18,6 +18,8 @@ async function readOptional(path) {
 
 const cinematicCss = await readOptional("assets/cinematic-homepage.css");
 const fleetData = await readOptional("assets/js/fleet-data.js");
+const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js");
+const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
 
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
@@ -113,4 +115,27 @@ test("fleet operation data contains four real-image stages", () => {
   assert.match(fleetData, /INDUSTRY/);
   assert.match(fleetData, /LOGISTICS/);
   assert.match(fleetData, /EXPLORATION/);
+});
+
+test("cinematic timelines register GSAP and cover every narrative stage", () => {
+  assert.match(cinematicTimelines, /registerPlugin\(ScrollTrigger\)/);
+  assert.match(cinematicTimelines, /gsap\.matchMedia\(\)/);
+  assert.match(cinematicTimelines, /prefers-reduced-motion/);
+  assert.match(cinematicTimelines, /min-width:\s*761px/);
+  assert.match(cinematicTimelines, /max-width:\s*760px/);
+  for (const id of ["hero", "signal", "manifesto", "operations", "archive", "recruit"]) {
+    assert.match(cinematicTimelines, new RegExp(`gvy-${id}`));
+  }
+  assert.match(cinematicTimelines, /scrub:/);
+  assert.doesNotMatch(cinematicTimelines, /toggleActions/);
+  assert.match(cinematicTimelines, /cleanup\(\)/);
+});
+
+test("homepage lifecycle initializes every controller once and cleans up", () => {
+  assert.match(cinematicHomepage, /initHeroVideo/);
+  assert.match(cinematicHomepage, /initDeferredMedia/);
+  assert.match(cinematicHomepage, /initArchiveLightbox/);
+  assert.match(cinematicHomepage, /initCinematicTimelines/);
+  assert.match(cinematicHomepage, /pagehide/);
+  assert.match(cinematicHomepage, /cleanup/);
 });
