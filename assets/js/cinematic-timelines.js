@@ -93,7 +93,8 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       scrollTrigger: {
         id: "gvy-operations",
         trigger: operations,
-        start: "top+=72% top",
+        start: () =>
+          `top+=${Math.round((root.defaultView?.innerHeight || 800) * 0.78)} top`,
         end: "bottom bottom",
         scrub: 0.7,
         invalidateOnRefresh: true,
@@ -108,9 +109,10 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         .fromTo(copies[index], { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.58, ease: "none" }, position + 0.28);
     }
 
+    const operationsDuration = Math.max(1, operationsTimeline.duration());
     operationsTimeline.to(
       operations,
-      { "--operations-progress": 1, duration: 0.2, ease: "none" },
+      { "--operations-progress": 1, duration: operationsDuration, ease: "none" },
       0,
     );
   }

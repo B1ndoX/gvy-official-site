@@ -8,7 +8,7 @@ export const FLEET_OPERATIONS = [
     description: "守护舰队航线，在威胁抵达之前建立防线。",
     detail: "ESCORT / RESPONSE / FRONTLINE",
     image: "./assets/gallery/team-14.jpg",
-    imageAlt: "星际远航者舰队在星球地表集结",
+    imageAlt: "星际远航者多艘舰船在太空编阵",
     position: "center center",
   },
   {
@@ -52,8 +52,8 @@ export const FLEET_OPERATIONS = [
 export const FEATURED_ARCHIVE = [
   {
     image: "./assets/gallery/team-14.jpg",
-    title: "地表集结",
-    caption: "在下一次升空之前，我们先在同一个坐标会合。",
+    title: "舰队编阵",
+    caption: "在下一次行动之前，我们先让每一艘舰船抵达同一编队。",
     index: "A-014",
   },
   {

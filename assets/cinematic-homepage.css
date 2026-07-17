@@ -128,7 +128,7 @@ a:focus-visible {
   margin: 0;
   color: var(--route-blue);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.68rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.22em;
   line-height: 1.4;
@@ -353,7 +353,7 @@ a:focus-visible {
   margin-top: 10px;
   color: var(--fleet-gold);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: clamp(0.57rem, 0.8vw, 0.75rem);
+  font-size: 0.75rem;
   font-style: normal;
   letter-spacing: 0.38em;
 }
@@ -380,7 +380,7 @@ a:focus-visible {
 .hero-motto span {
   color: var(--text-secondary);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.57rem;
+  font-size: 0.75rem;
   letter-spacing: 0.22em;
 }
 
@@ -413,7 +413,7 @@ a:focus-visible {
 }
 
 .hero-scroll small {
-  font-size: 0.52rem;
+  font-size: 0.75rem;
   letter-spacing: 0.24em;
 }
 
@@ -539,7 +539,7 @@ a:focus-visible {
 .identity-rail dt {
   color: var(--text-secondary);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 0.18em;
 }
 
@@ -714,7 +714,7 @@ a:focus-visible {
   margin: 30px 0 10px;
   color: var(--route-blue);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   letter-spacing: 0.26em;
 }
 
@@ -736,7 +736,7 @@ a:focus-visible {
   margin-top: 34px;
   color: var(--fleet-gold);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.56rem;
+  font-size: 0.75rem;
   letter-spacing: 0.16em;
 }
 
@@ -751,7 +751,7 @@ a:focus-visible {
   gap: 12px;
   color: var(--text-secondary);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.56rem;
+  font-size: 0.75rem;
 }
 
 .operation-progress i {
@@ -880,7 +880,7 @@ a:focus-visible {
 .archive-feature > div > span {
   color: var(--route-blue);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.57rem;
+  font-size: 0.75rem;
   letter-spacing: 0.18em;
 }
 
@@ -934,7 +934,7 @@ a:focus-visible {
   bottom: 5px;
   color: rgba(255, 255, 255, 0.72);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.5rem;
+  font-size: 0.75rem;
   letter-spacing: 0.14em;
 }
 
@@ -1063,18 +1063,18 @@ a:focus-visible {
 
 .footer-brand span {
   margin-top: 5px;
-  font-size: 0.49rem;
+  font-size: 0.75rem;
   letter-spacing: 0.17em;
 }
 
 .legal-copy {
   margin: 0;
-  font-size: 0.63rem;
+  font-size: 0.75rem;
   line-height: 1.7;
 }
 
 .site-footer > a {
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   white-space: nowrap;
 }
 
@@ -1130,7 +1130,7 @@ a:focus-visible {
   align-items: center;
   justify-content: space-between;
   color: var(--text-secondary);
-  font-size: 0.66rem;
+  font-size: 0.75rem;
   letter-spacing: 0.08em;
 }
 
@@ -1205,10 +1205,10 @@ noscript {
 
   .brand-sigil { width: 34px; height: 34px; }
   .brand-copy strong { font-size: 0.76rem; }
-  .brand-copy small { font-size: 0.43rem; }
+  .brand-copy small { font-size: 0.75rem; }
   .nav-links { gap: 10px; }
   .nav-links a { display: none; }
-  .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.62rem; }
+  .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
 
   .hero-sequence { height: 128svh; }
   .hero-title { top: 46%; width: calc(100% - 40px); }
@@ -1257,10 +1257,10 @@ noscript {
     inset: 0;
     content: "";
   }
-  .operation-copy:nth-child(1)::before { background: url("./gallery/team-14.jpg") center / cover; }
-  .operation-copy:nth-child(2)::before { background: url("./gallery/team-15.jpg") center / cover; }
-  .operation-copy:nth-child(3)::before { background: url("./gallery/team-17.jpg") center / cover; }
-  .operation-copy:nth-child(4)::before { background: url("./gallery/team-18.jpg") center / cover; }
+  .operation-copy:nth-child(1)::before { background: url("./gallery/optimized/team-14-1280.webp") center / cover; }
+  .operation-copy:nth-child(2)::before { background: url("./gallery/optimized/team-15-1280.webp") center / cover; }
+  .operation-copy:nth-child(3)::before { background: url("./gallery/optimized/team-17-1280.webp") center / cover; }
+  .operation-copy:nth-child(4)::before { background: url("./gallery/optimized/team-18-1280.webp") center / cover; }
   .operation-copy::after { background: linear-gradient(180deg, rgba(3, 7, 13, 0.08), rgba(3, 7, 13, 0.92) 67%, #03070d); }
   .operation-number { font-size: 7rem; }
   .operation-progress { display: none; }
