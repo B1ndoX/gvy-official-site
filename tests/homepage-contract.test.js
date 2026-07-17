@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
@@ -138,4 +138,25 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
+});
+
+test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", async () => {
+  const pictures = homepage.match(/<picture\b[\s\S]*?<\/picture>/g) || [];
+  assert.ok(pictures.length >= 25);
+  assert.match(homepage, /type="image\/webp"/);
+  assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-18-1920\.webp 1920w/);
+  assert.match(homepage, /\.\/assets\/gallery\/team-18\.jpg/);
+  assert.match(homepage, /<img\b[^>]*width="\d+"[^>]*height="\d+"/);
+  assert.match(homepage, /<img\b[^>]*loading="lazy"/);
+
+  await Promise.all(
+    Array.from({ length: 18 }, (_, index) =>
+      access(
+        new URL(
+          `assets/gallery/optimized/team-${String(index + 1).padStart(2, "0")}-1280.webp`,
+          root,
+        ),
+      ),
+    ),
+  );
 });
