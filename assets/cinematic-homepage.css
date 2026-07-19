@@ -263,7 +263,7 @@ a:focus-visible {
 .hero-sequence {
   position: relative;
   z-index: 2;
-  height: 220svh;
+  height: 250svh;
   background: #000;
 }
 
@@ -398,6 +398,26 @@ html[data-motion-ready] :is(
   .recruit-copy
 ) {
   will-change: opacity, transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-motion-pending] :is(
+    .hero-title > .system-label,
+    .hero-title h1 > *,
+    .hero-motto > *,
+    .signal-lockup > *,
+    .identity-rail > *,
+    .manifesto-copy > *,
+    .section-heading > *,
+    .operation-copy > *,
+    .archive-feature > div > *,
+    .archive-index-heading > *,
+    .recruit-copy > *
+  ) {
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
 }
 
 .hero-scroll {
@@ -1226,7 +1246,7 @@ noscript {
   .nav-links a { display: none; }
   .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
 
-  .hero-sequence { height: 168svh; }
+  .hero-sequence { height: 190svh; }
   .hero-title { top: 46%; width: calc(100% - 40px); }
   .hero-title h1 span { font-size: clamp(3rem, 16vw, 5rem); }
   .hero-title h1 small { font-size: clamp(0.75rem, 4vw, 1rem); letter-spacing: 0.14em; }

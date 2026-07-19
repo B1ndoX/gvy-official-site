@@ -126,13 +126,18 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   for (const id of ["hero", "signal", "manifesto", "operations", "recruit"]) {
     assert.match(cinematicTimelines, new RegExp(`gvy-${id}`));
   }
-  assert.match(cinematicTimelines, /root\.querySelectorAll\("\.archive-feature, \.archive-index"\),\s*\n\s*"archive"/);
+  assert.match(cinematicTimelines, /fadeTextSequenceThroughViewport/);
+  assert.match(cinematicTimelines, /stagger:\s*enterStagger/);
+  assert.match(cinematicTimelines, /holdDuration\s*=\s*3\.2/);
   assert.match(cinematicTimelines, /scrub:/);
   assert.doesNotMatch(cinematicTimelines, /toggleActions/);
   assert.doesNotMatch(cinematicTimelines, /once:\s*true/);
   assert.match(cinematicTimelines, /fadeThroughViewport/);
   assert.match(cinematicTimelines, /autoAlpha:\s*0,\s*y:\s*exitY/);
   assert.match(cinematicTimelines, /cleanup\(\)/);
+  assert.match(homepage, /data-motion-pending/);
+  assert.match(cinematicCss, /html\[data-motion-pending\]/);
+  assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });
 
 test("homepage lifecycle initializes every controller once and cleans up", () => {

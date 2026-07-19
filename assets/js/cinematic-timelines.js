@@ -7,7 +7,7 @@ function fadeThroughViewport(
   idPrefix,
   {
     start = "top 88%",
-    end = "bottom 12%",
+    end = "bottom -12%",
     enterY = 34,
     exitY = -24,
     scrub = 0.7,
@@ -30,8 +30,70 @@ function fadeThroughViewport(
         { autoAlpha: 1, y: 0, duration: 0.32, ease: "none" },
         0,
       )
-      .to(target, { autoAlpha: 1, y: 0, duration: 0.4, ease: "none" }, 0.32)
-      .to(target, { autoAlpha: 0, y: exitY, duration: 0.28, ease: "none" }, 0.72);
+      .to(target, { autoAlpha: 1, y: 0, duration: 0.56, ease: "none" }, 0.32)
+      .to(target, { autoAlpha: 0, y: exitY, duration: 0.22, ease: "none" }, 0.88);
+  });
+}
+
+function fadeTextSequenceThroughViewport(
+  gsap,
+  containers,
+  idPrefix,
+  {
+    itemSelector = ":scope > *",
+    start = "top 90%",
+    end = "bottom -18%",
+    enterY = 30,
+    exitY = -18,
+    scrub = 0.9,
+  } = {},
+) {
+  gsap.utils.toArray(containers).forEach((container, index) => {
+    const items = gsap.utils.toArray(container.querySelectorAll(itemSelector));
+    if (!items.length) return;
+
+    const enterDuration = 1;
+    const enterStagger = 0.42;
+    const lastEnterEnd = enterDuration + (items.length - 1) * enterStagger;
+    const holdDuration = 3.2;
+    const exitDuration = 1.55;
+    const exitStagger = 0.12;
+    const exitStart = lastEnterEnd + holdDuration;
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: `${TIMELINE_PREFIX}${idPrefix}-text-${index}`,
+          trigger: container,
+          start,
+          end,
+          scrub,
+        },
+      })
+      .fromTo(
+        items,
+        { autoAlpha: 0, y: enterY },
+        {
+          autoAlpha: 1,
+          y: 0,
+          duration: enterDuration,
+          stagger: enterStagger,
+          ease: "none",
+        },
+        0,
+      )
+      .to(items, { autoAlpha: 1, y: 0, duration: holdDuration, ease: "none" }, lastEnterEnd)
+      .to(
+        items,
+        {
+          autoAlpha: 0,
+          y: exitY,
+          duration: exitDuration,
+          stagger: exitStagger,
+          ease: "none",
+        },
+        exitStart,
+      );
   });
 }
 
@@ -43,6 +105,10 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   const heroTitle = root.querySelector("[data-hero-title]");
   const heroMotto = root.querySelector("[data-hero-motto]");
   const heroScroll = root.querySelector(".hero-scroll");
+  const heroText = [
+    ...gsap.utils.toArray(":scope > .system-label, h1 > *", heroTitle),
+    ...gsap.utils.toArray(":scope > *", heroMotto),
+  ];
   const timeline = gsap.timeline({
     scrollTrigger: {
       id: "gvy-hero",
@@ -54,27 +120,24 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   });
 
   if (animateMedia && heroMedia) {
-    timeline.fromTo(heroMedia, { scale: 1 }, { scale: 1.025, duration: 1, ease: "none" }, 0);
+    timeline.fromTo(heroMedia, { scale: 1 }, { scale: 1.025, duration: 12.65, ease: "none" }, 0);
   }
 
+  gsap.set([heroTitle, heroMotto], { autoAlpha: 1 });
   timeline
     .fromTo(
-      heroTitle,
-      { autoAlpha: 0, yPercent: 12 },
-      { autoAlpha: 1, yPercent: 0, duration: 0.28, ease: "none" },
-      0.08,
+      heroText,
+      { autoAlpha: 0, y: 26 },
+      { autoAlpha: 1, y: 0, duration: 1.2, stagger: 0.42, ease: "none" },
+      0.65,
     )
-    .to(heroTitle, { autoAlpha: 1, yPercent: 0, duration: 0.32, ease: "none" }, 0.36)
-    .to(heroTitle, { autoAlpha: 0, yPercent: -18, duration: 0.28, ease: "none" }, 0.68)
-    .fromTo(
-      heroMotto,
-      { autoAlpha: 0, yPercent: 14 },
-      { autoAlpha: 1, yPercent: 0, duration: 0.26, ease: "none" },
-      0.18,
+    .to(heroText, { autoAlpha: 1, y: 0, duration: 5.53, ease: "none" }, 4.37)
+    .to(
+      heroText,
+      { autoAlpha: 0, y: -18, duration: 1.9, stagger: 0.14, ease: "none" },
+      9.9,
     )
-    .to(heroMotto, { autoAlpha: 1, yPercent: 0, duration: 0.26, ease: "none" }, 0.44)
-    .to(heroMotto, { autoAlpha: 0, yPercent: -16, duration: 0.26, ease: "none" }, 0.7)
-    .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.24, ease: "none" }, 0);
+    .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 2.4, ease: "none" }, 0);
 }
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
@@ -95,9 +158,8 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       .fromTo(".signal-orbit-one", { scale: 0.72, rotate: -12 }, { scale: 1.05, rotate: 8, ease: "none" }, 0)
       .fromTo(".signal-orbit-two", { scale: 0.65, rotateZ: -9 }, { scale: 1.08, rotateZ: 16, ease: "none" }, 0);
   }
-  fadeThroughViewport(
+  fadeTextSequenceThroughViewport(
     gsap,
-    ScrollTrigger,
     root.querySelectorAll("[data-signal-lockup], [data-identity-rail]"),
     "signal",
   );
@@ -117,16 +179,16 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       .fromTo(".manifesto-image img", { scale: 1.08, xPercent: 2 }, { scale: 1, xPercent: -2, ease: "none" }, 0)
       .fromTo(".manifesto-rule", { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, ease: "none" }, 0.5);
   }
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll("[data-manifesto-copy]"), "manifesto", {
+  fadeTextSequenceThroughViewport(gsap, root.querySelectorAll("[data-manifesto-copy]"), "manifesto", {
     start: "top 86%",
-    end: "bottom 16%",
+    end: "bottom -20%",
     enterY: 64,
     exitY: -38,
   });
 
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".section-heading"), "heading", {
+  fadeTextSequenceThroughViewport(gsap, root.querySelectorAll(".section-heading"), "heading", {
     start: "top 90%",
-    end: "bottom 16%",
+    end: "bottom -18%",
     enterY: 42,
   });
 
@@ -136,6 +198,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   if (operations && visuals.length && copies.length) {
     gsap.set(visuals, { autoAlpha: 0, scale: 1.055 });
     gsap.set(copies, { autoAlpha: 0, y: 34 });
+    copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 18 }));
     gsap.set(visuals[0], { autoAlpha: 1 });
 
     const operationsTimeline = gsap.timeline({
@@ -150,19 +213,32 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       },
     });
 
-    operationsTimeline.fromTo(
-      copies[0],
-      { autoAlpha: 0, y: 34 },
-      { autoAlpha: 1, y: 0, duration: 0.65, ease: "none" },
-      0.12,
-    );
+    operationsTimeline
+      .fromTo(
+        copies[0],
+        { autoAlpha: 0, y: 34 },
+        { autoAlpha: 1, y: 0, duration: 0.55, ease: "none" },
+        0.12,
+      )
+      .fromTo(
+        copies[0].children,
+        { autoAlpha: 0, y: 18 },
+        { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "none" },
+        0.2,
+      );
 
     for (let index = 1; index < Math.min(visuals.length, copies.length); index += 1) {
       const position = index;
       operationsTimeline
         .to([visuals[index - 1], copies[index - 1]], { autoAlpha: 0, duration: 0.32, ease: "none" }, position)
         .fromTo(visuals[index], { autoAlpha: 0, scale: 1.055 }, { autoAlpha: 1, scale: 1, duration: 0.68, ease: "none" }, position + 0.2)
-        .fromTo(copies[index], { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.58, ease: "none" }, position + 0.28);
+        .fromTo(copies[index], { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.58, ease: "none" }, position + 0.28)
+        .fromTo(
+          copies[index].children,
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "none" },
+          position + 0.36,
+        );
     }
 
     const lastIndex = Math.min(visuals.length, copies.length) - 1;
@@ -180,12 +256,18 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     );
   }
 
-  fadeThroughViewport(
+  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button, .archive-grid"), "archive-media", {
+    start: "top 90%",
+    end: "bottom -12%",
+    enterY: 42,
+    exitY: -26,
+    scrub: 0.75,
+  });
+  fadeTextSequenceThroughViewport(
     gsap,
-    ScrollTrigger,
-    root.querySelectorAll(".archive-feature, .archive-index"),
+    root.querySelectorAll(".archive-feature > div, .archive-index-heading"),
     "archive",
-    { start: "top 88%", end: "bottom 10%", enterY: 58, exitY: -34, scrub: 0.65 },
+    { start: "top 92%", end: "bottom -18%", enterY: 32, exitY: -20 },
   );
 
   const recruit = root.querySelector("[data-recruit-section]");
@@ -202,9 +284,9 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       })
       .fromTo(".recruit-image img", { scale: 1.08 }, { scale: 1, ease: "none" }, 0);
   }
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll("[data-recruit-copy]"), "recruit", {
+  fadeTextSequenceThroughViewport(gsap, root.querySelectorAll("[data-recruit-copy]"), "recruit", {
     start: "top 88%",
-    end: "bottom 8%",
+    end: "bottom -16%",
     enterY: 56,
     exitY: -30,
   });
@@ -212,15 +294,21 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
 
 function createMobileTimelines(gsap, ScrollTrigger, root) {
   createHeroTimeline(gsap, root, { animateMedia: false });
-  fadeThroughViewport(
+  fadeTextSequenceThroughViewport(
     gsap,
-    ScrollTrigger,
     root.querySelectorAll(
-      ".signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy > *, .archive-feature, .archive-index, .recruit-copy",
+      ".signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature > div, .archive-index-heading, .recruit-copy",
     ),
     "mobile",
-    { start: "top 92%", end: "bottom 8%", enterY: 28, exitY: -20, scrub: 0.6 },
+    { start: "top 92%", end: "bottom -14%", enterY: 28, exitY: -20, scrub: 0.8 },
   );
+  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button, .archive-grid"), "mobile-media", {
+    start: "top 92%",
+    end: "bottom -10%",
+    enterY: 30,
+    exitY: -18,
+    scrub: 0.7,
+  });
 }
 
 function showStableLayout(gsap, root) {

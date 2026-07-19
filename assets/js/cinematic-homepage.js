@@ -15,12 +15,14 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   if (!root) return { cleanup() {} };
   if (view[LIFECYCLE_KEY]) return view[LIFECYCLE_KEY];
 
-  root.documentElement?.setAttribute("data-motion-ready", "true");
+  const motionAvailable = Boolean(view.gsap && view.ScrollTrigger);
+  if (motionAvailable) root.documentElement?.setAttribute("data-motion-ready", "true");
 
   const hero = initHeroVideo({ root });
   const deferred = initDeferredMedia({ root, rootMargin: "100% 0px" });
   const archive = initArchiveLightbox({ root });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
+  root.documentElement?.removeAttribute("data-motion-pending");
   const cleanups = [hero, deferred, archive, timelines].map(asCleanup);
   let cleaned = false;
 
