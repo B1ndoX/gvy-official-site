@@ -140,6 +140,75 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 2.4, ease: "none" }, 0);
 }
 
+function createArchiveGalleryTimeline(gsap, root) {
+  const archiveIndex = root.querySelector("[data-archive-index]");
+  const viewport = archiveIndex?.querySelector(".archive-grid-viewport");
+  const track = archiveIndex?.querySelector("[data-archive-grid]");
+  const current = archiveIndex?.querySelector("[data-archive-current]");
+  const cards = track ? gsap.utils.toArray("button", track) : [];
+  if (!archiveIndex || !viewport || !track || cards.length < 2) return;
+
+  const lastIndex = cards.length - 1;
+  let activeIndex = 0;
+
+  cards.forEach((card) => card.removeAttribute("aria-current"));
+  gsap.set(cards, { autoAlpha: 0.34, scale: 0.84 });
+  gsap.set(cards[0], { autoAlpha: 1, scale: 1 });
+  cards[0].setAttribute("aria-current", "true");
+
+  const galleryTimeline = gsap.timeline({
+    onUpdate() {
+      const nextIndex = Math.round(this.progress() * lastIndex);
+      if (nextIndex === activeIndex) return;
+      cards[activeIndex]?.removeAttribute("aria-current");
+      cards[nextIndex]?.setAttribute("aria-current", "true");
+      activeIndex = nextIndex;
+      if (current) current.textContent = String(nextIndex + 1).padStart(3, "0");
+    },
+    scrollTrigger: {
+      id: "gvy-archive-gallery",
+      trigger: archiveIndex,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.85,
+      snap: {
+        snapTo: 1 / lastIndex,
+        duration: { min: 0.16, max: 0.32 },
+        delay: 0.08,
+        ease: "power1.inOut",
+      },
+      invalidateOnRefresh: true,
+    },
+  });
+
+  galleryTimeline.to(
+    track,
+    {
+      x: () => -Math.max(0, track.scrollWidth - viewport.clientWidth),
+      duration: lastIndex,
+      ease: "none",
+    },
+    0,
+  );
+
+  cards.forEach((card, index) => {
+    if (index > 0) {
+      galleryTimeline.to(
+        card,
+        { autoAlpha: 1, scale: 1, duration: 0.48, ease: "none" },
+        index - 0.48,
+      );
+    }
+    if (index < lastIndex) {
+      galleryTimeline.to(
+        card,
+        { autoAlpha: 0.34, scale: 0.84, duration: 0.45, ease: "none" },
+        index + 0.55,
+      );
+    }
+  });
+}
+
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
   createHeroTimeline(gsap, root, { animateMedia: true });
 
@@ -213,39 +282,55 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       },
     });
 
+    const stageSpan = 2.35;
+
     operationsTimeline
       .fromTo(
         copies[0],
         { autoAlpha: 0, y: 34 },
-        { autoAlpha: 1, y: 0, duration: 0.55, ease: "none" },
-        0.12,
+        { autoAlpha: 1, y: 0, duration: 0.62, ease: "none" },
+        0.18,
       )
       .fromTo(
         copies[0].children,
         { autoAlpha: 0, y: 18 },
-        { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "none" },
-        0.2,
+        { autoAlpha: 1, y: 0, duration: 0.46, stagger: 0.09, ease: "none" },
+        0.3,
       );
 
     for (let index = 1; index < Math.min(visuals.length, copies.length); index += 1) {
-      const position = index;
+      const position = index * stageSpan;
       operationsTimeline
-        .to([visuals[index - 1], copies[index - 1]], { autoAlpha: 0, duration: 0.32, ease: "none" }, position)
-        .fromTo(visuals[index], { autoAlpha: 0, scale: 1.055 }, { autoAlpha: 1, scale: 1, duration: 0.68, ease: "none" }, position + 0.2)
-        .fromTo(copies[index], { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.58, ease: "none" }, position + 0.28)
+        .to(
+          [visuals[index - 1], copies[index - 1]],
+          { autoAlpha: 0, duration: 0.56, ease: "none" },
+          position - 0.5,
+        )
+        .fromTo(
+          visuals[index],
+          { autoAlpha: 0, scale: 1.055 },
+          { autoAlpha: 1, scale: 1, duration: 0.76, ease: "none" },
+          position - 0.22,
+        )
+        .fromTo(
+          copies[index],
+          { autoAlpha: 0, y: 34 },
+          { autoAlpha: 1, y: 0, duration: 0.68, ease: "none" },
+          position - 0.1,
+        )
         .fromTo(
           copies[index].children,
           { autoAlpha: 0, y: 18 },
-          { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.08, ease: "none" },
-          position + 0.36,
+          { autoAlpha: 1, y: 0, duration: 0.46, stagger: 0.09, ease: "none" },
+          position + 0.04,
         );
     }
 
     const lastIndex = Math.min(visuals.length, copies.length) - 1;
     operationsTimeline.to(
       [visuals[lastIndex], copies[lastIndex]],
-      { autoAlpha: 0, y: -24, duration: 0.42, ease: "none" },
-      lastIndex + 1,
+      { autoAlpha: 0, y: -24, duration: 0.72, ease: "none" },
+      lastIndex * stageSpan + 1.72,
     );
 
     const operationsDuration = Math.max(1, operationsTimeline.duration());
@@ -256,16 +341,17 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     );
   }
 
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button, .archive-grid"), "archive-media", {
+  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button"), "archive-media", {
     start: "top 90%",
     end: "bottom -12%",
     enterY: 42,
     exitY: -26,
     scrub: 0.75,
   });
+  createArchiveGalleryTimeline(gsap, root);
   fadeTextSequenceThroughViewport(
     gsap,
-    root.querySelectorAll(".archive-feature > div, .archive-index-heading"),
+    root.querySelectorAll(".archive-feature > div"),
     "archive",
     { start: "top 92%", end: "bottom -18%", enterY: 32, exitY: -20 },
   );
@@ -297,12 +383,12 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
   fadeTextSequenceThroughViewport(
     gsap,
     root.querySelectorAll(
-      ".signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature > div, .archive-index-heading, .recruit-copy",
+      ".signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature > div, .recruit-copy",
     ),
     "mobile",
     { start: "top 92%", end: "bottom -14%", enterY: 28, exitY: -20, scrub: 0.8 },
   );
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button, .archive-grid"), "mobile-media", {
+  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button"), "mobile-media", {
     start: "top 92%",
     end: "bottom -10%",
     enterY: 30,
@@ -314,7 +400,7 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
 function showStableLayout(gsap, root) {
   gsap.set(
     root.querySelectorAll(
-      ".hero-title, .hero-motto, .signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature, .archive-index, .archive-grid, .recruit-copy",
+      ".hero-title, .hero-motto, .signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature, .archive-index, .archive-grid, .archive-grid button, .recruit-copy",
     ),
     { clearProps: "all", autoAlpha: 1, x: 0, y: 0, scale: 1 },
   );

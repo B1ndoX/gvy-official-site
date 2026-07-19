@@ -107,10 +107,10 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   assert.match(cinematicCss, /overflow-x:\s*clip/);
 });
 
-test("fleet operation data contains four real-image stages", () => {
+test("fleet operation data contains four official full-bleed stages", () => {
   const operationsBlock = fleetData.match(/FLEET_OPERATIONS\s*=\s*\[([\s\S]*?)\n\];/)?.[1] || "";
   assert.equal((operationsBlock.match(/number:\s*"0[1-4]"/g) || []).length, 4);
-  assert.equal((operationsBlock.match(/image:\s*"\.\/assets\/gallery\/team-/g) || []).length, 4);
+  assert.equal((operationsBlock.match(/image:\s*"\.\/assets\/official\/operations-/g) || []).length, 4);
   assert.match(fleetData, /COMBAT/);
   assert.match(fleetData, /INDUSTRY/);
   assert.match(fleetData, /LOGISTICS/);
@@ -135,7 +135,12 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /fadeThroughViewport/);
   assert.match(cinematicTimelines, /autoAlpha:\s*0,\s*y:\s*exitY/);
   assert.match(cinematicTimelines, /cleanup\(\)/);
+  assert.match(cinematicTimelines, /gvy-archive-gallery/);
+  assert.match(cinematicTimelines, /track\.scrollWidth\s*-\s*viewport\.clientWidth/);
   assert.match(homepage, /data-motion-pending/);
+  assert.match(homepage, /data-archive-index/);
+  assert.match(homepage, /data-archive-current/);
+  assert.match(homepage, /A-009 \/ LAUNCH WEEK/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
   assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });
@@ -165,6 +170,14 @@ test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", asyn
           `assets/gallery/optimized/team-${String(index + 1).padStart(2, "0")}-1280.webp`,
           root,
         ),
+      ),
+    ),
+  );
+
+  await Promise.all(
+    ["combat", "industry", "logistics", "exploration"].flatMap((name) =>
+      [1280, 1920].map((width) =>
+        access(new URL(`assets/official/operations-${name}-${width}.webp`, root)),
       ),
     ),
   );

@@ -7,8 +7,8 @@ export const FLEET_OPERATIONS = [
     title: "战斗与护航",
     description: "守护舰队航线，在威胁抵达之前建立防线。",
     detail: "ESCORT / RESPONSE / FRONTLINE",
-    image: "./assets/gallery/team-14.jpg",
-    imageAlt: "星际远航者多艘舰船在太空编阵",
+    image: "./assets/official/operations-combat-1920.webp",
+    imageAlt: "舰队在行星轨道上进行战斗与护航",
     position: "center center",
   },
   {
@@ -19,8 +19,8 @@ export const FLEET_OPERATIONS = [
     title: "工业与资源",
     description: "把每一份资源，转化为下一次出发的底气。",
     detail: "SALVAGE / MINING / SUPPLY",
-    image: "./assets/gallery/team-15.jpg",
-    imageAlt: "星际远航者成员在洞穴行动中集结",
+    image: "./assets/official/operations-industry-1920.webp",
+    imageAlt: "工业舰船正在回收太空残骸",
     position: "center center",
   },
   {
@@ -31,8 +31,8 @@ export const FLEET_OPERATIONS = [
     title: "运输与后勤",
     description: "让补给、人员与情报，准时抵达航线上的每个坐标。",
     detail: "TRANSPORT / SUPPORT / ROUTE",
-    image: "./assets/gallery/team-17.jpg",
-    imageAlt: "星际远航者成员与舰船在空间站合影",
+    image: "./assets/official/operations-logistics-1920.webp",
+    imageAlt: "运输舰在货运设施间转运补给箱",
     position: "center center",
   },
   {
@@ -43,18 +43,18 @@ export const FLEET_OPERATIONS = [
     title: "探索与行动",
     description: "在未知留下航迹，把偶遇写成共同的远航记录。",
     detail: "DISCOVERY / SURVEY / EXPEDITION",
-    image: "./assets/gallery/team-18.jpg",
-    imageAlt: "星际远航者成员在大型舰船前集结",
+    image: "./assets/official/operations-exploration-1920.webp",
+    imageAlt: "远航舰船穿越通往未知星系的跃迁点",
     position: "center center",
   },
 ];
 
 export const FEATURED_ARCHIVE = [
   {
-    image: "./assets/gallery/team-14.jpg",
-    title: "舰队编阵",
-    caption: "在下一次行动之前，我们先让每一艘舰船抵达同一编队。",
-    index: "A-014",
+    image: "./assets/gallery/team-09.jpg",
+    title: "舰队集结",
+    caption: "一次真正的舰队活动，从成员在同一坐标集合开始。",
+    index: "A-009",
   },
   {
     image: "./assets/gallery/team-17.jpg",
