@@ -91,10 +91,13 @@ Preview evidence:
 - `/Users/bindox/.codex/visualizations/2026/07/17/019f6f78-7c09-7c73-8d1f-9f80707c4453/final-preview/mobile-390x844.png`
 - `/Users/bindox/.codex/visualizations/2026/07/17/019f6f78-7c09-7c73-8d1f-9f80707c4453/final-preview/operations-browser-crop.png`
 - `/Users/bindox/.codex/visualizations/2026/07/17/019f6f78-7c09-7c73-8d1f-9f80707c4453/final-preview/archive-browser-crop.png`
+- `/Users/bindox/.codex/visualizations/2026/07/19/gvy-hero-clarity-audit/hero-performance-v4-desktop.png`
+- `/Users/bindox/.codex/visualizations/2026/07/19/gvy-hero-clarity-audit/hero-performance-v4-mobile.png`
 
 ## Known pre-deployment blockers
 
-- `fleet-hero-01-1080p-v2.mp4` is 34,886,180 bytes and `fleet-hero-02-1080p-v2.mp4` is 26,776,353 bytes. Both exceed the currently documented 25 MiB EdgeOne Pages single-file threshold. They are intentionally retained at the user-approved quality level in this preview. A deployment path or narrowly reviewed encode adjustment is required before production authorization can be acted on.
+- The active adaptive hero files are `fleet-hero-02-1080p-v4.mp4` (about 18.3 MB) and `fleet-hero-02-1440p-v4.mp4` (about 25.7 MB). Both remain below 25 MiB, and the build excludes inactive oversized hero archives while preserving them in source control.
+- Hero 01 remains inactive because its official 1920×860 master cannot produce a true 16:9 high-resolution output without enlargement.
 - A real Microsoft Edge smoke test is still required because Edge is not installed on this machine.
 
 ## Local preview

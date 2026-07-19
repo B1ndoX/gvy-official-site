@@ -1,11 +1,12 @@
 export const HERO_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
-export const HERO_CACHE_KEY = "gvy-command-hero-video:v3";
+export const HERO_CACHE_KEY = "gvy-command-hero-video:v4";
 
 // Hero 01 stays archived until a master taller than the official 1920x860 source is available.
 const HERO_MEDIA = Object.freeze([
   Object.freeze({
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1440p-v3.mp4",
+    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
+    videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4",
     poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
   }),
 ]);
@@ -14,6 +15,26 @@ export function getHeroMedia(index) {
   const media = HERO_MEDIA[index];
   if (!media) throw new RangeError(`Unknown hero media index: ${index}`);
   return { ...media };
+}
+
+export function resolveHeroVideo(
+  media,
+  {
+    viewportWidth = 0,
+    pixelRatio = 1,
+    saveData = false,
+    effectiveType = "",
+  } = {},
+) {
+  const constrainedNetwork = saveData || /^(slow-2g|2g|3g)$/.test(effectiveType);
+  const renderedPixelWidth = viewportWidth * Math.min(Math.max(pixelRatio, 1), 2);
+  const useLargeVideo = !constrainedNetwork && renderedPixelWidth >= 2_200;
+
+  return {
+    ...media,
+    video: useLargeVideo ? media.videoLarge : media.video,
+    quality: useLargeVideo ? "1440p" : "1080p",
+  };
 }
 
 export function readHeroRecord(storage, key = HERO_CACHE_KEY) {
@@ -88,6 +109,9 @@ export function initHeroVideo({
   cacheKey = HERO_CACHE_KEY,
   now = Date.now(),
   random = Math.random,
+  viewportWidth = globalThis.innerWidth ?? 0,
+  pixelRatio = globalThis.devicePixelRatio ?? 1,
+  connection = globalThis.navigator?.connection,
   reducedMotion = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false,
 } = {}) {
   const video = root?.querySelector?.("[data-hero-video]");
@@ -99,7 +123,12 @@ export function initHeroVideo({
 
   const record = readHeroRecord(storage, cacheKey);
   const selection = resolveHeroSelection({ record, now, random });
-  const media = getHeroMedia(selection.index);
+  const media = resolveHeroVideo(getHeroMedia(selection.index), {
+    viewportWidth,
+    pixelRatio,
+    saveData: connection?.saveData === true,
+    effectiveType: connection?.effectiveType || "",
+  });
 
   if (selection.shouldPersist) {
     writeHeroRecord(storage, cacheKey, selection.index, now);
@@ -108,6 +137,7 @@ export function initHeroVideo({
   poster.src = media.poster;
   video.poster = media.poster;
   video.dataset.heroVideoSelected = media.id;
+  video.dataset.heroVideoQuality = media.quality;
   shell.dataset.heroState = "poster";
 
   if (reducedMotion) {

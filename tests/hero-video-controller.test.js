@@ -7,6 +7,7 @@ import {
   initHeroVideo,
   readHeroRecord,
   resolveHeroSelection,
+  resolveHeroVideo,
   writeHeroRecord,
 } from "../assets/js/hero-video-controller.js";
 
@@ -101,13 +102,35 @@ test("writes an explicit seven-day expiration and tolerates storage failures", (
   );
 });
 
-test("maps the enabled selection to the native-detail v3 video and poster", () => {
+test("maps the enabled selection to the adaptive v4 videos and poster", () => {
   assert.deepEqual(getHeroMedia(0), {
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1440p-v3.mp4",
+    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
+    videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4",
     poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
   });
   assert.throws(() => getHeroMedia(1), RangeError);
+});
+
+test("selects one quality tier before assigning the hero source", () => {
+  const media = getHeroMedia(0);
+
+  assert.equal(
+    resolveHeroVideo(media, { viewportWidth: 1_440, pixelRatio: 2, effectiveType: "4g" }).quality,
+    "1440p",
+  );
+  assert.equal(
+    resolveHeroVideo(media, { viewportWidth: 390, pixelRatio: 3, effectiveType: "4g" }).quality,
+    "1080p",
+  );
+  assert.equal(
+    resolveHeroVideo(media, { viewportWidth: 2_560, pixelRatio: 1, effectiveType: "3g" }).quality,
+    "1080p",
+  );
+  assert.equal(
+    resolveHeroVideo(media, { viewportWidth: 2_560, pixelRatio: 1, saveData: true }).quality,
+    "1080p",
+  );
 });
 
 test("browser controller assigns only the selected video after choosing", () => {
@@ -130,6 +153,7 @@ test("browser controller assigns only the selected video after choosing", () => 
   assert.equal(harness.poster.src, getHeroMedia(0).poster);
   assert.equal(harness.video.poster, getHeroMedia(0).poster);
   assert.equal(harness.video.src, getHeroMedia(0).video);
+  assert.equal(harness.video.dataset.heroVideoQuality, "1080p");
   assert.equal(harness.video.loadCalls, 1);
   assert.equal(harness.shell.dataset.heroState, "loading");
   assert.equal(saved.index, 0);
