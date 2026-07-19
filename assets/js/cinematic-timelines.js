@@ -39,7 +39,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
           scrub: 0.75,
         },
       })
-      .to(heroMedia, { scale: 1.1, filter: "brightness(0.58)", ease: "none" }, 0)
+      .to(heroMedia, { scale: 1.025, filter: "brightness(0.58)", ease: "none" }, 0)
       .to(heroTitle, { yPercent: -24, autoAlpha: 0, ease: "none" }, 0.08)
       .to(heroMotto, { yPercent: -20, autoAlpha: 0, ease: "none" }, 0.18)
       .to(heroScroll, { autoAlpha: 0, ease: "none" }, 0);

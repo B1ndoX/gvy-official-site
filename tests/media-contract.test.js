@@ -8,16 +8,11 @@ const root = resolve(new URL("..", import.meta.url).pathname);
 
 const outputs = [
   {
-    id: "01",
-    video: "assets/hero-random/v2/fleet-hero-01-1080p-v2.mp4",
-    poster: "assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
-    duration: "00:00:37.30",
-  },
-  {
     id: "02",
-    video: "assets/hero-random/v2/fleet-hero-02-1080p-v2.mp4",
-    poster: "assets/hero-random/v2/fleet-hero-02-poster-v2.webp",
+    video: "assets/hero-random/v2/fleet-hero-02-1440p-v3.mp4",
+    poster: "assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
     duration: "00:00:28.33",
+    resolution: "2560x1440",
   },
 ];
 
@@ -34,18 +29,18 @@ for (const output of outputs) {
 
     const metadata = inspectMedia(path);
     assert.match(metadata, new RegExp(`Duration: ${output.duration.replaceAll(".", "\\.")}`));
-    assert.match(metadata, /Video: h264 .*yuv420p.*1920x1080/);
+    assert.match(metadata, new RegExp(`Video: h264 .*yuv420p.*${output.resolution}`));
     assert.match(metadata, /SAR 1:1 DAR 16:9/);
     assert.match(metadata, /30 fps/);
     assert.doesNotMatch(metadata, /Audio:/);
   });
 
-  test(`hero ${output.id} poster is a full-HD WebP`, () => {
+  test(`hero ${output.id} poster matches the high-detail video frame`, () => {
     const path = resolve(root, output.poster);
     assert.equal(existsSync(path), true, `${output.poster} must exist`);
     assert.ok(statSync(path).size > 50_000, "poster must contain a detailed master frame");
 
     const metadata = inspectMedia(path);
-    assert.match(metadata, /Video: webp, .*1920x1080/);
+    assert.match(metadata, new RegExp(`Video: webp, .*${output.resolution}`));
   });
 }

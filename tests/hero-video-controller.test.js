@@ -101,18 +101,13 @@ test("writes an explicit seven-day expiration and tolerates storage failures", (
   );
 });
 
-test("maps each selection to one matching v2 video and poster", () => {
+test("maps the enabled selection to the native-detail v3 video and poster", () => {
   assert.deepEqual(getHeroMedia(0), {
-    id: "01",
-    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v2.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
-  });
-  assert.deepEqual(getHeroMedia(1), {
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v2.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-02-poster-v2.webp",
+    video: "./assets/hero-random/v2/fleet-hero-02-1440p-v3.mp4",
+    poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
   });
-  assert.throws(() => getHeroMedia(2), RangeError);
+  assert.throws(() => getHeroMedia(1), RangeError);
 });
 
 test("browser controller assigns only the selected video after choosing", () => {
@@ -131,13 +126,13 @@ test("browser controller assigns only the selected video after choosing", () => 
     reducedMotion: false,
   });
 
-  assert.equal(controller.index, 1);
-  assert.equal(harness.poster.src, getHeroMedia(1).poster);
-  assert.equal(harness.video.poster, getHeroMedia(1).poster);
-  assert.equal(harness.video.src, getHeroMedia(1).video);
+  assert.equal(controller.index, 0);
+  assert.equal(harness.poster.src, getHeroMedia(0).poster);
+  assert.equal(harness.video.poster, getHeroMedia(0).poster);
+  assert.equal(harness.video.src, getHeroMedia(0).video);
   assert.equal(harness.video.loadCalls, 1);
   assert.equal(harness.shell.dataset.heroState, "loading");
-  assert.equal(saved.index, 1);
+  assert.equal(saved.index, 0);
 
   harness.video.dispatch("canplay");
   assert.equal(harness.video.playCalls, 1);

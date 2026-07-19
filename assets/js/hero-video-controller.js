@@ -1,16 +1,12 @@
 export const HERO_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
-export const HERO_CACHE_KEY = "gvy-command-hero-video:v2";
+export const HERO_CACHE_KEY = "gvy-command-hero-video:v3";
 
+// Hero 01 stays archived until a master taller than the official 1920x860 source is available.
 const HERO_MEDIA = Object.freeze([
   Object.freeze({
-    id: "01",
-    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v2.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
-  }),
-  Object.freeze({
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v2.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-02-poster-v2.webp",
+    video: "./assets/hero-random/v2/fleet-hero-02-1440p-v3.mp4",
+    poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
   }),
 ]);
 
