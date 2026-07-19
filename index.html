@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260719-official-media-gallery-v7" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260719-carousel-polish-v8" />
   </head>
 
   <body id="pageTop">
@@ -117,10 +117,10 @@
           </div>
 
           <dl class="identity-rail" data-identity-rail>
-            <div><dt>ORG</dt><dd>GVY</dd></div>
-            <div><dt>CALLSIGN</dt><dd>VOYAGERS</dd></div>
-            <div><dt>CHANNEL</dt><dd>691311516</dd></div>
-            <div><dt>STATUS</dt><dd>RECRUITING</dd></div>
+            <div><dt>舰队组织</dt><dd>GVY</dd></div>
+            <div><dt>舰队呼号</dt><dd>VOYAGERS</dd></div>
+            <div><dt>联络频道</dt><dd>691311516</dd></div>
+            <div><dt>当前状态</dt><dd>招募中</dd></div>
           </dl>
         </div>
       </section>
@@ -251,31 +251,31 @@
 
         <div class="featured-archive" data-featured-archive>
           <article class="archive-feature">
-            <button type="button" data-archive-open="8" aria-label="查看舰队集结活动合影大图">
+            <button type="button" data-archive-open="6" aria-label="查看舰队集结活动合影大图">
               <picture>
-                <source type="image/webp" srcset="./assets/gallery/optimized/team-09-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 70vw" />
-                <img src="./assets/gallery/team-09.jpg" alt="星际远航者成员在舰船展会现场集结合影" width="1280" height="720" />
+                <source type="image/webp" srcset="./assets/gallery/optimized/team-07-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 70vw" />
+                <img src="./assets/gallery/team-07.jpg" alt="星际远航者成员在航站大厅列队集结" width="1280" height="720" />
               </picture>
             </button>
-            <div><span>A-009 / LAUNCH WEEK</span><h3>舰队集结</h3><p>一次真正的舰队活动，从成员在同一坐标集合开始。</p></div>
+            <div><span>A-007 / MUSTER</span><h3>舰队集结</h3><p>一次真正的舰队活动，从成员在同一坐标集合开始。</p></div>
           </article>
           <article class="archive-feature">
-            <button type="button" data-archive-open="16" aria-label="查看航站协同大图">
+            <button type="button" data-archive-open="12" aria-label="查看航站协同大图">
               <picture>
-                <source type="image/webp" srcset="./assets/gallery/optimized/team-17-1280.webp 1280w, ./assets/gallery/optimized/team-17-1920.webp 1920w" sizes="(max-width: 760px) 100vw, 70vw" />
-                <img src="./assets/gallery/team-17.jpg" alt="星际远航者成员与舰船在空间站合影" loading="lazy" width="1920" height="1440" />
+                <source type="image/webp" srcset="./assets/gallery/optimized/team-13-1280.webp 1280w, ./assets/gallery/optimized/team-13-1920.webp 1920w" sizes="(max-width: 760px) 100vw, 70vw" />
+                <img src="./assets/gallery/team-13.jpg" alt="星际远航者地面载具在航站机库完成协同编队" loading="lazy" width="1920" height="1080" />
               </picture>
             </button>
-            <div><span>A-017 / STATION</span><h3>航站协同</h3><p>每一条稳定航线，都由一次次可靠的协作组成。</p></div>
+            <div><span>A-013 / HANGAR</span><h3>航站协同</h3><p>每一条稳定航线，都由一次次可靠的协作组成。</p></div>
           </article>
           <article class="archive-feature">
-            <button type="button" data-archive-open="17" aria-label="查看远航编队大图">
+            <button type="button" data-archive-open="13" aria-label="查看远航编队大图">
               <picture>
-                <source type="image/webp" srcset="./assets/gallery/optimized/team-18-1280.webp 1280w, ./assets/gallery/optimized/team-18-1920.webp 1920w" sizes="(max-width: 760px) 100vw, 70vw" />
-                <img src="./assets/gallery/team-18.jpg" alt="星际远航者成员在大型舰船前集结" loading="lazy" width="1920" height="1080" />
+                <source type="image/webp" srcset="./assets/gallery/optimized/team-14-1280.webp 1280w, ./assets/gallery/optimized/team-14-1920.webp 1920w" sizes="(max-width: 760px) 100vw, 70vw" />
+                <img src="./assets/gallery/team-14.jpg" alt="星际远航者多艘舰船在深空组成远航编队" loading="lazy" width="2560" height="1440" />
               </picture>
             </button>
-            <div><span>A-018 / FORMATION</span><h3>远航编队</h3><p>舰船终会归港，同行的人让旅程值得被记录。</p></div>
+            <div><span>A-014 / FLIGHTLINE</span><h3>远航编队</h3><p>舰船终会归港，同行的人让旅程值得被记录。</p></div>
           </article>
         </div>
 
@@ -283,9 +283,9 @@
           <div class="archive-index-sticky">
             <div class="archive-index-heading">
               <p class="system-label">COMPLETE LOG / 001—018</p>
-              <span>滚动浏览 · 点击任一记录进入大图</span>
+              <span>自动巡航 · 横向滚动或拖动 · 左右键切换</span>
             </div>
-            <div class="archive-grid-viewport">
+            <div class="archive-grid-viewport" tabindex="0" role="region" aria-label="舰队远航档案横向轮播">
               <div class="archive-grid" data-archive-grid>
             <button type="button" data-archive-open="0"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-01-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-01.jpg" alt="GVY 远航档案 01" loading="lazy" width="1280" height="720" /></picture><span>001</span></button>
             <button type="button" data-archive-open="1"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-02-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-02.jpg" alt="GVY 远航档案 02" loading="lazy" width="1280" height="720" /></picture><span>002</span></button>
@@ -307,8 +307,20 @@
             <button type="button" data-archive-open="17"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-18-1280.webp 1280w, ./assets/gallery/optimized/team-18-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-18.jpg" alt="GVY 远航档案 18" loading="lazy" width="1920" height="1080" /></picture><span>018</span></button>
               </div>
             </div>
-            <div class="archive-gallery-status" aria-hidden="true">
-              <span data-archive-current>001</span><i></i><span>018</span>
+            <div class="archive-gallery-controls" aria-label="远航档案轮播控制">
+              <button type="button" data-archive-carousel-prev aria-label="上一张档案">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" /></svg>
+              </button>
+              <div class="archive-gallery-status" aria-live="polite">
+                <span data-archive-current>001</span><i></i><span>018</span>
+              </div>
+              <button type="button" data-archive-carousel-toggle aria-label="暂停自动切换" aria-pressed="false">
+                <svg class="archive-pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10" /></svg>
+                <svg class="archive-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l8 5-8 5z" /></svg>
+              </button>
+              <button type="button" data-archive-carousel-next aria-label="下一张档案">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" /></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -364,6 +376,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260719-official-media-gallery-v7"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260719-carousel-polish-v8"></script>
   </body>
 </html>

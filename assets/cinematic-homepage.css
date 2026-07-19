@@ -385,6 +385,7 @@ a:focus-visible {
 }
 
 html[data-motion-ready] :is(
+  .command-nav,
   .hero-title,
   .hero-motto,
   .signal-lockup,
@@ -401,6 +402,11 @@ html[data-motion-ready] :is(
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  html[data-motion-pending] .command-nav {
+    visibility: hidden;
+    opacity: 0;
+  }
+
   html[data-motion-pending] :is(
     .hero-title > .system-label,
     .hero-title h1 > *,
@@ -672,10 +678,37 @@ html[data-motion-ready] :is(
 }
 
 .operations-heading {
+  position: relative;
   z-index: 6;
-  min-height: 68svh;
+  min-height: 74svh;
   padding-top: 10vh;
-  padding-bottom: 12vh;
+  padding-bottom: 24vh;
+}
+
+.operations-heading::after {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: -18vh;
+  width: 100vw;
+  height: 60vh;
+  pointer-events: none;
+  content: "";
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(3, 7, 13, 0.72) 18%,
+    #03070d 30%,
+    rgba(3, 7, 13, 0.98) 46%,
+    rgba(3, 7, 13, 0.82) 68%,
+    transparent 100%
+  );
+  transform: translateX(-50%);
+}
+
+.operations-heading > * {
+  position: relative;
+  z-index: 1;
 }
 
 .operations-heading h2 {
@@ -688,10 +721,10 @@ html[data-motion-ready] :is(
   top: 0;
   display: block;
   height: 100svh;
-  margin-top: -12vh;
+  margin-top: -24vh;
   overflow: hidden;
   isolation: isolate;
-  background: #02060b;
+  background: #03070d;
 }
 
 .operations-stage::before {
@@ -700,10 +733,17 @@ html[data-motion-ready] :is(
   top: 0;
   right: 0;
   left: 0;
-  height: 24vh;
+  height: 38vh;
   pointer-events: none;
   content: "";
-  background: linear-gradient(180deg, #03070d 0%, rgba(3, 7, 13, 0.82) 24%, transparent 100%);
+  background: linear-gradient(
+    180deg,
+    #03070d 0%,
+    rgba(3, 7, 13, 0.98) 18%,
+    rgba(3, 7, 13, 0.78) 46%,
+    rgba(3, 7, 13, 0.3) 76%,
+    transparent 100%
+  );
 }
 
 .operation-visuals {
@@ -965,18 +1005,16 @@ html[data-motion-ready] :is(
 
 .archive-index {
   width: 100%;
-  min-height: 780svh;
-  margin: 22vh 0 0;
+  min-height: auto;
+  margin: 18vh 0 0;
   padding: 0;
 }
 
 .archive-index-sticky {
-  position: sticky;
-  top: 0;
-  display: grid;
-  height: 100svh;
-  align-content: center;
-  overflow: hidden;
+  position: relative;
+  display: block;
+  height: auto;
+  overflow: visible;
 }
 
 .archive-index-heading {
@@ -998,7 +1036,26 @@ html[data-motion-ready] :is(
 
 .archive-grid-viewport {
   width: 100%;
-  overflow: hidden;
+  padding-block: clamp(14px, 2vw, 28px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  overscroll-behavior-inline: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  touch-action: pan-x pan-y;
+}
+
+.archive-grid-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.archive-grid-viewport.is-dragging {
+  cursor: grabbing;
+  scroll-behavior: auto;
+  scroll-snap-type: none;
+  user-select: none;
 }
 
 .archive-grid {
@@ -1006,6 +1063,10 @@ html[data-motion-ready] :is(
   width: max-content;
   gap: clamp(18px, 2.2vw, 36px);
   padding-inline: max(var(--page-gutter), calc((100vw - min(68vw, 1080px)) / 2));
+  will-change: auto;
+}
+
+.archive-grid-viewport.is-dragging .archive-grid {
   will-change: transform;
 }
 
@@ -1015,10 +1076,12 @@ html[data-motion-ready] :is(
   aspect-ratio: 16 / 10;
   opacity: 0.34;
   transform: scale(0.84);
-  will-change: transform, opacity;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  transition: opacity 560ms ease, transform 780ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.archive-grid button:first-child {
+.archive-grid button.is-current {
   opacity: 1;
   transform: scale(1);
 }
@@ -1034,12 +1097,70 @@ html[data-motion-ready] :is(
   letter-spacing: 0.14em;
 }
 
-.archive-gallery-status {
+.archive-gallery-controls {
   display: flex;
-  width: min(68vw, 1080px);
+  width: max-content;
   margin: 24px auto 0;
   align-items: center;
-  gap: 14px;
+  gap: 7px;
+  padding: 7px;
+  border: 1px solid rgba(158, 193, 211, 0.16);
+  border-radius: 999px;
+  background: rgba(7, 15, 24, 0.82);
+  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(16px);
+}
+
+.archive-gallery-controls > button {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  color: #cbd6dc;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.archive-gallery-controls > button:hover {
+  color: var(--space-black);
+  background: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.archive-gallery-controls > button:disabled {
+  opacity: 0.46;
+  cursor: default;
+}
+
+.archive-gallery-controls svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.archive-gallery-controls .archive-play-icon {
+  display: none;
+  fill: currentColor;
+  stroke: none;
+}
+
+.archive-gallery-controls.is-paused .archive-pause-icon { display: none; }
+.archive-gallery-controls.is-paused .archive-play-icon { display: block; }
+
+.archive-gallery-status {
+  display: flex;
+  width: clamp(180px, 24vw, 360px);
+  align-items: center;
+  gap: 13px;
+  padding-inline: 10px;
   color: var(--text-secondary);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.72rem;
@@ -1049,7 +1170,19 @@ html[data-motion-ready] :is(
 .archive-gallery-status i {
   height: 1px;
   flex: 1;
-  background: linear-gradient(90deg, var(--route-blue), rgba(255, 255, 255, 0.14));
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.archive-gallery-status i::after {
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  background: var(--route-blue);
+  transform: scaleX(var(--archive-index-progress, 0));
+  transform-origin: left;
+  transition: transform 520ms var(--motion-ease);
 }
 
 /* Recruitment */
@@ -1350,6 +1483,7 @@ noscript {
 
   .operations-section { min-height: auto; padding: 15vh 0 0; }
   .operations-heading { min-height: auto; padding-bottom: 12vh; }
+  .operations-heading::after { display: none; }
   .operations-stage { position: relative; display: block; height: auto; margin-top: 0; overflow: visible; background: transparent; }
   .operations-stage::before { display: none; }
   .operation-visuals { display: none; }
@@ -1385,16 +1519,14 @@ noscript {
   .archive-feature:nth-child(even) button,
   .archive-feature:nth-child(even) > div { grid-column: auto; grid-row: auto; }
   .archive-feature > div { padding-top: 21px; }
-  .archive-index { min-height: auto; margin-top: 13vh; }
-  .archive-index-sticky { position: relative; display: block; height: auto; overflow: visible; }
+  .archive-index { margin-top: 13vh; }
   .archive-index-heading > span { display: none; }
   .archive-index-heading { margin-bottom: 20px; }
-  .archive-grid-viewport { overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-inline: contain; }
-  .archive-grid-viewport::-webkit-scrollbar { display: none; }
   .archive-grid { gap: 12px; padding-inline: 20px; will-change: auto; }
-  .archive-grid button,
-  .archive-grid button:first-child { width: 82vw; flex-basis: 82vw; opacity: 1; transform: none; scroll-snap-align: center; will-change: auto; }
-  .archive-gallery-status { display: none; }
+  .archive-grid button { width: 82vw; flex-basis: 82vw; }
+  .archive-gallery-status { width: min(44vw, 210px); }
+  .archive-gallery-controls > button:first-child,
+  .archive-gallery-controls > button:last-child { display: none; }
 
   .recruit-section { min-height: 100svh; }
   .recruit-image img { object-position: 62% center; }
@@ -1422,9 +1554,6 @@ noscript {
   .hero-sequence { height: 100svh; }
   .operation-visual,
   .operation-copy { transform: none; }
-  .archive-index { min-height: auto; }
-  .archive-index-sticky { position: relative; height: auto; overflow: visible; }
-  .archive-grid-viewport { overflow-x: auto; }
   .archive-grid button,
-  .archive-grid button:first-child { opacity: 1; transform: none; }
+  .archive-grid button.is-current { opacity: 1; transform: none; }
 }

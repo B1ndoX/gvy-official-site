@@ -1,4 +1,5 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
+import { initArchiveCarousel } from "./archive-carousel.js";
 import { initCinematicTimelines } from "./cinematic-timelines.js";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
@@ -20,10 +21,11 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
 
   const hero = initHeroVideo({ root });
   const deferred = initDeferredMedia({ root, rootMargin: "100% 0px" });
+  const carousel = initArchiveCarousel({ root, view, gsap: view.gsap });
   const archive = initArchiveLightbox({ root });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [hero, deferred, archive, timelines].map(asCleanup);
+  const cleanups = [hero, deferred, carousel, archive, timelines].map(asCleanup);
   let cleaned = false;
 
   const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());

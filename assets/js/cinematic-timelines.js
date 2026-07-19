@@ -105,6 +105,7 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   const heroTitle = root.querySelector("[data-hero-title]");
   const heroMotto = root.querySelector("[data-hero-motto]");
   const heroScroll = root.querySelector(".hero-scroll");
+  const commandNav = root.querySelector("[data-command-nav]");
   const heroText = [
     ...gsap.utils.toArray(":scope > .system-label, h1 > *", heroTitle),
     ...gsap.utils.toArray(":scope > *", heroMotto),
@@ -124,6 +125,7 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   }
 
   gsap.set([heroTitle, heroMotto], { autoAlpha: 1 });
+  if (commandNav) gsap.set(commandNav, { autoAlpha: 0, yPercent: -100 });
   timeline
     .fromTo(
       heroText,
@@ -138,75 +140,13 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
       9.9,
     )
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 2.4, ease: "none" }, 0);
-}
-
-function createArchiveGalleryTimeline(gsap, root) {
-  const archiveIndex = root.querySelector("[data-archive-index]");
-  const viewport = archiveIndex?.querySelector(".archive-grid-viewport");
-  const track = archiveIndex?.querySelector("[data-archive-grid]");
-  const current = archiveIndex?.querySelector("[data-archive-current]");
-  const cards = track ? gsap.utils.toArray("button", track) : [];
-  if (!archiveIndex || !viewport || !track || cards.length < 2) return;
-
-  const lastIndex = cards.length - 1;
-  let activeIndex = 0;
-
-  cards.forEach((card) => card.removeAttribute("aria-current"));
-  gsap.set(cards, { autoAlpha: 0.34, scale: 0.84 });
-  gsap.set(cards[0], { autoAlpha: 1, scale: 1 });
-  cards[0].setAttribute("aria-current", "true");
-
-  const galleryTimeline = gsap.timeline({
-    onUpdate() {
-      const nextIndex = Math.round(this.progress() * lastIndex);
-      if (nextIndex === activeIndex) return;
-      cards[activeIndex]?.removeAttribute("aria-current");
-      cards[nextIndex]?.setAttribute("aria-current", "true");
-      activeIndex = nextIndex;
-      if (current) current.textContent = String(nextIndex + 1).padStart(3, "0");
-    },
-    scrollTrigger: {
-      id: "gvy-archive-gallery",
-      trigger: archiveIndex,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.85,
-      snap: {
-        snapTo: 1 / lastIndex,
-        duration: { min: 0.16, max: 0.32 },
-        delay: 0.08,
-        ease: "power1.inOut",
-      },
-      invalidateOnRefresh: true,
-    },
-  });
-
-  galleryTimeline.to(
-    track,
-    {
-      x: () => -Math.max(0, track.scrollWidth - viewport.clientWidth),
-      duration: lastIndex,
-      ease: "none",
-    },
-    0,
-  );
-
-  cards.forEach((card, index) => {
-    if (index > 0) {
-      galleryTimeline.to(
-        card,
-        { autoAlpha: 1, scale: 1, duration: 0.48, ease: "none" },
-        index - 0.48,
-      );
-    }
-    if (index < lastIndex) {
-      galleryTimeline.to(
-        card,
-        { autoAlpha: 0.34, scale: 0.84, duration: 0.45, ease: "none" },
-        index + 0.55,
-      );
-    }
-  });
+  if (commandNav) {
+    timeline.to(
+      commandNav,
+      { autoAlpha: 1, yPercent: 0, duration: 1.1, ease: "none" },
+      4.45,
+    );
+  }
 }
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
@@ -262,6 +202,8 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   });
 
   const operations = root.querySelector("[data-operations-section]");
+  const operationsStage = operations?.querySelector("[data-operations-stage]");
+  const operationProgress = operations?.querySelector(".operation-progress");
   const visuals = gsap.utils.toArray("[data-operation-visual]", operations);
   const copies = gsap.utils.toArray("[data-operation-index]", operations);
   if (operations && visuals.length && copies.length) {
@@ -269,6 +211,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     gsap.set(copies, { autoAlpha: 0, y: 34 });
     copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 18 }));
     gsap.set(visuals[0], { autoAlpha: 1 });
+    gsap.set([operationsStage, operationProgress], { autoAlpha: 1 });
 
     const operationsTimeline = gsap.timeline({
       scrollTrigger: {
@@ -332,6 +275,17 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       { autoAlpha: 0, y: -24, duration: 0.72, ease: "none" },
       lastIndex * stageSpan + 1.72,
     );
+    operationsTimeline
+      .to(
+        operationProgress,
+        { autoAlpha: 0, duration: 0.62, ease: "none" },
+        lastIndex * stageSpan + 1.58,
+      )
+      .to(
+        operationsStage,
+        { autoAlpha: 0, duration: 0.9, ease: "none" },
+        lastIndex * stageSpan + 1.92,
+      );
 
     const operationsDuration = Math.max(1, operationsTimeline.duration());
     operationsTimeline.to(
@@ -348,7 +302,6 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     exitY: -26,
     scrub: 0.75,
   });
-  createArchiveGalleryTimeline(gsap, root);
   fadeTextSequenceThroughViewport(
     gsap,
     root.querySelectorAll(".archive-feature > div"),
@@ -400,7 +353,7 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
 function showStableLayout(gsap, root) {
   gsap.set(
     root.querySelectorAll(
-      ".hero-title, .hero-motto, .signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature, .archive-index, .archive-grid, .archive-grid button, .recruit-copy",
+      ".command-nav, .hero-title, .hero-motto, .signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operations-stage, .operation-copy, .operation-progress, .archive-feature, .archive-index, .archive-grid, .archive-grid button, .recruit-copy",
     ),
     { clearProps: "all", autoAlpha: 1, x: 0, y: 0, scale: 1 },
   );

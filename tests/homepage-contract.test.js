@@ -20,6 +20,7 @@ const cinematicCss = await readOptional("assets/cinematic-homepage.css");
 const fleetData = await readOptional("assets/js/fleet-data.js");
 const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js");
 const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
+const archiveCarousel = await readOptional("assets/js/archive-carousel.js");
 
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
@@ -135,12 +136,22 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /fadeThroughViewport/);
   assert.match(cinematicTimelines, /autoAlpha:\s*0,\s*y:\s*exitY/);
   assert.match(cinematicTimelines, /cleanup\(\)/);
-  assert.match(cinematicTimelines, /gvy-archive-gallery/);
-  assert.match(cinematicTimelines, /track\.scrollWidth\s*-\s*viewport\.clientWidth/);
+  assert.doesNotMatch(cinematicTimelines, /gvy-archive-gallery/);
+  assert.match(cinematicTimelines, /operationsStage/);
+  assert.match(cinematicTimelines, /operationProgress/);
+  assert.match(cinematicTimelines, /yPercent:\s*-100/);
   assert.match(homepage, /data-motion-pending/);
   assert.match(homepage, /data-archive-index/);
   assert.match(homepage, /data-archive-current/);
-  assert.match(homepage, /A-009 \/ LAUNCH WEEK/);
+  assert.match(homepage, /data-archive-carousel-toggle/);
+  assert.match(homepage, /A-007 \/ MUSTER/);
+  assert.match(homepage, /A-013 \/ HANGAR/);
+  assert.match(homepage, /A-014 \/ FLIGHTLINE/);
+  assert.match(homepage, /舰队组织/);
+  assert.match(homepage, /当前状态/);
+  assert.match(archiveCarousel, /elastic\.out/);
+  assert.match(archiveCarousel, /event\.deltaX/);
+  assert.match(archiveCarousel, /ArrowRight/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
   assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });
@@ -149,6 +160,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initHeroVideo/);
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
+  assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
