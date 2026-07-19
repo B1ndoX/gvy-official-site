@@ -37,6 +37,13 @@ test("production build copies local GSAP browser bundles", () => {
   assert.match(buildScript, /assets\/vendor\/ScrollTrigger\.min\.js/);
 });
 
+test("production build includes both active hero variants", () => {
+  assert.match(buildScript, /fleet-hero-01-1080p-v4\.mp4/);
+  assert.match(buildScript, /fleet-hero-01-poster-v2\.webp/);
+  assert.match(buildScript, /fleet-hero-02-1080p-v4\.mp4/);
+  assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
+});
+
 test("homepage contains one source-free hero video", () => {
   const heroVideos = homepage.match(/<video\b[^>]*data-hero-video[^>]*>/g) || [];
   assert.equal(heroVideos.length, 1);
@@ -57,7 +64,8 @@ test("homepage follows the approved voyage narrative", () => {
   assert.match(homepage, /因远航而集结/);
   assert.match(homepage, /每一次远航，都需要不同的人/);
   assert.match(homepage, /我们真实经历的远航/);
-  assert.match(homepage, /下一段航程，等待你的加入/);
+  assert.match(homepage, /下一段航程/);
+  assert.match(homepage, /等待你的<em>加入<\/em>/);
   assert.equal((homepage.match(/data-operation-index=/g) || []).length, 4);
 });
 
@@ -148,10 +156,14 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(homepage, /A-013 \/ HANGAR/);
   assert.match(homepage, /A-014 \/ FLIGHTLINE/);
   assert.match(homepage, /舰队组织/);
+  assert.match(homepage, /<dt>QQ群<\/dt><dd>691311516<\/dd>/);
   assert.match(homepage, /当前状态/);
-  assert.match(archiveCarousel, /elastic\.out/);
-  assert.match(archiveCarousel, /event\.deltaX/);
+  assert.doesNotMatch(archiveCarousel, /elastic\.out/);
+  assert.doesNotMatch(archiveCarousel, /skewX/);
+  assert.doesNotMatch(archiveCarousel, /addEventListener\("wheel"/);
   assert.match(archiveCarousel, /ArrowRight/);
+  assert.match(homepage, /团建相册/);
+  assert.doesNotMatch(homepage, /COMPLETE LOG/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
   assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });

@@ -270,21 +270,11 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     }
 
     const lastIndex = Math.min(visuals.length, copies.length) - 1;
-    operationsTimeline.to(
-      [visuals[lastIndex], copies[lastIndex]],
-      { autoAlpha: 0, y: -24, duration: 0.72, ease: "none" },
-      lastIndex * stageSpan + 1.72,
-    );
     operationsTimeline
       .to(
         operationProgress,
-        { autoAlpha: 0, duration: 0.62, ease: "none" },
-        lastIndex * stageSpan + 1.58,
-      )
-      .to(
-        operationsStage,
-        { autoAlpha: 0, duration: 0.9, ease: "none" },
-        lastIndex * stageSpan + 1.92,
+        { autoAlpha: 0, duration: 0.38, ease: "none" },
+        lastIndex * stageSpan + 2,
       );
 
     const operationsDuration = Math.max(1, operationsTimeline.duration());

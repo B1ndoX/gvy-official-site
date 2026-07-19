@@ -8,6 +8,12 @@ const root = resolve(new URL("..", import.meta.url).pathname);
 
 const outputs = [
   {
+    id: "01-1080p",
+    video: "assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4",
+    duration: "00:00:37.30",
+    resolution: "1920x1080",
+  },
+  {
     id: "02-1080p",
     video: "assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
     duration: "00:00:28.33",
@@ -43,10 +49,18 @@ for (const output of outputs) {
 
 }
 
-test("hero poster is a lightweight 1440p WebP", () => {
+test("hero 02 poster is a lightweight 1440p WebP", () => {
   const path = resolve(root, "assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp");
   assert.equal(existsSync(path), true);
   assert.ok(statSync(path).size > 50_000);
   assert.ok(statSync(path).size < 250_000);
   assert.match(inspectMedia(path), /Video: webp, .*2560x1440/);
+});
+
+test("hero 01 poster is a lightweight 1080p WebP", () => {
+  const path = resolve(root, "assets/hero-random/v2/fleet-hero-01-poster-v2.webp");
+  assert.equal(existsSync(path), true);
+  assert.ok(statSync(path).size > 40_000);
+  assert.ok(statSync(path).size < 250_000);
+  assert.match(inspectMedia(path), /Video: webp, .*1920x1080/);
 });

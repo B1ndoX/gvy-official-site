@@ -21,14 +21,9 @@ export function getClosestCardIndex(viewport, cards) {
   return closestIndex;
 }
 
-function clamp(value, min, max) {
-  return Math.min(max, Math.max(min, value));
-}
-
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
-  gsap = globalThis.gsap,
   intervalMs = 4800,
   Observer = view?.IntersectionObserver,
 } = {}) {
@@ -52,6 +47,7 @@ export function initArchiveCarousel({
   const setTimer = view?.setTimeout?.bind(view) || setTimeout;
   const clearTimer = view?.clearTimeout?.bind(view) || clearTimeout;
   let activeIndex = 0;
+  let autoDirection = 1;
   let autoTimer = 0;
   let scrollFrame = 0;
   let resizeFrame = 0;
@@ -65,8 +61,6 @@ export function initArchiveCarousel({
   let pointerId = null;
   let startX = 0;
   let startScrollLeft = 0;
-  let lastX = 0;
-  let lastTime = 0;
 
   function updateToggle() {
     controls?.classList.toggle("is-paused", manuallyPaused);
@@ -121,7 +115,9 @@ export function initArchiveCarousel({
     if (!canAutoPlay()) return;
     autoTimer = setTimer(() => {
       autoTimer = 0;
-      goTo(activeIndex + 1, { source: "auto" });
+      if (activeIndex >= cards.length - 1) autoDirection = -1;
+      if (activeIndex <= 0) autoDirection = 1;
+      goTo(activeIndex + autoDirection, { source: "auto" });
     }, intervalMs);
   }
 
@@ -143,14 +139,6 @@ export function initArchiveCarousel({
     scrollFrame = frame(syncFromScroll);
   }
 
-  function handleWheel(event) {
-    if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || Math.abs(event.deltaX) < 4) return;
-    event.preventDefault();
-    viewport.scrollLeft += event.deltaX;
-    handleScroll();
-    scheduleAuto();
-  }
-
   function handleKeydown(event) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
@@ -168,8 +156,6 @@ export function initArchiveCarousel({
     pointerId = event.pointerId;
     startX = event.clientX;
     startScrollLeft = viewport.scrollLeft;
-    lastX = startX;
-    lastTime = event.timeStamp;
     viewport.classList.add("is-dragging");
     viewport.setPointerCapture?.(pointerId);
     stopAuto();
@@ -178,22 +164,8 @@ export function initArchiveCarousel({
   function handlePointerMove(event) {
     if (!dragging || event.pointerId !== pointerId) return;
     const distance = event.clientX - startX;
-    const elapsed = Math.max(8, event.timeStamp - lastTime);
-    const velocity = (event.clientX - lastX) / elapsed;
     if (Math.abs(distance) > 7) moved = true;
     viewport.scrollLeft = startScrollLeft - distance;
-
-    if (gsap) {
-      gsap.set(track, {
-        x: clamp(distance * 0.045, -18, 18),
-        skewX: clamp(velocity * 16, -2.4, 2.4),
-        scaleX: 1 + Math.min(Math.abs(distance) / 7000, 0.018),
-        transformOrigin: "50% 50%",
-      });
-    }
-
-    lastX = event.clientX;
-    lastTime = event.timeStamp;
   }
 
   function finishDrag(event) {
@@ -208,17 +180,6 @@ export function initArchiveCarousel({
     viewport.releasePointerCapture?.(pointerId);
     pointerId = null;
     goTo(getClosestCardIndex(viewport, cards));
-
-    if (gsap) {
-      gsap.to(track, {
-        x: 0,
-        skewX: 0,
-        scaleX: 1,
-        duration: reducedMotion ? 0 : 0.78,
-        ease: "elastic.out(1, 0.46)",
-        overwrite: true,
-      });
-    }
   }
 
   function preventDraggedClick(event) {
@@ -292,7 +253,6 @@ export function initArchiveCarousel({
   observer?.observe(archiveIndex);
 
   viewport.addEventListener("scroll", handleScroll, { passive: true });
-  viewport.addEventListener("wheel", handleWheel, { passive: false });
   viewport.addEventListener("keydown", handleKeydown);
   viewport.addEventListener("pointerdown", handlePointerDown);
   viewport.addEventListener("pointermove", handlePointerMove);
@@ -319,7 +279,6 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       observer?.disconnect();
       viewport.removeEventListener("scroll", handleScroll);
-      viewport.removeEventListener("wheel", handleWheel);
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("pointerdown", handlePointerDown);
       viewport.removeEventListener("pointermove", handlePointerMove);
@@ -335,8 +294,6 @@ export function initArchiveCarousel({
       toggle?.removeEventListener("click", toggleAutoPlay);
       view?.removeEventListener?.("resize", handleResize);
       root.removeEventListener?.("visibilitychange", handleVisibility);
-      gsap?.killTweensOf?.(track);
-      gsap?.set?.(track, { clearProps: "transform" });
     },
   };
 }

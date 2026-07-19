@@ -1,8 +1,11 @@
-export const HERO_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
-export const HERO_CACHE_KEY = "gvy-command-hero-video:v4";
+export const HERO_CACHE_KEY = "gvy-command-hero-video:v5";
 
-// Hero 01 stays archived until a master taller than the official 1920x860 source is available.
 const HERO_MEDIA = Object.freeze([
+  Object.freeze({
+    id: "01",
+    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4",
+    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
+  }),
   Object.freeze({
     id: "02",
     video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
@@ -28,7 +31,9 @@ export function resolveHeroVideo(
 ) {
   const constrainedNetwork = saveData || /^(slow-2g|2g|3g)$/.test(effectiveType);
   const renderedPixelWidth = viewportWidth * Math.min(Math.max(pixelRatio, 1), 2);
-  const useLargeVideo = !constrainedNetwork && renderedPixelWidth >= 2_200;
+  const useLargeVideo = Boolean(media.videoLarge)
+    && !constrainedNetwork
+    && renderedPixelWidth >= 2_200;
 
   return {
     ...media,
@@ -53,11 +58,9 @@ export function writeHeroRecord(
   storage,
   key,
   index,
-  now = Date.now(),
-  ttl = HERO_CACHE_TTL_MS,
 ) {
   try {
-    storage?.setItem?.(key, JSON.stringify({ index, expiresAt: now + ttl }));
+    storage?.setItem?.(key, JSON.stringify({ index }));
     return typeof storage?.setItem === "function";
   } catch {
     return false;
@@ -66,7 +69,6 @@ export function writeHeroRecord(
 
 export function resolveHeroSelection({
   record,
-  now = Date.now(),
   optionCount = HERO_MEDIA.length,
   random = Math.random,
 }) {
@@ -74,20 +76,24 @@ export function resolveHeroSelection({
     throw new RangeError("optionCount must be a positive integer");
   }
 
-  const cachedIndex = record?.index;
-  const cacheIsValid =
-    Number.isInteger(cachedIndex) &&
-    cachedIndex >= 0 &&
-    cachedIndex < optionCount &&
-    Number.isFinite(record?.expiresAt) &&
-    record.expiresAt > now;
-
-  if (cacheIsValid) return { index: cachedIndex, shouldPersist: false };
-
   const randomValue = Number(random());
   const normalized = Number.isFinite(randomValue)
     ? Math.min(Math.max(randomValue, 0), 0.999999999999)
     : 0;
+  const previousIndex = record?.index;
+  const previousIsValid = Number.isInteger(previousIndex)
+    && previousIndex >= 0
+    && previousIndex < optionCount;
+
+  if (optionCount === 1) return { index: 0, shouldPersist: !previousIsValid };
+
+  if (previousIsValid) {
+    const candidate = Math.floor(normalized * (optionCount - 1));
+    return {
+      index: candidate >= previousIndex ? candidate + 1 : candidate,
+      shouldPersist: true,
+    };
+  }
 
   return {
     index: Math.floor(normalized * optionCount),
@@ -107,7 +113,6 @@ export function initHeroVideo({
   root = globalThis.document,
   storage = getDefaultStorage(),
   cacheKey = HERO_CACHE_KEY,
-  now = Date.now(),
   random = Math.random,
   viewportWidth = globalThis.innerWidth ?? 0,
   pixelRatio = globalThis.devicePixelRatio ?? 1,
@@ -122,7 +127,7 @@ export function initHeroVideo({
   }
 
   const record = readHeroRecord(storage, cacheKey);
-  const selection = resolveHeroSelection({ record, now, random });
+  const selection = resolveHeroSelection({ record, random });
   const media = resolveHeroVideo(getHeroMedia(selection.index), {
     viewportWidth,
     pixelRatio,
@@ -131,7 +136,7 @@ export function initHeroVideo({
   });
 
   if (selection.shouldPersist) {
-    writeHeroRecord(storage, cacheKey, selection.index, now);
+    writeHeroRecord(storage, cacheKey, selection.index);
   }
 
   poster.src = media.poster;

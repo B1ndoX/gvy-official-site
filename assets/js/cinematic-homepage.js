@@ -21,7 +21,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
 
   const hero = initHeroVideo({ root });
   const deferred = initDeferredMedia({ root, rootMargin: "100% 0px" });
-  const carousel = initArchiveCarousel({ root, view, gsap: view.gsap });
+  const carousel = initArchiveCarousel({ root, view });
   const archive = initArchiveLightbox({ root });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.removeAttribute("data-motion-pending");
