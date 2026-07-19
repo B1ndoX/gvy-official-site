@@ -263,7 +263,7 @@ a:focus-visible {
 .hero-sequence {
   position: relative;
   z-index: 2;
-  height: 190svh;
+  height: 220svh;
   background: #000;
 }
 
@@ -382,6 +382,22 @@ a:focus-visible {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.75rem;
   letter-spacing: 0.22em;
+}
+
+html[data-motion-ready] :is(
+  .hero-title,
+  .hero-motto,
+  .signal-lockup,
+  .identity-rail,
+  .manifesto-copy,
+  .section-heading,
+  .operation-copy,
+  .operation-copy > *,
+  .archive-feature,
+  .archive-index,
+  .recruit-copy
+) {
+  will-change: opacity, transform;
 }
 
 .hero-scroll {
@@ -1210,7 +1226,7 @@ noscript {
   .nav-links a { display: none; }
   .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
 
-  .hero-sequence { height: 128svh; }
+  .hero-sequence { height: 168svh; }
   .hero-title { top: 46%; width: calc(100% - 40px); }
   .hero-title h1 span { font-size: clamp(3rem, 16vw, 5rem); }
   .hero-title h1 small { font-size: clamp(0.75rem, 4vw, 1rem); letter-spacing: 0.14em; }

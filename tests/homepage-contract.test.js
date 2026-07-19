@@ -123,11 +123,15 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /prefers-reduced-motion/);
   assert.match(cinematicTimelines, /min-width:\s*761px/);
   assert.match(cinematicTimelines, /max-width:\s*760px/);
-  for (const id of ["hero", "signal", "manifesto", "operations", "archive", "recruit"]) {
+  for (const id of ["hero", "signal", "manifesto", "operations", "recruit"]) {
     assert.match(cinematicTimelines, new RegExp(`gvy-${id}`));
   }
+  assert.match(cinematicTimelines, /root\.querySelectorAll\("\.archive-feature, \.archive-index"\),\s*\n\s*"archive"/);
   assert.match(cinematicTimelines, /scrub:/);
   assert.doesNotMatch(cinematicTimelines, /toggleActions/);
+  assert.doesNotMatch(cinematicTimelines, /once:\s*true/);
+  assert.match(cinematicTimelines, /fadeThroughViewport/);
+  assert.match(cinematicTimelines, /autoAlpha:\s*0,\s*y:\s*exitY/);
   assert.match(cinematicTimelines, /cleanup\(\)/);
 });
 
