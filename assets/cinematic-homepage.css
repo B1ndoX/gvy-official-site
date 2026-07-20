@@ -1087,12 +1087,19 @@ html[data-motion-ready] :is(
   padding-block: clamp(14px, 2vw, 28px);
   overflow-x: auto;
   overflow-y: hidden;
-  cursor: default;
+  cursor: grab;
   overscroll-behavior-inline: contain;
   scroll-behavior: auto;
   scroll-snap-type: none;
   scrollbar-width: none;
   touch-action: pan-x pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.archive-grid-viewport.is-dragging,
+.archive-grid-viewport.is-dragging .archive-grid button {
+  cursor: grabbing;
 }
 
 .archive-grid-viewport::-webkit-scrollbar {
@@ -1115,6 +1122,10 @@ html[data-motion-ready] :is(
   scroll-snap-align: none;
   transition: opacity 300ms ease;
   cursor: zoom-in;
+}
+
+.archive-grid img {
+  -webkit-user-drag: none;
 }
 
 .archive-grid button > span {

@@ -202,8 +202,12 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.doesNotMatch(archiveCarousel, /addEventListener\("wheel"/);
   assert.doesNotMatch(archiveCarousel, /pointerenter/);
   assert.doesNotMatch(archiveCarousel, /focusin/);
-  assert.doesNotMatch(archiveCarousel, /pointerdown/);
-  assert.doesNotMatch(archiveCarousel, /setPointerCapture/);
+  assert.match(archiveCarousel, /pointerdown/);
+  assert.match(archiveCarousel, /pointermove/);
+  assert.match(archiveCarousel, /setPointerCapture/);
+  assert.match(archiveCarousel, /DRAG_THRESHOLD_PX\s*=\s*8/);
+  assert.match(archiveCarousel, /suppressClickUntil/);
+  assert.match(archiveCarousel, /handleViewportClick, true/);
   assert.match(archiveCarousel, /ArrowRight/);
   assert.match(archiveCarousel, /requestAnimationFrame/);
   assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*34/);
@@ -229,9 +233,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-hero-scroll-v22/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-hero-scroll-v22/);
-  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-hero-scroll-v22/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-archive-drag-v23/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-archive-drag-v23/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-archive-drag-v23/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);

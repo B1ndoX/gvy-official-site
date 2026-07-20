@@ -26,6 +26,12 @@ export function normalizeLoopPosition(position, loopWidth) {
   return ((Number(position) % loopWidth) + loopWidth) % loopWidth;
 }
 
+export function isCarouselDrag(startX, currentX, threshold = 8) {
+  const distance = Math.abs(Number(currentX) - Number(startX));
+  const minimum = Math.max(0, Number(threshold) || 0);
+  return Number.isFinite(distance) && distance >= minimum;
+}
+
 export function shouldAdvanceCarousel({
   loopWidth,
   manuallyPaused,
@@ -94,6 +100,15 @@ export function initArchiveCarousel({
   let pageTouchActive = false;
   let pageScrolling = false;
   let pageScrollTimer = 0;
+  let dragPointerId = null;
+  let dragStartX = 0;
+  let dragStartScrollLeft = 0;
+  let dragging = false;
+  let suppressClickUntil = 0;
+
+  const DRAG_THRESHOLD_PX = 8;
+  const CLICK_SUPPRESSION_MS = 420;
+  const now = () => view?.performance?.now?.() ?? Date.now();
 
   function updateToggle() {
     controls?.classList.toggle("is-paused", manuallyPaused);
@@ -163,6 +178,61 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
+  function finishPointerDrag(event, { cancelled = false } = {}) {
+    if (event?.pointerId !== dragPointerId) return;
+    if (dragging && !cancelled) suppressClickUntil = now() + CLICK_SUPPRESSION_MS;
+    dragging = false;
+    dragPointerId = null;
+    touchActive = false;
+    viewport.classList.remove("is-dragging");
+    if (event?.pointerId != null && viewport.hasPointerCapture?.(event.pointerId)) {
+      viewport.releasePointerCapture?.(event.pointerId);
+    }
+    viewport.scrollLeft = normalizeLoopPosition(viewport.scrollLeft, loopWidth);
+    lastTimestamp = null;
+  }
+
+  function handlePointerDown(event) {
+    if (event.pointerType !== "mouse" || event.button !== 0 || dragPointerId != null) return;
+    dragPointerId = event.pointerId;
+    dragStartX = event.clientX;
+    dragStartScrollLeft = viewport.scrollLeft;
+    dragging = false;
+    touchActive = true;
+    lastTimestamp = null;
+  }
+
+  function handlePointerMove(event) {
+    if (event.pointerId !== dragPointerId) return;
+    const deltaX = event.clientX - dragStartX;
+    if (!dragging && isCarouselDrag(dragStartX, event.clientX, DRAG_THRESHOLD_PX)) {
+      dragging = true;
+      viewport.classList.add("is-dragging");
+      viewport.setPointerCapture?.(event.pointerId);
+    }
+    if (!dragging) return;
+    event.preventDefault();
+    viewport.scrollLeft = normalizeLoopPosition(dragStartScrollLeft - deltaX, loopWidth);
+  }
+
+  function handlePointerUp(event) {
+    finishPointerDrag(event);
+  }
+
+  function handlePointerCancel(event) {
+    finishPointerDrag(event, { cancelled: true });
+  }
+
+  function handleViewportClick(event) {
+    if (now() > suppressClickUntil) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+  }
+
+  function preventNativeDrag(event) {
+    event.preventDefault();
+  }
+
   function settlePageScroll() {
     pageScrollTimer = 0;
     pageScrolling = false;
@@ -219,6 +289,12 @@ export function initArchiveCarousel({
   animationFrame = frame(tick);
 
   viewport.addEventListener("keydown", handleKeydown);
+  viewport.addEventListener("pointerdown", handlePointerDown);
+  viewport.addEventListener("pointermove", handlePointerMove, { passive: false });
+  viewport.addEventListener("pointerup", handlePointerUp);
+  viewport.addEventListener("pointercancel", handlePointerCancel);
+  viewport.addEventListener("click", handleViewportClick, true);
+  viewport.addEventListener("dragstart", preventNativeDrag);
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
@@ -238,6 +314,12 @@ export function initArchiveCarousel({
       if (pageScrollTimer) cancelTimeout(pageScrollTimer);
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
+      viewport.removeEventListener("pointerdown", handlePointerDown);
+      viewport.removeEventListener("pointermove", handlePointerMove);
+      viewport.removeEventListener("pointerup", handlePointerUp);
+      viewport.removeEventListener("pointercancel", handlePointerCancel);
+      viewport.removeEventListener("click", handleViewportClick, true);
+      viewport.removeEventListener("dragstart", preventNativeDrag);
       viewport.removeEventListener("touchstart", handleTouchStart);
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchEnd);

@@ -3,10 +3,17 @@ import test from "node:test";
 
 import {
   getClosestCardIndex,
+  isCarouselDrag,
   normalizeLoopPosition,
   shouldAdvanceCarousel,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
+
+test("carousel distinguishes a click from an intentional drag", () => {
+  assert.equal(isCarouselDrag(100, 105, 8), false);
+  assert.equal(isCarouselDrag(100, 108, 8), true);
+  assert.equal(isCarouselDrag(100, 82, 8), true);
+});
 
 test("carousel indexes wrap in both directions", () => {
   assert.equal(wrapCarouselIndex(18, 18), 0);
