@@ -24,7 +24,7 @@ export function getClosestCardIndex(viewport, cards) {
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
-  intervalMs = 4800,
+  intervalMs = 4200,
   Observer = view?.IntersectionObserver,
 } = {}) {
   const archiveIndex = root?.querySelector?.("[data-archive-index]");
@@ -52,7 +52,6 @@ export function initArchiveCarousel({
   let scrollFrame = 0;
   let resizeFrame = 0;
   let inView = !Observer;
-  let hovering = false;
   let focusWithin = false;
   let manuallyPaused = reducedMotion;
   let dragging = false;
@@ -103,7 +102,6 @@ export function initArchiveCarousel({
   function canAutoPlay() {
     return !reducedMotion
       && !manuallyPaused
-      && !hovering
       && !focusWithin
       && !dragging
       && inView
@@ -202,16 +200,6 @@ export function initArchiveCarousel({
     else scheduleAuto();
   }
 
-  function handlePointerEnter() {
-    hovering = true;
-    stopAuto();
-  }
-
-  function handlePointerLeave() {
-    hovering = false;
-    scheduleAuto();
-  }
-
   function handleFocusIn() {
     focusWithin = true;
     stopAuto();
@@ -259,8 +247,6 @@ export function initArchiveCarousel({
   viewport.addEventListener("pointerup", finishDrag);
   viewport.addEventListener("pointercancel", finishDrag);
   viewport.addEventListener("click", preventDraggedClick, true);
-  archiveIndex.addEventListener("pointerenter", handlePointerEnter);
-  archiveIndex.addEventListener("pointerleave", handlePointerLeave);
   archiveIndex.addEventListener("focusin", handleFocusIn);
   archiveIndex.addEventListener("focusout", handleFocusOut);
   previous?.addEventListener("click", showPrevious);
@@ -285,8 +271,6 @@ export function initArchiveCarousel({
       viewport.removeEventListener("pointerup", finishDrag);
       viewport.removeEventListener("pointercancel", finishDrag);
       viewport.removeEventListener("click", preventDraggedClick, true);
-      archiveIndex.removeEventListener("pointerenter", handlePointerEnter);
-      archiveIndex.removeEventListener("pointerleave", handlePointerLeave);
       archiveIndex.removeEventListener("focusin", handleFocusIn);
       archiveIndex.removeEventListener("focusout", handleFocusOut);
       previous?.removeEventListener("click", showPrevious);

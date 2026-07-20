@@ -161,6 +161,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.doesNotMatch(archiveCarousel, /elastic\.out/);
   assert.doesNotMatch(archiveCarousel, /skewX/);
   assert.doesNotMatch(archiveCarousel, /addEventListener\("wheel"/);
+  assert.doesNotMatch(archiveCarousel, /pointerenter/);
   assert.match(archiveCarousel, /ArrowRight/);
   assert.match(homepage, /团建相册/);
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
@@ -173,6 +174,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-rhythm-carousel-v10/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
