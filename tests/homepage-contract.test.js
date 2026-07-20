@@ -133,6 +133,10 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   assert.match(cinematicCss, /@media \(max-width: 760px\)/);
   assert.match(cinematicCss, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(cinematicCss, /overflow-x:\s*clip/);
+  assert.match(
+    cinematicCss,
+    /\.signal-lead\s*\{[\s\S]*?max-width:\s*700px;[\s\S]*?text-wrap:\s*balance;/,
+  );
 });
 
 test("fleet operation data contains four official full-bleed stages", () => {
