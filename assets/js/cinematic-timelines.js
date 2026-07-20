@@ -104,8 +104,6 @@ function createHeroTimeline(
     animateMedia,
     animateBlur = true,
     holdDuration = 7.8,
-    exitStart = 17.2,
-    exitDuration = 3.2,
     exitStagger = 0.18,
   },
 ) {
@@ -152,18 +150,6 @@ function createHeroTimeline(
       1,
     )
     .to(heroText, { autoAlpha: 1, y: 0, filter: "none", duration: holdDuration, ease: "sine.inOut" }, 9.4)
-    .to(
-      heroText,
-      {
-        autoAlpha: 0,
-        y: -18,
-        filter: animateBlur ? "blur(8px)" : "none",
-        duration: exitDuration,
-        stagger: exitStagger,
-        ease: "power2.inOut",
-      },
-      exitStart,
-    )
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
     timeline.to(
@@ -172,6 +158,26 @@ function createHeroTimeline(
       9.6,
     );
   }
+
+  gsap
+    .timeline({
+      scrollTrigger: {
+        id: "gvy-hero-exit",
+        trigger: hero,
+        start: "bottom 100%",
+        end: "bottom 40%",
+        scrub: 1.1,
+        invalidateOnRefresh: true,
+      },
+    })
+    .to(heroText, {
+      autoAlpha: 0,
+      y: -18,
+      filter: animateBlur ? "blur(8px)" : "none",
+      duration: 1.4,
+      stagger: { each: exitStagger, from: "end" },
+      ease: "power2.inOut",
+    });
 }
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
@@ -351,25 +357,18 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
     animateMedia: false,
     animateBlur: false,
     holdDuration: 15,
-    exitStart: 24.4,
-    exitDuration: 3.4,
     exitStagger: 0.12,
   });
-  fadeTextSequenceThroughViewport(
-    gsap,
+  showMobileStableContent(gsap, root);
+}
+
+function showMobileStableContent(gsap, root) {
+  gsap.set(
     root.querySelectorAll(
-      ".signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operation-copy, .archive-feature > div, .recruit-copy",
+      ".signal-lockup, .signal-lockup > *, .identity-rail, .identity-rail > *, .manifesto-copy, .manifesto-copy > *, .section-heading, .section-heading > *, .operations-stage, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
     ),
-    "mobile",
-    { start: "top 92%", end: "bottom -14%", enterY: 28, exitY: -20, scrub: 0.8 },
+    { clearProps: "opacity,visibility,transform,filter" },
   );
-  fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button"), "mobile-media", {
-    start: "top 92%",
-    end: "bottom -10%",
-    enterY: 30,
-    exitY: -18,
-    scrub: 0.7,
-  });
 }
 
 function showStableLayout(gsap, root) {
