@@ -52,8 +52,7 @@ export function initArchiveCarousel({
   let scrollFrame = 0;
   let resizeFrame = 0;
   let inView = !Observer;
-  let focusWithin = false;
-  let manuallyPaused = reducedMotion;
+  let manuallyPaused = false;
   let dragging = false;
   let moved = false;
   let suppressClick = false;
@@ -66,10 +65,6 @@ export function initArchiveCarousel({
     if (!toggle) return;
     toggle.setAttribute("aria-pressed", String(manuallyPaused));
     toggle.setAttribute("aria-label", manuallyPaused ? "继续自动切换" : "暂停自动切换");
-    if (reducedMotion) {
-      toggle.disabled = true;
-      toggle.setAttribute("aria-label", "已按系统设置关闭自动切换");
-    }
   }
 
   function updateActive(nextIndex) {
@@ -100,9 +95,7 @@ export function initArchiveCarousel({
   }
 
   function canAutoPlay() {
-    return !reducedMotion
-      && !manuallyPaused
-      && !focusWithin
+    return !manuallyPaused
       && !dragging
       && inView
       && !root.hidden;
@@ -200,18 +193,6 @@ export function initArchiveCarousel({
     else scheduleAuto();
   }
 
-  function handleFocusIn() {
-    focusWithin = true;
-    stopAuto();
-  }
-
-  function handleFocusOut() {
-    frame(() => {
-      focusWithin = archiveIndex.contains(root.activeElement);
-      scheduleAuto();
-    });
-  }
-
   function showPrevious() {
     goTo(activeIndex - 1);
   }
@@ -221,7 +202,6 @@ export function initArchiveCarousel({
   }
 
   function toggleAutoPlay() {
-    if (reducedMotion) return;
     manuallyPaused = !manuallyPaused;
     updateToggle();
     if (!manuallyPaused) toggle?.blur?.();
@@ -247,8 +227,6 @@ export function initArchiveCarousel({
   viewport.addEventListener("pointerup", finishDrag);
   viewport.addEventListener("pointercancel", finishDrag);
   viewport.addEventListener("click", preventDraggedClick, true);
-  archiveIndex.addEventListener("focusin", handleFocusIn);
-  archiveIndex.addEventListener("focusout", handleFocusOut);
   previous?.addEventListener("click", showPrevious);
   next?.addEventListener("click", showNext);
   toggle?.addEventListener("click", toggleAutoPlay);
@@ -271,8 +249,6 @@ export function initArchiveCarousel({
       viewport.removeEventListener("pointerup", finishDrag);
       viewport.removeEventListener("pointercancel", finishDrag);
       viewport.removeEventListener("click", preventDraggedClick, true);
-      archiveIndex.removeEventListener("focusin", handleFocusIn);
-      archiveIndex.removeEventListener("focusout", handleFocusOut);
       previous?.removeEventListener("click", showPrevious);
       next?.removeEventListener("click", showNext);
       toggle?.removeEventListener("click", toggleAutoPlay);

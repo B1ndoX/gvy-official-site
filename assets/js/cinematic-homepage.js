@@ -1,5 +1,5 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-rhythm-carousel-v10";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-rhythm-carousel-v12";
 import { initCinematicTimelines } from "./cinematic-timelines.js";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
