@@ -56,6 +56,10 @@ test("keeps the same hero during a short refresh window", () => {
   assert.deepEqual(selection, { index: 0, shouldPersist: false });
 });
 
+test("keeps the selected hero stable for the legacy seven-day window", () => {
+  assert.equal(HERO_STICKY_TTL_MS, 7 * 24 * 60 * 60 * 1_000);
+});
+
 test("selects again after the sticky refresh window expires", () => {
   const selection = resolveHeroSelection({
     record: { index: 0, selectedAt: 1_000 },
@@ -187,6 +191,31 @@ test("browser controller assigns only the selected video after choosing", () => 
   assert.equal(harness.shell.dataset.heroState, "playing");
   harness.video.dispatch("error");
   assert.equal(harness.shell.dataset.heroState, "poster");
+  controller.cleanup();
+});
+
+test("browser controller reuses the synchronously bootstrapped source", () => {
+  const harness = createHeroHarness();
+  const media = resolveHeroVideo(getHeroMedia(1), { viewportWidth: 390, pixelRatio: 3 });
+  harness.video.src = media.video;
+  harness.video.dataset.heroVideoSelected = media.id;
+  harness.video.dataset.heroVideoQuality = media.quality;
+  harness.video.readyState = 4;
+  harness.video.paused = false;
+
+  const controller = initHeroVideo({
+    root: harness.root,
+    bootstrap: { index: 1 },
+    reducedMotion: false,
+    viewportWidth: 390,
+    pixelRatio: 3,
+  });
+
+  assert.equal(controller.index, 1);
+  assert.equal(harness.video.src, media.video);
+  assert.equal(harness.video.loadCalls, 0);
+  assert.equal(harness.video.playCalls, 0);
+  assert.equal(harness.shell.dataset.heroState, "playing");
   controller.cleanup();
 });
 

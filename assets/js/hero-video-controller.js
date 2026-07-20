@@ -1,6 +1,6 @@
 export const HERO_CACHE_KEY = "gvy-command-hero-video:v6";
 export const HERO_MEDIA_VERSION = "20260720-edgeone-v1";
-export const HERO_STICKY_TTL_MS = 30 * 60 * 1_000;
+export const HERO_STICKY_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
 
 const versioned = (path) => `${path}?v=${HERO_MEDIA_VERSION}`;
 
@@ -129,6 +129,7 @@ export function initHeroVideo({
   pixelRatio = globalThis.devicePixelRatio ?? 1,
   connection = globalThis.navigator?.connection,
   reducedMotion = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false,
+  bootstrap = globalThis.__gvyHeroBootstrap,
   now = Date.now(),
   stickyTtlMs = HERO_STICKY_TTL_MS,
 } = {}) {
@@ -139,14 +140,23 @@ export function initHeroVideo({
     return { index: -1, media: null, cleanup() {} };
   }
 
-  const record = readHeroRecord(storage, cacheKey);
-  const selection = resolveHeroSelection({ record, random, now, stickyTtlMs });
+  const bootstrapIndex = Number(bootstrap?.index);
+  const bootstrapIsValid = Number.isInteger(bootstrapIndex)
+    && bootstrapIndex >= 0
+    && bootstrapIndex < HERO_MEDIA.length;
+  const record = bootstrapIsValid ? null : readHeroRecord(storage, cacheKey);
+  const selection = bootstrapIsValid
+    ? { index: bootstrapIndex, shouldPersist: false }
+    : resolveHeroSelection({ record, random, now, stickyTtlMs });
   const media = resolveHeroVideo(getHeroMedia(selection.index), {
     viewportWidth,
     pixelRatio,
     saveData: connection?.saveData === true,
     effectiveType: connection?.effectiveType || "",
   });
+  const sourceAlreadyAssigned = video.dataset.heroVideoSelected === media.id
+    && video.dataset.heroVideoQuality === media.quality
+    && Boolean(video.src);
 
   if (selection.shouldPersist) {
     writeHeroRecord(storage, cacheKey, selection.index, now);
@@ -188,8 +198,12 @@ export function initHeroVideo({
   listeners.forEach(([name, handler]) => video.addEventListener?.(name, handler));
 
   shell.dataset.heroState = "loading";
-  video.src = media.video;
-  video.load?.();
+  if (!sourceAlreadyAssigned) {
+    video.src = media.video;
+    video.load?.();
+  }
+  if (video.readyState >= 2 && video.paused === false) showVideo();
+  else if (video.readyState >= 2) tryPlay();
 
   return {
     index: selection.index,

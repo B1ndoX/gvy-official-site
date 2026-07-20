@@ -1,8 +1,8 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-archive-drag-v23";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-archive-drag-v23";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260721-hero-startup-v24";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260721-hero-startup-v24";
 import { initDeferredMedia } from "./deferred-media.js";
-import { initHeroVideo } from "./hero-video-controller.js?v=20260720-archive-drag-v23";
+import { initHeroVideo } from "./hero-video-controller.js?v=20260721-hero-startup-v24";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
@@ -26,6 +26,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const archive = initArchiveLightbox({ root });
   const brawl = initMemberBrawlDialog({ root });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
+  root.documentElement?.setAttribute("data-motion-initialized", "true");
   root.documentElement?.removeAttribute("data-motion-pending");
   const cleanups = [hero, deferred, carousel, archive, brawl, timelines].map(asCleanup);
   let cleaned = false;
@@ -43,6 +44,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
       view.removeEventListener?.("pagehide", controller.cleanup);
       cleanups.reverse().forEach((cleanup) => cleanup());
       root.documentElement?.removeAttribute("data-motion-ready");
+      root.documentElement?.removeAttribute("data-motion-initialized");
       if (view[LIFECYCLE_KEY] === controller) delete view[LIFECYCLE_KEY];
     },
   };

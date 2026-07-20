@@ -95,7 +95,7 @@ export function initArchiveCarousel({
   let lastTimestamp = null;
   let loopWidth = 0;
   let inView = !Observer;
-  let manuallyPaused = reducedMotion;
+  let manuallyPaused = false;
   let touchActive = false;
   let pageTouchActive = false;
   let pageScrolling = false;
@@ -266,6 +266,28 @@ export function initArchiveCarousel({
   }
 
   function handleVisibility() {
+    if (!root.hidden) {
+      touchActive = false;
+      pageTouchActive = false;
+      pageScrolling = false;
+      dragging = false;
+      dragPointerId = null;
+      viewport.classList.remove("is-dragging");
+      if (pageScrollTimer) cancelTimeout(pageScrollTimer);
+      pageScrollTimer = 0;
+    }
+    lastTimestamp = null;
+  }
+
+  function recoverTransientPause() {
+    touchActive = false;
+    pageTouchActive = false;
+    pageScrolling = false;
+    dragging = false;
+    dragPointerId = null;
+    viewport.classList.remove("is-dragging");
+    if (pageScrollTimer) cancelTimeout(pageScrollTimer);
+    pageScrollTimer = 0;
     lastTimestamp = null;
   }
 
@@ -293,6 +315,7 @@ export function initArchiveCarousel({
   viewport.addEventListener("pointermove", handlePointerMove, { passive: false });
   viewport.addEventListener("pointerup", handlePointerUp);
   viewport.addEventListener("pointercancel", handlePointerCancel);
+  viewport.addEventListener("lostpointercapture", recoverTransientPause);
   viewport.addEventListener("click", handleViewportClick, true);
   viewport.addEventListener("dragstart", preventNativeDrag);
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
@@ -304,6 +327,10 @@ export function initArchiveCarousel({
   view?.addEventListener?.("touchstart", handlePageTouchStart, { passive: true });
   view?.addEventListener?.("touchend", handlePageTouchEnd, { passive: true });
   view?.addEventListener?.("touchcancel", handlePageTouchEnd, { passive: true });
+  view?.addEventListener?.("pointerup", handlePointerUp, { passive: true });
+  view?.addEventListener?.("pointercancel", handlePointerCancel, { passive: true });
+  view?.addEventListener?.("blur", recoverTransientPause);
+  view?.addEventListener?.("focus", recoverTransientPause);
   root.addEventListener?.("visibilitychange", handleVisibility);
 
   return {
@@ -318,6 +345,7 @@ export function initArchiveCarousel({
       viewport.removeEventListener("pointermove", handlePointerMove);
       viewport.removeEventListener("pointerup", handlePointerUp);
       viewport.removeEventListener("pointercancel", handlePointerCancel);
+      viewport.removeEventListener("lostpointercapture", recoverTransientPause);
       viewport.removeEventListener("click", handleViewportClick, true);
       viewport.removeEventListener("dragstart", preventNativeDrag);
       viewport.removeEventListener("touchstart", handleTouchStart);
@@ -329,6 +357,10 @@ export function initArchiveCarousel({
       view?.removeEventListener?.("touchstart", handlePageTouchStart);
       view?.removeEventListener?.("touchend", handlePageTouchEnd);
       view?.removeEventListener?.("touchcancel", handlePageTouchEnd);
+      view?.removeEventListener?.("pointerup", handlePointerUp);
+      view?.removeEventListener?.("pointercancel", handlePointerCancel);
+      view?.removeEventListener?.("blur", recoverTransientPause);
+      view?.removeEventListener?.("focus", recoverTransientPause);
       root.removeEventListener?.("visibilitychange", handleVisibility);
       cloneHandlers.forEach(([clone, handler]) => {
         clone.removeEventListener("click", handler);

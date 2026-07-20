@@ -61,13 +61,20 @@ test("production build includes both active hero variants", () => {
   assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
 });
 
-test("homepage contains one source-free hero video", () => {
+test("homepage selects and starts one hero before the first paint", () => {
   const heroVideos = homepage.match(/<video\b[^>]*data-hero-video[^>]*>/g) || [];
   assert.equal(heroVideos.length, 1);
   assert.doesNotMatch(heroVideos[0], /\ssrc\s*=/);
   const heroVideoBlock = homepage.match(/<video\b[^>]*data-hero-video[^>]*>[\s\S]*?<\/video>/)?.[0] || "";
   assert.doesNotMatch(heroVideoBlock, /<source\b/);
-  assert.match(homepage, /data-hero-poster/);
+  const heroPoster = homepage.match(/<img\b[^>]*data-hero-poster[^>]*>/)?.[0] || "";
+  assert.doesNotMatch(heroPoster, /\ssrc\s*=/);
+  assert.match(heroPoster, /fetchpriority="high"/);
+  assert.match(homepage, /window\.__gvyHeroBootstrap/);
+  assert.match(homepage, /posterPreload\.rel\s*=\s*"preload"/);
+  assert.match(homepage, /video\.src\s*=\s*bootstrap\.video/);
+  assert.match(homepage, /stickyTtl\s*=\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/);
+  assert.doesNotMatch(homepage, /setTimeout\(\(\)\s*=>\s*document\.documentElement\.removeAttribute\("data-motion-pending"\)/);
   assert.match(homepage, /data-hero-shell/);
 });
 
@@ -215,6 +222,10 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /pageScrolling/);
   assert.match(archiveCarousel, /pageTouchActive/);
   assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
+  assert.match(archiveCarousel, /let manuallyPaused\s*=\s*false/);
+  assert.match(archiveCarousel, /recoverTransientPause/);
+  assert.match(archiveCarousel, /addEventListener\?\.\("pointerup"/);
+  assert.match(archiveCarousel, /addEventListener\?\.\("focus"/);
   assert.doesNotMatch(archiveCarousel, /intervalMs/);
   assert.match(homepage, /团建相册/);
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
@@ -233,12 +244,13 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-archive-drag-v23/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-archive-drag-v23/);
-  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-archive-drag-v23/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260721-hero-startup-v24/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260721-hero-startup-v24/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260721-hero-startup-v24/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
+  assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
 });
