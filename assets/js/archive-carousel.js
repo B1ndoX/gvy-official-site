@@ -70,13 +70,7 @@ export function initArchiveCarousel({
   let loopWidth = 0;
   let inView = !Observer;
   let manuallyPaused = reducedMotion;
-  let dragging = false;
   let touchActive = false;
-  let moved = false;
-  let suppressClick = false;
-  let pointerId = null;
-  let startX = 0;
-  let startScrollLeft = 0;
 
   function updateToggle() {
     controls?.classList.toggle("is-paused", manuallyPaused);
@@ -94,7 +88,6 @@ export function initArchiveCarousel({
   function canMove() {
     return loopWidth > 0
       && !manuallyPaused
-      && !dragging
       && !touchActive
       && inView
       && !root.hidden;
@@ -131,41 +124,6 @@ export function initArchiveCarousel({
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     nudge(event.key === "ArrowRight" ? 1 : -1);
-  }
-
-  function handlePointerDown(event) {
-    if (event.pointerType === "touch" || event.button !== 0 || event.isPrimary === false) return;
-    dragging = true;
-    moved = false;
-    pointerId = event.pointerId;
-    startX = event.clientX;
-    startScrollLeft = viewport.scrollLeft;
-    viewport.classList.add("is-dragging");
-    viewport.setPointerCapture?.(pointerId);
-  }
-
-  function handlePointerMove(event) {
-    if (!dragging || event.pointerId !== pointerId) return;
-    const distance = event.clientX - startX;
-    if (Math.abs(distance) > 7) moved = true;
-    viewport.scrollLeft = normalizeLoopPosition(startScrollLeft - distance, loopWidth);
-  }
-
-  function finishDrag(event) {
-    if (!dragging || (event?.pointerId != null && event.pointerId !== pointerId)) return;
-    dragging = false;
-    suppressClick = moved;
-    viewport.classList.remove("is-dragging");
-    viewport.releasePointerCapture?.(pointerId);
-    pointerId = null;
-    lastTimestamp = null;
-  }
-
-  function preventDraggedClick(event) {
-    if (!suppressClick) return;
-    suppressClick = false;
-    event.preventDefault();
-    event.stopImmediatePropagation();
   }
 
   function handleTouchStart() {
@@ -211,11 +169,6 @@ export function initArchiveCarousel({
   animationFrame = frame(tick);
 
   viewport.addEventListener("keydown", handleKeydown);
-  viewport.addEventListener("pointerdown", handlePointerDown);
-  viewport.addEventListener("pointermove", handlePointerMove);
-  viewport.addEventListener("pointerup", finishDrag);
-  viewport.addEventListener("pointercancel", finishDrag);
-  viewport.addEventListener("click", preventDraggedClick, true);
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
@@ -230,11 +183,6 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
-      viewport.removeEventListener("pointerdown", handlePointerDown);
-      viewport.removeEventListener("pointermove", handlePointerMove);
-      viewport.removeEventListener("pointerup", finishDrag);
-      viewport.removeEventListener("pointercancel", finishDrag);
-      viewport.removeEventListener("click", preventDraggedClick, true);
       viewport.removeEventListener("touchstart", handleTouchStart);
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchEnd);

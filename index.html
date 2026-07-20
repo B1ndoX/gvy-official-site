@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260720-continuous-brawl-v13" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260720-gallery-brawl-cdn-v14" />
   </head>
 
   <body id="pageTop">
@@ -62,7 +62,7 @@
             <img
               class="hero-poster"
               data-hero-poster
-              src="./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp"
+              src="./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp?v=20260720-edgeone-v1"
               width="2560"
               height="1440"
               alt=""
@@ -369,13 +369,15 @@
         <button class="member-brawl-dialog-close" type="button" data-member-brawl-close aria-label="关闭舰队成员大乱斗">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
         </button>
-        <iframe data-member-brawl-frame title="舰队成员大乱斗正式发布版" loading="lazy"></iframe>
+        <div class="member-brawl-stage" data-member-brawl-stage>
+          <iframe data-member-brawl-frame title="舰队成员大乱斗正式发布版" loading="lazy" scrolling="no"></iframe>
+        </div>
       </div>
     </dialog>
 
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260720-continuous-brawl-v13"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260720-gallery-brawl-cdn-v14"></script>
   </body>
 </html>

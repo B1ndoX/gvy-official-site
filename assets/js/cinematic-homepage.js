@@ -1,9 +1,9 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-continuous-brawl-v13";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-continuous-brawl-v13";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-gallery-brawl-cdn-v14";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-gallery-brawl-cdn-v14";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
-import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-continuous-brawl-v13";
+import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-gallery-brawl-cdn-v14";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 

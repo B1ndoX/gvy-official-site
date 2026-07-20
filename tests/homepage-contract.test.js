@@ -5,6 +5,7 @@ import test from "node:test";
 
 const root = new URL("../", import.meta.url);
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
+const edgeoneConfig = JSON.parse(await readFile(new URL("edgeone.json", root), "utf8"));
 const buildScript = await readFile(new URL("scripts/build-site.mjs", root), "utf8");
 const homepage = await readFile(new URL("index.html", root), "utf8");
 const memberBrawlPage = await readFile(new URL("member-brawl.html", root), "utf8");
@@ -28,9 +29,20 @@ const memberBrawlDialog = await readOptional("assets/js/member-brawl-dialog.js")
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
   assert.equal(packageJson.scripts["check:js"], "node scripts/check-js.mjs");
+  assert.equal(packageJson.scripts["check:edgeone"], "node scripts/check-edgeone-media.mjs");
   assert.match(packageJson.scripts.verify, /npm run test/);
   assert.match(packageJson.scripts.verify, /npm run check:js/);
   assert.match(packageJson.scripts.verify, /npm run build/);
+});
+
+test("EdgeOne gives versioned hero media long browser and edge cache lifetimes", () => {
+  const heroRule = edgeoneConfig.headers.find(
+    (rule) => rule.source === "/assets/hero-random/v2/*",
+  );
+  assert.ok(heroRule);
+  const headers = new Map(heroRule.headers.map(({ key, value }) => [key, value]));
+  assert.equal(headers.get("Cache-Control"), "public, max-age=31536000, immutable");
+  assert.equal(headers.get("Pages-Cache-Control"), "s-maxage=7776000");
 });
 
 test("production build copies local GSAP browser bundles", () => {
@@ -169,6 +181,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.doesNotMatch(archiveCarousel, /addEventListener\("wheel"/);
   assert.doesNotMatch(archiveCarousel, /pointerenter/);
   assert.doesNotMatch(archiveCarousel, /focusin/);
+  assert.doesNotMatch(archiveCarousel, /pointerdown/);
+  assert.doesNotMatch(archiveCarousel, /setPointerCapture/);
   assert.match(archiveCarousel, /ArrowRight/);
   assert.match(archiveCarousel, /requestAnimationFrame/);
   assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*34/);
@@ -185,9 +199,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-continuous-brawl-v13/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-continuous-brawl-v13/);
-  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-continuous-brawl-v13/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-gallery-brawl-cdn-v14/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-gallery-brawl-cdn-v14/);
+  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-gallery-brawl-cdn-v14/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -212,6 +226,10 @@ test("member brawl shell preserves the currently published markup and exact runt
   assert.match(memberBrawlPage, /fleet-command-brawl\.js\?v=20260712-audit-fixes/);
   assert.match(memberBrawlPage, /fleet-command\.js\?v=20260712-audit-fixes/);
   assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
+  assert.match(memberBrawlDialog, /BRAWL_DESIGN_WIDTH\s*=\s*1440/);
+  assert.match(memberBrawlDialog, /BRAWL_DESIGN_HEIGHT\s*=\s*900/);
+  assert.match(homepage, /data-member-brawl-stage/);
+  assert.match(homepage, /scrolling="no"/);
   assert.match(buildScript, /"member-brawl\.html"/);
 
   const expectedHashes = new Map([

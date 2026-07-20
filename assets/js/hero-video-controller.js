@@ -1,16 +1,19 @@
 export const HERO_CACHE_KEY = "gvy-command-hero-video:v5";
+export const HERO_MEDIA_VERSION = "20260720-edgeone-v1";
+
+const versioned = (path) => `${path}?v=${HERO_MEDIA_VERSION}`;
 
 const HERO_MEDIA = Object.freeze([
   Object.freeze({
     id: "01",
-    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
+    video: versioned("./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4"),
+    poster: versioned("./assets/hero-random/v2/fleet-hero-01-poster-v2.webp"),
   }),
   Object.freeze({
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
-    videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
+    video: versioned("./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4"),
+    videoLarge: versioned("./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4"),
+    poster: versioned("./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp"),
   }),
 ]);
 

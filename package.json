@@ -6,6 +6,7 @@
     "build": "node scripts/build-site.mjs",
     "test": "node --test",
     "check:js": "node scripts/check-js.mjs",
+    "check:edgeone": "node scripts/check-edgeone-media.mjs",
     "verify": "npm run test && npm run check:js && npm run build"
   },
   "dependencies": {

@@ -101,14 +101,14 @@ test("stores only the previous hero and tolerates storage failures", () => {
 test("maps both enabled selections to their production videos and posters", () => {
   assert.deepEqual(getHeroMedia(0), {
     id: "01",
-    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp",
+    video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4?v=20260720-edgeone-v1",
+    poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp?v=20260720-edgeone-v1",
   });
   assert.deepEqual(getHeroMedia(1), {
     id: "02",
-    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
-    videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4",
-    poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp",
+    video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4?v=20260720-edgeone-v1",
+    videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
+    poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp?v=20260720-edgeone-v1",
   });
   assert.throws(() => getHeroMedia(2), RangeError);
 });

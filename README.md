@@ -18,3 +18,5 @@ Open `http://127.0.0.1:8001/`.
 ## Build
 
 `npm run build` creates a production-only `dist/` directory. `edgeone.json` configures Makers to publish that directory so repository documentation and build scripts are not exposed as site files.
+
+After an EdgeOne deployment, run `npm run check:edgeone`. The check covers every active hero MP4 and fails unless the file is deployed through EdgeOne, supports byte-range `206` responses, uses the immutable one-year browser cache rule, and the warmed follow-up request reports an EdgeOne cache hit.
