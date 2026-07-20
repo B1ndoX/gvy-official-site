@@ -26,6 +26,24 @@ export function normalizeLoopPosition(position, loopWidth) {
   return ((Number(position) % loopWidth) + loopWidth) % loopWidth;
 }
 
+export function shouldAdvanceCarousel({
+  loopWidth,
+  manuallyPaused,
+  touchActive,
+  pageTouchActive,
+  pageScrolling,
+  inView,
+  hidden,
+}) {
+  return loopWidth > 0
+    && !manuallyPaused
+    && !touchActive
+    && !pageTouchActive
+    && !pageScrolling
+    && inView
+    && !hidden;
+}
+
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
@@ -47,6 +65,8 @@ export function initArchiveCarousel({
   const frame = view?.requestAnimationFrame?.bind(view)
     || ((callback) => setTimeout(() => callback(Date.now()), 16));
   const cancelFrame = view?.cancelAnimationFrame?.bind(view) || clearTimeout;
+  const scheduleTimeout = view?.setTimeout?.bind(view) || setTimeout;
+  const cancelTimeout = view?.clearTimeout?.bind(view) || clearTimeout;
   const cloneHandlers = [];
   const cloneCards = cards.map((card, index) => {
     const clone = card.cloneNode(true);
@@ -71,6 +91,9 @@ export function initArchiveCarousel({
   let inView = !Observer;
   let manuallyPaused = reducedMotion;
   let touchActive = false;
+  let pageTouchActive = false;
+  let pageScrolling = false;
+  let pageScrollTimer = 0;
 
   function updateToggle() {
     controls?.classList.toggle("is-paused", manuallyPaused);
@@ -86,11 +109,15 @@ export function initArchiveCarousel({
   }
 
   function canMove() {
-    return loopWidth > 0
-      && !manuallyPaused
-      && !touchActive
-      && inView
-      && !root.hidden;
+    return shouldAdvanceCarousel({
+      loopWidth,
+      manuallyPaused,
+      touchActive,
+      pageTouchActive,
+      pageScrolling,
+      inView,
+      hidden: root.hidden,
+    });
   }
 
   function tick(timestamp) {
@@ -136,6 +163,29 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
+  function settlePageScroll() {
+    pageScrollTimer = 0;
+    pageScrolling = false;
+    lastTimestamp = null;
+  }
+
+  function handlePageScroll() {
+    pageScrolling = true;
+    lastTimestamp = null;
+    if (pageScrollTimer) cancelTimeout(pageScrollTimer);
+    pageScrollTimer = scheduleTimeout(settlePageScroll, 180);
+  }
+
+  function handlePageTouchStart() {
+    pageTouchActive = true;
+    lastTimestamp = null;
+  }
+
+  function handlePageTouchEnd() {
+    pageTouchActive = false;
+    handlePageScroll();
+  }
+
   function handleResize() {
     if (resizeFrame) cancelFrame(resizeFrame);
     resizeFrame = frame(() => {
@@ -174,6 +224,10 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   view?.addEventListener?.("resize", handleResize, { passive: true });
+  view?.addEventListener?.("scroll", handlePageScroll, { passive: true });
+  view?.addEventListener?.("touchstart", handlePageTouchStart, { passive: true });
+  view?.addEventListener?.("touchend", handlePageTouchEnd, { passive: true });
+  view?.addEventListener?.("touchcancel", handlePageTouchEnd, { passive: true });
   root.addEventListener?.("visibilitychange", handleVisibility);
 
   return {
@@ -181,6 +235,7 @@ export function initArchiveCarousel({
     cleanup() {
       if (animationFrame) cancelFrame(animationFrame);
       if (resizeFrame) cancelFrame(resizeFrame);
+      if (pageScrollTimer) cancelTimeout(pageScrollTimer);
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("touchstart", handleTouchStart);
@@ -188,6 +243,10 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchcancel", handleTouchEnd);
       toggle?.removeEventListener("click", toggleAutoPlay);
       view?.removeEventListener?.("resize", handleResize);
+      view?.removeEventListener?.("scroll", handlePageScroll);
+      view?.removeEventListener?.("touchstart", handlePageTouchStart);
+      view?.removeEventListener?.("touchend", handlePageTouchEnd);
+      view?.removeEventListener?.("touchcancel", handlePageTouchEnd);
       root.removeEventListener?.("visibilitychange", handleVisibility);
       cloneHandlers.forEach(([clone, handler]) => {
         clone.removeEventListener("click", handler);

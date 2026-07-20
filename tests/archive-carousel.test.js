@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   getClosestCardIndex,
   normalizeLoopPosition,
+  shouldAdvanceCarousel,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
 
@@ -34,4 +35,21 @@ test("continuous carousel wraps forward and backward without changing visual pha
   assert.equal(normalizeLoopPosition(1010, 1000), 10);
   assert.equal(normalizeLoopPosition(-10, 1000), 990);
   assert.equal(normalizeLoopPosition(450, 1000), 450);
+});
+
+test("continuous carousel pauses while the page is touched or vertically scrolling", () => {
+  const baseState = {
+    loopWidth: 1000,
+    manuallyPaused: false,
+    touchActive: false,
+    pageTouchActive: false,
+    pageScrolling: false,
+    inView: true,
+    hidden: false,
+  };
+
+  assert.equal(shouldAdvanceCarousel(baseState), true);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, pageTouchActive: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, pageScrolling: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, touchActive: true }), false);
 });

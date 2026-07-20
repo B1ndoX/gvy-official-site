@@ -1514,9 +1514,31 @@ noscript {
 @media (max-width: 760px) {
   :root { --page-gutter: 20px; }
 
+  body::before { display: none; }
+
+  html[data-motion-ready] :is(
+    .command-nav,
+    .hero-title,
+    .hero-motto,
+    .signal-lockup,
+    .identity-rail,
+    .manifesto-copy,
+    .section-heading,
+    .operation-copy,
+    .operation-copy > *,
+    .archive-feature,
+    .archive-index,
+    .recruit-copy
+  ) {
+    will-change: auto;
+  }
+
   .command-nav {
     height: 64px;
     padding-inline: 17px;
+    background: rgba(2, 5, 9, 0.94);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 
   .brand-sigil { width: 34px; height: 34px; }
@@ -1526,7 +1548,7 @@ noscript {
   .nav-links a { display: none; }
   .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
 
-  .hero-sequence { height: 190svh; }
+  .hero-sequence { height: 220svh; }
   .hero-title {
     top: auto;
     right: 20px;
@@ -1568,36 +1590,41 @@ noscript {
   .operation-copy-stack { position: relative; width: auto; border-left: 0; background: transparent; }
   .operation-copy {
     position: relative;
-    min-height: 84svh;
-    padding: 42vh 20px 9vh;
+    min-height: auto;
+    padding: calc(56.25vw + 46px) 20px 11vh;
     opacity: 1;
     overflow: hidden;
-    background-position: center;
-    background-size: cover;
+    isolation: isolate;
+    background: #03070d;
   }
   .operation-copy::before,
   .operation-copy::after {
     position: absolute;
-    z-index: -1;
-    inset: 0;
+    z-index: 0;
+    inset: 0 0 auto;
+    height: calc(56.25vw + 74px);
     content: "";
   }
-  .operation-copy:nth-child(1)::before { background: url("./official/operations-combat-1280.webp") 46% center / cover; }
-  .operation-copy:nth-child(2)::before { background: url("./official/operations-industry-1280.webp") 42% center / cover; }
-  .operation-copy:nth-child(3)::before { background: url("./official/operations-logistics-1280.webp") 43% center / cover; }
-  .operation-copy:nth-child(4)::before { background: url("./official/operations-exploration-1280.webp") 43% center / cover; }
-  .operation-copy::after { background: linear-gradient(180deg, rgba(3, 7, 13, 0.08), rgba(3, 7, 13, 0.92) 67%, #03070d); }
+  .operation-copy::before { height: 56.25vw; }
+  .operation-copy > * { position: relative; z-index: 1; }
+  .operation-copy:nth-child(1)::before { background: #03070d url("./official/operations-combat-1280.webp") center top / contain no-repeat; }
+  .operation-copy:nth-child(2)::before { background: #03070d url("./official/operations-industry-1280.webp") center top / contain no-repeat; }
+  .operation-copy:nth-child(3)::before { background: #03070d url("./official/operations-logistics-1280.webp") center top / contain no-repeat; }
+  .operation-copy:nth-child(4)::before { background: #03070d url("./official/operations-exploration-1280.webp") center top / contain no-repeat; }
+  .operation-copy::after { background: linear-gradient(180deg, transparent 38%, rgba(3, 7, 13, 0.72) 72%, #03070d 100%); }
   .operation-number { font-size: 7rem; }
   .operation-progress { display: none; }
 
   .archive-section {
     margin-top: 0;
     padding-block: 10vh 12vh;
+    overflow: hidden;
     background: #040910;
   }
   .archive-section::before {
     background: radial-gradient(circle at 78% 22%, rgba(42, 105, 139, 0.11), transparent 27rem);
   }
+  .archive-ambient { display: none; }
   .featured-archive { margin-top: 9vh; gap: 72px; }
   .archive-feature,
   .archive-feature:nth-child(even) { display: block; }
@@ -1608,6 +1635,10 @@ noscript {
   .archive-index-heading { margin-bottom: 20px; }
   .archive-grid { gap: 10px; padding-inline: 20px; will-change: auto; }
   .archive-grid button { width: min(76vw, 360px); flex-basis: min(76vw, 360px); }
+  .archive-gallery-controls {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 
   .recruit-section { min-height: 100svh; }
   .recruit-image img { object-position: 62% center; }

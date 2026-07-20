@@ -1,6 +1,6 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-hero-brawl-v15";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-hero-brawl-v15";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-mobile-stability-v17";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-mobile-stability-v17";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";

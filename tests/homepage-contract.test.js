@@ -172,6 +172,9 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /operationsStage/);
   assert.match(cinematicTimelines, /operationProgress/);
   assert.match(cinematicTimelines, /yPercent:\s*-100/);
+  assert.match(cinematicTimelines, /holdDuration:\s*15/);
+  assert.match(cinematicTimelines, /exitStart:\s*24\.4/);
+  assert.match(cinematicTimelines, /animateBlur:\s*false/);
   assert.match(homepage, /data-motion-pending/);
   assert.match(homepage, /data-archive-index/);
   assert.match(homepage, /data-archive-carousel-toggle/);
@@ -192,10 +195,16 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /requestAnimationFrame/);
   assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*34/);
   assert.match(archiveCarousel, /data-archive-clone/);
+  assert.match(archiveCarousel, /pageScrolling/);
+  assert.match(archiveCarousel, /pageTouchActive/);
+  assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
   assert.doesNotMatch(archiveCarousel, /intervalMs/);
   assert.match(homepage, /团建相册/);
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
+  assert.match(cinematicCss, /\.operation-copy:nth-child\(1\)::before[\s\S]*?\/ contain no-repeat/);
+  assert.match(cinematicCss, /\.archive-ambient\s*\{\s*display:\s*none;/);
+  assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*220svh;/);
   assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });
 
@@ -204,8 +213,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-hero-brawl-v15/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-hero-brawl-v15/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-mobile-stability-v17/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-mobile-stability-v17/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);

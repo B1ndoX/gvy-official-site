@@ -97,7 +97,18 @@ function fadeTextSequenceThroughViewport(
   });
 }
 
-function createHeroTimeline(gsap, root, { animateMedia }) {
+function createHeroTimeline(
+  gsap,
+  root,
+  {
+    animateMedia,
+    animateBlur = true,
+    holdDuration = 7.8,
+    exitStart = 17.2,
+    exitDuration = 3.2,
+    exitStagger = 0.18,
+  },
+) {
   const hero = root.querySelector("[data-hero-sequence]");
   if (!hero) return;
 
@@ -129,29 +140,29 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   timeline
     .fromTo(
       heroText,
-      { autoAlpha: 0, y: 34, filter: "blur(10px)" },
+      { autoAlpha: 0, y: 34, filter: animateBlur ? "blur(10px)" : "none" },
       {
         autoAlpha: 1,
         y: 0,
-        filter: "blur(0px)",
+        filter: "none",
         duration: 3.8,
         stagger: 0.76,
         ease: "power2.out",
       },
       1,
     )
-    .to(heroText, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 7.8, ease: "sine.inOut" }, 9.4)
+    .to(heroText, { autoAlpha: 1, y: 0, filter: "none", duration: holdDuration, ease: "sine.inOut" }, 9.4)
     .to(
       heroText,
       {
         autoAlpha: 0,
         y: -18,
-        filter: "blur(8px)",
-        duration: 3.2,
-        stagger: 0.18,
+        filter: animateBlur ? "blur(8px)" : "none",
+        duration: exitDuration,
+        stagger: exitStagger,
         ease: "power2.inOut",
       },
-      17.2,
+      exitStart,
     )
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
@@ -336,7 +347,14 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
 }
 
 function createMobileTimelines(gsap, ScrollTrigger, root) {
-  createHeroTimeline(gsap, root, { animateMedia: false });
+  createHeroTimeline(gsap, root, {
+    animateMedia: false,
+    animateBlur: false,
+    holdDuration: 15,
+    exitStart: 24.4,
+    exitDuration: 3.4,
+    exitStagger: 0.12,
+  });
   fadeTextSequenceThroughViewport(
     gsap,
     root.querySelectorAll(
