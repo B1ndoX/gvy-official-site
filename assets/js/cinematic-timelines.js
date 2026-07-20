@@ -122,6 +122,38 @@ function createHeroTimeline(
     ...gsap.utils.toArray(":scope > *", heroMotto),
   ];
   const rootElement = root.documentElement;
+  const view = root.defaultView;
+  const animateInitialReveal = Math.abs(view?.scrollY || 0) <= 2;
+
+  rootElement?.removeAttribute("data-hero-intro-complete");
+  if (animateInitialReveal) {
+    const introFrom = {
+      autoAlpha: 0,
+      y: 24,
+      filter: animateBlur ? "blur(8px)" : "none",
+    };
+    gsap.set(heroText, introFrom);
+    gsap
+      .timeline({
+        defaults: { overwrite: "auto" },
+        onComplete: () => rootElement?.setAttribute("data-hero-intro-complete", "true"),
+      })
+      .to(
+        heroText,
+        {
+          autoAlpha: 1,
+          y: 0,
+          filter: "none",
+          duration: 1.6,
+          stagger: 0.2,
+          ease: "power2.out",
+        },
+      );
+  } else {
+    gsap.set(heroText, { autoAlpha: 1, y: 0, filter: "none" });
+    rootElement?.setAttribute("data-hero-intro-complete", "true");
+  }
+
   const syncLockedExit = () => {
     if (!lockExit || !rootElement) return;
     const viewportHeight = root.defaultView?.innerHeight || 1;
@@ -153,20 +185,6 @@ function createHeroTimeline(
   gsap.set([heroTitle, heroMotto], { autoAlpha: 1 });
   if (commandNav) gsap.set(commandNav, { autoAlpha: 0, yPercent: -100 });
   timeline
-    .fromTo(
-      heroText,
-      { autoAlpha: 0, y: 34, filter: animateBlur ? "blur(10px)" : "none" },
-      {
-        autoAlpha: 1,
-        y: 0,
-        filter: "none",
-        duration: 3.8,
-        stagger: 0.76,
-        ease: "power2.out",
-      },
-      1,
-    )
-    .to(heroText, { autoAlpha: 1, y: 0, filter: "none", duration: holdDuration, ease: "sine.inOut" }, 9.4)
     .to(
       heroText,
       {
@@ -420,6 +438,7 @@ export function initCinematicTimelines({
     },
     cleanup() {
       root.documentElement?.removeAttribute("data-hero-exit-complete");
+      root.documentElement?.removeAttribute("data-hero-intro-complete");
       media.revert();
       ScrollTrigger.getAll()
         .filter((trigger) => trigger.vars?.id?.startsWith?.(TIMELINE_PREFIX))

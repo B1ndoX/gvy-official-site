@@ -179,6 +179,11 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /end:\s*"bottom 40%"/);
   assert.match(cinematicTimelines, /exitDuration:\s*10\.4/);
   assert.match(cinematicTimelines, /data-hero-exit-complete/);
+  assert.match(cinematicTimelines, /data-hero-intro-complete/);
+  assert.match(cinematicTimelines, /animateInitialReveal/);
+  assert.match(cinematicTimelines, /gsap\.set\(heroText, introFrom\)/);
+  assert.match(cinematicTimelines, /duration:\s*1\.6/);
+  assert.match(cinematicTimelines, /stagger:\s*0\.2/);
   assert.match(cinematicTimelines, /stagger:\s*\{\s*each:\s*exitStagger,\s*from:\s*"end"\s*\}/);
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
@@ -226,9 +231,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-mobile-sticky-v20/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-mobile-sticky-v20/);
-  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-mobile-sticky-v20/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-hero-intro-v21/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-hero-intro-v21/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-hero-intro-v21/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
