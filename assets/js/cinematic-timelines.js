@@ -129,22 +129,36 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   timeline
     .fromTo(
       heroText,
-      { autoAlpha: 0, y: 38 },
-      { autoAlpha: 1, y: 0, duration: 3.1, stagger: 0.68, ease: "none" },
+      { autoAlpha: 0, y: 34, filter: "blur(10px)" },
+      {
+        autoAlpha: 1,
+        y: 0,
+        filter: "blur(0px)",
+        duration: 3.8,
+        stagger: 0.76,
+        ease: "power2.out",
+      },
       1,
     )
-    .to(heroText, { autoAlpha: 1, y: 0, duration: 6.6, ease: "none" }, 6.82)
+    .to(heroText, { autoAlpha: 1, y: 0, filter: "blur(0px)", duration: 7.8, ease: "sine.inOut" }, 9.4)
     .to(
       heroText,
-      { autoAlpha: 0, y: -22, duration: 2.5, stagger: 0.16, ease: "none" },
-      13.42,
+      {
+        autoAlpha: 0,
+        y: -18,
+        filter: "blur(8px)",
+        duration: 3.2,
+        stagger: 0.18,
+        ease: "power2.inOut",
+      },
+      17.2,
     )
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
     timeline.to(
       commandNav,
-      { autoAlpha: 1, yPercent: 0, duration: 1.6, ease: "none" },
-      6.9,
+      { autoAlpha: 1, yPercent: 0, duration: 1.8, ease: "power2.out" },
+      9.6,
     );
   }
 }

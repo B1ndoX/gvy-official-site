@@ -80,7 +80,7 @@ test("homepage follows the approved voyage narrative", () => {
   assert.match(homepage, /每一次远航，都需要不同的人/);
   assert.match(homepage, /我们真实经历的远航/);
   assert.match(homepage, /下一段航程/);
-  assert.match(homepage, /等待你的<em>加入<\/em>/);
+  assert.match(homepage, /期待你的<em>加入<\/em>/);
   assert.equal((homepage.match(/data-operation-index=/g) || []).length, 4);
 });
 
@@ -199,9 +199,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-gallery-brawl-cdn-v14/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-gallery-brawl-cdn-v14/);
-  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-gallery-brawl-cdn-v14/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-hero-brawl-v15/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-hero-brawl-v15/);
+  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-hero-brawl-v15/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -229,6 +229,10 @@ test("member brawl shell preserves the currently published markup and exact runt
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_WIDTH\s*=\s*1440/);
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_HEIGHT\s*=\s*900/);
   assert.match(homepage, /data-member-brawl-stage/);
+  assert.match(homepage, /期待你的<em>加入<\/em>/);
+  assert.match(cinematicCss, /\.member-brawl-dialog[\s\S]*?aspect-ratio:\s*8\s*\/\s*5/);
+  assert.match(cinematicCss, /\.hero-title h1 span[\s\S]*?font-weight:\s*900/);
+  assert.match(cinematicTimelines, /ease:\s*"power2\.out"/);
   assert.match(homepage, /scrolling="no"/);
   assert.match(buildScript, /"member-brawl\.html"/);
 

@@ -1,6 +1,6 @@
 const BRAWL_DESIGN_WIDTH = 1440;
 const BRAWL_DESIGN_HEIGHT = 900;
-const BRAWL_FIT_PADDING = 24;
+const BRAWL_FIT_PADDING = 0;
 
 export function getBrawlFit(
   containerWidth,

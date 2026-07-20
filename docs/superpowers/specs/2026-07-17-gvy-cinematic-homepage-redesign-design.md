@@ -246,7 +246,7 @@ Original JPEG files remain untouched. Derived WebP or AVIF display assets use ex
 Labels:
 
 - `THE NEXT VOYAGE`
-- `下一段航程，等待你的加入`
+- `下一段航程，期待你的加入`
 
 Featured archive imagery contracts into distant lights or coordinates. A deep-space view returns, followed by the title, supporting copy, QQ group 691311516, and the `加入星际远航者` action.
 

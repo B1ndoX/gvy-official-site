@@ -322,40 +322,50 @@ a:focus-visible {
 .hero-title {
   position: absolute;
   z-index: 5;
-  top: 49%;
-  left: var(--page-gutter);
-  width: min(800px, 72vw);
-  transform: translateY(-50%);
+  right: clamp(20px, 6vw, 120px);
+  bottom: clamp(200px, 27vh, 310px);
+  left: clamp(20px, 6vw, 120px);
+  width: min(960px, calc(100vw - 40px));
+}
+
+.hero-title > .system-label {
+  color: var(--fleet-gold);
 }
 
 .hero-title h1 {
   display: flex;
-  margin: 21px 0 0;
+  gap: 8px;
+  margin: 17px 0 0;
   flex-direction: column;
+  line-height: 0.95;
   text-shadow: 0 4px 40px rgba(0, 0, 0, 0.4);
 }
 
 .hero-title h1 span {
-  font-size: clamp(3.1rem, 7.4vw, 8.2rem);
-  font-weight: 300;
-  letter-spacing: -0.06em;
-  line-height: 0.92;
+  font-size: clamp(2.45rem, 5.2vw, 6.6rem);
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 0.95;
+  white-space: nowrap;
+}
+
+.hero-title h1 small,
+.hero-title h1 em {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: clamp(0.78rem, 1.1vw, 1rem);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  line-height: 1.25;
+  text-transform: uppercase;
 }
 
 .hero-title h1 small {
-  margin-top: 20px;
-  font-size: clamp(1rem, 2.1vw, 2.1rem);
-  font-weight: 400;
-  letter-spacing: 0.2em;
+  color: rgba(242, 245, 247, 0.82);
 }
 
 .hero-title h1 em {
-  margin-top: 10px;
-  color: var(--fleet-gold);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.75rem;
-  font-style: normal;
-  letter-spacing: 0.38em;
+  color: rgba(102, 188, 229, 0.88);
 }
 
 .hero-motto {
@@ -1426,10 +1436,11 @@ html[data-motion-ready] :is(
 /* The current production brawl is isolated in an iframe so its exact CSS/runtime
    remains untouched by the cinematic homepage. */
 .member-brawl-dialog {
-  width: min(1540px, calc(100vw - 48px));
+  width: min(1440px, calc(100vw - 48px), calc(160svh - 76.8px));
   max-width: none;
-  height: min(840px, calc(100svh - 48px));
+  height: auto;
   max-height: none;
+  aspect-ratio: 8 / 5;
   margin: auto;
   padding: 0;
   overflow: hidden;
@@ -1445,19 +1456,18 @@ html[data-motion-ready] :is(
 }
 
 .member-brawl-dialog-shell {
-  width: 100%;
-  height: 100%;
-}
-
-.member-brawl-dialog-shell {
   position: relative;
   display: grid;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   place-items: center;
 }
 
 .member-brawl-stage {
   position: relative;
+  width: 100%;
+  height: 100%;
   flex: none;
   overflow: hidden;
 }
@@ -1533,9 +1543,16 @@ noscript {
   .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
 
   .hero-sequence { height: 190svh; }
-  .hero-title { top: 46%; width: calc(100% - 40px); }
-  .hero-title h1 span { font-size: clamp(3rem, 16vw, 5rem); }
-  .hero-title h1 small { font-size: clamp(0.75rem, 4vw, 1rem); letter-spacing: 0.14em; }
+  .hero-title {
+    top: auto;
+    right: 20px;
+    bottom: clamp(250px, 37vh, 340px);
+    left: 20px;
+    width: auto;
+  }
+  .hero-title h1 span { font-size: clamp(2.35rem, 12.5vw, 4.6rem); white-space: normal; }
+  .hero-title h1 small,
+  .hero-title h1 em { font-size: 0.68rem; }
   .hero-motto { right: 20px; bottom: 15vh; max-width: 270px; }
   .hero-motto p { font-size: 0.87rem; }
   .hero-scroll { bottom: 25px; }
@@ -1623,8 +1640,11 @@ noscript {
   .archive-dialog-next { right: 20px; }
   .archive-dialog figcaption { padding: 0 58px; justify-content: center; }
   .archive-dialog figcaption p { display: none; }
-  .member-brawl-dialog { width: 100vw; height: 100svh; border: 0; }
-  .member-brawl-dialog-close { top: 10px; right: 10px; }
+  .member-brawl-dialog {
+    width: min(1440px, calc(100vw - 24px), calc(160svh - 38.4px));
+    border: 1px solid rgba(102, 188, 229, 0.3);
+  }
+  .member-brawl-dialog-close { top: 8px; right: 8px; width: 36px; height: 36px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
