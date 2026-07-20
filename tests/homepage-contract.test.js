@@ -201,7 +201,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-hero-brawl-v15/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-hero-brawl-v15/);
-  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-hero-brawl-v15/);
+  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -216,7 +216,7 @@ test("gallery exposes every one of the 18 production team photos before seamless
   }
 });
 
-test("member brawl shell preserves the currently published markup and exact runtime assets", async () => {
+test("member brawl popup preserves the published runtime without a nested frame shell", async () => {
   assert.match(memberBrawlPage, /GVY \/\/ MEMBER ARENA/);
   assert.match(memberBrawlPage, /JOIN READY/);
   assert.match(memberBrawlPage, /RECRUIT ARENA/);
@@ -228,12 +228,15 @@ test("member brawl shell preserves the currently published markup and exact runt
   assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_WIDTH\s*=\s*1440/);
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_HEIGHT\s*=\s*900/);
-  assert.match(homepage, /data-member-brawl-stage/);
+  assert.doesNotMatch(homepage, /data-member-brawl-stage|member-brawl-dialog-shell/);
   assert.match(homepage, /期待你的<em>加入<\/em>/);
   assert.match(cinematicCss, /\.member-brawl-dialog[\s\S]*?aspect-ratio:\s*8\s*\/\s*5/);
   assert.match(cinematicCss, /\.hero-title h1 span[\s\S]*?font-weight:\s*900/);
   assert.match(cinematicTimelines, /ease:\s*"power2\.out"/);
   assert.match(homepage, /scrolling="no"/);
+  assert.match(memberBrawlDialog, /member-brawl\.html\?v=20260720-brawl-frame-v16/);
+  assert.match(memberBrawlPage, /\.brawl-section[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/);
+  assert.match(memberBrawlPage, /\.member-brawl-terminal[\s\S]*?width:\s*100%;[\s\S]*?height:\s*100%/);
   assert.match(buildScript, /"member-brawl\.html"/);
 
   const expectedHashes = new Map([

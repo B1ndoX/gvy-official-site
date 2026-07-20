@@ -3,7 +3,7 @@ import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-hero-brawl
 import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-hero-brawl-v15";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
-import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-hero-brawl-v15";
+import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 

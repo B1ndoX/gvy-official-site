@@ -28,13 +28,11 @@ export function initMemberBrawlDialog({
   ResizeObserverClass = view?.ResizeObserver,
 } = {}) {
   const dialog = root?.querySelector?.("[data-member-brawl-dialog]");
-  const shell = dialog?.querySelector?.(".member-brawl-dialog-shell");
-  const stage = dialog?.querySelector?.("[data-member-brawl-stage]");
   const frame = dialog?.querySelector?.("[data-member-brawl-frame]");
   const closeButton = dialog?.querySelector?.("[data-member-brawl-close]");
   const openers = Array.from(root?.querySelectorAll?.("[data-member-brawl-open]") || []);
 
-  if (!dialog || !shell || !stage || !frame || openers.length === 0) {
+  if (!dialog || !frame || openers.length === 0) {
     return { cleanup() {} };
   }
 
@@ -45,9 +43,7 @@ export function initMemberBrawlDialog({
 
   const applyFit = () => {
     fitFrame = 0;
-    const fit = getBrawlFit(shell.clientWidth, shell.clientHeight);
-    stage.style.width = `${fit.width}px`;
-    stage.style.height = `${fit.height}px`;
+    const fit = getBrawlFit(dialog.clientWidth, dialog.clientHeight);
     frame.style.width = `${BRAWL_DESIGN_WIDTH}px`;
     frame.style.height = `${BRAWL_DESIGN_HEIGHT}px`;
     frame.style.transform = `scale(${fit.scale})`;
@@ -71,7 +67,9 @@ export function initMemberBrawlDialog({
   const open = (event) => {
     restoreFocus = event?.currentTarget || root.activeElement || null;
     previousBodyOverflow = body?.style?.overflow || "";
-    if (!frame.getAttribute("src")) frame.setAttribute("src", "./member-brawl.html");
+    if (!frame.getAttribute("src")) {
+      frame.setAttribute("src", "./member-brawl.html?v=20260720-brawl-frame-v16");
+    }
     if (body?.style) body.style.overflow = "hidden";
     if (!dialog.open) dialog.showModal();
     requestFit();
@@ -88,7 +86,7 @@ export function initMemberBrawlDialog({
   };
 
   const resizeObserver = ResizeObserverClass ? new ResizeObserverClass(requestFit) : null;
-  resizeObserver?.observe(shell);
+  resizeObserver?.observe(dialog);
   openers.forEach((button) => button.addEventListener("click", open));
   closeButton?.addEventListener("click", close);
   frame.addEventListener("load", requestFit);
