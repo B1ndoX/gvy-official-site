@@ -77,7 +77,8 @@ test("homepage follows the approved voyage narrative", () => {
 
   assert.match(homepage, /舰队信号已接入/);
   assert.match(homepage, /因远航而集结/);
-  assert.match(homepage, /每一次远航，都需要不同的人/);
+  assert.match(homepage, /远航，从来不是一个人的故事/);
+  assert.match(homepage, /有人迎战，有人开拓，有人维系航线，也有人率先驶向未知。/);
   assert.match(homepage, /我们真实经历的远航/);
   assert.match(homepage, /下一段航程/);
   assert.match(homepage, /期待你的<em>加入<\/em>/);

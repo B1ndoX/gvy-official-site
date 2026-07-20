@@ -196,7 +196,7 @@ There is no typewriter effect, card grid, split-column layout, or rapid entrance
 Labels:
 
 - `FLEET OPERATIONS`
-- `每一次远航，都需要不同的人`
+- `远航，从来不是一个人的故事`
 
 One pinned visual stage presents four sequential operation states:
 
