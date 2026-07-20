@@ -106,6 +106,7 @@ function createHeroTimeline(
     holdDuration = 7.8,
     exitDuration = 5.8,
     exitStagger = 0.18,
+    lockExit = false,
   },
 ) {
   const hero = root.querySelector("[data-hero-sequence]");
@@ -120,6 +121,18 @@ function createHeroTimeline(
     ...gsap.utils.toArray(":scope > .system-label, h1 > *", heroTitle),
     ...gsap.utils.toArray(":scope > *", heroMotto),
   ];
+  const rootElement = root.documentElement;
+  const syncLockedExit = () => {
+    if (!lockExit || !rootElement) return;
+    const viewportHeight = root.defaultView?.innerHeight || 1;
+    const bottomRatio = hero.getBoundingClientRect().bottom / viewportHeight;
+    if (bottomRatio <= 0.42) {
+      rootElement.setAttribute("data-hero-exit-complete", "true");
+    } else if (bottomRatio >= 1.02) {
+      rootElement.removeAttribute("data-hero-exit-complete");
+    }
+  };
+  if (lockExit) rootElement?.removeAttribute("data-hero-exit-complete");
   const timeline = gsap.timeline({
     scrollTrigger: {
       id: "gvy-hero",
@@ -128,6 +141,8 @@ function createHeroTimeline(
       end: "bottom 40%",
       scrub: 1.4,
       invalidateOnRefresh: true,
+      onUpdate: syncLockedExit,
+      onRefresh: syncLockedExit,
     },
   });
 
@@ -353,6 +368,7 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
     holdDuration: 15,
     exitDuration: 10.4,
     exitStagger: 0.12,
+    lockExit: true,
   });
   showMobileStableContent(gsap, root);
 }
@@ -403,6 +419,7 @@ export function initCinematicTimelines({
       ScrollTrigger.refresh();
     },
     cleanup() {
+      root.documentElement?.removeAttribute("data-hero-exit-complete");
       media.revert();
       ScrollTrigger.getAll()
         .filter((trigger) => trigger.vars?.id?.startsWith?.(TIMELINE_PREFIX))

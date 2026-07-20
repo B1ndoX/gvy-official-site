@@ -1,8 +1,8 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-reverse-stability-v19";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-reverse-stability-v19";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-mobile-sticky-v20";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-mobile-sticky-v20";
 import { initDeferredMedia } from "./deferred-media.js";
-import { initHeroVideo } from "./hero-video-controller.js";
+import { initHeroVideo } from "./hero-video-controller.js?v=20260720-mobile-sticky-v20";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";

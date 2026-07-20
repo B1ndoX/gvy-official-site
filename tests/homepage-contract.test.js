@@ -54,8 +54,10 @@ test("production build copies local GSAP browser bundles", () => {
 
 test("production build includes both active hero variants", () => {
   assert.match(buildScript, /fleet-hero-01-1080p-v4\.mp4/);
+  assert.match(buildScript, /fleet-hero-01-mobile-720p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-01-poster-v2\.webp/);
   assert.match(buildScript, /fleet-hero-02-1080p-v4\.mp4/);
+  assert.match(buildScript, /fleet-hero-02-mobile-720p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
 });
 
@@ -176,6 +178,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /animateBlur:\s*false/);
   assert.match(cinematicTimelines, /end:\s*"bottom 40%"/);
   assert.match(cinematicTimelines, /exitDuration:\s*10\.4/);
+  assert.match(cinematicTimelines, /data-hero-exit-complete/);
   assert.match(cinematicTimelines, /stagger:\s*\{\s*each:\s*exitStagger,\s*from:\s*"end"\s*\}/);
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
@@ -213,6 +216,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicCss, /\.archive-ambient\s*\{\s*display:\s*none;/);
   assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*220svh;/);
   assert.match(cinematicCss, /rgba\(2, 4, 8, 0\.72\) 84%[\s\S]*?#020408 100%/);
+  assert.match(cinematicCss, /overscroll-behavior-y:\s*none/);
+  assert.match(cinematicCss, /html\[data-hero-exit-complete\]/);
   assert.match(cinematicHomepage, /removeAttribute\("data-motion-pending"\)/);
 });
 
@@ -221,8 +226,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-reverse-stability-v19/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-reverse-stability-v19/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-mobile-sticky-v20/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-mobile-sticky-v20/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260720-mobile-sticky-v20/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);

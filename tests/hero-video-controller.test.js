@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  HERO_STICKY_TTL_MS,
   getHeroMedia,
   initHeroVideo,
   readHeroRecord,
@@ -44,11 +45,23 @@ function createHeroHarness() {
   return { root, shell, poster, video };
 }
 
-test("avoids immediately repeating the previous hero", () => {
+test("keeps the same hero during a short refresh window", () => {
   const selection = resolveHeroSelection({
-    record: { index: 0 },
+    record: { index: 0, selectedAt: 1_000 },
     optionCount: 2,
     random: () => 0.99,
+    now: 2_000,
+  });
+
+  assert.deepEqual(selection, { index: 0, shouldPersist: false });
+});
+
+test("selects again after the sticky refresh window expires", () => {
+  const selection = resolveHeroSelection({
+    record: { index: 0, selectedAt: 1_000 },
+    optionCount: 2,
+    random: () => 0.99,
+    now: 1_000 + HERO_STICKY_TTL_MS,
   });
 
   assert.deepEqual(selection, { index: 1, shouldPersist: true });
@@ -76,9 +89,9 @@ test("rejects invalid previous indexes", () => {
 
 test("reads a valid record and tolerates unavailable storage", () => {
   const storage = {
-    getItem: () => JSON.stringify({ index: 1 }),
+    getItem: () => JSON.stringify({ index: 1, selectedAt: 12_345 }),
   };
-  assert.deepEqual(readHeroRecord(storage, "hero"), { index: 1 });
+  assert.deepEqual(readHeroRecord(storage, "hero"), { index: 1, selectedAt: 12_345 });
 
   assert.equal(
     readHeroRecord({ getItem: () => { throw new Error("blocked"); } }, "hero"),
@@ -86,12 +99,12 @@ test("reads a valid record and tolerates unavailable storage", () => {
   );
 });
 
-test("stores only the previous hero and tolerates storage failures", () => {
+test("stores the selected hero with its sticky timestamp and tolerates storage failures", () => {
   let saved = null;
   const storage = { setItem: (_key, value) => { saved = JSON.parse(value); } };
 
-  assert.equal(writeHeroRecord(storage, "hero", 1), true);
-  assert.deepEqual(saved, { index: 1 });
+  assert.equal(writeHeroRecord(storage, "hero", 1, 12_345), true);
+  assert.deepEqual(saved, { index: 1, selectedAt: 12_345 });
   assert.equal(
     writeHeroRecord({ setItem: () => { throw new Error("blocked"); } }, "hero", 0),
     false,
@@ -102,11 +115,13 @@ test("maps both enabled selections to their production videos and posters", () =
   assert.deepEqual(getHeroMedia(0), {
     id: "01",
     video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4?v=20260720-edgeone-v1",
+    videoMobile: "./assets/hero-random/v2/fleet-hero-01-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
     poster: "./assets/hero-random/v2/fleet-hero-01-poster-v2.webp?v=20260720-edgeone-v1",
   });
   assert.deepEqual(getHeroMedia(1), {
     id: "02",
     video: "./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4?v=20260720-edgeone-v1",
+    videoMobile: "./assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
     videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
     poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp?v=20260720-edgeone-v1",
   });
@@ -127,15 +142,15 @@ test("selects one quality tier before assigning the hero source", () => {
   );
   assert.equal(
     resolveHeroVideo(media02, { viewportWidth: 390, pixelRatio: 3, effectiveType: "4g" }).quality,
-    "1080p",
+    "720p",
   );
   assert.equal(
     resolveHeroVideo(media02, { viewportWidth: 2_560, pixelRatio: 1, effectiveType: "3g" }).quality,
-    "1080p",
+    "720p",
   );
   assert.equal(
     resolveHeroVideo(media02, { viewportWidth: 2_560, pixelRatio: 1, saveData: true }).quality,
-    "1080p",
+    "720p",
   );
 });
 
@@ -152,16 +167,19 @@ test("browser controller assigns only the selected video after choosing", () => 
     storage,
     random: () => 0.99,
     reducedMotion: false,
+    viewportWidth: 390,
+    now: 12_345,
   });
 
   assert.equal(controller.index, 1);
   assert.equal(harness.poster.src, getHeroMedia(1).poster);
   assert.equal(harness.video.poster, getHeroMedia(1).poster);
-  assert.equal(harness.video.src, getHeroMedia(1).video);
-  assert.equal(harness.video.dataset.heroVideoQuality, "1080p");
+  assert.equal(harness.video.src, getHeroMedia(1).videoMobile);
+  assert.equal(harness.video.dataset.heroVideoQuality, "720p");
   assert.equal(harness.video.loadCalls, 1);
   assert.equal(harness.shell.dataset.heroState, "loading");
   assert.equal(saved.index, 1);
+  assert.equal(saved.selectedAt, 12_345);
 
   harness.video.dispatch("canplay");
   assert.equal(harness.video.playCalls, 1);
@@ -176,7 +194,7 @@ test("reduced motion keeps the matching poster without assigning video src", () 
   const harness = createHeroHarness();
   let saved = null;
   const storage = {
-    getItem: () => JSON.stringify({ index: 1 }),
+    getItem: () => JSON.stringify({ index: 1, selectedAt: 12_000 }),
     setItem: (_key, value) => { saved = JSON.parse(value); },
   };
 
@@ -184,13 +202,14 @@ test("reduced motion keeps the matching poster without assigning video src", () 
     root: harness.root,
     storage,
     reducedMotion: true,
+    now: 12_345,
   });
 
-  assert.equal(controller.index, 0);
-  assert.equal(harness.poster.src, getHeroMedia(0).poster);
+  assert.equal(controller.index, 1);
+  assert.equal(harness.poster.src, getHeroMedia(1).poster);
   assert.equal(harness.video.src, "");
   assert.equal(harness.video.loadCalls, 0);
   assert.equal(harness.shell.dataset.heroState, "poster");
-  assert.deepEqual(saved, { index: 0 });
+  assert.equal(saved, null);
   controller.cleanup();
 });

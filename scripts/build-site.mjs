@@ -14,8 +14,10 @@ for (const file of ["index.html", "member-brawl.html", "site.webmanifest", "robo
 
 const activeHeroAssets = new Set([
   "fleet-hero-01-1080p-v4.mp4",
+  "fleet-hero-01-mobile-720p-v1.mp4",
   "fleet-hero-01-poster-v2.webp",
   "fleet-hero-02-1080p-v4.mp4",
+  "fleet-hero-02-mobile-720p-v1.mp4",
   "fleet-hero-02-1440p-v4.mp4",
   "fleet-hero-02-poster-1440p-v3.webp",
 ]);

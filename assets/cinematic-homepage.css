@@ -31,12 +31,15 @@ html {
   scroll-behavior: smooth;
   background: var(--space-black);
   overflow-x: clip;
+  overscroll-behavior-y: none;
 }
 
 body {
   margin: 0;
   min-width: 320px;
+  min-height: 100svh;
   overflow-x: clip;
+  overscroll-behavior-y: none;
   color: var(--text-primary);
   background:
     radial-gradient(circle at 13% 20%, rgba(48, 111, 146, 0.09), transparent 27rem),
@@ -95,6 +98,10 @@ a {
 button {
   color: inherit;
   font: inherit;
+}
+
+dialog:not([open]) {
+  display: none !important;
 }
 
 button:focus-visible,
@@ -1569,6 +1576,15 @@ noscript {
   .hero-motto { right: 20px; bottom: 15vh; max-width: 270px; }
   .hero-motto p { font-size: 0.87rem; }
   .hero-scroll { bottom: 25px; }
+  html[data-hero-exit-complete] :is(
+    .hero-title > .system-label,
+    .hero-title h1 > *,
+    .hero-motto > *
+  ) {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    transform: translate3d(0, -18px, 0) !important;
+  }
 
   .signal-section { min-height: auto; padding-block: 11vh; }
   .signal-stage { min-height: 790px; }
@@ -1653,7 +1669,15 @@ noscript {
   .recruit-copy h2 strong { font-size: clamp(2.7rem, 12vw, 4.2rem); }
   .recruit-actions { flex-direction: column; gap: 17px; }
 
-  .site-footer { display: flex; padding-block: 38px; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .site-footer {
+    display: flex;
+    min-height: 0;
+    padding-top: 38px;
+    padding-bottom: max(38px, env(safe-area-inset-bottom));
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 22px;
+  }
   .site-footer > a { grid-column: auto; }
 
   .archive-dialog-shell { padding: 65px 12px 24px; }

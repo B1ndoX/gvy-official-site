@@ -1,5 +1,6 @@
-export const HERO_CACHE_KEY = "gvy-command-hero-video:v5";
+export const HERO_CACHE_KEY = "gvy-command-hero-video:v6";
 export const HERO_MEDIA_VERSION = "20260720-edgeone-v1";
+export const HERO_STICKY_TTL_MS = 30 * 60 * 1_000;
 
 const versioned = (path) => `${path}?v=${HERO_MEDIA_VERSION}`;
 
@@ -7,11 +8,13 @@ const HERO_MEDIA = Object.freeze([
   Object.freeze({
     id: "01",
     video: versioned("./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4"),
+    videoMobile: versioned("./assets/hero-random/v2/fleet-hero-01-mobile-720p-v1.mp4"),
     poster: versioned("./assets/hero-random/v2/fleet-hero-01-poster-v2.webp"),
   }),
   Object.freeze({
     id: "02",
     video: versioned("./assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4"),
+    videoMobile: versioned("./assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4"),
     videoLarge: versioned("./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4"),
     poster: versioned("./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp"),
   }),
@@ -34,14 +37,17 @@ export function resolveHeroVideo(
 ) {
   const constrainedNetwork = saveData || /^(slow-2g|2g|3g)$/.test(effectiveType);
   const renderedPixelWidth = viewportWidth * Math.min(Math.max(pixelRatio, 1), 2);
+  const useMobileVideo = Boolean(media.videoMobile)
+    && (constrainedNetwork || viewportWidth <= 760);
   const useLargeVideo = Boolean(media.videoLarge)
+    && !useMobileVideo
     && !constrainedNetwork
     && renderedPixelWidth >= 2_200;
 
   return {
     ...media,
-    video: useLargeVideo ? media.videoLarge : media.video,
-    quality: useLargeVideo ? "1440p" : "1080p",
+    video: useMobileVideo ? media.videoMobile : (useLargeVideo ? media.videoLarge : media.video),
+    quality: useMobileVideo ? "720p" : (useLargeVideo ? "1440p" : "1080p"),
   };
 }
 
@@ -61,9 +67,10 @@ export function writeHeroRecord(
   storage,
   key,
   index,
+  selectedAt = Date.now(),
 ) {
   try {
-    storage?.setItem?.(key, JSON.stringify({ index }));
+    storage?.setItem?.(key, JSON.stringify({ index, selectedAt }));
     return typeof storage?.setItem === "function";
   } catch {
     return false;
@@ -74,6 +81,8 @@ export function resolveHeroSelection({
   record,
   optionCount = HERO_MEDIA.length,
   random = Math.random,
+  now = Date.now(),
+  stickyTtlMs = HERO_STICKY_TTL_MS,
 }) {
   if (!Number.isInteger(optionCount) || optionCount < 1) {
     throw new RangeError("optionCount must be a positive integer");
@@ -87,16 +96,15 @@ export function resolveHeroSelection({
   const previousIsValid = Number.isInteger(previousIndex)
     && previousIndex >= 0
     && previousIndex < optionCount;
+  const selectedAt = Number(record?.selectedAt);
+  const recordAge = Number(now) - selectedAt;
+  const previousIsFresh = previousIsValid
+    && Number.isFinite(selectedAt)
+    && Number.isFinite(recordAge)
+    && recordAge >= 0
+    && recordAge < stickyTtlMs;
 
-  if (optionCount === 1) return { index: 0, shouldPersist: !previousIsValid };
-
-  if (previousIsValid) {
-    const candidate = Math.floor(normalized * (optionCount - 1));
-    return {
-      index: candidate >= previousIndex ? candidate + 1 : candidate,
-      shouldPersist: true,
-    };
-  }
+  if (previousIsFresh) return { index: previousIndex, shouldPersist: false };
 
   return {
     index: Math.floor(normalized * optionCount),
@@ -121,6 +129,8 @@ export function initHeroVideo({
   pixelRatio = globalThis.devicePixelRatio ?? 1,
   connection = globalThis.navigator?.connection,
   reducedMotion = globalThis.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches ?? false,
+  now = Date.now(),
+  stickyTtlMs = HERO_STICKY_TTL_MS,
 } = {}) {
   const video = root?.querySelector?.("[data-hero-video]");
   const poster = root?.querySelector?.("[data-hero-poster]");
@@ -130,7 +140,7 @@ export function initHeroVideo({
   }
 
   const record = readHeroRecord(storage, cacheKey);
-  const selection = resolveHeroSelection({ record, random });
+  const selection = resolveHeroSelection({ record, random, now, stickyTtlMs });
   const media = resolveHeroVideo(getHeroMedia(selection.index), {
     viewportWidth,
     pixelRatio,
@@ -139,7 +149,7 @@ export function initHeroVideo({
   });
 
   if (selection.shouldPersist) {
-    writeHeroRecord(storage, cacheKey, selection.index);
+    writeHeroRecord(storage, cacheKey, selection.index, now);
   }
 
   poster.src = media.poster;
