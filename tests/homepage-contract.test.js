@@ -174,9 +174,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /yPercent:\s*-100/);
   assert.match(cinematicTimelines, /holdDuration:\s*15/);
   assert.match(cinematicTimelines, /animateBlur:\s*false/);
-  assert.match(cinematicTimelines, /id:\s*"gvy-hero-exit"/);
-  assert.match(cinematicTimelines, /start:\s*"bottom 100%"/);
   assert.match(cinematicTimelines, /end:\s*"bottom 40%"/);
+  assert.match(cinematicTimelines, /exitDuration:\s*10\.4/);
   assert.match(cinematicTimelines, /stagger:\s*\{\s*each:\s*exitStagger,\s*from:\s*"end"\s*\}/);
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
@@ -222,8 +221,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-reverse-stability-v18/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-reverse-stability-v18/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-reverse-stability-v19/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-reverse-stability-v19/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);

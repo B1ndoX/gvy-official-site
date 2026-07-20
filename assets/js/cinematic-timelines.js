@@ -104,6 +104,7 @@ function createHeroTimeline(
     animateMedia,
     animateBlur = true,
     holdDuration = 7.8,
+    exitDuration = 5.8,
     exitStagger = 0.18,
   },
 ) {
@@ -124,8 +125,9 @@ function createHeroTimeline(
       id: "gvy-hero",
       trigger: hero,
       start: "top top",
-      end: "bottom bottom",
+      end: "bottom 40%",
       scrub: 1.4,
+      invalidateOnRefresh: true,
     },
   });
 
@@ -150,6 +152,18 @@ function createHeroTimeline(
       1,
     )
     .to(heroText, { autoAlpha: 1, y: 0, filter: "none", duration: holdDuration, ease: "sine.inOut" }, 9.4)
+    .to(
+      heroText,
+      {
+        autoAlpha: 0,
+        y: -18,
+        filter: animateBlur ? "blur(8px)" : "none",
+        duration: exitDuration,
+        stagger: { each: exitStagger, from: "end" },
+        ease: "power2.inOut",
+      },
+      9.4 + holdDuration,
+    )
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
     timeline.to(
@@ -158,26 +172,6 @@ function createHeroTimeline(
       9.6,
     );
   }
-
-  gsap
-    .timeline({
-      scrollTrigger: {
-        id: "gvy-hero-exit",
-        trigger: hero,
-        start: "bottom 100%",
-        end: "bottom 40%",
-        scrub: 1.1,
-        invalidateOnRefresh: true,
-      },
-    })
-    .to(heroText, {
-      autoAlpha: 0,
-      y: -18,
-      filter: animateBlur ? "blur(8px)" : "none",
-      duration: 1.4,
-      stagger: { each: exitStagger, from: "end" },
-      ease: "power2.inOut",
-    });
 }
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
@@ -357,6 +351,7 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
     animateMedia: false,
     animateBlur: false,
     holdDuration: 15,
+    exitDuration: 10.4,
     exitStagger: 0.12,
   });
   showMobileStableContent(gsap, root);
