@@ -29,7 +29,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260720-rhythm-carousel-v12" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260720-continuous-brawl-v13" />
   </head>
 
   <body id="pageTop">
@@ -284,7 +284,7 @@
             <div class="archive-index-heading">
               <h3 class="archive-gallery-title">团建相册</h3>
             </div>
-            <div class="archive-grid-viewport" tabindex="0" role="region" aria-label="舰队远航档案横向轮播">
+            <div class="archive-grid-viewport" tabindex="0" role="region" aria-label="18 张舰队团建照片匀速滚动相册">
               <div class="archive-grid" data-archive-grid>
             <button type="button" data-archive-open="0"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-01-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-01.jpg" alt="GVY 远航档案 01" loading="lazy" width="1280" height="720" /></picture><span>001</span></button>
             <button type="button" data-archive-open="1"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-02-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-02.jpg" alt="GVY 远航档案 02" loading="lazy" width="1280" height="720" /></picture><span>002</span></button>
@@ -306,19 +306,10 @@
             <button type="button" data-archive-open="17"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-18-1280.webp 1280w, ./assets/gallery/optimized/team-18-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-18.jpg" alt="GVY 远航档案 18" loading="lazy" width="1920" height="1080" /></picture><span>018</span></button>
               </div>
             </div>
-            <div class="archive-gallery-controls" aria-label="远航档案轮播控制">
-              <button type="button" data-archive-carousel-prev aria-label="上一张档案">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 4l-8 8 8 8" /></svg>
-              </button>
-              <div class="archive-gallery-status" aria-live="polite">
-                <span data-archive-current>001</span><i></i><span>018</span>
-              </div>
-              <button type="button" data-archive-carousel-toggle aria-label="暂停自动切换" aria-pressed="false">
+            <div class="archive-gallery-controls" aria-label="团建相册滚动控制">
+              <button type="button" data-archive-carousel-toggle aria-label="暂停匀速滚动" aria-pressed="false">
                 <svg class="archive-pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10" /></svg>
                 <svg class="archive-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l8 5-8 5z" /></svg>
-              </button>
-              <button type="button" data-archive-carousel-next aria-label="下一张档案">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4l8 8-8 8" /></svg>
               </button>
             </div>
           </div>
@@ -339,6 +330,7 @@
           <p>不论资历，不问舰船。带上好奇心与可靠的协作意识，我们在星海另一端等你。</p>
           <div class="recruit-actions">
             <a href="https://robertsspaceindustries.com/orgs/GVY" target="_blank" rel="noreferrer">访问 RSI 舰队主页</a>
+            <button class="recruit-brawl-button" type="button" data-member-brawl-open>舰队成员大乱斗</button>
             <span>QQ 交流群 <strong>691311516</strong></span>
           </div>
         </div>
@@ -372,9 +364,18 @@
       </div>
     </dialog>
 
+    <dialog class="member-brawl-dialog" data-member-brawl-dialog aria-label="舰队成员大乱斗">
+      <div class="member-brawl-dialog-shell">
+        <button class="member-brawl-dialog-close" type="button" data-member-brawl-close aria-label="关闭舰队成员大乱斗">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+        </button>
+        <iframe data-member-brawl-frame title="舰队成员大乱斗正式发布版" loading="lazy"></iframe>
+      </div>
+    </dialog>
+
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260720-rhythm-carousel-v12"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260720-continuous-brawl-v13"></script>
   </body>
 </html>

@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -6,6 +7,7 @@ const root = new URL("../", import.meta.url);
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
 const buildScript = await readFile(new URL("scripts/build-site.mjs", root), "utf8");
 const homepage = await readFile(new URL("index.html", root), "utf8");
+const memberBrawlPage = await readFile(new URL("member-brawl.html", root), "utf8");
 
 async function readOptional(path) {
   try {
@@ -21,6 +23,7 @@ const fleetData = await readOptional("assets/js/fleet-data.js");
 const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js");
 const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
 const archiveCarousel = await readOptional("assets/js/archive-carousel.js");
+const memberBrawlDialog = await readOptional("assets/js/member-brawl-dialog.js");
 
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
@@ -79,12 +82,15 @@ test("below-fold videos have deferred data sources only", () => {
   });
 });
 
-test("old planet, card map, and Matter runtime are removed from the active page", () => {
-  assert.doesNotMatch(homepage, /matter\.min\.js/i);
+test("old planet and card map stay removed while the production brawl remains isolated", () => {
+  assert.doesNotMatch(homepage, /<script[^>]+matter\.min\.js/i);
   assert.doesNotMatch(homepage, /data-orbit-gallery/);
   assert.doesNotMatch(homepage, /class="[^"]*archive-planet/);
   assert.doesNotMatch(homepage, /operation-video-sphere/);
-  assert.doesNotMatch(homepage, /member-brawl/);
+  assert.match(homepage, /data-member-brawl-open/);
+  assert.match(homepage, /data-member-brawl-frame/);
+  assert.match(memberBrawlPage, /data-member-brawl-field/);
+  assert.match(memberBrawlPage, /assets\/vendor\/matter\.min\.js\?v=0\.20\.0/);
 });
 
 test("archive controls use SVG icons and compliance copy is exact", () => {
@@ -137,7 +143,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   }
   assert.match(cinematicTimelines, /fadeTextSequenceThroughViewport/);
   assert.match(cinematicTimelines, /stagger:\s*enterStagger/);
-  assert.match(cinematicTimelines, /holdDuration\s*=\s*3\.2/);
+  assert.match(cinematicTimelines, /enterDuration\s*=\s*1\.9/);
+  assert.match(cinematicTimelines, /holdDuration\s*=\s*4\.6/);
   assert.match(cinematicTimelines, /scrub:/);
   assert.doesNotMatch(cinematicTimelines, /toggleActions/);
   assert.doesNotMatch(cinematicTimelines, /once:\s*true/);
@@ -150,7 +157,6 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /yPercent:\s*-100/);
   assert.match(homepage, /data-motion-pending/);
   assert.match(homepage, /data-archive-index/);
-  assert.match(homepage, /data-archive-current/);
   assert.match(homepage, /data-archive-carousel-toggle/);
   assert.match(homepage, /A-007 \/ MUSTER/);
   assert.match(homepage, /A-013 \/ HANGAR/);
@@ -164,6 +170,10 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.doesNotMatch(archiveCarousel, /pointerenter/);
   assert.doesNotMatch(archiveCarousel, /focusin/);
   assert.match(archiveCarousel, /ArrowRight/);
+  assert.match(archiveCarousel, /requestAnimationFrame/);
+  assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*34/);
+  assert.match(archiveCarousel, /data-archive-clone/);
+  assert.doesNotMatch(archiveCarousel, /intervalMs/);
   assert.match(homepage, /团建相册/);
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
@@ -175,10 +185,46 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-rhythm-carousel-v12/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260720-continuous-brawl-v13/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260720-continuous-brawl-v13/);
+  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-continuous-brawl-v13/);
+  assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
+});
+
+test("gallery exposes every one of the 18 production team photos before seamless cloning", () => {
+  const grid = homepage.match(/<div class="archive-grid" data-archive-grid>([\s\S]*?)<\/div>/)?.[1] || "";
+  assert.equal((grid.match(/data-archive-open=/g) || []).length, 18);
+  for (let index = 1; index <= 18; index += 1) {
+    assert.match(grid, new RegExp(`team-${String(index).padStart(2, "0")}\\.jpg`));
+  }
+});
+
+test("member brawl shell preserves the currently published markup and exact runtime assets", async () => {
+  assert.match(memberBrawlPage, /GVY \/\/ MEMBER ARENA/);
+  assert.match(memberBrawlPage, /JOIN READY/);
+  assert.match(memberBrawlPage, /RECRUIT ARENA/);
+  assert.match(memberBrawlPage, /舰队成员大乱斗，快快加入我们！/);
+  assert.match(memberBrawlPage, /data-brawl-start/);
+  assert.match(memberBrawlPage, /INITIATE MEMBER ARENA/);
+  assert.match(memberBrawlPage, /fleet-command-brawl\.js\?v=20260712-audit-fixes/);
+  assert.match(memberBrawlPage, /fleet-command\.js\?v=20260712-audit-fixes/);
+  assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
+  assert.match(buildScript, /"member-brawl\.html"/);
+
+  const expectedHashes = new Map([
+    ["assets/fleet-command-brawl.js", "a7a88d8a42b1c6412238f0a5581e9cb9b3a91c65e930bbee33425d7bdc5af793"],
+    ["assets/fleet-command.css", "96c55b6d0d8e5f196e44c310cbd0486c88f561bb6e854d0df2a18cffdcbd6a89"],
+    ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],
+    ["assets/fleet-command.js", "ab0d6e1f29a97c751f259112e4ff1e60606091f5afd1fdddfba518b4d2c88cb9"],
+  ]);
+
+  for (const [path, expected] of expectedHashes) {
+    const source = await readFile(new URL(path, root));
+    assert.equal(createHash("sha256").update(source).digest("hex"), expected);
+  }
 });
 
 test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", async () => {

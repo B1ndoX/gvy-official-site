@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   getClosestCardIndex,
+  normalizeLoopPosition,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
 
@@ -27,4 +28,10 @@ test("closest card follows the viewport center", () => {
   assert.equal(getClosestCardIndex(viewport, cards), 1);
   viewport.scrollLeft = 650;
   assert.equal(getClosestCardIndex(viewport, cards), 2);
+});
+
+test("continuous carousel wraps forward and backward without changing visual phase", () => {
+  assert.equal(normalizeLoopPosition(1010, 1000), 10);
+  assert.equal(normalizeLoopPosition(-10, 1000), 990);
+  assert.equal(normalizeLoopPosition(450, 1000), 450);
 });

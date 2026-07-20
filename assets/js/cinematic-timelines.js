@@ -41,23 +41,23 @@ function fadeTextSequenceThroughViewport(
   idPrefix,
   {
     itemSelector = ":scope > *",
-    start = "top 90%",
-    end = "bottom -18%",
-    enterY = 30,
-    exitY = -18,
-    scrub = 0.9,
+    start = "top 96%",
+    end = "bottom -28%",
+    enterY = 38,
+    exitY = -22,
+    scrub = 1.2,
   } = {},
 ) {
   gsap.utils.toArray(containers).forEach((container, index) => {
     const items = gsap.utils.toArray(container.querySelectorAll(itemSelector));
     if (!items.length) return;
 
-    const enterDuration = 1;
-    const enterStagger = 0.42;
+    const enterDuration = 1.9;
+    const enterStagger = 0.56;
     const lastEnterEnd = enterDuration + (items.length - 1) * enterStagger;
-    const holdDuration = 3.2;
-    const exitDuration = 1.55;
-    const exitStagger = 0.12;
+    const holdDuration = 4.6;
+    const exitDuration = 1.9;
+    const exitStagger = 0.16;
     const exitStart = lastEnterEnd + holdDuration;
 
     gsap
@@ -116,7 +116,7 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
       trigger: hero,
       start: "top top",
       end: "bottom bottom",
-      scrub: 0.75,
+      scrub: 1.4,
     },
   });
 
@@ -129,22 +129,22 @@ function createHeroTimeline(gsap, root, { animateMedia }) {
   timeline
     .fromTo(
       heroText,
-      { autoAlpha: 0, y: 26 },
-      { autoAlpha: 1, y: 0, duration: 1.2, stagger: 0.42, ease: "none" },
-      0.65,
+      { autoAlpha: 0, y: 38 },
+      { autoAlpha: 1, y: 0, duration: 3.1, stagger: 0.68, ease: "none" },
+      1,
     )
-    .to(heroText, { autoAlpha: 1, y: 0, duration: 5.53, ease: "none" }, 4.37)
+    .to(heroText, { autoAlpha: 1, y: 0, duration: 6.6, ease: "none" }, 6.82)
     .to(
       heroText,
-      { autoAlpha: 0, y: -18, duration: 1.9, stagger: 0.14, ease: "none" },
-      9.9,
+      { autoAlpha: 0, y: -22, duration: 2.5, stagger: 0.16, ease: "none" },
+      13.42,
     )
-    .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 2.4, ease: "none" }, 0);
+    .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
     timeline.to(
       commandNav,
-      { autoAlpha: 1, yPercent: 0, duration: 1.1, ease: "none" },
-      4.45,
+      { autoAlpha: 1, yPercent: 0, duration: 1.6, ease: "none" },
+      6.9,
     );
   }
 }

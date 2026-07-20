@@ -8,7 +8,7 @@ const output = resolve(root, "dist");
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 
-for (const file of ["index.html", "site.webmanifest", "robots.txt", "sitemap.xml"]) {
+for (const file of ["index.html", "member-brawl.html", "site.webmanifest", "robots.txt", "sitemap.xml"]) {
   await copyFile(resolve(root, file), resolve(output, file));
 }
 

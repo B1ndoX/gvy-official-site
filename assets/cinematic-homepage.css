@@ -1063,9 +1063,9 @@ html[data-motion-ready] :is(
   overflow-x: auto;
   overflow-y: hidden;
   cursor: grab;
-  overscroll-behavior-inline: auto;
+  overscroll-behavior-inline: contain;
   scroll-behavior: auto;
-  scroll-snap-type: x proximity;
+  scroll-snap-type: none;
   scrollbar-width: none;
   touch-action: pan-x pan-y;
 }
@@ -1084,23 +1084,18 @@ html[data-motion-ready] :is(
 .archive-grid {
   display: flex;
   width: max-content;
-  gap: clamp(18px, 2.2vw, 36px);
-  padding-inline: max(var(--page-gutter), calc((100vw - min(68vw, 1080px)) / 2));
+  gap: clamp(12px, 1.35vw, 22px);
+  padding-inline: var(--page-gutter);
 }
 
 .archive-grid button {
-  width: min(68vw, 1080px);
-  flex: 0 0 min(68vw, 1080px);
-  aspect-ratio: 16 / 10;
-  opacity: 0.58;
-  transform: scale(0.94);
-  scroll-snap-align: center;
-  transition: opacity 360ms ease, transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.archive-grid button.is-current {
+  width: clamp(320px, 25vw, 460px);
+  flex: 0 0 clamp(320px, 25vw, 460px);
+  aspect-ratio: 16 / 9;
   opacity: 1;
   transform: scale(1);
+  scroll-snap-align: none;
+  transition: opacity 300ms ease;
 }
 
 .archive-grid button > span {
@@ -1117,7 +1112,7 @@ html[data-motion-ready] :is(
 .archive-gallery-controls {
   display: flex;
   width: max-content;
-  margin: 24px auto 0;
+  margin: 17px auto 0;
   align-items: center;
   gap: 7px;
   padding: 7px;
@@ -1171,36 +1166,6 @@ html[data-motion-ready] :is(
 
 .archive-gallery-controls.is-paused .archive-pause-icon { display: none; }
 .archive-gallery-controls.is-paused .archive-play-icon { display: block; }
-
-.archive-gallery-status {
-  display: flex;
-  width: clamp(180px, 24vw, 360px);
-  align-items: center;
-  gap: 13px;
-  padding-inline: 10px;
-  color: var(--text-secondary);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-}
-
-.archive-gallery-status i {
-  height: 1px;
-  flex: 1;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.archive-gallery-status i::after {
-  display: block;
-  width: 100%;
-  height: 100%;
-  content: "";
-  background: var(--route-blue);
-  transform: scaleX(var(--archive-index-progress, 0));
-  transform-origin: left;
-  transition: transform 520ms var(--motion-ease);
-}
 
 /* Recruitment */
 .recruit-section {
@@ -1278,16 +1243,20 @@ html[data-motion-ready] :is(
   gap: 26px;
 }
 
-.recruit-actions a {
+.recruit-actions a,
+.recruit-brawl-button {
   padding: 13px 21px;
   border: 1px solid rgba(216, 182, 106, 0.58);
   color: var(--fleet-gold);
+  background: transparent;
   font-size: 0.75rem;
   letter-spacing: 0.1em;
+  cursor: pointer;
   transition: color 180ms ease, background 180ms ease;
 }
 
-.recruit-actions a:hover {
+.recruit-actions a:hover,
+.recruit-brawl-button:hover {
   color: var(--space-black);
   background: var(--fleet-gold);
 }
@@ -1460,6 +1429,68 @@ html[data-motion-ready] :is(
   stroke-width: 1.4;
 }
 
+/* The current production brawl is isolated in an iframe so its exact CSS/runtime
+   remains untouched by the cinematic homepage. */
+.member-brawl-dialog {
+  width: min(1760px, calc(100vw - 34px));
+  max-width: none;
+  height: min(920px, calc(100svh - 34px));
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid rgba(102, 188, 229, 0.3);
+  color: var(--text-primary);
+  background: #030508;
+  box-shadow: 0 32px 120px rgba(0, 0, 0, 0.78);
+}
+
+.member-brawl-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.84);
+  backdrop-filter: blur(12px);
+}
+
+.member-brawl-dialog-shell,
+.member-brawl-dialog iframe {
+  width: 100%;
+  height: 100%;
+}
+
+.member-brawl-dialog-shell {
+  position: relative;
+}
+
+.member-brawl-dialog iframe {
+  display: block;
+  border: 0;
+  background: #030508;
+}
+
+.member-brawl-dialog-close {
+  position: absolute;
+  z-index: 5;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #f2f5f7;
+  background: rgba(3, 5, 8, 0.84);
+  cursor: pointer;
+}
+
+.member-brawl-dialog-close svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.5;
+}
+
 noscript {
   position: fixed;
   z-index: 300;
@@ -1565,11 +1596,8 @@ noscript {
   .archive-feature > div { padding-top: 21px; }
   .archive-index { margin-top: 13vh; }
   .archive-index-heading { margin-bottom: 20px; }
-  .archive-grid { gap: 12px; padding-inline: 20px; will-change: auto; }
-  .archive-grid button { width: 82vw; flex-basis: 82vw; }
-  .archive-gallery-status { width: min(44vw, 210px); }
-  .archive-gallery-controls > button:first-child,
-  .archive-gallery-controls > button:last-child { display: none; }
+  .archive-grid { gap: 10px; padding-inline: 20px; will-change: auto; }
+  .archive-grid button { width: min(72vw, 330px); flex-basis: min(72vw, 330px); }
 
   .recruit-section { min-height: 100svh; }
   .recruit-image img { object-position: 62% center; }
@@ -1586,6 +1614,8 @@ noscript {
   .archive-dialog-next { right: 20px; }
   .archive-dialog figcaption { padding: 0 58px; justify-content: center; }
   .archive-dialog figcaption p { display: none; }
+  .member-brawl-dialog { width: 100vw; height: 100svh; border: 0; }
+  .member-brawl-dialog-close { top: 10px; right: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1599,6 +1629,5 @@ noscript {
   .hero-sequence { height: 100svh; }
   .operation-visual,
   .operation-copy { transform: none; }
-  .archive-grid button,
-  .archive-grid button.is-current { opacity: 1; transform: none; }
+  .archive-grid button { opacity: 1; transform: none; }
 }

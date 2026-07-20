@@ -21,20 +21,22 @@ export function getClosestCardIndex(viewport, cards) {
   return closestIndex;
 }
 
+export function normalizeLoopPosition(position, loopWidth) {
+  if (!Number.isFinite(loopWidth) || loopWidth <= 0) return Math.max(0, Number(position) || 0);
+  return ((Number(position) % loopWidth) + loopWidth) % loopWidth;
+}
+
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
-  intervalMs = 4200,
+  pixelsPerSecond = 34,
   Observer = view?.IntersectionObserver,
 } = {}) {
   const archiveIndex = root?.querySelector?.("[data-archive-index]");
   const viewport = archiveIndex?.querySelector?.(".archive-grid-viewport");
   const track = archiveIndex?.querySelector?.("[data-archive-grid]");
-  const cards = Array.from(track?.querySelectorAll?.("button") || []);
-  const currentLabel = archiveIndex?.querySelector?.("[data-archive-current]");
+  const cards = Array.from(track?.querySelectorAll?.(":scope > [data-archive-open]") || []);
   const controls = archiveIndex?.querySelector?.(".archive-gallery-controls");
-  const previous = archiveIndex?.querySelector?.("[data-archive-carousel-prev]");
-  const next = archiveIndex?.querySelector?.("[data-archive-carousel-next]");
   const toggle = archiveIndex?.querySelector?.("[data-archive-carousel-toggle]");
 
   if (!archiveIndex || !viewport || !track || cards.length < 2) {
@@ -42,18 +44,34 @@ export function initArchiveCarousel({
   }
 
   const reducedMotion = Boolean(view?.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
-  const frame = view?.requestAnimationFrame?.bind(view) || ((callback) => setTimeout(callback, 16));
+  const frame = view?.requestAnimationFrame?.bind(view)
+    || ((callback) => setTimeout(() => callback(Date.now()), 16));
   const cancelFrame = view?.cancelAnimationFrame?.bind(view) || clearTimeout;
-  const setTimer = view?.setTimeout?.bind(view) || setTimeout;
-  const clearTimer = view?.clearTimeout?.bind(view) || clearTimeout;
-  let activeIndex = 0;
-  let autoDirection = 1;
-  let autoTimer = 0;
-  let scrollFrame = 0;
+  const cloneHandlers = [];
+  const cloneCards = cards.map((card, index) => {
+    const clone = card.cloneNode(true);
+    clone.removeAttribute("data-archive-open");
+    clone.setAttribute("data-archive-clone", String(index));
+    clone.setAttribute("aria-hidden", "true");
+    clone.tabIndex = -1;
+    const openOriginal = (event) => {
+      event.preventDefault();
+      cards[index].click();
+    };
+    clone.addEventListener("click", openOriginal);
+    cloneHandlers.push([clone, openOriginal]);
+    track.append(clone);
+    return clone;
+  });
+
+  let animationFrame = 0;
   let resizeFrame = 0;
+  let lastTimestamp = null;
+  let loopWidth = 0;
   let inView = !Observer;
-  let manuallyPaused = false;
+  let manuallyPaused = reducedMotion;
   let dragging = false;
+  let touchActive = false;
   let moved = false;
   let suppressClick = false;
   let pointerId = null;
@@ -64,84 +82,59 @@ export function initArchiveCarousel({
     controls?.classList.toggle("is-paused", manuallyPaused);
     if (!toggle) return;
     toggle.setAttribute("aria-pressed", String(manuallyPaused));
-    toggle.setAttribute("aria-label", manuallyPaused ? "继续自动切换" : "暂停自动切换");
+    toggle.setAttribute("aria-label", manuallyPaused ? "继续匀速滚动" : "暂停匀速滚动");
   }
 
-  function updateActive(nextIndex) {
-    const normalized = wrapCarouselIndex(nextIndex, cards.length);
-    if (normalized !== activeIndex) {
-      cards[activeIndex]?.classList.remove("is-current");
-      cards[activeIndex]?.removeAttribute("aria-current");
-    }
-    activeIndex = normalized;
-    cards[activeIndex].classList.add("is-current");
-    cards[activeIndex].setAttribute("aria-current", "true");
-    if (currentLabel) currentLabel.textContent = String(activeIndex + 1).padStart(3, "0");
-    archiveIndex.style.setProperty(
-      "--archive-index-progress",
-      String(activeIndex / Math.max(1, cards.length - 1)),
-    );
+  function measureLoop() {
+    loopWidth = (cloneCards[0]?.offsetLeft || 0) - (cards[0]?.offsetLeft || 0);
+    if (loopWidth <= 0) loopWidth = track.scrollWidth / 2;
+    viewport.scrollLeft = normalizeLoopPosition(viewport.scrollLeft, loopWidth);
   }
 
-  function targetScrollLeft(index) {
-    const card = cards[wrapCarouselIndex(index, cards.length)];
-    return card.offsetLeft - (viewport.clientWidth - card.offsetWidth) / 2;
-  }
-
-  function stopAuto() {
-    if (!autoTimer) return;
-    clearTimer(autoTimer);
-    autoTimer = 0;
-  }
-
-  function canAutoPlay() {
-    return !manuallyPaused
+  function canMove() {
+    return loopWidth > 0
+      && !manuallyPaused
       && !dragging
+      && !touchActive
       && inView
       && !root.hidden;
   }
 
-  function scheduleAuto() {
-    stopAuto();
-    if (!canAutoPlay()) return;
-    autoTimer = setTimer(() => {
-      autoTimer = 0;
-      if (activeIndex >= cards.length - 1) autoDirection = -1;
-      if (activeIndex <= 0) autoDirection = 1;
-      goTo(activeIndex + autoDirection, { source: "auto" });
-    }, intervalMs);
+  function tick(timestamp) {
+    animationFrame = frame(tick);
+    if (!canMove()) {
+      lastTimestamp = timestamp;
+      return;
+    }
+
+    if (lastTimestamp == null) {
+      lastTimestamp = timestamp;
+      return;
+    }
+
+    const elapsed = Math.min(64, Math.max(0, timestamp - lastTimestamp));
+    lastTimestamp = timestamp;
+    viewport.scrollLeft = normalizeLoopPosition(
+      viewport.scrollLeft + (pixelsPerSecond * elapsed) / 1000,
+      loopWidth,
+    );
   }
 
-  function goTo(index, { behavior = reducedMotion ? "auto" : "smooth", source = "manual" } = {}) {
-    const normalized = wrapCarouselIndex(index, cards.length);
-    updateActive(normalized);
-    viewport.scrollTo?.({ left: targetScrollLeft(normalized), behavior });
-    if (source !== "scroll") scheduleAuto();
-  }
-
-  function syncFromScroll() {
-    scrollFrame = 0;
-    if (dragging) return;
-    updateActive(getClosestCardIndex(viewport, cards));
-  }
-
-  function handleScroll() {
-    if (scrollFrame) return;
-    scrollFrame = frame(syncFromScroll);
+  function nudge(direction) {
+    const distance = cards[1]?.offsetLeft - cards[0]?.offsetLeft || cards[0].offsetWidth;
+    const nextPosition = normalizeLoopPosition(viewport.scrollLeft + direction * distance, loopWidth);
+    viewport.scrollTo?.({ left: nextPosition, behavior: reducedMotion ? "auto" : "smooth" });
+    if (!viewport.scrollTo) viewport.scrollLeft = nextPosition;
   }
 
   function handleKeydown(event) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
-    goTo(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+    nudge(event.key === "ArrowRight" ? 1 : -1);
   }
 
   function handlePointerDown(event) {
-    if (event.pointerType === "touch") {
-      stopAuto();
-      return;
-    }
-    if (event.button !== 0 || event.isPrimary === false) return;
+    if (event.pointerType === "touch" || event.button !== 0 || event.isPrimary === false) return;
     dragging = true;
     moved = false;
     pointerId = event.pointerId;
@@ -149,28 +142,23 @@ export function initArchiveCarousel({
     startScrollLeft = viewport.scrollLeft;
     viewport.classList.add("is-dragging");
     viewport.setPointerCapture?.(pointerId);
-    stopAuto();
   }
 
   function handlePointerMove(event) {
     if (!dragging || event.pointerId !== pointerId) return;
     const distance = event.clientX - startX;
     if (Math.abs(distance) > 7) moved = true;
-    viewport.scrollLeft = startScrollLeft - distance;
+    viewport.scrollLeft = normalizeLoopPosition(startScrollLeft - distance, loopWidth);
   }
 
   function finishDrag(event) {
-    if (!dragging) {
-      if (event?.pointerType === "touch") scheduleAuto();
-      return;
-    }
-    if (event?.pointerId != null && event.pointerId !== pointerId) return;
+    if (!dragging || (event?.pointerId != null && event.pointerId !== pointerId)) return;
     dragging = false;
     suppressClick = moved;
     viewport.classList.remove("is-dragging");
     viewport.releasePointerCapture?.(pointerId);
     pointerId = null;
-    goTo(getClosestCardIndex(viewport, cards));
+    lastTimestamp = null;
   }
 
   function preventDraggedClick(event) {
@@ -180,80 +168,83 @@ export function initArchiveCarousel({
     event.stopImmediatePropagation();
   }
 
+  function handleTouchStart() {
+    touchActive = true;
+  }
+
+  function handleTouchEnd() {
+    touchActive = false;
+    viewport.scrollLeft = normalizeLoopPosition(viewport.scrollLeft, loopWidth);
+    lastTimestamp = null;
+  }
+
   function handleResize() {
     if (resizeFrame) cancelFrame(resizeFrame);
     resizeFrame = frame(() => {
       resizeFrame = 0;
-      goTo(activeIndex, { behavior: "auto", source: "resize" });
+      measureLoop();
+      lastTimestamp = null;
     });
   }
 
   function handleVisibility() {
-    if (root.hidden) stopAuto();
-    else scheduleAuto();
-  }
-
-  function showPrevious() {
-    goTo(activeIndex - 1);
-  }
-
-  function showNext() {
-    goTo(activeIndex + 1);
+    lastTimestamp = null;
   }
 
   function toggleAutoPlay() {
     manuallyPaused = !manuallyPaused;
     updateToggle();
     if (!manuallyPaused) toggle?.blur?.();
-    scheduleAuto();
+    lastTimestamp = null;
   }
 
   const observer = Observer
     ? new Observer((entries) => {
-        inView = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.2);
-        if (inView) scheduleAuto();
-        else stopAuto();
-      }, { threshold: [0, 0.2, 0.6] })
+        inView = entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= 0.08);
+        lastTimestamp = null;
+      }, { threshold: [0, 0.08, 0.5] })
     : null;
 
-  updateActive(0);
+  measureLoop();
   updateToggle();
   observer?.observe(archiveIndex);
+  animationFrame = frame(tick);
 
-  viewport.addEventListener("scroll", handleScroll, { passive: true });
   viewport.addEventListener("keydown", handleKeydown);
   viewport.addEventListener("pointerdown", handlePointerDown);
   viewport.addEventListener("pointermove", handlePointerMove);
   viewport.addEventListener("pointerup", finishDrag);
   viewport.addEventListener("pointercancel", finishDrag);
   viewport.addEventListener("click", preventDraggedClick, true);
-  previous?.addEventListener("click", showPrevious);
-  next?.addEventListener("click", showNext);
+  viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
+  viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
+  viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   view?.addEventListener?.("resize", handleResize, { passive: true });
   root.addEventListener?.("visibilitychange", handleVisibility);
-  scheduleAuto();
 
   return {
-    get index() { return activeIndex; },
-    goTo,
+    get isPaused() { return manuallyPaused; },
     cleanup() {
-      stopAuto();
-      if (scrollFrame) cancelFrame(scrollFrame);
+      if (animationFrame) cancelFrame(animationFrame);
       if (resizeFrame) cancelFrame(resizeFrame);
       observer?.disconnect();
-      viewport.removeEventListener("scroll", handleScroll);
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("pointerdown", handlePointerDown);
       viewport.removeEventListener("pointermove", handlePointerMove);
       viewport.removeEventListener("pointerup", finishDrag);
       viewport.removeEventListener("pointercancel", finishDrag);
       viewport.removeEventListener("click", preventDraggedClick, true);
-      previous?.removeEventListener("click", showPrevious);
-      next?.removeEventListener("click", showNext);
+      viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchend", handleTouchEnd);
+      viewport.removeEventListener("touchcancel", handleTouchEnd);
       toggle?.removeEventListener("click", toggleAutoPlay);
       view?.removeEventListener?.("resize", handleResize);
       root.removeEventListener?.("visibilitychange", handleVisibility);
+      cloneHandlers.forEach(([clone, handler]) => {
+        clone.removeEventListener("click", handler);
+        clone.remove();
+      });
     },
   };
 }

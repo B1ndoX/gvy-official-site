@@ -1,8 +1,9 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-rhythm-carousel-v12";
-import { initCinematicTimelines } from "./cinematic-timelines.js";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260720-continuous-brawl-v13";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260720-continuous-brawl-v13";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js";
+import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-continuous-brawl-v13";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 
@@ -23,9 +24,10 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const deferred = initDeferredMedia({ root, rootMargin: "100% 0px" });
   const carousel = initArchiveCarousel({ root, view });
   const archive = initArchiveLightbox({ root });
+  const brawl = initMemberBrawlDialog({ root });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [hero, deferred, carousel, archive, timelines].map(asCleanup);
+  const cleanups = [hero, deferred, carousel, archive, brawl, timelines].map(asCleanup);
   let cleaned = false;
 
   const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());
