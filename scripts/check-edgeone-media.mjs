@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 const origin = (process.env.GVY_CDN_ORIGIN || "https://www.gvyvoyagers.vip").replace(/\/$/, "");
 const mediaPaths = [
   "/assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4?v=20260720-edgeone-v1",
+  "/assets/hero-random/v2/fleet-hero-01-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4?v=20260720-edgeone-v1",
+  "/assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
 ];
 
