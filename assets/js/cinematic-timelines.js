@@ -103,9 +103,9 @@ function createHeroTimeline(
   {
     animateMedia,
     animateBlur = true,
-    holdDuration = 7.8,
-    exitDuration = 5.8,
-    exitStagger = 0.18,
+    exitStart = 16.5,
+    exitDuration = 1.15,
+    exitStagger = 0.62,
     lockExit = false,
   },
 ) {
@@ -121,6 +121,12 @@ function createHeroTimeline(
     ...gsap.utils.toArray(":scope > .system-label, h1 > *", heroTitle),
     ...gsap.utils.toArray(":scope > *", heroMotto),
   ];
+  const heroExitText = [...heroText].reverse();
+  const enterStart = 1;
+  const enterDuration = 3.8;
+  const enterStagger = 0.76;
+  const enterEnd = enterStart + enterDuration + (heroText.length - 1) * enterStagger;
+  const exitEnd = exitStart + exitDuration + (heroExitText.length - 1) * exitStagger;
   const rootElement = root.documentElement;
   gsap.set(heroText, {
     autoAlpha: 0,
@@ -159,35 +165,44 @@ function createHeroTimeline(
   gsap.set([heroTitle, heroMotto], { autoAlpha: 1 });
   if (commandNav) gsap.set(commandNav, { autoAlpha: 0, yPercent: -100 });
   timeline
+    .addLabel("hero-enter", enterStart)
     .to(
       heroText,
       {
         autoAlpha: 1,
         y: 0,
         filter: "none",
-        duration: 3.8,
-        stagger: 0.76,
+        duration: enterDuration,
+        stagger: enterStagger,
         ease: "power2.out",
       },
-      1,
+      "hero-enter",
     )
-    .to(
-      heroText,
-      { autoAlpha: 1, y: 0, filter: "none", duration: holdDuration, ease: "sine.inOut" },
-      9.4,
-    )
+    .addLabel("hero-complete", enterEnd)
     .to(
       heroText,
       {
+        autoAlpha: 1,
+        y: 0,
+        filter: "none",
+        duration: exitStart - enterEnd,
+        ease: "none",
+      },
+      "hero-complete",
+    )
+    .addLabel("hero-exit", exitStart)
+    .to(
+      heroExitText,
+      {
         autoAlpha: 0,
         y: -18,
-        filter: animateBlur ? "blur(8px)" : "none",
         duration: exitDuration,
-        stagger: { each: exitStagger, from: "end" },
-        ease: "power2.inOut",
+        stagger: exitStagger,
+        ease: "power2.in",
       },
-      9.4 + holdDuration,
+      "hero-exit",
     )
+    .addLabel("hero-exit-complete", exitEnd)
     .fromTo(heroScroll, { autoAlpha: 1 }, { autoAlpha: 0, duration: 3.2, ease: "none" }, 0);
   if (commandNav) {
     timeline.to(
@@ -374,9 +389,6 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
   createHeroTimeline(gsap, root, {
     animateMedia: false,
     animateBlur: false,
-    holdDuration: 15,
-    exitDuration: 10.4,
-    exitStagger: 0.12,
     lockExit: true,
   });
   showMobileStableContent(gsap, root);

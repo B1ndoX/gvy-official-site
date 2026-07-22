@@ -490,8 +490,8 @@ html[data-motion-ready] :is(
 
 /* Fleet signal */
 .signal-section {
-  min-height: 125svh;
-  padding: 16vh var(--page-gutter);
+  min-height: 100svh;
+  padding: 10vh var(--page-gutter);
   background:
     linear-gradient(180deg, #020408 0%, rgba(5, 13, 23, 0.95) 42%, #03070d 100%);
 }
@@ -500,7 +500,7 @@ html[data-motion-ready] :is(
   position: relative;
   display: grid;
   width: min(var(--content-max), 100%);
-  min-height: 86svh;
+  min-height: 80svh;
   margin: 0 auto;
   place-items: center;
   overflow: hidden;
@@ -619,7 +619,7 @@ html[data-motion-ready] :is(
 /* Manifesto */
 .manifesto-section {
   display: grid;
-  min-height: 125svh;
+  min-height: 100svh;
   align-items: center;
   overflow: hidden;
 }
@@ -649,7 +649,7 @@ html[data-motion-ready] :is(
   position: relative;
   width: min(650px, 52vw);
   margin-left: max(var(--page-gutter), calc((100vw - var(--content-max)) / 2 + var(--page-gutter)));
-  padding-block: 16vh;
+  padding-block: 12.8vh;
 }
 
 .manifesto-copy h2 {
@@ -677,8 +677,8 @@ html[data-motion-ready] :is(
 
 /* Operations */
 .operations-section {
-  min-height: 420svh;
-  padding-top: 20vh;
+  min-height: 336svh;
+  padding-top: 16vh;
   background: #03070d;
 }
 
@@ -705,16 +705,16 @@ html[data-motion-ready] :is(
 .operations-heading {
   position: relative;
   z-index: 6;
-  min-height: 74svh;
-  padding-top: 10vh;
-  padding-bottom: 24vh;
+  min-height: 59.2svh;
+  padding-top: 8vh;
+  padding-bottom: 19.2vh;
 }
 
 .operations-heading::after {
   position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: -18vh;
+  bottom: -14.4vh;
   width: 100vw;
   height: 60vh;
   pointer-events: none;
@@ -746,7 +746,7 @@ html[data-motion-ready] :is(
   top: 0;
   display: block;
   height: 100svh;
-  margin-top: -24vh;
+  margin-top: -19.2vh;
   overflow: hidden;
   isolation: isolate;
   background: #03070d;
@@ -906,8 +906,8 @@ html[data-motion-ready] :is(
 
 /* Archive */
 .archive-section {
-  margin-top: -10vh;
-  padding: 30vh 0 20vh;
+  margin-top: -8vh;
+  padding: 24vh 0 16vh;
   overflow: clip;
   background: transparent;
 }
@@ -946,16 +946,16 @@ html[data-motion-ready] :is(
 .featured-archive {
   display: grid;
   width: min(var(--content-max), 100%);
-  margin: 12vh auto 0;
+  margin: 9.6vh auto 0;
   padding: 0 var(--page-gutter);
-  gap: clamp(55px, 10vw, 150px);
+  gap: clamp(44px, 8vw, 120px);
 }
 
 .archive-feature {
   display: grid;
   grid-template-columns: minmax(0, 1.75fr) minmax(270px, 0.65fr);
   align-items: end;
-  gap: clamp(30px, 5vw, 78px);
+  gap: clamp(24px, 4vw, 62px);
 }
 
 .archive-feature:nth-child(even) {
@@ -1041,7 +1041,7 @@ html[data-motion-ready] :is(
 .archive-index {
   width: 100%;
   min-height: auto;
-  margin: 18vh 0 0;
+  margin: 14.4vh 0 0;
   padding: 0;
 }
 
@@ -1624,8 +1624,8 @@ noscript {
     transform: translate3d(0, -18px, 0) !important;
   }
 
-  .signal-section { min-height: auto; padding-block: 11vh; }
-  .signal-stage { min-height: 790px; }
+  .signal-section { min-height: auto; padding-block: 8.8vh; }
+  .signal-stage { min-height: 740px; }
   .signal-lockup { padding: 65px 16px 230px; }
   .signal-orbit-one { width: 125vw; }
   .signal-orbit-two { width: 82vw; }
@@ -1634,16 +1634,16 @@ noscript {
   .identity-rail div:nth-child(2) { border-right: 0; }
   .identity-rail div:nth-last-child(-n + 2) { border-bottom: 0; }
 
-  .manifesto-section { min-height: 108svh; align-items: end; }
+  .manifesto-section { min-height: 92svh; align-items: end; }
   .manifesto-image img { object-position: 68% center; }
   .manifesto-shade {
     background: linear-gradient(180deg, rgba(2, 5, 9, 0.12), rgba(2, 5, 9, 0.82) 48%, #03070d 96%);
   }
-  .manifesto-copy { width: auto; margin: 0; padding: 34vh 20px 10vh; }
+  .manifesto-copy { width: auto; margin: 0; padding: 27.2vh 20px 8vh; }
   .manifesto-copy h2 { font-size: clamp(3.4rem, 16vw, 5.5rem); }
 
-  .operations-section { min-height: auto; padding: 15vh 0 0; }
-  .operations-heading { min-height: auto; padding-bottom: 12vh; }
+  .operations-section { min-height: auto; padding: 12vh 0 0; }
+  .operations-heading { min-height: auto; padding-bottom: 9.6vh; }
   .operations-heading::after { display: none; }
   .operations-stage { position: relative; display: block; height: auto; margin-top: 0; overflow: visible; background: transparent; }
   .operations-stage::before { display: none; }
@@ -1652,7 +1652,7 @@ noscript {
   .operation-copy {
     position: relative;
     min-height: auto;
-    padding: calc(56.25vw + 46px) 20px 11vh;
+    padding: calc(56.25vw + 46px) 20px 8.8vh;
     opacity: 1;
     overflow: hidden;
     isolation: isolate;
@@ -1678,7 +1678,7 @@ noscript {
 
   .archive-section {
     margin-top: 0;
-    padding-block: 10vh 12vh;
+    padding-block: 8vh 9.6vh;
     overflow: hidden;
     background: #040910;
   }
@@ -1686,13 +1686,13 @@ noscript {
     background: radial-gradient(circle at 78% 22%, rgba(42, 105, 139, 0.11), transparent 27rem);
   }
   .archive-ambient { display: none; }
-  .featured-archive { margin-top: 9vh; gap: 72px; }
+  .featured-archive { margin-top: 7.2vh; gap: 58px; }
   .archive-feature,
   .archive-feature:nth-child(even) { display: block; }
   .archive-feature:nth-child(even) button,
   .archive-feature:nth-child(even) > div { grid-column: auto; grid-row: auto; }
   .archive-feature > div { padding-top: 21px; }
-  .archive-index { margin-top: 13vh; }
+  .archive-index { margin-top: 10.4vh; }
   .archive-index-heading { margin-bottom: 20px; }
   .archive-grid { gap: 10px; padding-inline: 20px; will-change: auto; }
   .archive-grid button { width: min(76vw, 360px); flex-basis: min(76vw, 360px); }
@@ -1772,44 +1772,44 @@ noscript {
   .hero-motto { bottom: 187px; }
 
   .signal-section {
-    min-height: 1800px;
-    padding-block: 230px;
+    min-height: 1440px;
+    padding-block: 144px;
   }
-  .signal-stage { min-height: 1240px; }
+  .signal-stage { min-height: 1152px; }
 
-  .manifesto-section { min-height: 1800px; }
+  .manifesto-section { min-height: 1440px; }
   .manifesto-copy {
     margin-left: calc((2560px - var(--content-max)) / 2 + var(--page-gutter));
-    padding-block: 230px;
+    padding-block: 184px;
   }
 
   .operations-section {
-    min-height: 6048px;
-    padding-top: 288px;
+    min-height: 4838px;
+    padding-top: 230px;
   }
   .operations-heading {
-    min-height: 1066px;
-    padding-top: 144px;
-    padding-bottom: 346px;
+    min-height: 853px;
+    padding-top: 115px;
+    padding-bottom: 277px;
   }
   .operations-heading::after {
-    bottom: -259px;
+    bottom: -207px;
     width: 100%;
     height: 864px;
   }
   .operations-stage {
     height: 1440px;
-    margin-top: -346px;
+    margin-top: -277px;
   }
   .operations-stage::before { height: 547px; }
   .operation-copy { padding-block: 346px 216px; }
 
   .archive-section {
-    margin-top: -144px;
-    padding-block: 432px 288px;
+    margin-top: -115px;
+    padding-block: 346px 230px;
   }
-  .featured-archive { margin-top: 173px; }
-  .archive-index { margin-top: 259px; }
+  .featured-archive { margin-top: 138px; }
+  .archive-index { margin-top: 207px; }
 
   .recruit-section { min-height: 1670px; }
   .recruit-copy { padding-block: 173px; }

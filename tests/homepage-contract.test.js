@@ -187,15 +187,22 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /operationsStage/);
   assert.match(cinematicTimelines, /operationProgress/);
   assert.match(cinematicTimelines, /yPercent:\s*-100/);
-  assert.match(cinematicTimelines, /holdDuration:\s*15/);
   assert.match(cinematicTimelines, /animateBlur:\s*false/);
   assert.match(cinematicTimelines, /end:\s*"bottom 40%"/);
-  assert.match(cinematicTimelines, /exitDuration:\s*10\.4/);
   assert.match(cinematicTimelines, /data-hero-exit-complete/);
   assert.match(cinematicTimelines, /gsap\.set\(heroText,\s*\{[\s\S]*?autoAlpha:\s*0/);
-  assert.match(cinematicTimelines, /duration:\s*3\.8/);
-  assert.match(cinematicTimelines, /stagger:\s*0\.76/);
-  assert.match(cinematicTimelines, /stagger:\s*\{\s*each:\s*exitStagger,\s*from:\s*"end"\s*\}/);
+  assert.match(cinematicTimelines, /const heroExitText = \[\.\.\.heroText\]\.reverse\(\)/);
+  assert.match(cinematicTimelines, /const enterDuration = 3\.8/);
+  assert.match(cinematicTimelines, /const enterStagger = 0\.76/);
+  assert.match(cinematicTimelines, /exitStart = 16\.5/);
+  assert.match(cinematicTimelines, /exitDuration = 1\.15/);
+  assert.match(cinematicTimelines, /exitStagger = 0\.62/);
+  assert.match(cinematicTimelines, /\.addLabel\("hero-exit", exitStart\)[\s\S]*?\.to\(\s*heroExitText/);
+  const heroExitBlock = cinematicTimelines.match(
+    /\.to\(\s*heroExitText,[\s\S]*?"hero-exit",\s*\)/,
+  )?.[0] || "";
+  assert.match(heroExitBlock, /stagger:\s*exitStagger/);
+  assert.doesNotMatch(heroExitBlock, /filter|blur/);
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
   )?.[0] || "";
@@ -254,14 +261,22 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260722-carousel-wide-canvas-v25/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260721-hero-startup-v24/);
-  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260721-hero-startup-v24/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260722-hero-reverse-exit-v27/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
+});
+
+test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {
+  assert.match(cinematicCss, /\.hero-sequence\s*\{[\s\S]*?height:\s*250svh/);
+  assert.match(cinematicCss, /\.signal-section\s*\{[\s\S]*?min-height:\s*100svh/);
+  assert.match(cinematicCss, /\.manifesto-section\s*\{[\s\S]*?min-height:\s*100svh/);
+  assert.match(cinematicCss, /\.operations-section\s*\{[\s\S]*?min-height:\s*336svh/);
+  assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 
 test("gallery exposes every one of the 18 production team photos before seamless cloning", () => {

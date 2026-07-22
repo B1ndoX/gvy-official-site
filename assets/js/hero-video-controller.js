@@ -36,13 +36,12 @@ export function resolveHeroVideo(
   } = {},
 ) {
   const constrainedNetwork = saveData || /^(slow-2g|2g|3g)$/.test(effectiveType);
-  const renderedPixelWidth = viewportWidth * Math.min(Math.max(pixelRatio, 1), 2);
   const useMobileVideo = Boolean(media.videoMobile)
     && (constrainedNetwork || viewportWidth <= 760);
   const useLargeVideo = Boolean(media.videoLarge)
     && !useMobileVideo
     && !constrainedNetwork
-    && renderedPixelWidth >= 2_200;
+    && viewportWidth >= 2_200;
 
   return {
     ...media,

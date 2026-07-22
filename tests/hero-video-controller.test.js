@@ -142,6 +142,10 @@ test("selects one quality tier before assigning the hero source", () => {
   );
   assert.equal(
     resolveHeroVideo(media02, { viewportWidth: 1_440, pixelRatio: 2, effectiveType: "4g" }).quality,
+    "1080p",
+  );
+  assert.equal(
+    resolveHeroVideo(media02, { viewportWidth: 2_560, pixelRatio: 1, effectiveType: "4g" }).quality,
     "1440p",
   );
   assert.equal(
