@@ -7,6 +7,14 @@ const mediaPaths = [
   "/assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
+  "/assets/operations-motion/v1/combat-1280-v1.mp4",
+  "/assets/operations-motion/v1/combat-1920-v1.mp4",
+  "/assets/operations-motion/v1/industry-1280-v1.mp4",
+  "/assets/operations-motion/v1/industry-1920-v1.mp4",
+  "/assets/operations-motion/v1/logistics-1280-v1.mp4",
+  "/assets/operations-motion/v1/logistics-1920-v1.mp4",
+  "/assets/operations-motion/v1/exploration-1280-v1.mp4",
+  "/assets/operations-motion/v1/exploration-1920-v1.mp4",
 ];
 
 async function fetchRange(url) {

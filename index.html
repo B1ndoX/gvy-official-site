@@ -109,7 +109,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260722-breathing-rhythm-v26" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260723-operation-motion-v28" />
   </head>
 
   <body id="pageTop">
@@ -252,7 +252,7 @@
         </div>
       </section>
 
-      <section class="operations-section section-shell" id="operations" data-operations-section>
+      <section class="operations-section section-shell" id="operations" data-operations-section data-operation-active="0">
         <div class="operations-ambient" aria-hidden="true">
           <video
             data-deferred-media
@@ -278,24 +278,28 @@
                 <source type="image/webp" srcset="./assets/official/operations-combat-1280.webp 1280w, ./assets/official/operations-combat-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-combat-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
+              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v1/combat-1280-v1.mp4" data-src-wide="./assets/operations-motion/v1/combat-1920-v1.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="1">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-industry-1280.webp 1280w, ./assets/official/operations-industry-1920.webp 1916w" sizes="100vw" />
                 <img src="./assets/official/operations-industry-1920.webp" alt="" loading="lazy" width="1916" height="822" />
               </picture>
+              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v1/industry-1280-v1.mp4" data-src-wide="./assets/operations-motion/v1/industry-1920-v1.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="2">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-logistics-1280.webp 1280w, ./assets/official/operations-logistics-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-logistics-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
+              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v1/logistics-1280-v1.mp4" data-src-wide="./assets/operations-motion/v1/logistics-1920-v1.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="3">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-exploration-1280.webp 1280w, ./assets/official/operations-exploration-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-exploration-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
+              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v1/exploration-1280-v1.mp4" data-src-wide="./assets/operations-motion/v1/exploration-1920-v1.mp4" muted loop playsinline preload="none"></video>
             </figure>
           </div>
 
@@ -487,6 +491,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260722-hero-reverse-exit-v27"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260723-operation-motion-v28"></script>
   </body>
 </html>

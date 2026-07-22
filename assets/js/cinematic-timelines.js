@@ -277,7 +277,21 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     gsap.set(visuals[0], { autoAlpha: 1 });
     gsap.set([operationsStage, operationProgress], { autoAlpha: 1 });
 
-    const operationsTimeline = gsap.timeline({
+    const stageSpan = 2.35;
+    let operationsTimeline;
+    let activeOperationIndex = -1;
+    const syncActiveOperation = () => {
+      const currentTime = operationsTimeline?.time?.() || 0;
+      let nextIndex = 0;
+      for (let index = 1; index < Math.min(visuals.length, copies.length); index += 1) {
+        if (currentTime >= index * stageSpan - 0.22) nextIndex = index;
+      }
+      if (nextIndex === activeOperationIndex) return;
+      activeOperationIndex = nextIndex;
+      operations.dataset.operationActive = String(nextIndex);
+    };
+
+    operationsTimeline = gsap.timeline({
       scrollTrigger: {
         id: "gvy-operations",
         trigger: operations,
@@ -286,10 +300,11 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         end: "bottom bottom",
         scrub: 0.7,
         invalidateOnRefresh: true,
+        onUpdate: syncActiveOperation,
+        onRefresh: syncActiveOperation,
       },
     });
-
-    const stageSpan = 2.35;
+    syncActiveOperation();
 
     operationsTimeline
       .fromTo(

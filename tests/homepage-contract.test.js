@@ -25,6 +25,7 @@ const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js"
 const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
 const archiveCarousel = await readOptional("assets/js/archive-carousel.js");
 const memberBrawlDialog = await readOptional("assets/js/member-brawl-dialog.js");
+const operationMotion = await readOptional("assets/js/operation-motion.js");
 
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
@@ -41,6 +42,16 @@ test("EdgeOne gives versioned hero media long browser and edge cache lifetimes",
   );
   assert.ok(heroRule);
   const headers = new Map(heroRule.headers.map(({ key, value }) => [key, value]));
+  assert.equal(headers.get("Cache-Control"), "public, max-age=31536000, immutable");
+  assert.equal(headers.get("Pages-Cache-Control"), "s-maxage=7776000");
+});
+
+test("EdgeOne gives operation motion immutable browser and edge cache lifetimes", () => {
+  const operationRule = edgeoneConfig.headers.find(
+    (rule) => rule.source === "/assets/operations-motion/v1/*",
+  );
+  assert.ok(operationRule);
+  const headers = new Map(operationRule.headers.map(({ key, value }) => [key, value]));
   assert.equal(headers.get("Cache-Control"), "public, max-age=31536000, immutable");
   assert.equal(headers.get("Pages-Cache-Control"), "s-maxage=7776000");
 });
@@ -102,6 +113,31 @@ test("below-fold videos have deferred data sources only", () => {
     assert.doesNotMatch(video, /\ssrc\s*=/);
     assert.match(video, /preload="none"/);
   });
+});
+
+test("operation motion keeps still-image fallbacks and loads no clip from HTML", async () => {
+  const operationVideos = homepage.match(/<video\b[^>]*data-operation-video[^>]*>/g) || [];
+  assert.equal(operationVideos.length, 4);
+  operationVideos.forEach((video) => {
+    assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v1\/[a-z]+-1280-v1\.mp4"/);
+    assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v1\/[a-z]+-1920-v1\.mp4"/);
+    assert.match(video, /preload="none"/);
+    assert.doesNotMatch(video, /\ssrc\s*=/);
+  });
+  assert.match(homepage, /data-operation-active="0"/);
+  assert.match(operationMotion, /prefers-reduced-motion: reduce/);
+  assert.match(operationMotion, /navigator\?\.connection\?\.saveData/);
+  assert.match(operationMotion, /pauseAll/);
+  assert.match(operationMotion, /IntersectionObserver|Observer/);
+  assert.match(cinematicTimelines, /dataset\.operationActive/);
+
+  await Promise.all(
+    ["combat", "industry", "logistics", "exploration"].flatMap((name) =>
+      [1280, 1920].map((width) =>
+        access(new URL(`assets/operations-motion/v1/${name}-${width}-v1.mp4`, root)),
+      ),
+    ),
+  );
 });
 
 test("old planet and card map stay removed while the production brawl remains isolated", () => {
@@ -261,10 +297,11 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260722-carousel-wide-canvas-v25/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260722-hero-reverse-exit-v27/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-operation-motion-v28/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
+  assert.match(cinematicHomepage, /initOperationMotion/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
