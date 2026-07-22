@@ -1380,8 +1380,8 @@ html[data-motion-ready] :is(
 
 .public-security-beian img {
   display: block;
-  width: 18px;
-  height: 20px;
+  width: 12px;
+  height: 13px;
   object-fit: contain;
   flex: 0 0 auto;
 }
