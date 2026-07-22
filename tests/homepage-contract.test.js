@@ -120,10 +120,13 @@ test("archive controls use SVG icons and compliance copy is exact", () => {
   assert.match(homepage, /data-archive-next[\s\S]*?<svg/);
   assert.match(homepage, /陕ICP备2026017597号-1/);
   assert.match(homepage, /https:\/\/beian\.miit\.gov\.cn\//);
+  assert.match(homepage, /© 2026 星际远航者/);
   assert.match(
     homepage,
-    /本站为玩家自建非商业资料展示站，非 Star Citizen 官方网站，不提供游戏下载、充值、账号交易、虚拟物品交易或游戏运营服务。Star Citizen及相关名称、商标、图像和素材归其权利方所有。/,
+    /玩家自建非商业资料站，非 Star Citizen 官方网站；相关名称、商标与素材归其权利方所有。/,
   );
+  assert.doesNotMatch(homepage, /class="footer-brand"/);
+  assert.doesNotMatch(homepage, /不提供游戏下载、充值、账号交易、虚拟物品交易或游戏运营服务/);
 });
 
 test("cinematic design system defines responsive and reduced-motion contracts", () => {

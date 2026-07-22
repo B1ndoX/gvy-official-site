@@ -1308,56 +1308,36 @@ html[data-motion-ready] :is(
 .site-footer {
   position: relative;
   z-index: 2;
-  display: grid;
-  padding: 45px var(--page-gutter) 52px;
-  grid-template-columns: 1fr minmax(320px, 1.3fr) auto;
+  display: flex;
+  padding: 24px var(--page-gutter) max(24px, env(safe-area-inset-bottom));
+  flex-wrap: wrap;
   align-items: center;
-  gap: 40px;
+  justify-content: space-between;
+  gap: 14px 32px;
   border-top: 1px solid var(--line-cool);
   background: #020408;
   color: var(--text-secondary);
 }
 
-.footer-brand {
+.footer-summary {
   display: flex;
+  margin: 0;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 14px;
-}
-
-.footer-brand img {
-  width: 42px;
-  height: 42px;
-  object-fit: contain;
-}
-
-.footer-brand p {
-  display: flex;
-  margin: 0;
-  flex-direction: column;
-  line-height: 1.2;
-}
-
-.footer-brand strong {
-  color: var(--text-primary);
-  font-size: 0.83rem;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-}
-
-.footer-brand span {
-  margin-top: 5px;
-  font-size: 0.75rem;
-  letter-spacing: 0.17em;
-}
-
-.legal-copy {
-  margin: 0;
+  gap: 0 8px;
+  max-width: 880px;
   font-size: 0.75rem;
   line-height: 1.7;
 }
 
+.footer-summary > span:first-child {
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
 .footer-beian {
   display: flex;
+  margin-left: auto;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
@@ -1557,8 +1537,6 @@ noscript {
 
 @media (max-width: 980px) {
   .nav-links a:nth-child(-n + 3) { display: none; }
-  .site-footer { grid-template-columns: 1fr 1fr; }
-  .footer-beian { grid-column: 2; }
 }
 
 @media (max-width: 760px) {
@@ -1706,18 +1684,29 @@ noscript {
   .recruit-actions { flex-direction: column; gap: 17px; }
 
   .site-footer {
-    display: flex;
     min-height: 0;
-    padding-top: 38px;
-    padding-bottom: max(38px, env(safe-area-inset-bottom));
+    padding-top: 22px;
+    padding-bottom: max(26px, env(safe-area-inset-bottom));
     flex-direction: column;
     align-items: flex-start;
-    gap: 22px;
+    gap: 14px;
+  }
+  .footer-summary {
+    display: block;
+    max-width: 34rem;
+    font-size: 0.7rem;
+  }
+  .footer-summary > span {
+    display: inline;
+  }
+  .footer-summary > span:first-child {
+    margin-right: 6px;
   }
   .footer-beian {
-    grid-column: auto;
+    margin-left: 0;
     justify-content: flex-start;
   }
+  .footer-summary > .footer-summary-separator,
   .footer-beian-separator { display: none; }
 
   .archive-dialog-shell { padding: 65px 12px 24px; }
