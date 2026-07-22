@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  advanceCarouselPosition,
   getClosestCardIndex,
   isCarouselDrag,
   normalizeLoopPosition,
@@ -44,19 +45,27 @@ test("continuous carousel wraps forward and backward without changing visual pha
   assert.equal(normalizeLoopPosition(450, 1000), 450);
 });
 
-test("continuous carousel pauses while the page is touched or vertically scrolling", () => {
+test("continuous carousel keeps a floating position across subpixel animation frames", () => {
+  const firstFrame = advanceCarouselPosition(0, 34, 16, 1000);
+  const secondFrame = advanceCarouselPosition(firstFrame, 34, 16, 1000);
+
+  assert.ok(Math.abs(firstFrame - 0.544) < 1e-9);
+  assert.ok(Math.abs(secondFrame - 1.088) < 1e-9);
+  assert.ok(Math.abs(advanceCarouselPosition(999.8, 34, 16, 1000) - 0.344) < 1e-9);
+});
+
+test("continuous carousel pauses only for direct interaction, visibility, or its pause control", () => {
   const baseState = {
     loopWidth: 1000,
     manuallyPaused: false,
     touchActive: false,
-    pageTouchActive: false,
-    pageScrolling: false,
     inView: true,
     hidden: false,
   };
 
   assert.equal(shouldAdvanceCarousel(baseState), true);
-  assert.equal(shouldAdvanceCarousel({ ...baseState, pageTouchActive: true }), false);
-  assert.equal(shouldAdvanceCarousel({ ...baseState, pageScrolling: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, touchActive: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, manuallyPaused: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, inView: false }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, hidden: true }), false);
 });

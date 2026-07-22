@@ -144,6 +144,9 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   }
   assert.match(cinematicCss, /@media \(max-width: 760px\)/);
   assert.match(cinematicCss, /@media \(prefers-reduced-motion: reduce\)/);
+  assert.match(cinematicCss, /@media \(min-width: 2561px\)/);
+  assert.match(cinematicCss, /\.hero-sticky\s*\{\s*height:\s*1440px;/);
+  assert.match(cinematicCss, /main,[\s\S]*?\.site-footer\s*\{[\s\S]*?width:\s*2560px;/);
   assert.match(cinematicCss, /overflow-x:\s*clip/);
   assert.match(
     cinematicCss,
@@ -222,8 +225,11 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /requestAnimationFrame/);
   assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*34/);
   assert.match(archiveCarousel, /data-archive-clone/);
-  assert.match(archiveCarousel, /pageScrolling/);
-  assert.match(archiveCarousel, /pageTouchActive/);
+  assert.match(archiveCarousel, /virtualPosition/);
+  assert.match(archiveCarousel, /advanceCarouselPosition/);
+  assert.match(archiveCarousel, /updateInViewFromGeometry/);
+  assert.doesNotMatch(archiveCarousel, /pageScrolling/);
+  assert.doesNotMatch(archiveCarousel, /pageTouchActive/);
   assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
   assert.match(archiveCarousel, /let manuallyPaused\s*=\s*false/);
   assert.match(archiveCarousel, /recoverTransientPause/);
@@ -247,7 +253,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260721-hero-startup-v24/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260722-carousel-wide-canvas-v25/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260721-hero-startup-v24/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260721-hero-startup-v24/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
