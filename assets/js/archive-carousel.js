@@ -41,12 +41,14 @@ export function shouldAdvanceCarousel({
   loopWidth,
   manuallyPaused,
   touchActive,
+  pageScrolling = false,
   inView,
   hidden,
 }) {
   return loopWidth > 0
     && !manuallyPaused
     && !touchActive
+    && !pageScrolling
     && inView
     && !hidden;
 }
@@ -71,6 +73,8 @@ export function initArchiveCarousel({
   const frame = view?.requestAnimationFrame?.bind(view)
     || ((callback) => setTimeout(() => callback(Date.now()), 16));
   const cancelFrame = view?.cancelAnimationFrame?.bind(view) || clearTimeout;
+  const schedule = view?.setTimeout?.bind(view) || setTimeout;
+  const cancelSchedule = view?.clearTimeout?.bind(view) || clearTimeout;
   const cloneHandlers = [];
   const cloneCards = cards.map((card, index) => {
     const clone = card.cloneNode(true);
@@ -97,6 +101,8 @@ export function initArchiveCarousel({
   let inView = false;
   let manuallyPaused = false;
   let touchActive = false;
+  let pageScrolling = false;
+  let pageScrollTimer = 0;
   let dragPointerId = null;
   let dragStartX = 0;
   let dragStartScrollLeft = 0;
@@ -134,6 +140,14 @@ export function initArchiveCarousel({
   }
 
   function scheduleVisibilityCheck() {
+    pageScrolling = true;
+    if (pageScrollTimer) cancelSchedule(pageScrollTimer);
+    pageScrollTimer = schedule(() => {
+      pageScrollTimer = 0;
+      pageScrolling = false;
+      updateInViewFromGeometry();
+      lastTimestamp = null;
+    }, 160);
     if (visibilityFrame) return;
     visibilityFrame = frame(() => {
       visibilityFrame = 0;
@@ -147,6 +161,7 @@ export function initArchiveCarousel({
       loopWidth,
       manuallyPaused,
       touchActive,
+      pageScrolling,
       inView,
       hidden: root.hidden,
     });
@@ -329,6 +344,7 @@ export function initArchiveCarousel({
       if (animationFrame) cancelFrame(animationFrame);
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
+      if (pageScrollTimer) cancelSchedule(pageScrollTimer);
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("pointerdown", handlePointerDown);

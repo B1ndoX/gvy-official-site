@@ -59,12 +59,14 @@ test("continuous carousel pauses only for direct interaction, visibility, or its
     loopWidth: 1000,
     manuallyPaused: false,
     touchActive: false,
+    pageScrolling: false,
     inView: true,
     hidden: false,
   };
 
   assert.equal(shouldAdvanceCarousel(baseState), true);
   assert.equal(shouldAdvanceCarousel({ ...baseState, touchActive: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, pageScrolling: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, manuallyPaused: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, inView: false }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, hidden: true }), false);

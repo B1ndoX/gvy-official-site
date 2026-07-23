@@ -202,6 +202,7 @@ test("fleet operation data contains four official full-bleed stages", () => {
 
 test("cinematic timelines register GSAP and cover every narrative stage", () => {
   assert.match(cinematicTimelines, /registerPlugin\(ScrollTrigger\)/);
+  assert.match(cinematicTimelines, /ignoreMobileResize:\s*true/);
   assert.match(cinematicTimelines, /gsap\.matchMedia\(\)/);
   assert.match(cinematicTimelines, /prefers-reduced-motion/);
   assert.match(cinematicTimelines, /min-width:\s*761px/);
@@ -271,7 +272,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /virtualPosition/);
   assert.match(archiveCarousel, /advanceCarouselPosition/);
   assert.match(archiveCarousel, /updateInViewFromGeometry/);
-  assert.doesNotMatch(archiveCarousel, /pageScrolling/);
+  assert.match(archiveCarousel, /pageScrolling/);
   assert.doesNotMatch(archiveCarousel, /pageTouchActive/);
   assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
   assert.match(archiveCarousel, /let manuallyPaused\s*=\s*false/);
@@ -296,8 +297,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260722-carousel-wide-canvas-v25/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-operation-transition-v29/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260723-mobile-scroll-stability-v30/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-mobile-scroll-stability-v30/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
@@ -319,7 +320,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260723-operation-transition-v29/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-operation-transition-v29/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-mobile-scroll-stability-v30/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {

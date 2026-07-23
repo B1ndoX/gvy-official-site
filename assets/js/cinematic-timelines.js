@@ -451,6 +451,10 @@ export function initCinematicTimelines({
   if (!root || !gsap || !ScrollTrigger) return { refresh() {}, cleanup() {} };
 
   gsap.registerPlugin(ScrollTrigger);
+  // Mobile browser chrome changes the visual viewport height while the user
+  // scrolls. Recalculating every trigger for those transient resizes can make
+  // the document jump between two paint states, especially on iOS Safari.
+  ScrollTrigger.config?.({ ignoreMobileResize: true });
   const media = gsap.matchMedia();
 
   media.add(
