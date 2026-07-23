@@ -105,14 +105,12 @@ test("homepage follows the approved voyage narrative", () => {
   assert.equal((homepage.match(/data-operation-index=/g) || []).length, 4);
 });
 
-test("below-fold videos have deferred data sources only", () => {
+test("abandoned ambient videos are not mounted in the homepage", () => {
   const deferredVideos = homepage.match(/<video\b[^>]*data-deferred-media[^>]*>/g) || [];
-  assert.equal(deferredVideos.length, 2);
-  deferredVideos.forEach((video) => {
-    assert.match(video, /data-src="\.\/assets\/(?:operations-planet-video|archive-planet-feed)\.mp4"/);
-    assert.doesNotMatch(video, /\ssrc\s*=/);
-    assert.match(video, /preload="none"/);
-  });
+  assert.equal(deferredVideos.length, 0);
+  assert.doesNotMatch(homepage, /operations-planet-video\.mp4/);
+  assert.doesNotMatch(homepage, /archive-planet-feed\.mp4/);
+  assert.doesNotMatch(homepage, /operations-ambient|archive-ambient/);
 });
 
 test("operation motion keeps still-image fallbacks and loads no clip from HTML", async () => {
@@ -181,8 +179,11 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   assert.match(cinematicCss, /@media \(max-width: 760px\)/);
   assert.match(cinematicCss, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(cinematicCss, /@media \(min-width: 2561px\)/);
-  assert.match(cinematicCss, /\.hero-sticky\s*\{\s*height:\s*1440px;/);
   assert.match(cinematicCss, /main,[\s\S]*?\.site-footer\s*\{[\s\S]*?width:\s*2560px;/);
+  assert.doesNotMatch(cinematicCss, /min-height:\s*4838px/);
+  assert.match(cinematicCss, /\.operations-stage\s*\{[\s\S]*?grid-template-rows:\s*repeat\(4, 945px\)/);
+  assert.match(cinematicCss, /\.operation-visuals,[\s\S]*?\.operation-copy-stack\s*\{\s*display:\s*contents;/);
+  assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*1440px;/);
   assert.match(cinematicCss, /overflow-x:\s*clip/);
   assert.match(
     cinematicCss,
@@ -207,6 +208,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /prefers-reduced-motion/);
   assert.match(cinematicTimelines, /min-width:\s*761px/);
   assert.match(cinematicTimelines, /max-width:\s*760px/);
+  assert.match(cinematicTimelines, /max-width:\s*2560px/);
+  assert.match(cinematicTimelines, /wide:\s*"\(min-width:\s*2561px\)/);
   for (const id of ["hero", "signal", "manifesto", "operations", "recruit"]) {
     assert.match(cinematicTimelines, new RegExp(`gvy-${id}`));
   }
@@ -284,7 +287,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
   assert.match(cinematicCss, /\.operation-copy:nth-child\(1\)::before[\s\S]*?\/ contain no-repeat/);
-  assert.match(cinematicCss, /\.archive-ambient\s*\{\s*display:\s*none;/);
+  assert.doesNotMatch(cinematicCss, /\.archive-ambient|\.operations-ambient/);
   assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*220svh;/);
   assert.match(cinematicCss, /rgba\(2, 4, 8, 0\.72\) 84%[\s\S]*?#020408 100%/);
   assert.match(cinematicCss, /overscroll-behavior-y:\s*none/);
@@ -298,7 +301,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260723-mobile-scroll-stability-v30/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-mobile-scroll-stability-v30/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-proportional-zoom-flow-v31/);
+  assert.match(cinematicHomepage, /operation-motion\.js\?v=20260723-proportional-zoom-flow-v31/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
@@ -319,8 +323,8 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260723-operation-transition-v29/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-mobile-scroll-stability-v30/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260723-proportional-zoom-flow-v31/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-proportional-zoom-flow-v31/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {

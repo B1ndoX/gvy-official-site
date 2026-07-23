@@ -682,26 +682,6 @@ html[data-motion-ready] :is(
   background: #03070d;
 }
 
-.operations-ambient,
-.operations-ambient video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.operations-ambient {
-  z-index: -2;
-  overflow: hidden;
-  opacity: 0.13;
-  mask-image: linear-gradient(to bottom, transparent, #000 15%, #000 84%, transparent);
-}
-
-.operations-ambient video {
-  object-fit: cover;
-  filter: grayscale(0.5) saturate(0.65) brightness(0.52);
-}
-
 .operations-heading {
   position: relative;
   z-index: 6;
@@ -966,26 +946,6 @@ html[data-motion-ready] :is(
   background:
     linear-gradient(180deg, transparent 0, rgba(4, 9, 16, 0.84) 11vh, #040910 25vh),
     radial-gradient(circle at 78% 22%, rgba(42, 105, 139, 0.11), transparent 27rem);
-}
-
-.archive-ambient {
-  position: absolute;
-  z-index: -2;
-  top: 0;
-  right: -8vw;
-  width: min(68vw, 1000px);
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 50%;
-  opacity: 0.1;
-  filter: grayscale(0.7);
-  mask-image: radial-gradient(circle, #000 0 52%, transparent 73%);
-}
-
-.archive-ambient video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
 }
 
 .featured-archive {
@@ -1731,7 +1691,6 @@ noscript {
   .archive-section::before {
     background: radial-gradient(circle at 78% 22%, rgba(42, 105, 139, 0.11), transparent 27rem);
   }
-  .archive-ambient { display: none; }
   .featured-archive { margin-top: 7.2vh; gap: 58px; }
   .archive-feature,
   .archive-feature:nth-child(even) { display: block; }
@@ -1799,10 +1758,17 @@ noscript {
   .archive-grid button { opacity: 1; transform: none; }
 }
 
-/* Browser zoom-out and very wide displays use one centered 2560 × 1440 design
-   canvas. Viewport-sized scenes otherwise remain physically full-screen while
-   the type scales down, which breaks the intended proportions. */
+/* At deep browser zoom-out (and on ultra-wide displays), the CSS viewport can
+   become taller than the original scene canvas. Scroll-linked sticky scenes
+   would then outlive their content and expose empty black travel. Keep one
+   proportional 2560 × 1440 canvas, but render the narrative in normal flow so
+   every scene stays adjacent and the complete page scales as one composition. */
 @media (min-width: 2561px) {
+  :root {
+    --content-max: 1920px;
+    --page-gutter: 96px;
+  }
+
   main,
   .site-footer {
     width: 2560px;
@@ -1814,50 +1780,148 @@ noscript {
     width: 2560px;
   }
 
-  .hero-sequence { height: 3600px; }
-  .hero-sticky { height: 1440px; }
-  .hero-motto { bottom: 187px; }
+  .hero-sequence {
+    height: 1440px;
+  }
+
+  .hero-sticky {
+    position: relative;
+    top: auto;
+    height: 1440px;
+  }
+
+  .hero-title {
+    right: 120px;
+    bottom: 310px;
+    left: 120px;
+  }
+
+  .hero-motto {
+    right: 96px;
+    bottom: 187px;
+  }
 
   .signal-section {
     min-height: 1440px;
-    padding-block: 144px;
+    padding: 144px 96px;
   }
-  .signal-stage { min-height: 1152px; }
 
-  .manifesto-section { min-height: 1440px; }
+  .signal-stage {
+    min-height: 1152px;
+  }
+
+  .manifesto-section {
+    min-height: 1440px;
+  }
+
   .manifesto-copy {
     margin-left: calc((2560px - var(--content-max)) / 2 + var(--page-gutter));
     padding-block: 184px;
   }
 
   .operations-section {
-    min-height: 4838px;
-    padding-top: 230px;
+    min-height: 0;
+    padding-top: 140px;
   }
+
   .operations-heading {
-    min-height: 853px;
-    padding-top: 115px;
-    padding-bottom: 277px;
+    min-height: 0;
+    padding-top: 80px;
+    padding-bottom: 140px;
   }
+
   .operations-heading::after {
-    bottom: -207px;
-    width: 100%;
-    height: 864px;
+    display: none;
   }
+
   .operations-stage {
-    height: 1440px;
-    margin-top: -277px;
+    position: relative;
+    top: auto;
+    display: grid;
+    height: auto;
+    margin-top: 0;
+    grid-template-columns: minmax(0, 1680px) minmax(0, 880px);
+    grid-template-rows: repeat(4, 945px);
+    overflow: hidden;
   }
-  .operations-stage::before { height: 547px; }
-  .operation-copy { padding-block: 346px 216px; }
+
+  .operations-stage::before,
+  .operations-stage::after,
+  .operation-progress {
+    display: none;
+  }
+
+  .operation-visuals,
+  .operation-copy-stack {
+    display: contents;
+  }
+
+  .operation-visual {
+    position: relative;
+    inset: auto;
+    grid-column: 1;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .operation-visual:nth-child(1),
+  .operation-copy:nth-child(1) { grid-row: 1; }
+  .operation-visual:nth-child(2),
+  .operation-copy:nth-child(2) { grid-row: 2; }
+  .operation-visual:nth-child(3),
+  .operation-copy:nth-child(3) { grid-row: 3; }
+  .operation-visual:nth-child(4),
+  .operation-copy:nth-child(4) { grid-row: 4; }
+
+  .operation-motion {
+    display: none;
+  }
+
+  .operation-copy {
+    position: relative;
+    inset: auto;
+    grid-column: 2;
+    min-width: 0;
+    padding: 120px 90px;
+    border-bottom: 1px solid var(--line-cool);
+    border-left: 1px solid var(--line-cool);
+    opacity: 1 !important;
+    background: linear-gradient(90deg, rgba(2, 6, 11, 0.3), rgba(2, 6, 11, 0.94));
+    transform: none !important;
+  }
+
+  .operation-copy > * {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 
   .archive-section {
-    margin-top: -115px;
-    padding-block: 346px 230px;
+    margin-top: 0;
+    padding: 180px 0 160px;
+    background: #040910;
   }
-  .featured-archive { margin-top: 138px; }
-  .archive-index { margin-top: 207px; }
 
-  .recruit-section { min-height: 1670px; }
-  .recruit-copy { padding-block: 173px; }
+  .archive-section::before {
+    background: radial-gradient(circle at 78% 22%, rgba(42, 105, 139, 0.11), transparent 27rem);
+  }
+
+  .featured-archive {
+    margin-top: 100px;
+  }
+
+  .archive-index {
+    margin-top: 150px;
+  }
+
+  .recruit-section {
+    min-height: 1440px;
+  }
+
+  .recruit-copy {
+    padding-block: 173px;
+  }
 }

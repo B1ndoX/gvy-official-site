@@ -1,10 +1,10 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
 import { initArchiveCarousel } from "./archive-carousel.js?v=20260723-mobile-scroll-stability-v30";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260723-mobile-scroll-stability-v30";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260723-proportional-zoom-flow-v31";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260722-breathing-media-v26";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
-import { initOperationMotion } from "./operation-motion.js?v=20260723-operation-motion-v28";
+import { initOperationMotion } from "./operation-motion.js?v=20260723-proportional-zoom-flow-v31";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 

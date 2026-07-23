@@ -9,6 +9,7 @@ import {
 
 function createView({ width = 1600, reduced = false, saveData = false } = {}) {
   return {
+    innerWidth: width,
     navigator: { connection: { saveData } },
     matchMedia(query) {
       if (query.includes("prefers-reduced-motion")) return { matches: reduced };
@@ -28,8 +29,9 @@ function createVideo() {
   };
 }
 
-test("operation motion stays disabled for mobile, reduced motion, and data saver", () => {
+test("operation motion stays disabled for mobile, deep zoom-out, reduced motion, and data saver", () => {
   assert.equal(canPlayOperationMotion(createView({ width: 760 })), false);
+  assert.equal(canPlayOperationMotion(createView({ width: 4096 })), false);
   assert.equal(canPlayOperationMotion(createView({ reduced: true })), false);
   assert.equal(canPlayOperationMotion(createView({ saveData: true })), false);
   assert.equal(canPlayOperationMotion(createView({ width: 1441 })), true);

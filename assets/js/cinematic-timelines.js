@@ -435,9 +435,10 @@ function showMobileStableContent(gsap, root) {
 }
 
 function showStableLayout(gsap, root) {
+  root.documentElement?.removeAttribute("data-hero-exit-complete");
   gsap.set(
     root.querySelectorAll(
-      ".command-nav, .hero-title, .hero-motto, .signal-lockup, .identity-rail, .manifesto-copy, .section-heading, .operations-stage, .operation-copy, .operation-progress, .archive-feature, .archive-index, .archive-grid, .archive-grid button, .recruit-copy",
+      ".command-nav, .hero-title, .hero-title > *, .hero-title h1 > *, .hero-motto, .hero-motto > *, .signal-lockup, .signal-lockup > *, .identity-rail, .identity-rail > *, .manifesto-copy, .manifesto-copy > *, .section-heading, .section-heading > *, .operations-stage, .operation-visual, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
     ),
     { clearProps: "all", autoAlpha: 1, x: 0, y: 0, scale: 1 },
   );
@@ -459,13 +460,15 @@ export function initCinematicTimelines({
 
   media.add(
     {
-      desktop: "(min-width: 761px) and (prefers-reduced-motion: no-preference)",
+      desktop: "(min-width: 761px) and (max-width: 2560px) and (prefers-reduced-motion: no-preference)",
+      wide: "(min-width: 2561px) and (prefers-reduced-motion: no-preference)",
       mobile: "(max-width: 760px) and (prefers-reduced-motion: no-preference)",
       reduced: "(prefers-reduced-motion: reduce)",
     },
     (context) => {
       if (context.conditions.reduced) showStableLayout(gsap, root);
       else if (context.conditions.desktop) createDesktopTimelines(gsap, ScrollTrigger, root);
+      else if (context.conditions.wide) showStableLayout(gsap, root);
       else if (context.conditions.mobile) createMobileTimelines(gsap, ScrollTrigger, root);
     },
   );

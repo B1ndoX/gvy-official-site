@@ -1,5 +1,6 @@
 const MOBILE_BREAKPOINT = 760;
 const COMPACT_BREAKPOINT = 1440;
+const MAX_SCROLL_MOTION_WIDTH = 2560;
 
 function mediaMatches(view, query) {
   return Boolean(view?.matchMedia?.(query)?.matches);
@@ -7,6 +8,7 @@ function mediaMatches(view, query) {
 
 export function canPlayOperationMotion(view = globalThis) {
   if (mediaMatches(view, `(max-width: ${MOBILE_BREAKPOINT}px)`)) return false;
+  if (Number(view?.innerWidth || 0) > MAX_SCROLL_MOTION_WIDTH) return false;
   if (mediaMatches(view, "(prefers-reduced-motion: reduce)")) return false;
   if (view?.navigator?.connection?.saveData) return false;
   return true;
