@@ -742,6 +742,8 @@ html[data-motion-ready] :is(
 }
 
 .operations-stage {
+  --operations-entry-shade: 1;
+  --operations-exit-shade: 0;
   position: sticky;
   top: 0;
   display: block;
@@ -761,6 +763,7 @@ html[data-motion-ready] :is(
   height: 38vh;
   pointer-events: none;
   content: "";
+  opacity: var(--operations-entry-shade);
   background: linear-gradient(
     180deg,
     #03070d 0%,
@@ -769,6 +772,28 @@ html[data-motion-ready] :is(
     rgba(3, 7, 13, 0.3) 76%,
     transparent 100%
   );
+  will-change: opacity;
+}
+
+.operations-stage::after {
+  position: absolute;
+  z-index: 4;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 46vh;
+  pointer-events: none;
+  content: "";
+  opacity: var(--operations-exit-shade);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(3, 7, 13, 0.12) 24%,
+    rgba(4, 9, 16, 0.48) 52%,
+    rgba(4, 9, 16, 0.86) 78%,
+    #040910 100%
+  );
+  will-change: opacity;
 }
 
 .operation-visuals {
@@ -1666,7 +1691,8 @@ noscript {
   .operations-heading { min-height: auto; padding-bottom: 9.6vh; }
   .operations-heading::after { display: none; }
   .operations-stage { position: relative; display: block; height: auto; margin-top: 0; overflow: visible; background: transparent; }
-  .operations-stage::before { display: none; }
+  .operations-stage::before,
+  .operations-stage::after { display: none; }
   .operation-visuals { display: none; }
   .operation-copy-stack { position: relative; width: auto; border-left: 0; background: transparent; }
   .operation-copy {

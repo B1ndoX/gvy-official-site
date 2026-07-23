@@ -297,7 +297,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260722-carousel-wide-canvas-v25/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-operation-motion-v28/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-operation-transition-v29/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
@@ -306,6 +306,20 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
+});
+
+test("operation stage fades its entry and exit edges with scroll progress", () => {
+  assert.match(cinematicCss, /--operations-entry-shade:\s*1/);
+  assert.match(cinematicCss, /--operations-exit-shade:\s*0/);
+  assert.match(cinematicCss, /\.operations-stage::after\s*\{[\s\S]*?#040910 100%/);
+  assert.match(
+    cinematicCss,
+    /\.operations-stage::before,\s*\n\s*\.operations-stage::after\s*\{\s*display:\s*none;/,
+  );
+  assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
+  assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260723-operation-transition-v29/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-operation-transition-v29/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {

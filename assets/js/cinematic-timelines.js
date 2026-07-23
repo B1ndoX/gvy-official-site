@@ -276,6 +276,10 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 18 }));
     gsap.set(visuals[0], { autoAlpha: 1 });
     gsap.set([operationsStage, operationProgress], { autoAlpha: 1 });
+    gsap.set(operationsStage, {
+      "--operations-entry-shade": 1,
+      "--operations-exit-shade": 0,
+    });
 
     const stageSpan = 2.35;
     let operationsTimeline;
@@ -354,6 +358,18 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         operationProgress,
         { autoAlpha: 0, duration: 0.38, ease: "none" },
         lastIndex * stageSpan + 2,
+      );
+
+    operationsTimeline
+      .to(
+        operationsStage,
+        { "--operations-entry-shade": 0, duration: 1.25, ease: "none" },
+        0,
+      )
+      .to(
+        operationsStage,
+        { "--operations-exit-shade": 1, duration: 1.46, ease: "none" },
+        lastIndex * stageSpan + 0.92,
       );
 
     const operationsDuration = Math.max(1, operationsTimeline.duration());
