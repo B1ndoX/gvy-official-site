@@ -90,6 +90,22 @@ const operationClips = [
 ];
 
 for (const clip of operationClips) {
+  test(`operation ${clip.name} mobile video is a sharp lazy-load encode`, () => {
+    const path = resolve(root, `assets/operations-motion/v2/${clip.name}-mobile-1280-v1.mp4`);
+    assert.equal(existsSync(path), true);
+    assert.ok(statSync(path).size > 1 * 1024 * 1024, "mobile clip must not be a placeholder");
+    assert.ok(statSync(path).size < 7 * 1024 * 1024, "mobile clip must remain within its per-scene budget");
+
+    const metadata = inspectMedia(path);
+    assert.match(metadata, new RegExp(`Duration: ${clip.duration.replaceAll(".", "\\.")}`));
+    assert.match(metadata, /Video: h264 .*yuv420p.*1280x550/);
+    assert.match(metadata, /SAR 1:1 DAR 128:55/);
+    assert.match(metadata, /30 fps/);
+    assert.doesNotMatch(metadata, /Audio:/);
+  });
+}
+
+for (const clip of operationClips) {
   for (const tier of [
     { width: 1920, resolution: "1920x824" },
     { width: 2560, resolution: "2560x1098" },

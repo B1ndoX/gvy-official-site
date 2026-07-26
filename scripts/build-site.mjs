@@ -25,12 +25,16 @@ const activeHeroAssets = new Set([
 const activeOperationAssets = new Set([
   "combat-1920-v2.mp4",
   "combat-2560-v2.mp4",
+  "combat-mobile-1280-v1.mp4",
   "industry-1920-v2.mp4",
   "industry-2560-v2.mp4",
+  "industry-mobile-1280-v1.mp4",
   "logistics-1920-v2.mp4",
   "logistics-2560-v2.mp4",
+  "logistics-mobile-1280-v1.mp4",
   "exploration-1920-v2.mp4",
   "exploration-2560-v2.mp4",
+  "exploration-mobile-1280-v1.mp4",
 ]);
 
 await cp(resolve(root, "assets"), resolve(output, "assets"), {

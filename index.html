@@ -109,7 +109,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260726-nav-video-quality-v32" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260726-mobile-cinematic-v36" />
   </head>
 
   <body id="pageTop">
@@ -266,55 +266,51 @@
                 <source type="image/webp" srcset="./assets/official/operations-combat-1280.webp 1280w, ./assets/official/operations-combat-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-combat-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
-              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v2/combat-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/combat-2560-v2.mp4" muted loop playsinline preload="none"></video>
+              <video class="operation-motion" data-operation-video data-src-mobile="./assets/operations-motion/v2/combat-mobile-1280-v1.mp4" data-src-compact="./assets/operations-motion/v2/combat-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/combat-2560-v2.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="1">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-industry-1280.webp 1280w, ./assets/official/operations-industry-1920.webp 1916w" sizes="100vw" />
                 <img src="./assets/official/operations-industry-1920.webp" alt="" loading="lazy" width="1916" height="822" />
               </picture>
-              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v2/industry-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/industry-2560-v2.mp4" muted loop playsinline preload="none"></video>
+              <video class="operation-motion" data-operation-video data-src-mobile="./assets/operations-motion/v2/industry-mobile-1280-v1.mp4" data-src-compact="./assets/operations-motion/v2/industry-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/industry-2560-v2.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="2">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-logistics-1280.webp 1280w, ./assets/official/operations-logistics-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-logistics-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
-              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v2/logistics-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/logistics-2560-v2.mp4" muted loop playsinline preload="none"></video>
+              <video class="operation-motion" data-operation-video data-src-mobile="./assets/operations-motion/v2/logistics-mobile-1280-v1.mp4" data-src-compact="./assets/operations-motion/v2/logistics-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/logistics-2560-v2.mp4" muted loop playsinline preload="none"></video>
             </figure>
             <figure class="operation-visual" data-operation-visual="3">
               <picture>
                 <source type="image/webp" srcset="./assets/official/operations-exploration-1280.webp 1280w, ./assets/official/operations-exploration-1920.webp 1920w" sizes="100vw" />
                 <img src="./assets/official/operations-exploration-1920.webp" alt="" loading="lazy" width="1920" height="1080" />
               </picture>
-              <video class="operation-motion" data-operation-video data-src-compact="./assets/operations-motion/v2/exploration-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/exploration-2560-v2.mp4" muted loop playsinline preload="none"></video>
+              <video class="operation-motion" data-operation-video data-src-mobile="./assets/operations-motion/v2/exploration-mobile-1280-v1.mp4" data-src-compact="./assets/operations-motion/v2/exploration-1920-v2.mp4" data-src-wide="./assets/operations-motion/v2/exploration-2560-v2.mp4" muted loop playsinline preload="none"></video>
             </figure>
           </div>
 
           <div class="operation-copy-stack">
             <article class="operation-copy is-active" data-operation-index="0">
-              <span class="operation-number">01</span>
               <p class="operation-label">COMBAT</p>
               <h3>战斗与护航</h3>
               <p>守住舰队航线，在威胁逼近之前完成响应。</p>
               <small>ESCORT / RESPONSE / FRONTLINE</small>
             </article>
             <article class="operation-copy" data-operation-index="1">
-              <span class="operation-number">02</span>
               <p class="operation-label">INDUSTRY</p>
               <h3>工业与资源</h3>
               <p>把每一份资源，转化为下一次出发的底气。</p>
               <small>SALVAGE / MINING / SUPPLY</small>
             </article>
             <article class="operation-copy" data-operation-index="2">
-              <span class="operation-number">03</span>
               <p class="operation-label">LOGISTICS</p>
               <h3>运输与后勤</h3>
               <p>让补给、人员与情报，准时抵达每一个需要它们的地方。</p>
               <small>TRANSPORT / SUPPORT / ROUTE</small>
             </article>
             <article class="operation-copy" data-operation-index="3">
-              <span class="operation-number">04</span>
               <p class="operation-label">EXPLORATION</p>
               <h3>探索与勘测</h3>
               <p>驶向未标记的坐标，把每一次发现写进舰队记录。</p>
@@ -322,9 +318,12 @@
             </article>
           </div>
 
-          <div class="operation-progress" aria-hidden="true">
-            <span>01</span><i></i><span>04</span>
-          </div>
+          <nav class="operation-progress" aria-label="行动编队场景切换">
+            <button type="button" class="operation-progress-segment is-current" data-operation-jump="0" aria-label="切换到战斗与护航" aria-current="step"></button>
+            <button type="button" class="operation-progress-segment" data-operation-jump="1" aria-label="切换到工业与资源"></button>
+            <button type="button" class="operation-progress-segment" data-operation-jump="2" aria-label="切换到运输与后勤"></button>
+            <button type="button" class="operation-progress-segment" data-operation-jump="3" aria-label="切换到探索与勘测"></button>
+          </nav>
         </div>
       </section>
 
@@ -467,6 +466,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260726-nav-video-quality-v32"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260726-mobile-cinematic-v36"></script>
   </body>
 </html>

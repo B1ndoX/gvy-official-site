@@ -21,7 +21,7 @@ function createView({ width = 1600, reduced = false, saveData = false } = {}) {
 
 function createVideo() {
   return {
-    dataset: { srcCompact: "compact.mp4", srcWide: "wide.mp4" },
+    dataset: { srcMobile: "mobile.mp4", srcCompact: "compact.mp4", srcWide: "wide.mp4" },
     preload: "none",
     src: "",
     loadCalls: 0,
@@ -29,8 +29,8 @@ function createVideo() {
   };
 }
 
-test("operation motion stays disabled for mobile, deep zoom-out, reduced motion, and data saver", () => {
-  assert.equal(canPlayOperationMotion(createView({ width: 760 })), false);
+test("operation motion stays available on mobile but respects deep zoom-out, reduced motion, and data saver", () => {
+  assert.equal(canPlayOperationMotion(createView({ width: 760 })), true);
   assert.equal(canPlayOperationMotion(createView({ width: 4096 })), false);
   assert.equal(canPlayOperationMotion(createView({ reduced: true })), false);
   assert.equal(canPlayOperationMotion(createView({ saveData: true })), false);
@@ -39,6 +39,7 @@ test("operation motion stays disabled for mobile, deep zoom-out, reduced motion,
 
 test("operation motion selects the compact or wide encode from viewport width", () => {
   const video = createVideo();
+  assert.equal(selectOperationSource(video, createView({ width: 390 })), "mobile.mp4");
   assert.equal(selectOperationSource(video, createView({ width: 1280 })), "compact.mp4");
   assert.equal(selectOperationSource(video, createView({ width: 1920 })), "wide.mp4");
 });

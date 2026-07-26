@@ -214,6 +214,7 @@ function createHeroTimeline(
 }
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
+  const cleanups = [];
   createHeroTimeline(gsap, root, { animateMedia: true });
 
   const signal = root.querySelector("[data-signal-section]");
@@ -233,9 +234,37 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   }
   fadeTextSequenceThroughViewport(
     gsap,
-    root.querySelectorAll("[data-signal-lockup], [data-identity-rail]"),
-    "signal",
+    root.querySelectorAll("[data-signal-lockup]"),
+    "signal-lockup",
   );
+  const identityRail = root.querySelector("[data-identity-rail]");
+  const identityCells = gsap.utils.toArray(":scope > div", identityRail);
+  if (identityRail && identityCells.length) {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: "gvy-signal-identity",
+          trigger: identityRail,
+          start: "top 104%",
+          end: "top 76%",
+          scrub: 0.68,
+        },
+      })
+      .fromTo(
+        identityCells,
+        { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 100%" },
+        {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          stagger: 0.07,
+          ease: "none",
+        },
+        0,
+      )
+      .to(identityCells, { autoAlpha: 1, y: 0, scale: 1, duration: 0.34, ease: "none" }, 0.8);
+  }
 
   const manifesto = root.querySelector("[data-manifesto-section]");
   if (manifesto) {
@@ -268,9 +297,12 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   const operations = root.querySelector("[data-operations-section]");
   const operationsStage = operations?.querySelector("[data-operations-stage]");
   const operationProgress = operations?.querySelector(".operation-progress");
+  const progressSegments = gsap.utils.toArray("[data-operation-jump]", operations);
   const visuals = gsap.utils.toArray("[data-operation-visual]", operations);
   const copies = gsap.utils.toArray("[data-operation-index]", operations);
   if (operations && visuals.length && copies.length) {
+    const operationCount = Math.min(visuals.length, copies.length);
+    const lastIndex = operationCount - 1;
     gsap.set(visuals, { autoAlpha: 0, scale: 1.055 });
     gsap.set(copies, { autoAlpha: 0, y: 34 });
     copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 18 }));
@@ -287,12 +319,29 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     const syncActiveOperation = () => {
       const currentTime = operationsTimeline?.time?.() || 0;
       let nextIndex = 0;
-      for (let index = 1; index < Math.min(visuals.length, copies.length); index += 1) {
+      for (let index = 1; index < operationCount; index += 1) {
         if (currentTime >= index * stageSpan - 0.22) nextIndex = index;
       }
-      if (nextIndex === activeOperationIndex) return;
-      activeOperationIndex = nextIndex;
-      operations.dataset.operationActive = String(nextIndex);
+      if (nextIndex !== activeOperationIndex) {
+        activeOperationIndex = nextIndex;
+        operations.dataset.operationActive = String(nextIndex);
+      }
+
+      progressSegments.forEach((segment, index) => {
+        const segmentStart = index === 0 ? 0 : index * stageSpan - 0.22;
+        const segmentEnd = index === lastIndex
+          ? lastIndex * stageSpan + 2
+          : (index + 1) * stageSpan - 0.22;
+        const segmentProgress = Math.max(
+          0,
+          Math.min(1, (currentTime - segmentStart) / Math.max(0.01, segmentEnd - segmentStart)),
+        );
+        segment.style.setProperty("--segment-progress", segmentProgress.toFixed(4));
+        segment.classList.toggle("is-past", index < nextIndex);
+        segment.classList.toggle("is-current", index === nextIndex);
+        if (index === nextIndex) segment.setAttribute("aria-current", "step");
+        else segment.removeAttribute("aria-current");
+      });
     };
 
     operationsTimeline = gsap.timeline({
@@ -324,7 +373,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         0.3,
       );
 
-    for (let index = 1; index < Math.min(visuals.length, copies.length); index += 1) {
+    for (let index = 1; index < operationCount; index += 1) {
       const position = index * stageSpan;
       operationsTimeline
         .to(
@@ -352,7 +401,6 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         );
     }
 
-    const lastIndex = Math.min(visuals.length, copies.length) - 1;
     operationsTimeline
       .to(
         operationProgress,
@@ -372,12 +420,25 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         lastIndex * stageSpan + 0.92,
       );
 
-    const operationsDuration = Math.max(1, operationsTimeline.duration());
-    operationsTimeline.to(
-      operations,
-      { "--operations-progress": 1, duration: operationsDuration, ease: "none" },
-      0,
-    );
+    const handleOperationJump = (event) => {
+      const segment = event.currentTarget;
+      const index = Number.parseInt(segment.dataset.operationJump || "0", 10);
+      const trigger = operationsTimeline.scrollTrigger;
+      const view = root.defaultView;
+      if (!trigger || !view || !Number.isFinite(index) || index < 0 || index > lastIndex) return;
+
+      const segmentStart = index === 0 ? 0 : index * stageSpan - 0.22;
+      const targetTime = Math.min(operationsTimeline.duration(), segmentStart + 0.42);
+      const targetProgress = targetTime / Math.max(0.01, operationsTimeline.duration());
+      const targetScroll = trigger.start + (trigger.end - trigger.start) * targetProgress;
+      view.scrollTo({ top: targetScroll, behavior: "smooth" });
+    };
+
+    progressSegments.forEach((segment) => segment.addEventListener("click", handleOperationJump));
+    cleanups.push(() => {
+      progressSegments.forEach((segment) => segment.removeEventListener("click", handleOperationJump));
+    });
+    syncActiveOperation();
   }
 
   fadeThroughViewport(gsap, ScrollTrigger, root.querySelectorAll(".archive-feature button"), "archive-media", {
@@ -414,6 +475,8 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     enterY: 56,
     exitY: -30,
   });
+
+  return () => cleanups.splice(0).reverse().forEach((cleanup) => cleanup());
 }
 
 function createMobileTimelines(gsap, ScrollTrigger, root) {
@@ -423,6 +486,45 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
     lockExit: true,
   });
   showMobileStableContent(gsap, root);
+
+  const signal = root.querySelector("[data-signal-section]");
+  if (signal) {
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: "gvy-mobile-signal-orbits",
+          trigger: signal,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.65,
+        },
+      })
+      .fromTo(".signal-orbit-one", { scale: 0.88, rotate: -5 }, { scale: 1.04, rotate: 5, ease: "none" }, 0)
+      .fromTo(".signal-orbit-two", { scale: 0.9, rotateZ: -4 }, { scale: 1.05, rotateZ: 7, ease: "none" }, 0);
+  }
+
+  const createImageBreath = (selector, trigger, id) => {
+    if (!trigger) return;
+    gsap.fromTo(
+      selector,
+      { scale: 1.045, yPercent: -1.5 },
+      {
+        scale: 1,
+        yPercent: 1.5,
+        ease: "none",
+        scrollTrigger: {
+          id,
+          trigger,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 0.75,
+        },
+      },
+    );
+  };
+
+  createImageBreath(".manifesto-image img", root.querySelector("[data-manifesto-section]"), "gvy-mobile-manifesto-image");
+  createImageBreath(".recruit-image img", root.querySelector("[data-recruit-section]"), "gvy-mobile-recruit-image");
 }
 
 function showMobileStableContent(gsap, root) {
@@ -467,7 +569,7 @@ export function initCinematicTimelines({
     },
     (context) => {
       if (context.conditions.reduced) showStableLayout(gsap, root);
-      else if (context.conditions.desktop) createDesktopTimelines(gsap, ScrollTrigger, root);
+      else if (context.conditions.desktop) return createDesktopTimelines(gsap, ScrollTrigger, root);
       else if (context.conditions.wide) showStableLayout(gsap, root);
       else if (context.conditions.mobile) createMobileTimelines(gsap, ScrollTrigger, root);
     },

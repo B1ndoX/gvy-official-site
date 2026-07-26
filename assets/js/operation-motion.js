@@ -7,7 +7,6 @@ function mediaMatches(view, query) {
 }
 
 export function canPlayOperationMotion(view = globalThis) {
-  if (mediaMatches(view, `(max-width: ${MOBILE_BREAKPOINT}px)`)) return false;
   if (Number(view?.innerWidth || 0) > MAX_SCROLL_MOTION_WIDTH) return false;
   if (mediaMatches(view, "(prefers-reduced-motion: reduce)")) return false;
   if (view?.navigator?.connection?.saveData) return false;
@@ -16,8 +15,12 @@ export function canPlayOperationMotion(view = globalThis) {
 
 export function selectOperationSource(video, view = globalThis) {
   if (!video?.dataset) return "";
+  const useMobile = mediaMatches(view, `(max-width: ${MOBILE_BREAKPOINT}px)`);
   const useCompact = mediaMatches(view, `(max-width: ${COMPACT_BREAKPOINT}px)`);
-  return (useCompact && video.dataset.srcCompact) || video.dataset.srcWide || "";
+  return (useMobile && video.dataset.srcMobile)
+    || (useCompact && video.dataset.srcCompact)
+    || video.dataset.srcWide
+    || "";
 }
 
 export function assignOperationSource(video, view = globalThis) {
@@ -45,6 +48,7 @@ export function initOperationMotion({
 
   let sectionNearby = false;
   let activeIndex = Number.parseInt(section.dataset.operationActive || "0", 10) || 0;
+  const mobileLayout = mediaMatches(view, `(max-width: ${MOBILE_BREAKPOINT}px)`);
   const readyHandlers = new Map();
 
   const pauseAll = (exceptIndex = -1) => {
@@ -90,6 +94,29 @@ export function initOperationMotion({
     playActive();
   }
 
+  let cardObserver;
+  if (mobileLayout && typeof Observer === "function") {
+    const cards = [...(section.querySelectorAll?.("[data-operation-index]") || [])];
+    const visibleCards = new Map();
+    cardObserver = new Observer(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = Number.parseInt(entry.target?.dataset?.operationIndex || "-1", 10);
+          if (index >= 0) visibleCards.set(index, entry.isIntersecting ? (entry.intersectionRatio || 0.01) : 0);
+        });
+        const next = [...visibleCards.entries()]
+          .filter(([, ratio]) => ratio > 0)
+          .sort((a, b) => b[1] - a[1])[0]?.[0];
+        if (!Number.isFinite(next) || next === activeIndex) return;
+        activeIndex = next;
+        section.dataset.operationActive = String(next);
+        playActive();
+      },
+      { rootMargin: "-24% 0px -36% 0px", threshold: [0, 0.01, 0.25, 0.5, 0.75] },
+    );
+    cards.forEach((card) => cardObserver.observe(card));
+  }
+
   const mutation = typeof Mutation === "function"
     ? new Mutation(() => {
         const nextIndex = Number.parseInt(section.dataset.operationActive || "0", 10) || 0;
@@ -105,6 +132,7 @@ export function initOperationMotion({
 
   return () => {
     observer?.disconnect?.();
+    cardObserver?.disconnect?.();
     mutation?.disconnect?.();
     root.removeEventListener?.("visibilitychange", handleVisibility);
     pauseAll();

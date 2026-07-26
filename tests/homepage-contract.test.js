@@ -73,6 +73,12 @@ test("production build includes both active hero variants", () => {
   assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
 });
 
+test("production build includes one dedicated mobile encode for every operation", () => {
+  for (const name of ["combat", "industry", "logistics", "exploration"]) {
+    assert.match(buildScript, new RegExp(`${name}-mobile-1280-v1\\.mp4`));
+  }
+});
+
 test("homepage selects and starts one hero before the first paint", () => {
   const heroVideos = homepage.match(/<video\b[^>]*data-hero-video[^>]*>/g) || [];
   assert.equal(heroVideos.length, 1);
@@ -126,6 +132,7 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
   const operationVideos = homepage.match(/<video\b[^>]*data-operation-video[^>]*>/g) || [];
   assert.equal(operationVideos.length, 4);
   operationVideos.forEach((video) => {
+    assert.match(video, /data-src-mobile="\.\/assets\/operations-motion\/v2\/[a-z]+-mobile-1280-v1\.mp4"/);
     assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v2\/[a-z]+-1920-v2\.mp4"/);
     assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v2\/[a-z]+-2560-v2\.mp4"/);
     assert.match(video, /preload="none"/);
@@ -140,9 +147,12 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
 
   await Promise.all(
     ["combat", "industry", "logistics", "exploration"].flatMap((name) =>
-      [1920, 2560].map((width) =>
-        access(new URL(`assets/operations-motion/v2/${name}-${width}-v2.mp4`, root)),
-      ),
+      [
+        access(new URL(`assets/operations-motion/v2/${name}-mobile-1280-v1.mp4`, root)),
+        ...[1920, 2560].map((width) =>
+          access(new URL(`assets/operations-motion/v2/${name}-${width}-v2.mp4`, root)),
+        ),
+      ],
     ),
   );
 });
@@ -208,6 +218,24 @@ test("fleet operation data contains four official full-bleed stages", () => {
   assert.match(fleetData, /INDUSTRY/);
   assert.match(fleetData, /LOGISTICS/);
   assert.match(fleetData, /EXPLORATION/);
+});
+
+test("operation stage uses four interactive local progress segments without numeric ornaments", () => {
+  assert.equal((homepage.match(/data-operation-jump=/g) || []).length, 4);
+  assert.doesNotMatch(homepage, /class="operation-number"/);
+  assert.doesNotMatch(homepage, /<span>01<\/span>[\s\S]*?<span>04<\/span>/);
+  assert.match(homepage, /<nav class="operation-progress" aria-label="行动编队场景切换">/);
+  assert.match(cinematicCss, /\.operation-copy-stack\s*\{[\s\S]*?width:\s*34vw/);
+  assert.match(cinematicCss, /grid-template-columns:\s*repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.match(cinematicCss, /\.operation-progress-segment:is\(:hover, :focus-visible\)/);
+  assert.match(cinematicCss, /scaleX\(var\(--segment-progress\)\)/);
+  assert.match(cinematicCss, /\.operation-progress-segment\.is-past::after\s*\{[\s\S]*?opacity:\s*0\.3/);
+  assert.match(cinematicCss, /\.operation-progress-segment\.is-current::after\s*\{[\s\S]*?opacity:\s*1/);
+  assert.match(cinematicTimelines, /style\.setProperty\("--segment-progress"/);
+  assert.match(cinematicTimelines, /classList\.toggle\("is-past", index < nextIndex\)/);
+  assert.match(cinematicTimelines, /classList\.toggle\("is-current", index === nextIndex\)/);
+  assert.match(cinematicTimelines, /dataset\.operationJump/);
+  assert.match(cinematicTimelines, /scrollTo\(\{ top: targetScroll, behavior: "smooth" \}\)/);
 });
 
 test("cinematic timelines register GSAP and cover every narrative stage", () => {
@@ -295,7 +323,9 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(homepage, /团建相册/);
   assert.doesNotMatch(homepage, /COMPLETE LOG/);
   assert.match(cinematicCss, /html\[data-motion-pending\]/);
-  assert.match(cinematicCss, /\.operation-copy:nth-child\(1\)::before[\s\S]*?\/ contain no-repeat/);
+  assert.match(cinematicCss, /grid-template-rows:\s*repeat\(4, 56\.25vw auto\)/);
+  assert.match(operationMotion, /dataset\.srcMobile/);
+  assert.match(operationMotion, /cardObserver/);
   assert.doesNotMatch(cinematicCss, /\.archive-ambient|\.operations-ambient/);
   assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*220svh;/);
   assert.match(cinematicCss, /rgba\(2, 4, 8, 0\.72\) 84%[\s\S]*?#020408 100%/);
@@ -310,8 +340,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260723-mobile-scroll-stability-v30/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260723-proportional-zoom-flow-v31/);
-  assert.match(cinematicHomepage, /operation-motion\.js\?v=20260723-proportional-zoom-flow-v31/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260726-mobile-cinematic-v36/);
+  assert.match(cinematicHomepage, /operation-motion\.js\?v=20260726-mobile-cinematic-v36/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
@@ -336,15 +366,24 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260726-nav-video-quality-v32/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260726-nav-video-quality-v32/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260726-mobile-cinematic-v36/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260726-mobile-cinematic-v36/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {
   assert.match(cinematicCss, /\.hero-sequence\s*\{[\s\S]*?height:\s*250svh/);
-  assert.match(cinematicCss, /\.signal-section\s*\{[\s\S]*?min-height:\s*100svh/);
+  assert.match(cinematicCss, /\.signal-section\s*\{[\s\S]*?min-height:\s*92svh/);
   assert.match(cinematicCss, /\.manifesto-section\s*\{[\s\S]*?min-height:\s*100svh/);
-  assert.match(cinematicCss, /\.operations-section\s*\{[\s\S]*?min-height:\s*336svh/);
+  assert.match(cinematicCss, /\.operations-section\s*\{[\s\S]*?min-height:\s*352svh/);
+  assert.match(cinematicCss, /\.manifesto-image\s*\{[\s\S]*?mask-image:\s*linear-gradient/);
+  assert.match(cinematicTimelines, /id:\s*"gvy-signal-identity"/);
+  assert.match(cinematicTimelines, /trigger:\s*identityRail[\s\S]*?start:\s*"top 104%"[\s\S]*?end:\s*"top 76%"/);
+  assert.match(cinematicTimelines, /identityCells[\s\S]*?scale:\s*0\.94[\s\S]*?stagger:\s*0\.07/);
+  assert.match(cinematicTimelines, /id:\s*"gvy-mobile-signal-orbits"/);
+  assert.match(cinematicTimelines, /"gvy-mobile-manifesto-image"/);
+  assert.match(cinematicTimelines, /"gvy-mobile-recruit-image"/);
+  assert.match(cinematicCss, /grid-template-rows:\s*repeat\(4, 56\.25vw auto\)/);
+  assert.match(cinematicCss, /\.operation-visual:nth-child\(4\)\s*\{\s*grid-row:\s*7/);
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 

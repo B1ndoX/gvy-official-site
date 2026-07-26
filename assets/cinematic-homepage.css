@@ -495,8 +495,8 @@ html[data-motion-ready] :is(
 
 /* Fleet signal */
 .signal-section {
-  min-height: 100svh;
-  padding: 10vh var(--page-gutter);
+  min-height: 92svh;
+  padding: 8vh var(--page-gutter);
   background:
     linear-gradient(180deg, #020408 0%, rgba(5, 13, 23, 0.95) 42%, #03070d 100%);
 }
@@ -505,7 +505,7 @@ html[data-motion-ready] :is(
   position: relative;
   display: grid;
   width: min(var(--content-max), 100%);
-  min-height: 80svh;
+  min-height: 76svh;
   margin: 0 auto;
   place-items: center;
   overflow: hidden;
@@ -555,7 +555,7 @@ html[data-motion-ready] :is(
   z-index: 2;
   display: flex;
   max-width: 820px;
-  padding: 70px 20px 130px;
+  padding: 58px 20px 116px;
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -600,7 +600,7 @@ html[data-motion-ready] :is(
 }
 
 .identity-rail div {
-  padding: 21px clamp(14px, 2vw, 28px);
+  padding: 17px clamp(14px, 2vw, 28px);
   border-right: 1px solid var(--line-cool);
 }
 
@@ -627,6 +627,7 @@ html[data-motion-ready] :is(
   min-height: 100svh;
   align-items: center;
   overflow: hidden;
+  background: #03070d;
 }
 
 .manifesto-image,
@@ -638,6 +639,27 @@ html[data-motion-ready] :is(
   height: 100%;
 }
 
+.manifesto-image {
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.52) 5%,
+    #000 16%,
+    #000 84%,
+    rgba(0, 0, 0, 0.52) 95%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.52) 5%,
+    #000 16%,
+    #000 84%,
+    rgba(0, 0, 0, 0.52) 95%,
+    transparent 100%
+  );
+}
+
 .manifesto-image img {
   object-fit: cover;
   object-position: 58% center;
@@ -647,7 +669,17 @@ html[data-motion-ready] :is(
 .manifesto-shade {
   background:
     linear-gradient(90deg, rgba(2, 5, 9, 0.96) 0%, rgba(2, 5, 9, 0.84) 38%, rgba(2, 5, 9, 0.17) 76%, rgba(2, 5, 9, 0.54) 100%),
-    linear-gradient(180deg, #03070d 0%, transparent 16%, transparent 82%, #03070d 100%);
+    linear-gradient(
+      180deg,
+      #03070d 0%,
+      rgba(3, 7, 13, 0.84) 5%,
+      rgba(3, 7, 13, 0.25) 15%,
+      transparent 25%,
+      transparent 75%,
+      rgba(3, 7, 13, 0.28) 85%,
+      rgba(3, 7, 13, 0.86) 95%,
+      #03070d 100%
+    );
 }
 
 .manifesto-copy {
@@ -682,7 +714,7 @@ html[data-motion-ready] :is(
 
 /* Operations */
 .operations-section {
-  min-height: 336svh;
+  min-height: 352svh;
   padding-top: 16vh;
   background: #03070d;
 }
@@ -844,7 +876,7 @@ html[data-motion-ready] :is(
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(44vw, 690px);
+  width: 34vw;
   border-left: 1px solid var(--line-cool);
   background: linear-gradient(90deg, rgba(2, 6, 11, 0.05), rgba(2, 6, 11, 0.42) 28%, rgba(2, 6, 11, 0.84));
 }
@@ -853,7 +885,7 @@ html[data-motion-ready] :is(
   position: absolute;
   inset: 0;
   display: flex;
-  padding: 24vh clamp(36px, 5vw, 86px) 15vh;
+  padding: 24vh clamp(32px, 4vw, 72px) 15vh;
   flex-direction: column;
   justify-content: center;
   opacity: 0;
@@ -863,16 +895,8 @@ html[data-motion-ready] :is(
   opacity: 1;
 }
 
-.operation-number {
-  color: rgba(255, 255, 255, 0.11);
-  font-size: clamp(6.5rem, 13vw, 13rem);
-  font-weight: 200;
-  letter-spacing: -0.08em;
-  line-height: 0.72;
-}
-
 .operation-label {
-  margin: 30px 0 10px;
+  margin: 0 0 10px;
   color: var(--route-blue);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.75rem;
@@ -905,33 +929,71 @@ html[data-motion-ready] :is(
   position: absolute;
   z-index: 5;
   right: var(--page-gutter);
-  bottom: 42px;
+  bottom: 36px;
   left: auto;
-  width: min(calc(44vw - var(--page-gutter) - 34px), 610px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-secondary);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.75rem;
+  display: grid;
+  width: min(calc(34vw - var(--page-gutter) - 18px), 520px);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(10px, 1vw, 16px);
 }
 
-.operation-progress i {
+.operation-progress-segment {
+  --segment-progress: 0;
   position: relative;
   display: block;
-  height: 1px;
-  flex: 1;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.15);
+  height: 24px;
+  padding: 0;
+  border: 0;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
 }
 
-.operation-progress i::after {
+.operation-progress-segment::before,
+.operation-progress-segment::after {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 2px;
   content: "";
+  transform: translateY(-50%);
+  transition: height 180ms ease, opacity 180ms ease, filter 180ms ease;
+}
+
+.operation-progress-segment::before {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.operation-progress-segment::after {
   background: var(--route-blue);
-  transform: scaleX(var(--operations-progress, 0));
+  opacity: 0;
+  transform: translateY(-50%) scaleX(var(--segment-progress));
   transform-origin: left;
+  transition: transform 120ms linear, height 180ms ease, opacity 180ms ease, filter 180ms ease;
+}
+
+.operation-progress-segment.is-past::after {
+  opacity: 0.3;
+}
+
+.operation-progress-segment.is-current::after {
+  opacity: 1;
+}
+
+.operation-progress-segment:is(:hover, :focus-visible)::before,
+.operation-progress-segment:is(:hover, :focus-visible)::after {
+  height: 4px;
+  filter: drop-shadow(0 0 6px rgba(102, 188, 229, 0.46));
+}
+
+.operation-progress-segment.is-current::before {
+  background: rgba(159, 211, 236, 0.28);
+}
+
+.operation-progress-segment:focus-visible {
+  outline: 1px solid rgba(102, 188, 229, 0.72);
+  outline-offset: 2px;
 }
 
 /* Archive */
@@ -1595,6 +1657,15 @@ noscript {
     will-change: auto;
   }
 
+  html[data-motion-ready] :is(
+    .signal-orbit-one,
+    .signal-orbit-two,
+    .manifesto-image img,
+    .recruit-image img
+  ) {
+    will-change: transform;
+  }
+
   .command-nav {
     height: 64px;
     padding-inline: 17px;
@@ -1655,36 +1726,76 @@ noscript {
   .operations-section { min-height: auto; padding: 12vh 0 0; }
   .operations-heading { min-height: auto; padding-bottom: 9.6vh; }
   .operations-heading::after { display: none; }
-  .operations-stage { position: relative; display: block; height: auto; margin-top: 0; overflow: visible; background: transparent; }
+  .operations-stage {
+    position: relative;
+    display: grid;
+    height: auto;
+    margin-top: 0;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(4, 56.25vw auto);
+    overflow: hidden;
+    background: #03070d;
+  }
   .operations-stage::before,
   .operations-stage::after { display: none; }
-  .operation-visuals { display: none; }
-  .operation-copy-stack { position: relative; width: auto; border-left: 0; background: transparent; }
+  .operation-visuals,
+  .operation-copy-stack { display: contents; }
+  .operation-visual {
+    position: relative;
+    inset: auto;
+    z-index: 0;
+    grid-column: 1;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    opacity: 1 !important;
+    background: #03070d;
+    transform: none !important;
+  }
+  .operation-visual:nth-child(1) { grid-row: 1; }
+  .operation-visual:nth-child(2) { grid-row: 3; }
+  .operation-visual:nth-child(3) { grid-row: 5; }
+  .operation-visual:nth-child(4) { grid-row: 7; }
+  .operation-visual picture,
+  .operation-motion {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  .operation-motion { object-fit: cover; }
+  .operation-visual::after {
+    background: linear-gradient(
+      180deg,
+      rgba(3, 7, 13, 0.4) 0%,
+      transparent 28%,
+      transparent 62%,
+      #03070d 100%
+    );
+  }
   .operation-copy {
     position: relative;
+    inset: auto;
+    z-index: 1;
+    display: flex;
+    grid-column: 1;
     min-height: auto;
-    padding: calc(56.25vw + 46px) 20px 8.8vh;
-    opacity: 1;
+    padding: 28px 20px 8.8vh;
+    flex-direction: column;
+    justify-content: flex-start;
+    opacity: 1 !important;
     overflow: hidden;
     isolation: isolate;
     background: #03070d;
+    transform: none !important;
   }
+  .operation-copy:nth-child(1) { grid-row: 2; }
+  .operation-copy:nth-child(2) { grid-row: 4; }
+  .operation-copy:nth-child(3) { grid-row: 6; }
+  .operation-copy:nth-child(4) { grid-row: 8; }
   .operation-copy::before,
-  .operation-copy::after {
-    position: absolute;
-    z-index: 0;
-    inset: 0 0 auto;
-    height: calc(56.25vw + 74px);
-    content: "";
-  }
-  .operation-copy::before { height: 56.25vw; }
+  .operation-copy::after { display: none; }
   .operation-copy > * { position: relative; z-index: 1; }
-  .operation-copy:nth-child(1)::before { background: #03070d url("./official/operations-combat-1280.webp") center top / contain no-repeat; }
-  .operation-copy:nth-child(2)::before { background: #03070d url("./official/operations-industry-1280.webp") center top / contain no-repeat; }
-  .operation-copy:nth-child(3)::before { background: #03070d url("./official/operations-logistics-1280.webp") center top / contain no-repeat; }
-  .operation-copy:nth-child(4)::before { background: #03070d url("./official/operations-exploration-1280.webp") center top / contain no-repeat; }
-  .operation-copy::after { background: linear-gradient(180deg, transparent 38%, rgba(3, 7, 13, 0.72) 72%, #03070d 100%); }
-  .operation-number { font-size: 7rem; }
   .operation-progress { display: none; }
 
   .archive-section {
