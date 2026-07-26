@@ -26,6 +26,7 @@ const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
 const archiveCarousel = await readOptional("assets/js/archive-carousel.js");
 const memberBrawlDialog = await readOptional("assets/js/member-brawl-dialog.js");
 const operationMotion = await readOptional("assets/js/operation-motion.js");
+const sectionNavigation = await readOptional("assets/js/section-navigation.js");
 
 test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
@@ -48,7 +49,7 @@ test("EdgeOne gives versioned hero media long browser and edge cache lifetimes",
 
 test("EdgeOne gives operation motion immutable browser and edge cache lifetimes", () => {
   const operationRule = edgeoneConfig.headers.find(
-    (rule) => rule.source === "/assets/operations-motion/v1/*",
+    (rule) => rule.source === "/assets/operations-motion/v2/*",
   );
   assert.ok(operationRule);
   const headers = new Map(operationRule.headers.map(({ key, value }) => [key, value]));
@@ -96,10 +97,18 @@ test("homepage follows the approved voyage narrative", () => {
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
 
   assert.match(homepage, /舰队信号已接入/);
+  assert.match(homepage, /成为可靠的伙伴。/);
+  assert.match(homepage, /<dt>舰队名称<\/dt><dd>星际远航者<\/dd>/);
   assert.match(homepage, /因远航而集结/);
+  assert.match(homepage, /未知值得共同见证，险途值得并肩穿越/);
+  assert.match(homepage, /第一次驾驶飞船，还是早已熟悉量子航线/);
   assert.match(homepage, /远航，从来不是一个人的故事/);
   assert.match(homepage, /有人迎战，有人开拓，有人维系航线，也有人率先驶向未知。/);
+  assert.match(homepage, /每一个需要它们的地方。/);
   assert.match(homepage, /我们真实经历的远航/);
+  assert.match(homepage, /这里记录的，是 GVY 成员真正并肩经历的远航。/);
+  assert.doesNotMatch(homepage, /我们不只是舰船与呼号的集合。/);
+  assert.doesNotMatch(homepage, /没有虚构，也没有替身。/);
   assert.match(homepage, /下一段航程/);
   assert.match(homepage, /期待你的<em>加入<\/em>/);
   assert.equal((homepage.match(/data-operation-index=/g) || []).length, 4);
@@ -117,8 +126,8 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
   const operationVideos = homepage.match(/<video\b[^>]*data-operation-video[^>]*>/g) || [];
   assert.equal(operationVideos.length, 4);
   operationVideos.forEach((video) => {
-    assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v1\/[a-z]+-1280-v1\.mp4"/);
-    assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v1\/[a-z]+-1920-v1\.mp4"/);
+    assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v2\/[a-z]+-1920-v2\.mp4"/);
+    assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v2\/[a-z]+-2560-v2\.mp4"/);
     assert.match(video, /preload="none"/);
     assert.doesNotMatch(video, /\ssrc\s*=/);
   });
@@ -131,8 +140,8 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
 
   await Promise.all(
     ["combat", "industry", "logistics", "exploration"].flatMap((name) =>
-      [1280, 1920].map((width) =>
-        access(new URL(`assets/operations-motion/v1/${name}-${width}-v1.mp4`, root)),
+      [1920, 2560].map((width) =>
+        access(new URL(`assets/operations-motion/v2/${name}-${width}-v2.mp4`, root)),
       ),
     ),
   );
@@ -307,6 +316,10 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initOperationMotion/);
+  assert.match(cinematicHomepage, /initSectionNavigation/);
+  assert.match(cinematicHomepage, /section-navigation\.js\?v=20260726-nav-video-quality-v32/);
+  assert.match(sectionNavigation, /aria-current/);
+  assert.match(cinematicCss, /\.nav-links a\.is-active::after/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -323,8 +336,8 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260723-proportional-zoom-flow-v31/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260723-proportional-zoom-flow-v31/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260726-nav-video-quality-v32/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260726-nav-video-quality-v32/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {

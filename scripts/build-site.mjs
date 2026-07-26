@@ -22,11 +22,25 @@ const activeHeroAssets = new Set([
   "fleet-hero-02-poster-1440p-v3.webp",
 ]);
 
+const activeOperationAssets = new Set([
+  "combat-1920-v2.mp4",
+  "combat-2560-v2.mp4",
+  "industry-1920-v2.mp4",
+  "industry-2560-v2.mp4",
+  "logistics-1920-v2.mp4",
+  "logistics-2560-v2.mp4",
+  "exploration-1920-v2.mp4",
+  "exploration-2560-v2.mp4",
+]);
+
 await cp(resolve(root, "assets"), resolve(output, "assets"), {
   recursive: true,
   filter(source) {
     const inVersionedHeroDirectory = dirname(source).endsWith("assets/hero-random/v2");
-    return !inVersionedHeroDirectory || activeHeroAssets.has(basename(source));
+    if (inVersionedHeroDirectory && !activeHeroAssets.has(basename(source))) return false;
+    if (source.includes("assets/operations-motion/v1")) return false;
+    const inActiveOperationDirectory = dirname(source).endsWith("assets/operations-motion/v2");
+    return !inActiveOperationDirectory || activeOperationAssets.has(basename(source));
   },
 });
 

@@ -5,6 +5,7 @@ import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260722-breathing-media-v26";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
 import { initOperationMotion } from "./operation-motion.js?v=20260723-proportional-zoom-flow-v31";
+import { initSectionNavigation } from "./section-navigation.js?v=20260726-nav-video-quality-v32";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 
@@ -27,10 +28,11 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const archive = initArchiveLightbox({ root });
   const brawl = initMemberBrawlDialog({ root });
   const operationMotion = initOperationMotion({ root, view });
+  const sectionNavigation = initSectionNavigation({ root, view });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.setAttribute("data-motion-initialized", "true");
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [hero, deferred, carousel, archive, brawl, operationMotion, timelines].map(asCleanup);
+  const cleanups = [hero, deferred, carousel, archive, brawl, operationMotion, sectionNavigation, timelines].map(asCleanup);
   let cleaned = false;
 
   const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());

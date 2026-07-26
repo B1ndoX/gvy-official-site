@@ -29,7 +29,7 @@ export const FLEET_OPERATIONS = [
     english: "LOGISTICS",
     label: "LOGISTICS",
     title: "运输与后勤",
-    description: "让补给、人员与情报，准时抵达每一个需要它们的坐标。",
+    description: "让补给、人员与情报，准时抵达每一个需要它们的地方。",
     detail: "TRANSPORT / SUPPORT / ROUTE",
     image: "./assets/official/operations-logistics-1920.webp",
     imageAlt: "运输舰在货运设施间转运补给箱",

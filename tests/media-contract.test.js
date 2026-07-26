@@ -81,3 +81,30 @@ test("hero 01 poster is a lightweight 1080p WebP", () => {
   assert.ok(statSync(path).size < 250_000);
   assert.match(inspectMedia(path), /Video: webp, .*1920x1080/);
 });
+
+const operationClips = [
+  { name: "combat", duration: "00:00:08.00" },
+  { name: "industry", duration: "00:00:07.00" },
+  { name: "logistics", duration: "00:00:08.00" },
+  { name: "exploration", duration: "00:00:08.00" },
+];
+
+for (const clip of operationClips) {
+  for (const tier of [
+    { width: 1920, resolution: "1920x824" },
+    { width: 2560, resolution: "2560x1098" },
+  ]) {
+    test(`operation ${clip.name} ${tier.width} video preserves the approved short clip at high quality`, () => {
+      const path = resolve(root, `assets/operations-motion/v2/${clip.name}-${tier.width}-v2.mp4`);
+      assert.equal(existsSync(path), true);
+      assert.ok(statSync(path).size > 3 * 1024 * 1024, "clip must not be the previous low-bitrate encode");
+      assert.ok(statSync(path).size < 21 * 1024 * 1024, "clip must remain within its lazy-load budget");
+
+      const metadata = inspectMedia(path);
+      assert.match(metadata, new RegExp(`Duration: ${clip.duration.replaceAll(".", "\\.")}`));
+      assert.match(metadata, new RegExp(`Video: h264 .*yuv420p.*${tier.resolution}`));
+      assert.match(metadata, /30 fps/);
+      assert.doesNotMatch(metadata, /Audio:/);
+    });
+  }
+}

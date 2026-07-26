@@ -255,9 +255,14 @@ a:focus-visible {
   color: #fff;
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.is-active::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+.nav-links a.is-active {
+  color: #fff;
 }
 
 .nav-blueprint-link {
