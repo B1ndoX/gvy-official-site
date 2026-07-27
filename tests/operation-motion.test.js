@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   assignOperationSource,
   canPlayOperationMotion,
+  selectMobileOperationIndex,
   selectOperationSource,
 } from "../assets/js/operation-motion.js";
 
@@ -54,4 +55,18 @@ test("operation motion assigns one source exactly once", () => {
   assert.equal(video.loadCalls, 1);
   assert.equal(assignOperationSource(video, view), false);
   assert.equal(video.loadCalls, 1);
+});
+
+test("mobile operation switches as each visual enters the viewport before its copy", () => {
+  const tops = [-220, 845, 1360, 1880];
+  const visuals = tops.map((_, index) => ({
+    getBoundingClientRect: () => ({ top: tops[index] }),
+  }));
+  const view = { innerHeight: 844 };
+
+  assert.equal(selectMobileOperationIndex(visuals, view, 0), 0);
+  tops[1] = 843;
+  assert.equal(selectMobileOperationIndex(visuals, view, 0), 1);
+  tops[1] = 846;
+  assert.equal(selectMobileOperationIndex(visuals, view, 1), 0);
 });

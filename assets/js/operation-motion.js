@@ -35,6 +35,14 @@ export function assignOperationSource(video, view = globalThis) {
   return true;
 }
 
+export function selectMobileOperationIndex(visuals, view = globalThis, fallbackIndex = 0) {
+  const activationLine = Math.max(0, Number(view?.innerHeight || 0));
+  return visuals.reduce((selectedIndex, visual, index) => {
+    const top = Number(visual?.getBoundingClientRect?.().top);
+    return Number.isFinite(top) && top <= activationLine ? index : selectedIndex;
+  }, fallbackIndex);
+}
+
 export function initOperationMotion({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
@@ -95,26 +103,36 @@ export function initOperationMotion({
   }
 
   let cardObserver;
+  let warmObserver;
   if (mobileLayout && typeof Observer === "function") {
-    const cards = [...(section.querySelectorAll?.("[data-operation-index]") || [])];
-    const visibleCards = new Map();
-    cardObserver = new Observer(
+    const visuals = [...(section.querySelectorAll?.("[data-operation-visual]") || [])];
+    const syncMobileActive = () => {
+      const next = selectMobileOperationIndex(visuals, view, activeIndex);
+      if (next === activeIndex) return;
+      activeIndex = next;
+      section.dataset.operationActive = String(next);
+      playActive();
+    };
+
+    warmObserver = new Observer(
       (entries) => {
         entries.forEach((entry) => {
-          const index = Number.parseInt(entry.target?.dataset?.operationIndex || "-1", 10);
-          if (index >= 0) visibleCards.set(index, entry.isIntersecting ? (entry.intersectionRatio || 0.01) : 0);
+          if (!entry.isIntersecting) return;
+          const index = Number.parseInt(entry.target?.dataset?.operationVisual || "-1", 10);
+          if (index >= 0) assignOperationSource(videos[index], view);
         });
-        const next = [...visibleCards.entries()]
-          .filter(([, ratio]) => ratio > 0)
-          .sort((a, b) => b[1] - a[1])[0]?.[0];
-        if (!Number.isFinite(next) || next === activeIndex) return;
-        activeIndex = next;
-        section.dataset.operationActive = String(next);
-        playActive();
       },
-      { rootMargin: "-24% 0px -36% 0px", threshold: [0, 0.01, 0.25, 0.5, 0.75] },
+      { rootMargin: "0px 0px 35% 0px", threshold: 0.01 },
     );
-    cards.forEach((card) => cardObserver.observe(card));
+
+    cardObserver = new Observer(
+      syncMobileActive,
+      { rootMargin: "0px", threshold: [0, 0.01] },
+    );
+    visuals.forEach((visual) => {
+      warmObserver.observe(visual);
+      cardObserver.observe(visual);
+    });
   }
 
   const mutation = typeof Mutation === "function"
@@ -133,6 +151,7 @@ export function initOperationMotion({
   return () => {
     observer?.disconnect?.();
     cardObserver?.disconnect?.();
+    warmObserver?.disconnect?.();
     mutation?.disconnect?.();
     root.removeEventListener?.("visibilitychange", handleVisibility);
     pauseAll();

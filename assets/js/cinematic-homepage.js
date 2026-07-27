@@ -4,7 +4,7 @@ import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260726-mobi
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260722-breathing-media-v26";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
-import { initOperationMotion } from "./operation-motion.js?v=20260726-mobile-cinematic-v36";
+import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
 import { initSectionNavigation } from "./section-navigation.js?v=20260726-nav-video-quality-v32";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
