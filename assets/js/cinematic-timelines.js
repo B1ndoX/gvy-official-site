@@ -325,19 +325,6 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     const stageSettleOffset = 0.82;
     let operationsTimeline;
     let activeOperationIndex = -1;
-    const snapToSettledOperation = (progress) => {
-      const duration = operationsTimeline?.duration?.() || 1;
-      const snapPoints = Array.from(
-        { length: operationCount },
-        (_, index) => Math.min(1, (index * stageSpan + stageSettleOffset) / duration),
-      );
-      snapPoints.push(1);
-      return snapPoints.reduce(
-        (nearest, point) =>
-          Math.abs(point - progress) < Math.abs(nearest - progress) ? point : nearest,
-        snapPoints[0],
-      );
-    };
     const syncActiveOperation = () => {
       const currentTime = operationsTimeline?.time?.() || 0;
       let nextIndex = 0;
@@ -373,14 +360,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         start: () =>
           `top+=${Math.round((root.defaultView?.innerHeight || 800) * 0.78)} top`,
         end: "bottom bottom",
-        scrub: 0.55,
-        snap: {
-          snapTo: snapToSettledOperation,
-          duration: { min: 0.18, max: 0.42 },
-          delay: 0.1,
-          ease: "power1.inOut",
-          inertia: false,
-        },
+        scrub: 0.42,
         invalidateOnRefresh: true,
         onUpdate: syncActiveOperation,
         onRefresh: syncActiveOperation,

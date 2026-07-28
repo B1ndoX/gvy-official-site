@@ -1,6 +1,6 @@
 export const HERO_CACHE_KEY = "gvy-command-hero-video:v6";
 export const HERO_MEDIA_VERSION = "20260720-edgeone-v1";
-export const HERO_STICKY_TTL_MS = 7 * 24 * 60 * 60 * 1_000;
+export const HERO_STICKY_TTL_MS = 10 * 60 * 1_000;
 
 const versioned = (path) => `${path}?v=${HERO_MEDIA_VERSION}`;
 

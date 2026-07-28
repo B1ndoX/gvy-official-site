@@ -56,8 +56,8 @@ test("keeps the same hero during a short refresh window", () => {
   assert.deepEqual(selection, { index: 0, shouldPersist: false });
 });
 
-test("keeps the selected hero stable for the legacy seven-day window", () => {
-  assert.equal(HERO_STICKY_TTL_MS, 7 * 24 * 60 * 60 * 1_000);
+test("keeps the selected hero stable for ten minutes", () => {
+  assert.equal(HERO_STICKY_TTL_MS, 10 * 60 * 1_000);
 });
 
 test("selects again after the sticky refresh window expires", () => {

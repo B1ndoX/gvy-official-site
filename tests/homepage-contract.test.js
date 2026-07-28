@@ -91,7 +91,7 @@ test("homepage selects and starts one hero before the first paint", () => {
   assert.match(homepage, /window\.__gvyHeroBootstrap/);
   assert.match(homepage, /posterPreload\.rel\s*=\s*"preload"/);
   assert.match(homepage, /video\.src\s*=\s*bootstrap\.video/);
-  assert.match(homepage, /stickyTtl\s*=\s*7\s*\*\s*24\s*\*\s*60\s*\*\s*60\s*\*\s*1000/);
+  assert.match(homepage, /stickyTtl\s*=\s*10\s*\*\s*60\s*\*\s*1000/);
   assert.doesNotMatch(homepage, /setTimeout\(\(\)\s*=>\s*document\.documentElement\.removeAttribute\("data-motion-pending"\)/);
   assert.match(homepage, /data-hero-shell/);
 });
@@ -203,13 +203,13 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   assert.match(cinematicCss, /@media \(min-width: 2561px\)/);
   assert.match(cinematicCss, /main,[\s\S]*?\.site-footer\s*\{[\s\S]*?width:\s*2560px;/);
   assert.doesNotMatch(cinematicCss, /min-height:\s*4838px/);
-  assert.match(cinematicCss, /\.operations-stage\s*\{[\s\S]*?grid-template-rows:\s*repeat\(4, 945px\)/);
+  assert.match(cinematicCss, /grid-template-rows:\s*repeat\(4, 945px\)/);
   assert.match(cinematicCss, /\.operation-visuals,[\s\S]*?\.operation-copy-stack\s*\{\s*display:\s*contents;/);
   assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*1440px;/);
   assert.match(cinematicCss, /overflow-x:\s*clip/);
   assert.match(
     cinematicCss,
-    /\.signal-lead,[\s\S]*?\.signal-story\s*\{[\s\S]*?max-width:\s*660px;/,
+    /\.signal-lead,[\s\S]*?\.signal-story\s*\{[\s\S]*?max-width:\s*clamp\(570px, 38vw, 780px\)/,
   );
 });
 
@@ -343,7 +343,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260723-mobile-scroll-stability-v30/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-inline-identity-v49/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
@@ -369,17 +369,15 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260728-inline-identity-v49/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260728-inline-identity-v49/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260728-zoom-scale-v51/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260728-zoom-scale-v51/);
 });
 
-test("desktop operation scenes settle gently on complete stages after fast scrolling", () => {
+test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {
   assert.match(cinematicTimelines, /const stageSpan = 2\.5/);
   assert.match(cinematicTimelines, /const stageSettleOffset = 0\.82/);
-  assert.match(cinematicTimelines, /snapTo:\s*snapToSettledOperation/);
-  assert.match(cinematicTimelines, /duration:\s*\{ min: 0\.18, max: 0\.42 \}/);
-  assert.match(cinematicTimelines, /delay:\s*0\.1/);
-  assert.match(cinematicTimelines, /inertia:\s*false/);
+  assert.match(cinematicTimelines, /scrub:\s*0\.42/);
+  assert.doesNotMatch(cinematicTimelines, /snapToSettledOperation|snap:\s*\{/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {
@@ -389,7 +387,7 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.signal-backdrop\s*\{[\s\S]*?mask-image:\s*linear-gradient/);
   assert.match(homepage, /assets\/gvy-logo-hq\.png/);
   assert.doesNotMatch(homepage, /class="manifesto-section/);
-  assert.match(cinematicCss, /\.operations-section\s*\{[\s\S]*?min-height:\s*520svh/);
+  assert.match(cinematicCss, /\.operations-section\s*\{[\s\S]*?min-height:\s*400svh/);
   assert.match(
     cinematicCss,
     /@media \(min-width: 761px\) and \(max-width: 2560px\) and \(min-aspect-ratio: 16 \/ 9\)[\s\S]*?\.signal-section\s*\{[\s\S]*?min-height:\s*92svh[\s\S]*?\.signal-stage\s*\{[\s\S]*?min-height:\s*84svh/,

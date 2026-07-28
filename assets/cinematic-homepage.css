@@ -613,11 +613,11 @@ html[data-motion-ready] :is(
   position: relative;
   z-index: 2;
   display: grid;
-  width: min(var(--content-max), 100%);
+  width: min(92vw, 1920px);
   min-width: 0;
   margin-inline: auto;
   padding: clamp(64px, 7.6vh, 92px) clamp(34px, 5vw, 80px) clamp(56px, 7vh, 84px);
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.88fr);
+  grid-template-columns: minmax(0, 1fr) minmax(clamp(420px, 30vw, 600px), 0.88fr);
   align-items: center;
   gap: clamp(28px, 4vw, 72px);
 }
@@ -653,13 +653,13 @@ html[data-motion-ready] :is(
 .signal-lockup {
   position: relative;
   z-index: 2;
-  max-width: 610px;
+  max-width: clamp(610px, 38vw, 780px);
 }
 
 .signal-lockup h2 {
-  max-width: 610px;
+  max-width: clamp(610px, 38vw, 780px);
   margin: 24px 0 28px;
-  font-size: clamp(3.05rem, 4.2vw, 4.7rem);
+  font-size: clamp(3.05rem, 4.2vw, 6rem);
   font-weight: 300;
   letter-spacing: -0.06em;
   line-height: 0.98;
@@ -667,10 +667,10 @@ html[data-motion-ready] :is(
 
 .signal-lead,
 .signal-story {
-  max-width: 570px;
+  max-width: clamp(570px, 38vw, 780px);
   margin: 0;
   color: #b6c1ca;
-  font-size: clamp(0.93rem, 0.92vw, 1.02rem);
+  font-size: clamp(0.93rem, 1.05vw, 1.28rem);
   line-height: 1.8;
   text-wrap: pretty;
 }
@@ -694,7 +694,7 @@ html[data-motion-ready] :is(
   z-index: 2;
   display: grid;
   min-width: 0;
-  width: min(100%, 430px);
+  width: min(100%, clamp(430px, 29vw, 600px));
   aspect-ratio: 1;
   margin-right: 0;
   justify-self: center;
@@ -704,7 +704,7 @@ html[data-motion-ready] :is(
 .signal-logo {
   position: relative;
   z-index: 2;
-  width: clamp(235px, 18vw, 315px);
+  width: clamp(235px, 19vw, 420px);
   filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 34px rgba(89, 168, 210, 0.13));
 }
 
@@ -717,7 +717,7 @@ html[data-motion-ready] :is(
   position: relative;
   z-index: 3;
   display: grid;
-  width: min(660px, calc(100vw - clamp(72px, 9vw, 150px)));
+  width: min(clamp(660px, 46vw, 920px), calc(100vw - clamp(72px, 9vw, 150px)));
   margin: clamp(24px, 3.2vh, 34px) 0 0;
   padding: 8px 10px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -768,7 +768,7 @@ html[data-motion-ready] :is(
 
 /* Operations */
 .operations-section {
-  min-height: 520svh;
+  min-height: 400svh;
   padding-top: 7vh;
   background: #03070d;
 }
@@ -1996,11 +1996,10 @@ noscript {
   .archive-grid button { opacity: 1; transform: none; }
 }
 
-/* At deep browser zoom-out (and on ultra-wide displays), the CSS viewport can
-   become taller than the original scene canvas. Scroll-linked sticky scenes
-   would then outlive their content and expose empty black travel. Keep one
-   proportional 2560 × 1440 canvas, but render the narrative in normal flow so
-   every scene stays adjacent and the complete page scales as one composition. */
+/* Browser zoom-out expands the CSS viewport. Above the designed desktop
+   canvas, keep every section on the same 2560 × 1440 coordinate system so
+   media, typography and spacing scale together instead of mixing full-viewport
+   scenes with tiny fluid content. */
 @media (min-width: 2561px) {
   :root {
     --content-max: 1920px;
