@@ -115,7 +115,7 @@ test("stores the selected hero with its sticky timestamp and tolerates storage f
   );
 });
 
-test("maps both enabled selections to their production videos and posters", () => {
+test("maps all three enabled selections to their production videos and posters", () => {
   assert.deepEqual(getHeroMedia(0), {
     id: "01",
     video: "./assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4?v=20260720-edgeone-v1",
@@ -129,7 +129,13 @@ test("maps both enabled selections to their production videos and posters", () =
     videoLarge: "./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
     poster: "./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp?v=20260720-edgeone-v1",
   });
-  assert.throws(() => getHeroMedia(2), RangeError);
+  assert.deepEqual(getHeroMedia(2), {
+    id: "03",
+    video: "./assets/hero-random/v2/fleet-hero-03-1080p-v1.mp4?v=20260720-edgeone-v1",
+    videoMobile: "./assets/hero-random/v2/fleet-hero-03-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
+    poster: "./assets/hero-random/v2/fleet-hero-03-poster-v1.webp?v=20260720-edgeone-v1",
+  });
+  assert.throws(() => getHeroMedia(3), RangeError);
 });
 
 test("selects one quality tier before assigning the hero source", () => {
@@ -179,14 +185,14 @@ test("browser controller assigns only the selected video after choosing", () => 
     now: 12_345,
   });
 
-  assert.equal(controller.index, 1);
-  assert.equal(harness.poster.src, getHeroMedia(1).poster);
-  assert.equal(harness.video.poster, getHeroMedia(1).poster);
-  assert.equal(harness.video.src, getHeroMedia(1).videoMobile);
+  assert.equal(controller.index, 2);
+  assert.equal(harness.poster.src, getHeroMedia(2).poster);
+  assert.equal(harness.video.poster, getHeroMedia(2).poster);
+  assert.equal(harness.video.src, getHeroMedia(2).videoMobile);
   assert.equal(harness.video.dataset.heroVideoQuality, "720p");
   assert.equal(harness.video.loadCalls, 1);
   assert.equal(harness.shell.dataset.heroState, "loading");
-  assert.equal(saved.index, 1);
+  assert.equal(saved.index, 2);
   assert.equal(saved.selectedAt, 12_345);
 
   harness.video.dispatch("canplay");

@@ -64,13 +64,16 @@ test("production build copies local GSAP browser bundles", () => {
   assert.match(buildScript, /assets\/vendor\/ScrollTrigger\.min\.js/);
 });
 
-test("production build includes both active hero variants", () => {
+test("production build includes all three active hero variants", () => {
   assert.match(buildScript, /fleet-hero-01-1080p-v4\.mp4/);
   assert.match(buildScript, /fleet-hero-01-mobile-720p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-01-poster-v2\.webp/);
   assert.match(buildScript, /fleet-hero-02-1080p-v4\.mp4/);
   assert.match(buildScript, /fleet-hero-02-mobile-720p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
+  assert.match(buildScript, /fleet-hero-03-1080p-v1\.mp4/);
+  assert.match(buildScript, /fleet-hero-03-mobile-720p-v1\.mp4/);
+  assert.match(buildScript, /fleet-hero-03-poster-v1\.webp/);
 });
 
 test("production build includes one dedicated mobile encode for every operation", () => {
@@ -405,11 +408,11 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 
-test("gallery exposes every one of the 18 production team photos before seamless cloning", () => {
+test("gallery exposes every one of the 37 production team photos before seamless cloning", () => {
   const grid = homepage.match(/<div class="archive-grid" data-archive-grid>([\s\S]*?)<\/div>/)?.[1] || "";
-  assert.equal((grid.match(/data-archive-open=/g) || []).length, 18);
-  for (let index = 1; index <= 18; index += 1) {
-    assert.match(grid, new RegExp(`team-${String(index).padStart(2, "0")}\\.jpg`));
+  assert.equal((grid.match(/data-archive-open=/g) || []).length, 37);
+  for (let index = 1; index <= 37; index += 1) {
+    assert.match(grid, new RegExp(`team-${String(index).padStart(2, "0")}\\.(?:jpe?g|png)`));
   }
 });
 
@@ -455,11 +458,13 @@ test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", asyn
   assert.match(homepage, /type="image\/webp"/);
   assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-18-1920\.webp 1920w/);
   assert.match(homepage, /\.\/assets\/gallery\/team-18\.jpg/);
+  assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-37-1920\.webp 1920w/);
+  assert.match(homepage, /\.\/assets\/gallery\/team-37\.png/);
   assert.match(homepage, /<img\b[^>]*width="\d+"[^>]*height="\d+"/);
   assert.match(homepage, /<img\b[^>]*loading="lazy"/);
 
   await Promise.all(
-    Array.from({ length: 18 }, (_, index) =>
+    Array.from({ length: 37 }, (_, index) =>
       access(
         new URL(
           `assets/gallery/optimized/team-${String(index + 1).padStart(2, "0")}-1280.webp`,

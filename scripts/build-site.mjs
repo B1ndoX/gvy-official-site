@@ -20,6 +20,9 @@ const activeHeroAssets = new Set([
   "fleet-hero-02-mobile-720p-v1.mp4",
   "fleet-hero-02-1440p-v4.mp4",
   "fleet-hero-02-poster-1440p-v3.webp",
+  "fleet-hero-03-1080p-v1.mp4",
+  "fleet-hero-03-mobile-720p-v1.mp4",
+  "fleet-hero-03-poster-v1.webp",
 ]);
 
 const activeOperationAssets = new Set([

@@ -42,6 +42,20 @@ const outputs = [
     resolution: "2560x1440",
     maxBytes: 25 * 1024 * 1024,
   },
+  {
+    id: "03-1080p",
+    video: "assets/hero-random/v2/fleet-hero-03-1080p-v1.mp4",
+    duration: "00:00:31.00",
+    resolution: "1920x1080",
+    maxBytes: 32 * 1024 * 1024,
+  },
+  {
+    id: "03-mobile-720p",
+    video: "assets/hero-random/v2/fleet-hero-03-mobile-720p-v1.mp4",
+    duration: "00:00:31.00",
+    resolution: "1280x720",
+    maxBytes: 14 * 1024 * 1024,
+  },
 ];
 
 function inspectMedia(path) {
@@ -76,6 +90,14 @@ test("hero 02 poster is a lightweight 1440p WebP", () => {
 
 test("hero 01 poster is a lightweight 1080p WebP", () => {
   const path = resolve(root, "assets/hero-random/v2/fleet-hero-01-poster-v2.webp");
+  assert.equal(existsSync(path), true);
+  assert.ok(statSync(path).size > 40_000);
+  assert.ok(statSync(path).size < 250_000);
+  assert.match(inspectMedia(path), /Video: webp, .*1920x1080/);
+});
+
+test("hero 03 poster is a lightweight 1080p WebP", () => {
+  const path = resolve(root, "assets/hero-random/v2/fleet-hero-03-poster-v1.webp");
   assert.equal(existsSync(path), true);
   assert.ok(statSync(path).size > 40_000);
   assert.ok(statSync(path).size < 250_000);

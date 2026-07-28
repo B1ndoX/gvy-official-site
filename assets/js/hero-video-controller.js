@@ -18,6 +18,12 @@ const HERO_MEDIA = Object.freeze([
     videoLarge: versioned("./assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4"),
     poster: versioned("./assets/hero-random/v2/fleet-hero-02-poster-1440p-v3.webp"),
   }),
+  Object.freeze({
+    id: "03",
+    video: versioned("./assets/hero-random/v2/fleet-hero-03-1080p-v1.mp4"),
+    videoMobile: versioned("./assets/hero-random/v2/fleet-hero-03-mobile-720p-v1.mp4"),
+    poster: versioned("./assets/hero-random/v2/fleet-hero-03-poster-v1.webp"),
+  }),
 ]);
 
 export function getHeroMedia(index) {

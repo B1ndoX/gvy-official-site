@@ -7,6 +7,8 @@ const mediaPaths = [
   "/assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
   "/assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4?v=20260720-edgeone-v1",
+  "/assets/hero-random/v2/fleet-hero-03-1080p-v1.mp4?v=20260720-edgeone-v1",
+  "/assets/hero-random/v2/fleet-hero-03-mobile-720p-v1.mp4?v=20260720-edgeone-v1",
   "/assets/operations-motion/v2/combat-1920-v2.mp4",
   "/assets/operations-motion/v2/combat-2560-v2.mp4",
   "/assets/operations-motion/v2/combat-mobile-1280-v1.mp4",
