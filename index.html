@@ -90,7 +90,7 @@
     <meta name="theme-color" content="#03060b" />
     <meta
       name="description"
-      content="星际远航者 GVY 玩家舰队首页：了解舰队、行动编队、真实远航档案与加入方式。"
+      content="星际远航者 GVY 玩家舰队首页：了解舰队、选择航向、浏览真实远航档案与加入方式。"
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.gvyvoyagers.vip/" />
@@ -109,7 +109,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260726-mobile-cinematic-v36" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260728-inline-identity-v49" />
   </head>
 
   <body id="pageTop">
@@ -128,7 +128,7 @@
 
       <nav class="nav-links" aria-label="页面导航">
         <a href="#fleet-signal" data-scroll-link>舰队定位</a>
-        <a href="#operations" data-scroll-link>行动编队</a>
+        <a href="#operations" data-scroll-link>选择航向</a>
         <a href="#archive" data-scroll-link>团建图册</a>
         <a href="#recruit" data-scroll-link>加入舰队</a>
         <a class="nav-blueprint-link" href="https://lantu.gvyvoyagers.vip">蓝图查询</a>
@@ -210,50 +210,53 @@
 
       <section class="signal-section section-shell" id="fleet-signal" data-signal-section>
         <div class="signal-stage">
-          <div class="signal-orbit signal-orbit-one" aria-hidden="true"></div>
-          <div class="signal-orbit signal-orbit-two" aria-hidden="true"></div>
+          <div class="signal-backdrop" aria-hidden="true">
+            <picture>
+              <source type="image/webp" srcset="./assets/gallery/optimized/team-14-1280.webp 1280w, ./assets/gallery/optimized/team-14-1920.webp 1920w" sizes="100vw" />
+              <img src="./assets/gallery/team-14.jpg" alt="" loading="lazy" width="2560" height="1440" />
+            </picture>
+          </div>
+          <div class="signal-shade" aria-hidden="true"></div>
 
-          <div class="signal-lockup" data-signal-lockup>
-            <p class="system-label">FLEET SIGNAL / CONNECTION ESTABLISHED</p>
-            <div class="signal-logo" aria-hidden="true">
-              <img src="./assets/gvy-logo.png" alt="" width="240" height="240" />
+          <div class="signal-main" id="manifesto">
+            <div class="signal-lockup" data-signal-lockup>
+              <p class="system-label">FLEET POSITIONING / GALACTIC VOYAGERS</p>
+              <h2>因远航而集结</h2>
+              <p class="signal-lead">
+                星际远航者（GVY）是一支面向长期发展的综合型玩家舰队。我们以探索未知为方向，以工业体系构筑远航基础，依靠协同作战与成员互助完成行动。
+              </p>
+              <p class="signal-story">
+                未知值得共同见证，险途值得并肩穿越。无论第一次驾驶飞船，还是早已熟悉量子航线，都能在这里找到同行者，将下一段故事写进舰队日志。
+              </p>
+              <span class="signal-rule" aria-hidden="true"></span>
+
+              <dl class="identity-rail" data-identity-rail>
+                <div><dt>舰队组织</dt><dd>GVY</dd></div>
+                <div><dt>舰队名称</dt><dd>星际远航者</dd></div>
+                <div><dt>QQ群</dt><dd>691311516</dd></div>
+                <div><dt>当前状态</dt><dd>招募中</dd></div>
+              </dl>
             </div>
-            <h2>舰队信号已接入</h2>
-            <p class="signal-lead">这里是星际远航者。我们因同一个方向相遇，也在彼此需要时成为可靠的伙伴。</p>
+
+            <div class="signal-emblem" data-signal-emblem aria-hidden="true">
+              <div class="signal-orbit signal-orbit-one"></div>
+              <div class="signal-orbit signal-orbit-two"></div>
+              <div class="signal-orbit signal-orbit-three"></div>
+              <div class="signal-logo">
+                <img src="./assets/gvy-logo-hq.png" alt="" width="1048" height="883" />
+              </div>
+            </div>
           </div>
 
-          <dl class="identity-rail" data-identity-rail>
-            <div><dt>舰队组织</dt><dd>GVY</dd></div>
-            <div><dt>舰队名称</dt><dd>星际远航者</dd></div>
-            <div><dt>QQ群</dt><dd>691311516</dd></div>
-            <div><dt>当前状态</dt><dd>招募中</dd></div>
-          </dl>
-        </div>
-      </section>
-
-      <section class="manifesto-section section-shell" id="manifesto" data-manifesto-section>
-        <div class="manifesto-image" aria-hidden="true">
-          <picture>
-            <source type="image/webp" srcset="./assets/gallery/optimized/team-14-1280.webp 1280w, ./assets/gallery/optimized/team-14-1920.webp 1920w" sizes="100vw" />
-            <img src="./assets/gallery/team-14.jpg" alt="" loading="lazy" width="2560" height="1440" />
-          </picture>
-        </div>
-        <div class="manifesto-shade" aria-hidden="true"></div>
-        <div class="manifesto-copy" data-manifesto-copy>
-          <p class="system-label">WHY WE VOYAGE / 2956</p>
-          <h2>因远航而集结</h2>
-          <p>
-            未知值得共同见证，险途值得并肩穿越，而每一次出发，都让彼此成为更可靠的同行者。
-          </p>
-          <p>
-            无论你第一次驾驶飞船，还是早已熟悉量子航线，你都能在这里找到同行的人，把下一段故事写进舰队日志。
-          </p>
-          <span class="manifesto-rule" aria-hidden="true"></span>
         </div>
       </section>
 
       <section class="operations-section section-shell" id="operations" data-operations-section data-operation-active="0">
         <header class="section-heading operations-heading">
+          <div class="operations-route-cue" aria-label="选择你的航向">
+            <span>CHOOSE YOUR COURSE</span>
+            <p>选择你的航向</p>
+          </div>
           <p class="system-label">FLEET OPERATIONS / ASSIGNMENT ROUTE</p>
           <h2>远航，从来不是一个人的故事</h2>
           <p>有人迎战，有人开拓，有人维系航线，也有人率先驶向未知。</p>
@@ -466,6 +469,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260727-operation-preplay-v37"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260728-inline-identity-v49"></script>
   </body>
 </html>

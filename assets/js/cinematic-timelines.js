@@ -219,24 +219,54 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
 
   const signal = root.querySelector("[data-signal-section]");
   if (signal) {
+    const signalTextItems = gsap.utils.toArray(
+      "[data-signal-lockup] > :not(.signal-rule):not(.identity-rail)",
+      signal,
+    );
     const signalTimeline = gsap.timeline({
       scrollTrigger: {
         id: "gvy-signal-visual",
         trigger: signal,
-        start: "top 76%",
-        end: "bottom 28%",
-        scrub: 0.8,
+        start: "top 72%",
+        end: "top 8%",
+        scrub: 0.92,
+        invalidateOnRefresh: true,
       },
     });
     signalTimeline
-      .fromTo(".signal-orbit-one", { scale: 0.72, rotate: -12 }, { scale: 1.05, rotate: 8, ease: "none" }, 0)
-      .fromTo(".signal-orbit-two", { scale: 0.65, rotateZ: -9 }, { scale: 1.08, rotateZ: 16, ease: "none" }, 0);
+      .fromTo(".signal-backdrop img", { scale: 1.045, xPercent: 0.8 }, { scale: 1.012, xPercent: -0.4, duration: 1, ease: "none" }, 0)
+      .fromTo("[data-signal-emblem]", { autoAlpha: 0.06, scale: 0.84, y: 44 }, { autoAlpha: 1, scale: 1, y: 0, duration: 0.94, ease: "power2.out" }, 0.08)
+      .fromTo(signalTextItems, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.52, stagger: 0.12, ease: "power2.out" }, 0.12)
+      .fromTo(".signal-rule", { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, duration: 0.26, ease: "power1.out" }, 0.76);
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: "gvy-signal-drift",
+          trigger: signal,
+          start: "top 100%",
+          end: "bottom 0%",
+          scrub: 1.1,
+          invalidateOnRefresh: true,
+        },
+      })
+      .fromTo(".signal-main", { yPercent: 12 }, { yPercent: -11, duration: 1, ease: "none" }, 0);
+
+    gsap
+      .timeline({
+        scrollTrigger: {
+          id: "gvy-signal-orbits",
+          trigger: signal,
+          start: "top 100%",
+          end: "bottom 0%",
+          scrub: 0.9,
+          invalidateOnRefresh: true,
+        },
+      })
+      .fromTo(".signal-orbit-one", { autoAlpha: 0.24, scale: 0.72, rotate: -9 }, { autoAlpha: 0.92, scale: 1.18, rotate: 8, duration: 1, ease: "none" }, 0)
+      .fromTo(".signal-orbit-two", { autoAlpha: 0.42, scale: 1.15, rotate: 7 }, { autoAlpha: 0.82, scale: 0.84, rotate: -8, duration: 1, ease: "none" }, 0)
+      .fromTo(".signal-orbit-three", { autoAlpha: 0.2, scale: 0.68, rotate: -4 }, { autoAlpha: 0.76, scale: 1.22, rotate: 10, duration: 1, ease: "none" }, 0);
   }
-  fadeTextSequenceThroughViewport(
-    gsap,
-    root.querySelectorAll("[data-signal-lockup]"),
-    "signal-lockup",
-  );
   const identityRail = root.querySelector("[data-identity-rail]");
   const identityCells = gsap.utils.toArray(":scope > div", identityRail);
   if (identityRail && identityCells.length) {
@@ -244,49 +274,27 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       .timeline({
         scrollTrigger: {
           id: "gvy-signal-identity",
-          trigger: identityRail,
-          start: "top 104%",
-          end: "top 76%",
-          scrub: 0.68,
+          trigger: signal,
+          start: "top 66%",
+          end: "top 7%",
+          scrub: 0.92,
+          invalidateOnRefresh: true,
         },
       })
       .fromTo(
         identityCells,
-        { autoAlpha: 0, y: 30, scale: 0.94, transformOrigin: "50% 100%" },
+        { autoAlpha: 0, y: 22, scale: 0.97, transformOrigin: "50% 100%" },
         {
           autoAlpha: 1,
           y: 0,
           scale: 1,
-          duration: 1,
-          stagger: 0.07,
-          ease: "none",
+          duration: 0.7,
+          stagger: 0.1,
+          ease: "power2.out",
         },
         0,
-      )
-      .to(identityCells, { autoAlpha: 1, y: 0, scale: 1, duration: 0.34, ease: "none" }, 0.8);
+      );
   }
-
-  const manifesto = root.querySelector("[data-manifesto-section]");
-  if (manifesto) {
-    gsap
-      .timeline({
-        scrollTrigger: {
-          id: "gvy-manifesto-visual",
-          trigger: manifesto,
-          start: "top 78%",
-          end: "bottom 22%",
-          scrub: 0.8,
-        },
-      })
-      .fromTo(".manifesto-image img", { scale: 1.08, xPercent: 2 }, { scale: 1, xPercent: -2, ease: "none" }, 0)
-      .fromTo(".manifesto-rule", { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, ease: "none" }, 0.5);
-  }
-  fadeTextSequenceThroughViewport(gsap, root.querySelectorAll("[data-manifesto-copy]"), "manifesto", {
-    start: "top 86%",
-    end: "bottom -20%",
-    enterY: 64,
-    exitY: -38,
-  });
 
   fadeTextSequenceThroughViewport(gsap, root.querySelectorAll(".section-heading"), "heading", {
     start: "top 90%",
@@ -313,9 +321,23 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       "--operations-exit-shade": 0,
     });
 
-    const stageSpan = 2.35;
+    const stageSpan = 2.5;
+    const stageSettleOffset = 0.82;
     let operationsTimeline;
     let activeOperationIndex = -1;
+    const snapToSettledOperation = (progress) => {
+      const duration = operationsTimeline?.duration?.() || 1;
+      const snapPoints = Array.from(
+        { length: operationCount },
+        (_, index) => Math.min(1, (index * stageSpan + stageSettleOffset) / duration),
+      );
+      snapPoints.push(1);
+      return snapPoints.reduce(
+        (nearest, point) =>
+          Math.abs(point - progress) < Math.abs(nearest - progress) ? point : nearest,
+        snapPoints[0],
+      );
+    };
     const syncActiveOperation = () => {
       const currentTime = operationsTimeline?.time?.() || 0;
       let nextIndex = 0;
@@ -351,7 +373,14 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         start: () =>
           `top+=${Math.round((root.defaultView?.innerHeight || 800) * 0.78)} top`,
         end: "bottom bottom",
-        scrub: 0.7,
+        scrub: 0.55,
+        snap: {
+          snapTo: snapToSettledOperation,
+          duration: { min: 0.18, max: 0.42 },
+          delay: 0.1,
+          ease: "power1.inOut",
+          inertia: false,
+        },
         invalidateOnRefresh: true,
         onUpdate: syncActiveOperation,
         onRefresh: syncActiveOperation,
@@ -427,8 +456,10 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
       const view = root.defaultView;
       if (!trigger || !view || !Number.isFinite(index) || index < 0 || index > lastIndex) return;
 
-      const segmentStart = index === 0 ? 0 : index * stageSpan - 0.22;
-      const targetTime = Math.min(operationsTimeline.duration(), segmentStart + 0.42);
+      const targetTime = Math.min(
+        operationsTimeline.duration(),
+        index * stageSpan + stageSettleOffset,
+      );
       const targetProgress = targetTime / Math.max(0.01, operationsTimeline.duration());
       const targetScroll = trigger.start + (trigger.end - trigger.start) * targetProgress;
       view.scrollTo({ top: targetScroll, behavior: "smooth" });
@@ -500,7 +531,8 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
         },
       })
       .fromTo(".signal-orbit-one", { scale: 0.88, rotate: -5 }, { scale: 1.04, rotate: 5, ease: "none" }, 0)
-      .fromTo(".signal-orbit-two", { scale: 0.9, rotateZ: -4 }, { scale: 1.05, rotateZ: 7, ease: "none" }, 0);
+      .fromTo(".signal-orbit-two", { scale: 0.9, rotateZ: -4 }, { scale: 1.05, rotateZ: 7, ease: "none" }, 0)
+      .fromTo(".signal-orbit-three", { scale: 0.92, rotateZ: 4 }, { scale: 1.08, rotateZ: -6, ease: "none" }, 0);
   }
 
   const createImageBreath = (selector, trigger, id) => {
@@ -523,14 +555,14 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
     );
   };
 
-  createImageBreath(".manifesto-image img", root.querySelector("[data-manifesto-section]"), "gvy-mobile-manifesto-image");
+  createImageBreath(".signal-backdrop img", root.querySelector("[data-signal-section]"), "gvy-mobile-signal-image");
   createImageBreath(".recruit-image img", root.querySelector("[data-recruit-section]"), "gvy-mobile-recruit-image");
 }
 
 function showMobileStableContent(gsap, root) {
   gsap.set(
     root.querySelectorAll(
-      ".signal-lockup, .signal-lockup > *, .identity-rail, .identity-rail > *, .manifesto-copy, .manifesto-copy > *, .section-heading, .section-heading > *, .operations-stage, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
+      ".signal-lockup, .signal-lockup > *, .signal-emblem, .identity-rail, .identity-rail > *, .section-heading, .section-heading > *, .operations-stage, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
     ),
     { clearProps: "opacity,visibility,transform,filter" },
   );
@@ -540,7 +572,7 @@ function showStableLayout(gsap, root) {
   root.documentElement?.removeAttribute("data-hero-exit-complete");
   gsap.set(
     root.querySelectorAll(
-      ".command-nav, .hero-title, .hero-title > *, .hero-title h1 > *, .hero-motto, .hero-motto > *, .signal-lockup, .signal-lockup > *, .identity-rail, .identity-rail > *, .manifesto-copy, .manifesto-copy > *, .section-heading, .section-heading > *, .operations-stage, .operation-visual, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
+      ".command-nav, .hero-title, .hero-title > *, .hero-title h1 > *, .hero-motto, .hero-motto > *, .signal-lockup, .signal-lockup > *, .signal-emblem, .identity-rail, .identity-rail > *, .section-heading, .section-heading > *, .operations-stage, .operation-visual, .operation-copy, .operation-copy > *, .operation-progress, .archive-feature, .archive-feature button, .archive-feature > div, .archive-feature > div > *, .archive-index, .archive-index-heading, .archive-index-heading > *, .archive-grid, .archive-grid button, .recruit-copy, .recruit-copy > *",
     ),
     { clearProps: "all", autoAlpha: 1, x: 0, y: 0, scale: 1 },
   );
