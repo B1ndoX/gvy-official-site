@@ -408,10 +408,10 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 
-test("gallery exposes every one of the 37 production team photos before seamless cloning", () => {
+test("gallery exposes every one of the 47 production team photos before seamless cloning", () => {
   const grid = homepage.match(/<div class="archive-grid" data-archive-grid>([\s\S]*?)<\/div>/)?.[1] || "";
-  assert.equal((grid.match(/data-archive-open=/g) || []).length, 37);
-  for (let index = 1; index <= 37; index += 1) {
+  assert.equal((grid.match(/data-archive-open=/g) || []).length, 47);
+  for (let index = 1; index <= 47; index += 1) {
     assert.match(grid, new RegExp(`team-${String(index).padStart(2, "0")}\\.(?:jpe?g|png)`));
   }
 });
@@ -460,11 +460,13 @@ test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", asyn
   assert.match(homepage, /\.\/assets\/gallery\/team-18\.jpg/);
   assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-37-1920\.webp 1920w/);
   assert.match(homepage, /\.\/assets\/gallery\/team-37\.png/);
+  assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-47-1280\.webp 1280w/);
+  assert.match(homepage, /\.\/assets\/gallery\/team-47\.png/);
   assert.match(homepage, /<img\b[^>]*width="\d+"[^>]*height="\d+"/);
   assert.match(homepage, /<img\b[^>]*loading="lazy"/);
 
   await Promise.all(
-    Array.from({ length: 37 }, (_, index) =>
+    Array.from({ length: 47 }, (_, index) =>
       access(
         new URL(
           `assets/gallery/optimized/team-${String(index + 1).padStart(2, "0")}-1280.webp`,
