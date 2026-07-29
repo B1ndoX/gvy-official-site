@@ -2,7 +2,9 @@ import { Icon } from "../icons.jsx";
 
 export function ActionBar({ photoCount, session, busy, onPreview, onClear, onPublish }) {
   const canPreview = photoCount > 0 && !session?.published && !busy;
-  const canClear = !busy && Boolean(photoCount || session) && !session?.commitSha;
+  const canClear = !busy
+    && Boolean(photoCount || session)
+    && (!session?.commitSha || session?.published);
   const publishReady = Boolean(session?.verified && session?.publishAllowed && !session?.published && !busy);
   const publishLabel = session?.published ? "已发布正式网站" : "发布正式网站";
   const helper = session?.published

@@ -5,6 +5,7 @@ import test from "node:test";
 const styles = await readFile(new URL("../src/styles.css", import.meta.url), "utf8");
 const app = await readFile(new URL("../src/App.jsx", import.meta.url), "utf8");
 const duplicateReview = await readFile(new URL("../src/components/DuplicateReviewModal.jsx", import.meta.url), "utf8");
+const actionBar = await readFile(new URL("../src/components/ActionBar.jsx", import.meta.url), "utf8");
 const dropZone = await readFile(new URL("../src/components/DropZone.jsx", import.meta.url), "utf8");
 
 test("selected photo previews keep a bounded card and show the complete source ratio", () => {
@@ -29,4 +30,9 @@ test("publisher explains local two-layer deduplication and requires a visual com
   assert.match(duplicateReview, /官网已有照片/);
   assert.match(duplicateReview, /我已核对，仍然继续上传/);
   assert.match(styles, /\.duplicate-image-pair img\s*\{[^}]*object-fit:\s*contain/);
+});
+
+test("a deployed batch can clear only its local completed session", () => {
+  assert.match(actionBar, /!session\?\.commitSha \|\| session\?\.published/);
+  assert.match(actionBar, /开始下一批/);
 });
