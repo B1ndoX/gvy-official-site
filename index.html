@@ -115,7 +115,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260729-gallery-lightbox-webp-v61" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260729-gallery-dots-v63" />
   </head>
 
   <body id="pageTop">
@@ -421,17 +421,8 @@
               </div>
             </div>
             <div class="archive-gallery-controls" aria-label="团建相册滚动控制">
-              <button
-                class="archive-latest-button"
-                type="button"
-                data-archive-carousel-latest
-                aria-label="跳转到本次新增团建照片"
-              >
-                <span class="archive-latest-signal" aria-hidden="true"></span>
-                <span class="archive-latest-new" aria-hidden="true">NEW</span>
-                <span class="archive-latest-copy">最新</span>
-              </button>
-              <button type="button" data-archive-carousel-toggle aria-label="暂停匀速滚动" aria-pressed="false">
+              <div class="archive-pagination" data-archive-carousel-pagination role="group" aria-label="按照片选择团建相册；可左右滑动"></div>
+              <button class="archive-playback-toggle" type="button" data-archive-carousel-toggle aria-label="暂停匀速滚动" aria-pressed="false">
                 <svg class="archive-pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10" /></svg>
                 <svg class="archive-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l8 5-8 5z" /></svg>
               </button>
@@ -505,6 +496,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260729-production-trim-v62"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260729-gallery-dots-v63"></script>
   </body>
 </html>

@@ -20,10 +20,16 @@ export function resolveCarouselTargetIndex(value, length) {
   return wrapCarouselIndex(index, length);
 }
 
-export function getLatestBatchStartIndex(cards) {
-  if (!cards?.length) return 0;
-  const index = cards.findIndex((card) => card?.hasAttribute?.("data-archive-latest-start"));
-  return index >= 0 ? index : 0;
+export function getCarouselNavigationTargetIndexes(length) {
+  const itemCount = Math.max(0, Math.floor(Number(length) || 0));
+  return Array.from({ length: itemCount }, (_, index) => index);
+}
+
+export function getCarouselNavigationIndex(position, loopWidth, navigationCount) {
+  const nodeCount = Math.max(0, Math.floor(Number(navigationCount) || 0));
+  if (nodeCount < 2 || !Number.isFinite(loopWidth) || loopWidth <= 0) return 0;
+  const progress = normalizeLoopPosition(position, loopWidth) / loopWidth;
+  return wrapCarouselIndex(Math.round(progress * nodeCount), nodeCount);
 }
 
 export function getCarouselCardPosition(cards, index) {
@@ -74,8 +80,8 @@ export function initArchiveCarousel({
   const track = archiveIndex?.querySelector?.("[data-archive-grid]");
   const cards = Array.from(track?.querySelectorAll?.(":scope > [data-archive-open]") || []);
   const controls = archiveIndex?.querySelector?.(".archive-gallery-controls");
+  const pagination = archiveIndex?.querySelector?.("[data-archive-carousel-pagination]");
   const toggle = archiveIndex?.querySelector?.("[data-archive-carousel-toggle]");
-  const latest = archiveIndex?.querySelector?.("[data-archive-carousel-latest]");
 
   if (!archiveIndex || !viewport || !track || cards.length < 2) {
     return { cleanup() {} };
@@ -114,9 +120,19 @@ export function initArchiveCarousel({
   let touchActive = false;
   let pageScrolling = false;
   let pageScrollTimer = 0;
-  let latestTransitionTimer = 0;
-  let latestSettleTimer = 0;
-  let returningToLatest = false;
+  let navigationTransitionTimer = 0;
+  let navigationSettleTimer = 0;
+  let navigationClickResetTimer = 0;
+  let returningToTarget = false;
+  let navigationButtons = [];
+  let navigationTargets = [];
+  let activeNavigationIndex = -1;
+  let paginationPointerId = null;
+  let paginationStartX = 0;
+  let paginationStartY = 0;
+  let paginationStartScrollLeft = 0;
+  let paginationDragging = false;
+  let suppressNavigationClick = false;
   let dragPointerId = null;
   let dragStartX = 0;
   let dragStartY = 0;
@@ -132,7 +148,6 @@ export function initArchiveCarousel({
   const DRAG_THRESHOLD_PX = 8;
   const HOLD_SUPPRESSION_MS = 240;
   const POINTER_CLICK_WINDOW_MS = 700;
-  const latestIndex = getLatestBatchStartIndex(cards);
   const now = () => view?.performance?.now?.() ?? Date.now();
 
   function updateToggle() {
@@ -146,6 +161,60 @@ export function initArchiveCarousel({
   function setPosition(position) {
     virtualPosition = normalizeLoopPosition(position, loopWidth);
     viewport.scrollLeft = virtualPosition;
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const nextIndex = getCarouselNavigationIndex(
+      virtualPosition,
+      loopWidth,
+      navigationButtons.length,
+    );
+    if (nextIndex === activeNavigationIndex) return;
+    const isInitialUpdate = activeNavigationIndex < 0;
+    activeNavigationIndex = nextIndex;
+    navigationButtons.forEach((button, index) => {
+      const isActive = index === nextIndex;
+      button.classList.toggle("is-active", isActive);
+      if (isActive) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+    const activeButton = navigationButtons[nextIndex];
+    if (!activeButton || paginationDragging) return;
+    const maximumScroll = Math.max(0, pagination.scrollWidth - pagination.clientWidth);
+    const centeredLeft = activeButton.offsetLeft + (activeButton.offsetWidth / 2) - (pagination.clientWidth / 2);
+    const targetLeft = Math.min(maximumScroll, Math.max(0, centeredLeft));
+    if (pagination.scrollTo) {
+      pagination.scrollTo({ left: targetLeft, behavior: isInitialUpdate ? "auto" : "smooth" });
+    } else {
+      pagination.scrollLeft = targetLeft;
+    }
+  }
+
+  function rebuildPagination() {
+    if (!pagination || !root?.createElement) return;
+    if (cards.length === navigationButtons.length) {
+      updatePagination();
+      return;
+    }
+
+    pagination.replaceChildren();
+    navigationTargets = getCarouselNavigationTargetIndexes(cards.length);
+    navigationButtons = navigationTargets.map((targetIndex) => {
+      const button = root.createElement("button");
+      const marker = root.createElement("span");
+      button.type = "button";
+      button.className = "archive-pagination-node";
+      button.dataset.archiveCarouselNode = String(targetIndex);
+      button.setAttribute("aria-label", `查看团建照片 ${targetIndex + 1}，共 ${cards.length} 张`);
+      marker.className = "archive-pagination-node-mark";
+      marker.setAttribute("aria-hidden", "true");
+      button.append(marker);
+      pagination.append(button);
+      return button;
+    });
+    activeNavigationIndex = -1;
+    updatePagination();
   }
 
   function measureLoop() {
@@ -179,7 +248,7 @@ export function initArchiveCarousel({
   }
 
   function canMove() {
-    return !returningToLatest && shouldAdvanceCarousel({
+    return !returningToTarget && shouldAdvanceCarousel({
       loopWidth,
       manuallyPaused,
       touchActive,
@@ -357,6 +426,7 @@ export function initArchiveCarousel({
     resizeFrame = frame(() => {
       resizeFrame = 0;
       measureLoop();
+      rebuildPagination();
       updateInViewFromGeometry();
       lastTimestamp = null;
     });
@@ -397,38 +467,110 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
-  function clearLatestTransition() {
-    if (latestTransitionTimer) cancelSchedule(latestTransitionTimer);
-    if (latestSettleTimer) cancelSchedule(latestSettleTimer);
-    latestTransitionTimer = 0;
-    latestSettleTimer = 0;
-    returningToLatest = false;
-    viewport.classList.remove("is-returning-latest");
+  function clearNavigationTransition() {
+    if (navigationTransitionTimer) cancelSchedule(navigationTransitionTimer);
+    if (navigationSettleTimer) cancelSchedule(navigationSettleTimer);
+    navigationTransitionTimer = 0;
+    navigationSettleTimer = 0;
+    returningToTarget = false;
+    viewport.classList.remove("is-returning-target");
   }
 
-  function jumpToLatest(event) {
+  function handlePaginationPointerDown(event) {
+    if (event.pointerType !== "mouse" || event.button !== 0 || paginationPointerId != null) return;
+    paginationPointerId = event.pointerId;
+    paginationStartX = event.clientX;
+    paginationStartY = event.clientY;
+    paginationStartScrollLeft = pagination.scrollLeft;
+    paginationDragging = false;
+    suppressNavigationClick = false;
+    touchActive = true;
+    pagination.setPointerCapture?.(event.pointerId);
+  }
+
+  function handlePaginationPointerMove(event) {
+    if (event.pointerId !== paginationPointerId) return;
+    if (!paginationDragging && isCarouselDrag(
+      paginationStartX,
+      event.clientX,
+      DRAG_THRESHOLD_PX,
+      paginationStartY,
+      event.clientY,
+    )) {
+      paginationDragging = true;
+      pagination.classList.add("is-dragging");
+    }
+    if (!paginationDragging) return;
+    event.preventDefault();
+    pagination.scrollLeft = paginationStartScrollLeft - (event.clientX - paginationStartX);
+  }
+
+  function finishPaginationPointer(event, { cancelled = false } = {}) {
+    if (event?.pointerId !== paginationPointerId) return;
+    const endedAsDrag = paginationDragging || isCarouselDrag(
+      paginationStartX,
+      event.clientX,
+      DRAG_THRESHOLD_PX,
+      paginationStartY,
+      event.clientY,
+    );
+    if (endedAsDrag || cancelled) {
+      suppressNavigationClick = true;
+      if (navigationClickResetTimer) cancelSchedule(navigationClickResetTimer);
+      navigationClickResetTimer = schedule(() => {
+        navigationClickResetTimer = 0;
+        suppressNavigationClick = false;
+      }, 0);
+    }
+    if (pagination.hasPointerCapture?.(event.pointerId)) pagination.releasePointerCapture?.(event.pointerId);
+    paginationPointerId = null;
+    paginationDragging = false;
+    touchActive = false;
+    pagination.classList.remove("is-dragging");
+    lastTimestamp = null;
+  }
+
+  function handlePaginationPointerUp(event) {
+    finishPaginationPointer(event);
+  }
+
+  function handlePaginationPointerCancel(event) {
+    finishPaginationPointer(event, { cancelled: true });
+  }
+
+  function jumpToNavigationTarget(event) {
+    if (suppressNavigationClick) {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      return;
+    }
+    const button = event?.target?.closest?.("[data-archive-carousel-node]");
+    if (!button || !pagination?.contains?.(button)) return;
     event?.preventDefault?.();
     event?.stopPropagation?.();
-    clearLatestTransition();
+    const nodeIndex = Number.parseInt(button.dataset.archiveCarouselNode, 10);
+    const targetIndex = navigationTargets[nodeIndex];
+    if (!Number.isInteger(targetIndex)) return;
+    clearNavigationTransition();
     recoverTransientPause();
-    returningToLatest = true;
-    viewport.classList.add("is-returning-latest");
-    const targetPosition = getCarouselCardPosition(cards, latestIndex);
+    returningToTarget = true;
+    viewport.classList.add("is-returning-target");
+    const targetPosition = getCarouselCardPosition(cards, targetIndex);
     const reducedMotion = view?.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
 
     const move = () => {
-      latestTransitionTimer = 0;
+      navigationTransitionTimer = 0;
       setPosition(targetPosition);
       lastTimestamp = null;
-      latestSettleTimer = schedule(() => {
-        latestSettleTimer = 0;
-        returningToLatest = false;
-        viewport.classList.remove("is-returning-latest");
+      navigationSettleTimer = schedule(() => {
+        navigationSettleTimer = 0;
+        returningToTarget = false;
+        viewport.classList.remove("is-returning-target");
       }, reducedMotion ? 0 : 190);
     };
 
     if (reducedMotion) move();
-    else latestTransitionTimer = schedule(move, 150);
+    else navigationTransitionTimer = schedule(move, 150);
   }
 
   const observer = Observer
@@ -439,6 +581,7 @@ export function initArchiveCarousel({
     : null;
 
   measureLoop();
+  rebuildPagination();
   updateInViewFromGeometry();
   updateToggle();
   observer?.observe(viewport);
@@ -457,7 +600,11 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchCancel, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
-  latest?.addEventListener("click", jumpToLatest);
+  pagination?.addEventListener("pointerdown", handlePaginationPointerDown);
+  pagination?.addEventListener("pointermove", handlePaginationPointerMove, { passive: false });
+  pagination?.addEventListener("pointerup", handlePaginationPointerUp);
+  pagination?.addEventListener("pointercancel", handlePaginationPointerCancel);
+  pagination?.addEventListener("click", jumpToNavigationTarget);
   view?.addEventListener?.("resize", handleResize, { passive: true });
   view?.addEventListener?.("scroll", scheduleVisibilityCheck, { passive: true });
   view?.addEventListener?.("pointerup", handlePointerUp, { passive: true });
@@ -473,7 +620,8 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
       if (pageScrollTimer) cancelSchedule(pageScrollTimer);
-      clearLatestTransition();
+      if (navigationClickResetTimer) cancelSchedule(navigationClickResetTimer);
+      clearNavigationTransition();
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("pointerdown", handlePointerDown);
@@ -488,7 +636,11 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchCancel);
       toggle?.removeEventListener("click", toggleAutoPlay);
-      latest?.removeEventListener("click", jumpToLatest);
+      pagination?.removeEventListener("pointerdown", handlePaginationPointerDown);
+      pagination?.removeEventListener("pointermove", handlePaginationPointerMove);
+      pagination?.removeEventListener("pointerup", handlePaginationPointerUp);
+      pagination?.removeEventListener("pointercancel", handlePaginationPointerCancel);
+      pagination?.removeEventListener("click", jumpToNavigationTarget);
       view?.removeEventListener?.("resize", handleResize);
       view?.removeEventListener?.("scroll", scheduleVisibilityCheck);
       view?.removeEventListener?.("pointerup", handlePointerUp);

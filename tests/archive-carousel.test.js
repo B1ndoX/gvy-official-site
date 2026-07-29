@@ -4,7 +4,8 @@ import test from "node:test";
 import {
   advanceCarouselPosition,
   getCarouselCardPosition,
-  getLatestBatchStartIndex,
+  getCarouselNavigationIndex,
+  getCarouselNavigationTargetIndexes,
   isCarouselDrag,
   normalizeLoopPosition,
   resolveCarouselTargetIndex,
@@ -44,19 +45,18 @@ test("carousel resolves explicit targets without changing the default start", ()
   assert.equal(resolveCarouselTargetIndex(52, 47), 5);
 });
 
-test("latest control follows the first photo in each imported batch", () => {
-  const makeCards = (existingCount, newCount) => Array.from(
-    { length: existingCount + newCount },
-    (_, index) => ({
-      hasAttribute(name) {
-        return name === "data-archive-latest-start" && index === existingCount;
-      },
-    }),
-  );
+test("gallery navigation keeps one exact target for every photo", () => {
+  assert.deepEqual(getCarouselNavigationTargetIndexes(5), [0, 1, 2, 3, 4]);
+  assert.deepEqual(getCarouselNavigationTargetIndexes(1), [0]);
+  assert.deepEqual(getCarouselNavigationTargetIndexes(0), []);
+});
 
-  assert.equal(getLatestBatchStartIndex(makeCards(47, 6)), 47);
-  assert.equal(getLatestBatchStartIndex(makeCards(53, 20)), 53);
-  assert.equal(getLatestBatchStartIndex([{ hasAttribute: () => false }]), 0);
+test("gallery navigation follows the exact photo across continuous loop progress", () => {
+  assert.equal(getCarouselNavigationIndex(0, 1000, 10), 0);
+  assert.equal(getCarouselNavigationIndex(100, 1000, 10), 1);
+  assert.equal(getCarouselNavigationIndex(900, 1000, 10), 9);
+  assert.equal(getCarouselNavigationIndex(960, 1000, 10), 0);
+  assert.equal(getCarouselNavigationIndex(1000, 1000, 10), 0);
 });
 
 test("carousel converts a target card to the loop-relative scroll position", () => {
