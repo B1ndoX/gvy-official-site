@@ -3,7 +3,11 @@ import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
-const targets = [resolve(root, "assets/js"), resolve(root, "scripts")];
+const targets = [
+  resolve(root, "assets/js"),
+  resolve(root, "scripts"),
+  resolve(root, "tools/gallery-publisher"),
+];
 const files = [];
 
 async function collectJavaScript(directory) {

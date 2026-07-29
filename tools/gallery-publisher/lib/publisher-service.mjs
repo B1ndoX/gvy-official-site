@@ -1,0 +1,505 @@
+import { spawn } from "node:child_process";
+import { copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { dirname, join, relative, resolve } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+
+import { appendGalleryBatch, createBatchNumbers, parseGalleryState, removeGalleryItems } from "./gallery-html.mjs";
+import { createVisualFingerprint, processGalleryPhoto, visualFingerprintDistance } from "./process.mjs";
+import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
+
+const STEP_LABELS = [
+  "保留原图",
+  "生成 1280 WebP",
+  "按原图宽度生成 1920 WebP",
+  "生成 640×360 缩略图",
+  "更新相册与最新批次标记",
+  "运行完整测试与生产构建",
+];
+
+function run(command, args, { cwd, maxOutput = 8_000_000 } = {}) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => { if (stdout.length < maxOutput) stdout += chunk; });
+    child.stderr.on("data", (chunk) => { if (stderr.length < maxOutput) stderr += chunk; });
+    child.on("error", reject);
+    child.on("close", (code) => {
+      if (code === 0) resolve({ stdout, stderr });
+      else {
+        const output = stderr.trim() || stdout.trim();
+        const lines = output.split("\n").map((line) => line.trim()).filter(Boolean);
+        const usefulLine = [...lines].reverse().find((line) => /AssertionError|SyntaxError|ReferenceError|TypeError|✖ failing tests|npm error/i.test(line));
+        const detail = (usefulLine || lines.at(-1) || `退出码 ${code}`).slice(0, 600);
+        reject(new Error(`${command} ${args.join(" ")} 失败：${detail}`));
+      }
+    });
+  });
+}
+
+function relativePaths(root, paths) {
+  return paths.map((path) => relative(root, path)).sort();
+}
+
+export class PublisherService {
+  constructor({ root }) {
+    this.root = resolve(root);
+    this.runtimeDir = join(this.root, "tools/gallery-publisher/.runtime");
+    this.statePath = join(this.runtimeDir, "active-session.json");
+    this.indexPath = join(this.root, "index.html");
+    this.session = null;
+    this.operation = { type: "idle", status: "idle", message: "等待添加照片", steps: STEP_LABELS.map(() => "pending") };
+    this.activity = [];
+    this.hashCache = new Map();
+  }
+
+  async initialize() {
+    await mkdir(this.runtimeDir, { recursive: true });
+    try {
+      this.session = JSON.parse(await readFile(this.statePath, "utf8"));
+      this.session.type ||= "add";
+      this.log("检测到上次保留的本地预览，可继续发布或清空回滚");
+    } catch (error) {
+      if (error?.code !== "ENOENT") this.log(`无法恢复上次预览：${error.message}`);
+    }
+  }
+
+  log(message) {
+    this.activity.unshift({ at: new Date().toISOString(), message });
+    this.activity = this.activity.slice(0, 60);
+  }
+
+  setOperation(patch) {
+    this.operation = { ...this.operation, ...patch };
+    if (patch.message) this.log(patch.message);
+  }
+
+  async getRepositoryInfo() {
+    const [branch, remote, changes] = await Promise.all([
+      gitOutput(this.root, ["branch", "--show-current"]).catch(() => "未知"),
+      gitOutput(this.root, ["remote", "get-url", "origin"]).catch(() => ""),
+      listGitChanges(this.root).catch(() => []),
+    ]);
+    return { branch, remote, connected: Boolean(remote), changes };
+  }
+
+  async hashGalleryFile(path) {
+    const details = await stat(path);
+    const cached = this.hashCache.get(path);
+    if (cached?.size === details.size && cached?.mtimeMs === details.mtimeMs) return cached.hash;
+    const hash = createHash("sha256").update(await readFile(path)).digest("hex");
+    this.hashCache.set(path, { size: details.size, mtimeMs: details.mtimeMs, hash });
+    return hash;
+  }
+
+  async getGalleryInventory(parsed) {
+    const withHashes = await Promise.all(parsed.items.map(async (item) => {
+      const path = join(this.root, "assets/gallery", item.fallbackName);
+      const itemRelativePath = relative(this.root, path);
+      const backupPath = this.session?.type === "delete" && !this.session.published
+        ? join(this.runtimeDir, this.session.id, "removed-assets", itemRelativePath)
+        : null;
+      const hash = await this.hashGalleryFile(path)
+        .catch(() => backupPath ? this.hashGalleryFile(backupPath).catch(() => null) : null);
+      return { ...item, hash };
+    }));
+    const grouped = new Map();
+    withHashes.forEach((item) => {
+      if (!item.hash) return;
+      const group = grouped.get(item.hash) || [];
+      group.push(item.number);
+      grouped.set(item.hash, group);
+    });
+    const duplicateGroups = [...grouped.values()]
+      .filter((numbers) => numbers.length > 1)
+      .sort((left, right) => left[0] - right[0]);
+    const originalByDuplicate = new Map();
+    duplicateGroups.forEach((numbers) => numbers.slice(1).forEach((number) => originalByDuplicate.set(number, numbers[0])));
+    const displayByAssetNumber = new Map(withHashes.map((item) => [item.number, item.displayNumber]));
+    return {
+      items: withHashes.map((item) => ({
+        number: item.number,
+        displayNumber: item.displayNumber,
+        fallbackName: item.fallbackName,
+        publicUrl: this.session?.type === "delete" && !this.session.published && this.session.deletedNumbers?.includes(item.number)
+          ? `/deleted-preview/${this.session.id}/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`
+          : `/preview/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
+        latestStart: item.latestStart,
+        duplicateOf: originalByDuplicate.get(item.number) || null,
+        duplicateOfDisplayNumber: displayByAssetNumber.get(originalByDuplicate.get(item.number)) || null,
+      })),
+      duplicateGroups,
+    };
+  }
+
+  async getStatus() {
+    const html = await readFile(this.indexPath, "utf8");
+    const previewParsed = parseGalleryState(html);
+    let officialParsed = previewParsed;
+    if (this.session && !this.session.published && this.session.backupPath) {
+      officialParsed = parseGalleryState(await readFile(this.session.backupPath, "utf8"));
+    }
+    const inventory = await this.getGalleryInventory(officialParsed);
+    const repository = await this.getRepositoryInfo();
+    const baseCount = officialParsed.count;
+    const latestStart = officialParsed.latestStart;
+    const latestEnd = officialParsed.latestEnd;
+    const release = this.session ? this.session.release || buildReleaseSummary(this.session) : null;
+    const sessionDisplayStart = this.session?.displayStart
+      ?? (this.session?.type === "add" ? this.session.baseCount + 1 : null);
+    const previousPreviewItem = sessionDisplayStart > 1
+      ? previewParsed.items[sessionDisplayStart - 2]
+      : null;
+    return {
+      gallery: {
+        count: baseCount,
+        latestStart,
+        latestEnd,
+        maxPhotoNumber: officialParsed.maxPhotoNumber,
+        previewCount: previewParsed.count,
+        items: inventory.items,
+        duplicateGroups: inventory.duplicateGroups,
+      },
+      repository,
+      operation: this.operation,
+      session: this.session ? {
+        id: this.session.id,
+        type: this.session.type || "add",
+        batchStart: this.session.batchStart,
+        batchEnd: this.session.batchEnd,
+        displayStart: sessionDisplayStart,
+        displayEnd: this.session.displayEnd
+          ?? (this.session.type === "add" ? this.session.baseCount + this.session.items.length : null),
+        itemCount: this.session.items.length,
+        items: this.session.items.map(({ number, displayNumber, fallbackName, publicUrl, width, height, has1920 }, index) => ({
+          number,
+          displayNumber: displayNumber ?? (this.session.type === "add" ? sessionDisplayStart + index : null),
+          fallbackName,
+          publicUrl,
+          width,
+          height,
+          has1920,
+        })),
+        previousItem: previousPreviewItem ? {
+          number: previousPreviewItem.number,
+          displayNumber: previousPreviewItem.displayNumber,
+          publicUrl: `/preview/assets/gallery/thumbs/team-${String(previousPreviewItem.number).padStart(2, "0")}.jpg`,
+        } : null,
+        verified: this.session.verified,
+        published: Boolean(this.session.published),
+        deploymentVerified: Boolean(this.session.deploymentVerified),
+        commitSha: this.session.commitSha || null,
+        baselineDirty: this.session.baselineDirty,
+        resultCount: previewParsed.count,
+        nextLatestStart: previewParsed.latestStart,
+        publishAllowed: this.session.verified
+          && this.session.baselineDirty.length === 0
+          && repository.branch === "main"
+          && !this.session.published,
+        release,
+      } : null,
+      activity: this.activity,
+    };
+  }
+
+  async persistSession() {
+    if (!this.session) {
+      await rm(this.statePath, { force: true });
+      return;
+    }
+    await writeFile(this.statePath, `${JSON.stringify(this.session, null, 2)}\n`, "utf8");
+  }
+
+  async validateUploadDuplicates(gallery, uploads) {
+    const existingFingerprints = [];
+    for (const item of gallery.items) {
+      const path = join(this.root, "assets/gallery", item.fallbackName);
+      existingFingerprints.push({
+        number: item.number,
+        displayNumber: item.displayNumber,
+        fingerprint: await createVisualFingerprint(path),
+      });
+    }
+    const batchFingerprints = [];
+    for (const upload of uploads) {
+      const fingerprint = await createVisualFingerprint(upload.path);
+      const existingDuplicate = existingFingerprints.find(
+        (entry) => visualFingerprintDistance(entry.fingerprint, fingerprint) <= 2.5,
+      );
+      if (existingDuplicate) {
+        throw new Error(`${upload.originalName} 与官网照片 ${String(existingDuplicate.displayNumber).padStart(3, "0")} 内容相同，已拒绝重复添加`);
+      }
+      const batchDuplicate = batchFingerprints.find(
+        (entry) => visualFingerprintDistance(entry.fingerprint, fingerprint) <= 2.5,
+      );
+      if (batchDuplicate) {
+        throw new Error(`${upload.originalName} 与本批 ${batchDuplicate.name} 内容相同，已拒绝重复添加`);
+      }
+      batchFingerprints.push({ name: upload.originalName, fingerprint });
+    }
+  }
+
+  async createPreview(uploads) {
+    if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
+    if (this.session) throw new Error("已有本地预览，请先发布或清空当前批次");
+    if (!Array.isArray(uploads) || uploads.length < 1) throw new Error("请先选择照片");
+    if (uploads.length > 100) throw new Error("单批最多添加 100 张照片");
+
+    const originalHtml = await readFile(this.indexPath, "utf8");
+    const gallery = parseGalleryState(originalHtml);
+    const duplicateSteps = STEP_LABELS.map(() => "pending");
+    this.setOperation({ type: "preview", status: "running", message: "检查照片内容指纹，防止官网或本批重复", steps: duplicateSteps });
+    try {
+      await this.validateUploadDuplicates(gallery, uploads);
+    } catch (error) {
+      this.setOperation({ type: "preview", status: "error", message: error.message, steps: duplicateSteps });
+      throw error;
+    }
+    const baselineDirty = await listGitChanges(this.root);
+    const numbers = createBatchNumbers(gallery.maxPhotoNumber, uploads.length);
+    const id = randomUUID();
+    const sessionDir = join(this.runtimeDir, id);
+    const backupPath = join(sessionDir, "index.html.before-preview");
+    await mkdir(sessionDir, { recursive: true });
+    await writeFile(backupPath, originalHtml, "utf8");
+    const createdPaths = [];
+    const steps = STEP_LABELS.map(() => "pending");
+    this.setOperation({ type: "preview", status: "running", message: `开始处理本批 ${uploads.length} 张照片`, steps });
+
+    try {
+      steps[0] = "running";
+      steps[1] = "running";
+      steps[2] = "running";
+      steps[3] = "running";
+      this.setOperation({ steps: [...steps], message: "保留原图并生成响应式图片" });
+      const items = [];
+      for (let index = 0; index < uploads.length; index += 1) {
+        const item = await processGalleryPhoto({ upload: uploads[index], number: numbers[index], root: this.root });
+        items.push(item);
+        createdPaths.push(...item.createdPaths);
+        this.setOperation({ message: `已处理 ${index + 1} / ${uploads.length}：${String(item.number).padStart(3, "0")}` });
+      }
+      steps.fill("done", 0, 4);
+      steps[4] = "running";
+      this.setOperation({ steps: [...steps], message: "更新相册数量与本批精准起点" });
+      const nextHtml = appendGalleryBatch(originalHtml, items);
+      await writeFile(this.indexPath, nextHtml, "utf8");
+      steps[4] = "done";
+      steps[5] = "running";
+      this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
+      await run("npm", ["run", "verify"], { cwd: this.root });
+      steps[5] = "done";
+
+      const changedFiles = ["index.html", ...relativePaths(this.root, createdPaths)].sort();
+      const sessionDraft = {
+        id,
+        type: "add",
+        createdAt: new Date().toISOString(),
+        backupPath,
+        baseCount: gallery.count,
+        previousLatestStart: gallery.latestStart,
+        previousLatestEnd: gallery.latestEnd,
+        batchStart: numbers[0],
+        batchEnd: numbers.at(-1),
+        displayStart: gallery.count + 1,
+        displayEnd: gallery.count + uploads.length,
+        items: items.map((item, index) => ({ ...item, displayNumber: gallery.count + index + 1 })),
+        createdPaths,
+        changedFiles,
+        baselineDirty,
+        verified: true,
+        published: false,
+      };
+      sessionDraft.release = buildReleaseSummary(sessionDraft);
+      this.session = sessionDraft;
+      await this.persistSession();
+      this.setOperation({ type: "preview", status: "done", message: `本地预览已通过，最新精准定位 ${String(gallery.count + 1).padStart(3, "0")}`, steps: [...steps] });
+      return this.getStatus();
+    } catch (error) {
+      await writeFile(this.indexPath, originalHtml, "utf8");
+      await Promise.all(createdPaths.map((path) => rm(path, { force: true })));
+      await rm(sessionDir, { recursive: true, force: true });
+      this.setOperation({ type: "preview", status: "error", message: error.message, steps: steps.map((step) => step === "running" ? "error" : step) });
+      throw error;
+    }
+  }
+
+  async findGalleryAssetPaths(item) {
+    const twoDigit = String(item.number).padStart(2, "0");
+    const candidates = [
+      join(this.root, "assets/gallery", item.fallbackName),
+      join(this.root, `assets/gallery/optimized/team-${twoDigit}-1280.webp`),
+      join(this.root, `assets/gallery/optimized/team-${twoDigit}-1920.webp`),
+      join(this.root, `assets/gallery/thumbs/team-${twoDigit}.jpg`),
+      join(this.root, `assets/gallery/originals/team-${twoDigit}.heic`),
+      join(this.root, `assets/gallery/originals/team-${twoDigit}.heif`),
+    ];
+    const existing = [];
+    for (const path of candidates) {
+      try {
+        const details = await stat(path);
+        if (details.isFile()) existing.push(path);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+    return [...new Set(existing)];
+  }
+
+  async restoreDeletedAssets(assetBackups) {
+    for (const entry of assetBackups || []) {
+      await mkdir(dirname(entry.path), { recursive: true });
+      await copyFile(entry.backupPath, entry.path);
+    }
+  }
+
+  async createDeletePreview(numbers) {
+    if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
+    if (this.session) throw new Error("已有本地预览，请先发布或清空当前批次");
+    if (!Array.isArray(numbers) || numbers.length < 1) throw new Error("请先选择要删除的照片");
+
+    const originalHtml = await readFile(this.indexPath, "utf8");
+    const gallery = parseGalleryState(originalHtml);
+    const selectedSet = new Set(numbers.map(Number));
+    const selectedItems = gallery.items.filter((item) => selectedSet.has(item.number));
+    const baselineDirty = await listGitChanges(this.root);
+    const id = randomUUID();
+    const sessionDir = join(this.runtimeDir, id);
+    const backupPath = join(sessionDir, "index.html.before-preview");
+    await mkdir(sessionDir, { recursive: true });
+    await writeFile(backupPath, originalHtml, "utf8");
+    const assetBackups = [];
+    const steps = STEP_LABELS.map(() => "pending");
+    this.setOperation({ type: "delete-preview", status: "running", message: `准备删除 ${selectedItems.length} 张官网相册照片`, steps });
+
+    try {
+      steps.fill("done", 0, 4);
+      steps[4] = "running";
+      this.setOperation({ steps: [...steps], message: "移除相册条目并自动重排可见序号，原图文件保留可回滚" });
+      const nextHtml = removeGalleryItems(originalHtml, numbers);
+      const assetPaths = (await Promise.all(selectedItems.map((item) => this.findGalleryAssetPaths(item)))).flat();
+      for (const path of assetPaths) {
+        const itemRelativePath = relative(this.root, path);
+        const assetBackupPath = join(sessionDir, "removed-assets", itemRelativePath);
+        await mkdir(dirname(assetBackupPath), { recursive: true });
+        await copyFile(path, assetBackupPath);
+        assetBackups.push({ path, backupPath: assetBackupPath });
+      }
+      await writeFile(this.indexPath, nextHtml, "utf8");
+      await Promise.all(assetBackups.map((entry) => rm(entry.path, { force: true })));
+      steps[4] = "done";
+      steps[5] = "running";
+      this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
+      await run("npm", ["run", "verify"], { cwd: this.root });
+      steps[5] = "done";
+
+      const nextGallery = parseGalleryState(nextHtml);
+      const orderedNumbers = selectedItems.map((item) => item.number);
+      const items = selectedItems.map((item) => ({
+        number: item.number,
+        displayNumber: item.displayNumber,
+        fallbackName: item.fallbackName,
+        width: 0,
+        height: 0,
+        has1920: false,
+        publicUrl: `/deleted-preview/${id}/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
+      }));
+      const sessionDraft = {
+        id,
+        type: "delete",
+        createdAt: new Date().toISOString(),
+        backupPath,
+        baseCount: gallery.count,
+        previousLatestStart: gallery.latestStart,
+        previousLatestEnd: gallery.latestEnd,
+        batchStart: Math.min(...orderedNumbers),
+        batchEnd: Math.max(...orderedNumbers),
+        displayStart: Math.min(...selectedItems.map((item) => item.displayNumber)),
+        displayEnd: Math.max(...selectedItems.map((item) => item.displayNumber)),
+        items,
+        deletedNumbers: orderedNumbers,
+        createdPaths: [],
+        removedPaths: assetBackups.map((entry) => entry.path),
+        assetBackups,
+        changedFiles: ["index.html", ...relativePaths(this.root, assetBackups.map((entry) => entry.path))].sort(),
+        baselineDirty,
+        resultCount: nextGallery.count,
+        nextLatestStart: nextGallery.latestStart,
+        verified: true,
+        published: false,
+      };
+      sessionDraft.release = buildReleaseSummary(sessionDraft);
+      this.session = sessionDraft;
+      await this.persistSession();
+      this.setOperation({ type: "delete-preview", status: "done", message: `删除预览已通过，官网相册将从 ${gallery.count} 张变为 ${nextGallery.count} 张`, steps: [...steps] });
+      return this.getStatus();
+    } catch (error) {
+      await writeFile(this.indexPath, originalHtml, "utf8");
+      await this.restoreDeletedAssets(assetBackups);
+      await rm(sessionDir, { recursive: true, force: true });
+      this.setOperation({ type: "delete-preview", status: "error", message: error.message, steps: steps.map((step) => step === "running" ? "error" : step) });
+      throw error;
+    }
+  }
+
+  async rollback() {
+    if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
+    if (!this.session) {
+      this.setOperation({ type: "idle", status: "idle", message: "已清空本批", steps: STEP_LABELS.map(() => "pending") });
+      return this.getStatus();
+    }
+    if (this.session.published) {
+      await rm(join(this.runtimeDir, this.session.id), { recursive: true, force: true });
+      this.session = null;
+      await this.persistSession();
+      this.setOperation({ type: "idle", status: "idle", message: "已结束上一批，可继续添加照片", steps: STEP_LABELS.map(() => "pending") });
+      return this.getStatus();
+    }
+    if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布正式网站重试推送");
+    const originalHtml = await readFile(this.session.backupPath, "utf8");
+    await writeFile(this.indexPath, originalHtml, "utf8");
+    if (this.session.type === "delete") await this.restoreDeletedAssets(this.session.assetBackups);
+    else await Promise.all(this.session.createdPaths.map((path) => rm(path, { force: true })));
+    await rm(join(this.runtimeDir, this.session.id), { recursive: true, force: true });
+    this.session = null;
+    await this.persistSession();
+    this.setOperation({ type: "idle", status: "idle", message: "已清空本批并恢复生成预览前的文件", steps: STEP_LABELS.map(() => "pending") });
+    return this.getStatus();
+  }
+
+  async publish() {
+    if (!this.session) throw new Error("没有可发布的相册批次");
+    if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
+    this.setOperation({ type: "publish", status: "running", message: "开始正式发布", steps: STEP_LABELS.map(() => "done") });
+    try {
+      const release = await publishGallerySession({
+        root: this.root,
+        session: this.session,
+        onUpdate: (message) => this.setOperation({ message }),
+        onCommitted: async ({ commitSha, release: preparedRelease }) => {
+          this.session.commitSha = commitSha;
+          this.session.release = preparedRelease;
+          await this.persistSession();
+        },
+        onPushed: async ({ commitSha, release: pushedRelease }) => {
+          this.session.commitSha = commitSha;
+          this.session.release = pushedRelease;
+          this.session.published = true;
+          await this.persistSession();
+        },
+      });
+      this.session.published = true;
+      this.session.deploymentVerified = true;
+      this.session.release = release;
+      await this.persistSession();
+      this.setOperation({ type: "publish", status: "done", message: "正式网站发布并复查完成" });
+      return release;
+    } catch (error) {
+      const message = this.session?.published
+        ? `代码已推送，但线上复查未完成：${error.message}`
+        : error.message;
+      this.setOperation({ type: "publish", status: "error", message });
+      throw error;
+    }
+  }
+}

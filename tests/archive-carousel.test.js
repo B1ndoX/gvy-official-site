@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   advanceCarouselPosition,
   getCarouselCardPosition,
+  getCarouselScrubberIndex,
   getClosestCardIndex,
   getLatestBatchStartIndex,
   isCarouselDrag,
@@ -17,6 +18,7 @@ test("carousel distinguishes a click from an intentional drag", () => {
   assert.equal(isCarouselDrag(100, 105, 8), false);
   assert.equal(isCarouselDrag(100, 108, 8), true);
   assert.equal(isCarouselDrag(100, 82, 8), true);
+  assert.equal(isCarouselDrag(100, 104, 8, 100, 107), true);
 });
 
 test("carousel indexes wrap in both directions", () => {
@@ -63,6 +65,18 @@ test("carousel converts a target card to the loop-relative scroll position", () 
   assert.equal(getCarouselCardPosition(cards, 5), 754);
 });
 
+test("scrubber follows the nearest stable card position", () => {
+  const cards = [
+    { offsetLeft: 24 },
+    { offsetLeft: 401 },
+    { offsetLeft: 778 },
+  ];
+
+  assert.equal(getCarouselScrubberIndex(0, cards), 0);
+  assert.equal(getCarouselScrubberIndex(390, cards), 1);
+  assert.equal(getCarouselScrubberIndex(740, cards), 2);
+});
+
 test("closest card follows the viewport center", () => {
   const viewport = { scrollLeft: 420, clientWidth: 400 };
   const cards = [
@@ -104,6 +118,7 @@ test("continuous carousel pauses only for direct interaction, visibility, or its
   assert.equal(shouldAdvanceCarousel(baseState), true);
   assert.equal(shouldAdvanceCarousel({ ...baseState, touchActive: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, pageScrolling: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, scrubbing: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, manuallyPaused: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, inView: false }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, hidden: true }), false);

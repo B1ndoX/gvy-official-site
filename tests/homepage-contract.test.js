@@ -296,6 +296,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(homepage, /data-archive-carousel-toggle/);
   assert.equal((homepage.match(/data-archive-latest-start/g) || []).length, 1);
   assert.match(homepage, /data-archive-carousel-latest/);
+  assert.match(homepage, /data-archive-carousel-scrubber/);
+  assert.match(homepage, /data-archive-carousel-scrubber-output/);
   assert.match(homepage, />NEW</);
   assert.match(homepage, />最新</);
   assert.match(homepage, /A-007 \/ MUSTER/);
@@ -321,6 +323,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /resolveCarouselTargetIndex/);
   assert.match(archiveCarousel, /getCarouselCardPosition/);
   assert.match(archiveCarousel, /getLatestBatchStartIndex/);
+  assert.match(archiveCarousel, /getCarouselScrubberIndex/);
+  assert.match(archiveCarousel, /startScrubbing/);
   assert.match(archiveCarousel, /is-returning-latest/);
   assert.match(archiveCarousel, /data-archive-clone/);
   assert.match(archiveCarousel, /virtualPosition/);
@@ -353,7 +357,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-latest-preview-v54/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-scrubber-v55/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
@@ -380,8 +384,8 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-latest-preview-v54/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-latest-preview-v54/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-scrubber-v55/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-scrubber-v55/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {
@@ -416,15 +420,17 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 
-test("gallery exposes every sequential production team photo before seamless cloning", () => {
-  const grid = homepage.match(/<div class="archive-grid" data-archive-grid>([\s\S]*?)<\/div>/)?.[1] || "";
-  const galleryCount = (grid.match(/data-archive-open=/g) || []).length;
-  assert.ok(galleryCount >= 47);
+test("gallery exposes stable photo numbers with sequential lightbox indexes before seamless cloning", () => {
+  const grid = homepage.match(/<div class="archive-grid" data-archive-grid[^>]*>([\s\S]*?)<\/div>/)?.[1] || "";
+  const entries = [...grid.matchAll(/data-archive-open="(\d+)"[\s\S]*?<img src="\.\/assets\/gallery\/team-(\d+)\.(?:jpe?g|png)"/g)]
+    .map((match) => ({ openIndex: Number(match[1]), number: Number(match[2]) }));
+  const galleryCount = entries.length;
+  assert.ok(galleryCount >= 2);
   assert.match(homepage, new RegExp(`aria-label="${galleryCount} 张舰队团建照片`));
-  for (let index = 1; index <= galleryCount; index += 1) {
-    assert.match(grid, new RegExp(`data-archive-open="${index - 1}"`));
-    assert.match(grid, new RegExp(`team-${String(index).padStart(2, "0")}\\.(?:jpe?g|png)`));
-  }
+  entries.forEach((entry, index) => {
+    assert.equal(entry.openIndex, index);
+    if (index > 0) assert.ok(entry.number > entries[index - 1].number);
+  });
 });
 
 test("member brawl popup preserves the published runtime without a nested frame shell", async () => {
@@ -471,19 +477,18 @@ test("real fleet imagery uses responsive WebP sources with JPEG fallbacks", asyn
   assert.match(homepage, /\.\/assets\/gallery\/team-18\.jpg/);
   assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-37-1920\.webp 1920w/);
   assert.match(homepage, /\.\/assets\/gallery\/team-37\.png/);
-  assert.match(homepage, /\.\/assets\/gallery\/optimized\/team-47-1280\.webp 1280w/);
-  assert.match(homepage, /\.\/assets\/gallery\/team-47\.png/);
   assert.match(homepage, /<img\b[^>]*width="\d+"[^>]*height="\d+"/);
   assert.match(homepage, /<img\b[^>]*loading="lazy"/);
 
-  const grid = homepage.match(/<div class="archive-grid" data-archive-grid>([\s\S]*?)<\/div>/)?.[1] || "";
-  const galleryCount = (grid.match(/data-archive-open=/g) || []).length;
+  const grid = homepage.match(/<div class="archive-grid" data-archive-grid[^>]*>([\s\S]*?)<\/div>/)?.[1] || "";
+  const photoNumbers = [...grid.matchAll(/<img src="\.\/assets\/gallery\/team-(\d+)\.(?:jpe?g|png)"/g)]
+    .map((match) => Number(match[1]));
 
   await Promise.all(
-    Array.from({ length: galleryCount }, (_, index) =>
+    photoNumbers.map((number) =>
       access(
         new URL(
-          `assets/gallery/optimized/team-${String(index + 1).padStart(2, "0")}-1280.webp`,
+          `assets/gallery/optimized/team-${String(number).padStart(2, "0")}-1280.webp`,
           root,
         ),
       ),

@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   createArchiveSession,
   getSwipeDirection,
+  shouldOpenArchiveFromClick,
   wrapArchiveIndex,
 } from "../assets/js/archive-lightbox.js";
 
@@ -29,4 +30,14 @@ test("archive session retains the element that should receive restored focus", (
   const session = createArchiveSession(13, target);
   assert.equal(session.index, 13);
   assert.equal(session.restoreFocus, target);
+});
+
+test("lightbox opens only for a real click, never for a suppressed drag release", () => {
+  const makeTrigger = (dragSuppressClick) => ({
+    closest: () => ({ dataset: { dragSuppressClick } }),
+  });
+
+  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: false }, makeTrigger("false")), true);
+  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: false }, makeTrigger("true")), false);
+  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: true }, makeTrigger("false")), false);
 });

@@ -52,8 +52,26 @@ export function getCarouselCardPosition(cards, index) {
   return Math.max(0, targetOffset - firstOffset);
 }
 
-export function isCarouselDrag(startX, currentX, threshold = 8) {
-  const distance = Math.abs(Number(currentX) - Number(startX));
+export function getCarouselScrubberIndex(position, cards) {
+  if (!cards?.length) return 0;
+  const firstOffset = Number(cards[0]?.offsetLeft) || 0;
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+  cards.forEach((card, index) => {
+    const cardPosition = (Number(card?.offsetLeft) || firstOffset) - firstOffset;
+    const distance = Math.abs(cardPosition - (Number(position) || 0));
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
+    }
+  });
+  return closestIndex;
+}
+
+export function isCarouselDrag(startX, currentX, threshold = 8, startY = 0, currentY = startY) {
+  const deltaX = Number(currentX) - Number(startX);
+  const deltaY = Number(currentY) - Number(startY);
+  const distance = Math.hypot(deltaX, deltaY);
   const minimum = Math.max(0, Number(threshold) || 0);
   return Number.isFinite(distance) && distance >= minimum;
 }
@@ -63,6 +81,7 @@ export function shouldAdvanceCarousel({
   manuallyPaused,
   touchActive,
   pageScrolling = false,
+  scrubbing = false,
   inView,
   hidden,
 }) {
@@ -70,6 +89,7 @@ export function shouldAdvanceCarousel({
     && !manuallyPaused
     && !touchActive
     && !pageScrolling
+    && !scrubbing
     && inView
     && !hidden;
 }
@@ -87,6 +107,8 @@ export function initArchiveCarousel({
   const controls = archiveIndex?.querySelector?.(".archive-gallery-controls");
   const toggle = archiveIndex?.querySelector?.("[data-archive-carousel-toggle]");
   const latest = archiveIndex?.querySelector?.("[data-archive-carousel-latest]");
+  const scrubber = archiveIndex?.querySelector?.("[data-archive-carousel-scrubber]");
+  const scrubberOutput = archiveIndex?.querySelector?.("[data-archive-carousel-scrubber-output]");
 
   if (!archiveIndex || !viewport || !track || cards.length < 2) {
     return { cleanup() {} };
@@ -128,11 +150,18 @@ export function initArchiveCarousel({
   let latestTransitionTimer = 0;
   let latestSettleTimer = 0;
   let returningToLatest = false;
+  let scrubbing = false;
+  let scrubberIndex = -1;
   let dragPointerId = null;
   let dragStartX = 0;
+  let dragStartY = 0;
   let dragStartScrollLeft = 0;
   let dragging = false;
   let suppressClickUntil = 0;
+  let suppressClickTimer = 0;
+  let touchStartX = null;
+  let touchStartY = null;
+  let touchDragging = false;
 
   const DRAG_THRESHOLD_PX = 8;
   const CLICK_SUPPRESSION_MS = 420;
@@ -147,9 +176,24 @@ export function initArchiveCarousel({
     toggle.setAttribute("aria-label", manuallyPaused ? "继续匀速滚动" : "暂停匀速滚动");
   }
 
+  function syncScrubber(force = false) {
+    if (!scrubber || (scrubbing && !force)) return;
+    const index = getCarouselScrubberIndex(virtualPosition, cards);
+    if (!force && index === scrubberIndex) return;
+    scrubberIndex = index;
+    scrubber.max = String(cards.length - 1);
+    scrubber.value = String(index);
+    scrubber.style.setProperty("--archive-scrubber-progress", `${(index / Math.max(1, cards.length - 1)) * 100}%`);
+    const label = cards[index]?.querySelector?.(":scope > span")?.textContent?.trim()
+      || String(index + 1).padStart(3, "0");
+    scrubber.setAttribute("aria-valuetext", `第 ${label} 张，共 ${cards.length} 张`);
+    if (scrubberOutput) scrubberOutput.value = label;
+  }
+
   function setPosition(position) {
     virtualPosition = normalizeLoopPosition(position, loopWidth);
     viewport.scrollLeft = virtualPosition;
+    syncScrubber();
   }
 
   function measureLoop() {
@@ -188,6 +232,7 @@ export function initArchiveCarousel({
       manuallyPaused,
       touchActive,
       pageScrolling,
+      scrubbing,
       inView,
       hidden: root.hidden,
     });
@@ -227,19 +272,45 @@ export function initArchiveCarousel({
     nudge(event.key === "ArrowRight" ? 1 : -1);
   }
 
-  function handleTouchStart() {
+  function markDragSuppressed() {
+    suppressClickUntil = now() + CLICK_SUPPRESSION_MS;
+    archiveIndex.dataset.dragSuppressClick = "true";
+    if (suppressClickTimer) cancelSchedule(suppressClickTimer);
+    suppressClickTimer = schedule(() => {
+      suppressClickTimer = 0;
+      archiveIndex.dataset.dragSuppressClick = "false";
+    }, CLICK_SUPPRESSION_MS);
+  }
+
+  function handleTouchStart(event) {
     touchActive = true;
+    touchDragging = false;
+    touchStartX = event.touches?.[0]?.clientX ?? null;
+    touchStartY = event.touches?.[0]?.clientY ?? null;
+  }
+
+  function handleTouchMove(event) {
+    if (touchStartX == null || touchStartY == null) return;
+    const touch = event.touches?.[0];
+    if (!touchDragging && touch && isCarouselDrag(touchStartX, touch.clientX, DRAG_THRESHOLD_PX, touchStartY, touch.clientY)) {
+      touchDragging = true;
+      markDragSuppressed();
+    }
   }
 
   function handleTouchEnd() {
+    if (touchDragging) markDragSuppressed();
     touchActive = false;
+    touchDragging = false;
+    touchStartX = null;
+    touchStartY = null;
     setPosition(viewport.scrollLeft);
     lastTimestamp = null;
   }
 
   function finishPointerDrag(event, { cancelled = false } = {}) {
     if (event?.pointerId !== dragPointerId) return;
-    if (dragging && !cancelled) suppressClickUntil = now() + CLICK_SUPPRESSION_MS;
+    if (dragging && !cancelled) markDragSuppressed();
     dragging = false;
     dragPointerId = null;
     touchActive = false;
@@ -255,6 +326,7 @@ export function initArchiveCarousel({
     if (event.pointerType !== "mouse" || event.button !== 0 || dragPointerId != null) return;
     dragPointerId = event.pointerId;
     dragStartX = event.clientX;
+    dragStartY = event.clientY;
     dragStartScrollLeft = virtualPosition;
     dragging = false;
     touchActive = true;
@@ -264,8 +336,9 @@ export function initArchiveCarousel({
   function handlePointerMove(event) {
     if (event.pointerId !== dragPointerId) return;
     const deltaX = event.clientX - dragStartX;
-    if (!dragging && isCarouselDrag(dragStartX, event.clientX, DRAG_THRESHOLD_PX)) {
+    if (!dragging && isCarouselDrag(dragStartX, event.clientX, DRAG_THRESHOLD_PX, dragStartY, event.clientY)) {
       dragging = true;
+      markDragSuppressed();
       viewport.classList.add("is-dragging");
       viewport.setPointerCapture?.(event.pointerId);
     }
@@ -283,7 +356,7 @@ export function initArchiveCarousel({
   }
 
   function handleViewportClick(event) {
-    if (now() > suppressClickUntil) return;
+    if (!dragging && archiveIndex.dataset.dragSuppressClick !== "true" && now() > suppressClickUntil) return;
     event.preventDefault();
     event.stopImmediatePropagation();
   }
@@ -331,6 +404,31 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
+  function startScrubbing() {
+    scrubbing = true;
+    touchActive = true;
+    lastTimestamp = null;
+    archiveIndex.classList.add("is-scrubbing");
+  }
+
+  function updateFromScrubber(event) {
+    const index = resolveCarouselTargetIndex(event?.currentTarget?.value, cards.length);
+    scrubberIndex = index;
+    setPosition(getCarouselCardPosition(cards, index));
+    syncScrubber(true);
+    lastTimestamp = null;
+  }
+
+  function finishScrubbing() {
+    if (!scrubbing) return;
+    scrubbing = false;
+    touchActive = false;
+    archiveIndex.classList.remove("is-scrubbing");
+    setPosition(viewport.scrollLeft);
+    syncScrubber(true);
+    lastTimestamp = null;
+  }
+
   function clearLatestTransition() {
     if (latestTransitionTimer) cancelSchedule(latestTransitionTimer);
     if (latestSettleTimer) cancelSchedule(latestSettleTimer);
@@ -373,6 +471,7 @@ export function initArchiveCarousel({
     : null;
 
   measureLoop();
+  syncScrubber(true);
   updateInViewFromGeometry();
   updateToggle();
   observer?.observe(viewport);
@@ -387,10 +486,17 @@ export function initArchiveCarousel({
   viewport.addEventListener("click", handleViewportClick, true);
   viewport.addEventListener("dragstart", preventNativeDrag);
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
+  viewport.addEventListener("touchmove", handleTouchMove, { passive: true });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   latest?.addEventListener("click", jumpToLatest);
+  scrubber?.addEventListener("pointerdown", startScrubbing);
+  scrubber?.addEventListener("touchstart", startScrubbing, { passive: true });
+  scrubber?.addEventListener("input", updateFromScrubber);
+  scrubber?.addEventListener("change", finishScrubbing);
+  scrubber?.addEventListener("pointerup", finishScrubbing);
+  scrubber?.addEventListener("pointercancel", finishScrubbing);
   view?.addEventListener?.("resize", handleResize, { passive: true });
   view?.addEventListener?.("scroll", scheduleVisibilityCheck, { passive: true });
   view?.addEventListener?.("pointerup", handlePointerUp, { passive: true });
@@ -406,6 +512,7 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
       if (pageScrollTimer) cancelSchedule(pageScrollTimer);
+      if (suppressClickTimer) cancelSchedule(suppressClickTimer);
       clearLatestTransition();
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
@@ -417,10 +524,17 @@ export function initArchiveCarousel({
       viewport.removeEventListener("click", handleViewportClick, true);
       viewport.removeEventListener("dragstart", preventNativeDrag);
       viewport.removeEventListener("touchstart", handleTouchStart);
+      viewport.removeEventListener("touchmove", handleTouchMove);
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchEnd);
       toggle?.removeEventListener("click", toggleAutoPlay);
       latest?.removeEventListener("click", jumpToLatest);
+      scrubber?.removeEventListener("pointerdown", startScrubbing);
+      scrubber?.removeEventListener("touchstart", startScrubbing);
+      scrubber?.removeEventListener("input", updateFromScrubber);
+      scrubber?.removeEventListener("change", finishScrubbing);
+      scrubber?.removeEventListener("pointerup", finishScrubbing);
+      scrubber?.removeEventListener("pointercancel", finishScrubbing);
       view?.removeEventListener?.("resize", handleResize);
       view?.removeEventListener?.("scroll", scheduleVisibilityCheck);
       view?.removeEventListener?.("pointerup", handlePointerUp);
@@ -429,6 +543,8 @@ export function initArchiveCarousel({
       view?.removeEventListener?.("focus", recoverTransientPause);
       root.removeEventListener?.("visibilitychange", handleVisibility);
       delete archiveIndex.dataset.carouselState;
+      delete archiveIndex.dataset.dragSuppressClick;
+      archiveIndex.classList.remove("is-scrubbing");
       cloneHandlers.forEach(([clone, handler]) => {
         clone.removeEventListener("click", handler);
         clone.remove();
