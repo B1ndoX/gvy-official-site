@@ -1271,6 +1271,11 @@ html[data-motion-ready] :is(
   width: max-content;
   gap: clamp(12px, 1.35vw, 22px);
   padding-inline: var(--page-gutter);
+  transition: opacity 190ms ease;
+}
+
+.archive-grid-viewport.is-returning-latest .archive-grid {
+  opacity: 0.12;
 }
 
 .archive-grid button {
@@ -1325,6 +1330,37 @@ html[data-motion-ready] :is(
   background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.archive-gallery-controls > .archive-latest-button {
+  width: auto;
+  min-width: 98px;
+  padding: 0 14px;
+  grid-auto-flow: column;
+  gap: 7px;
+  border-radius: 999px;
+}
+
+.archive-latest-signal {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--route-blue);
+  box-shadow: 0 0 10px rgba(102, 188, 229, 0.58);
+}
+
+.archive-latest-new {
+  color: var(--route-blue);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+}
+
+.archive-latest-copy {
+  color: currentColor;
+  font-size: 0.73rem;
+  letter-spacing: 0.1em;
 }
 
 .archive-gallery-controls > button:hover {

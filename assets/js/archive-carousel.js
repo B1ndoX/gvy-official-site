@@ -31,6 +31,27 @@ export function advanceCarouselPosition(position, pixelsPerSecond, elapsed, loop
   return normalizeLoopPosition((Number(position) || 0) + distance, loopWidth);
 }
 
+export function resolveCarouselTargetIndex(value, length) {
+  if (!Number.isInteger(length) || length < 1) return 0;
+  const index = typeof value === "string" ? Number.parseInt(value, 10) : Number(value);
+  if (!Number.isInteger(index)) return 0;
+  return wrapCarouselIndex(index, length);
+}
+
+export function getLatestBatchStartIndex(cards) {
+  if (!cards?.length) return 0;
+  const index = cards.findIndex((card) => card?.hasAttribute?.("data-archive-latest-start"));
+  return index >= 0 ? index : 0;
+}
+
+export function getCarouselCardPosition(cards, index) {
+  if (!cards?.length) return 0;
+  const targetIndex = resolveCarouselTargetIndex(index, cards.length);
+  const firstOffset = Number(cards[0]?.offsetLeft) || 0;
+  const targetOffset = Number(cards[targetIndex]?.offsetLeft) || firstOffset;
+  return Math.max(0, targetOffset - firstOffset);
+}
+
 export function isCarouselDrag(startX, currentX, threshold = 8) {
   const distance = Math.abs(Number(currentX) - Number(startX));
   const minimum = Math.max(0, Number(threshold) || 0);
@@ -56,7 +77,7 @@ export function shouldAdvanceCarousel({
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
-  pixelsPerSecond = 34,
+  pixelsPerSecond = 48,
   Observer = view?.IntersectionObserver,
 } = {}) {
   const archiveIndex = root?.querySelector?.("[data-archive-index]");
@@ -65,6 +86,7 @@ export function initArchiveCarousel({
   const cards = Array.from(track?.querySelectorAll?.(":scope > [data-archive-open]") || []);
   const controls = archiveIndex?.querySelector?.(".archive-gallery-controls");
   const toggle = archiveIndex?.querySelector?.("[data-archive-carousel-toggle]");
+  const latest = archiveIndex?.querySelector?.("[data-archive-carousel-latest]");
 
   if (!archiveIndex || !viewport || !track || cards.length < 2) {
     return { cleanup() {} };
@@ -103,6 +125,9 @@ export function initArchiveCarousel({
   let touchActive = false;
   let pageScrolling = false;
   let pageScrollTimer = 0;
+  let latestTransitionTimer = 0;
+  let latestSettleTimer = 0;
+  let returningToLatest = false;
   let dragPointerId = null;
   let dragStartX = 0;
   let dragStartScrollLeft = 0;
@@ -111,6 +136,7 @@ export function initArchiveCarousel({
 
   const DRAG_THRESHOLD_PX = 8;
   const CLICK_SUPPRESSION_MS = 420;
+  const latestIndex = getLatestBatchStartIndex(cards);
   const now = () => view?.performance?.now?.() ?? Date.now();
 
   function updateToggle() {
@@ -157,7 +183,7 @@ export function initArchiveCarousel({
   }
 
   function canMove() {
-    return shouldAdvanceCarousel({
+    return !returningToLatest && shouldAdvanceCarousel({
       loopWidth,
       manuallyPaused,
       touchActive,
@@ -305,6 +331,40 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
+  function clearLatestTransition() {
+    if (latestTransitionTimer) cancelSchedule(latestTransitionTimer);
+    if (latestSettleTimer) cancelSchedule(latestSettleTimer);
+    latestTransitionTimer = 0;
+    latestSettleTimer = 0;
+    returningToLatest = false;
+    viewport.classList.remove("is-returning-latest");
+  }
+
+  function jumpToLatest(event) {
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+    clearLatestTransition();
+    recoverTransientPause();
+    returningToLatest = true;
+    viewport.classList.add("is-returning-latest");
+    const targetPosition = getCarouselCardPosition(cards, latestIndex);
+    const reducedMotion = view?.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    const move = () => {
+      latestTransitionTimer = 0;
+      setPosition(targetPosition);
+      lastTimestamp = null;
+      latestSettleTimer = schedule(() => {
+        latestSettleTimer = 0;
+        returningToLatest = false;
+        viewport.classList.remove("is-returning-latest");
+      }, reducedMotion ? 0 : 190);
+    };
+
+    if (reducedMotion) move();
+    else latestTransitionTimer = schedule(move, 150);
+  }
+
   const observer = Observer
     ? new Observer((entries) => {
         inView = entries.some((entry) => entry.isIntersecting);
@@ -330,6 +390,7 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
+  latest?.addEventListener("click", jumpToLatest);
   view?.addEventListener?.("resize", handleResize, { passive: true });
   view?.addEventListener?.("scroll", scheduleVisibilityCheck, { passive: true });
   view?.addEventListener?.("pointerup", handlePointerUp, { passive: true });
@@ -345,6 +406,7 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
       if (pageScrollTimer) cancelSchedule(pageScrollTimer);
+      clearLatestTransition();
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
       viewport.removeEventListener("pointerdown", handlePointerDown);
@@ -358,6 +420,7 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchEnd);
       toggle?.removeEventListener("click", toggleAutoPlay);
+      latest?.removeEventListener("click", jumpToLatest);
       view?.removeEventListener?.("resize", handleResize);
       view?.removeEventListener?.("scroll", scheduleVisibilityCheck);
       view?.removeEventListener?.("pointerup", handlePointerUp);

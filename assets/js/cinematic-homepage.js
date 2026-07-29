@@ -1,5 +1,5 @@
 import { initArchiveLightbox } from "./archive-lightbox.js";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260723-mobile-scroll-stability-v30";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260729-gallery-latest-preview-v54";
 import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260728-zoom-scale-v51";
 import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260722-breathing-media-v26";

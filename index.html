@@ -115,7 +115,7 @@
     <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192.png" />
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260728-zoom-scale-v51" />
+    <link rel="stylesheet" href="./assets/cinematic-homepage.css?v=20260729-gallery-latest-preview-v54" />
   </head>
 
   <body id="pageTop">
@@ -398,7 +398,7 @@
             <button type="button" data-archive-open="15"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-16-1280.webp 1280w, ./assets/gallery/optimized/team-16-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-16.jpg" alt="GVY 远航档案 16" loading="lazy" width="1920" height="1080" /></picture><span>016</span></button>
             <button type="button" data-archive-open="16"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-17-1280.webp 1280w, ./assets/gallery/optimized/team-17-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-17.jpg" alt="GVY 远航档案 17" loading="lazy" width="1920" height="1440" /></picture><span>017</span></button>
             <button type="button" data-archive-open="17"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-18-1280.webp 1280w, ./assets/gallery/optimized/team-18-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-18.jpg" alt="GVY 远航档案 18" loading="lazy" width="1920" height="1080" /></picture><span>018</span></button>
-            <button type="button" data-archive-open="18"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-19-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-19.png" alt="GVY 远航档案 19" loading="lazy" width="1860" height="1122" /></picture><span>019</span></button>
+            <button type="button" data-archive-open="18" data-archive-latest-start><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-19-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-19.png" alt="GVY 远航档案 19" loading="lazy" width="1860" height="1122" /></picture><span>019</span></button>
             <button type="button" data-archive-open="19"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-20-1280.webp 1280w, ./assets/gallery/optimized/team-20-1920.webp 1920w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-20.png" alt="GVY 远航档案 20" loading="lazy" width="2553" height="1439" /></picture><span>020</span></button>
             <button type="button" data-archive-open="20"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-21-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-21.png" alt="GVY 远航档案 21" loading="lazy" width="1826" height="998" /></picture><span>021</span></button>
             <button type="button" data-archive-open="21"><picture><source type="image/webp" srcset="./assets/gallery/optimized/team-22-1280.webp 1280w" sizes="(max-width: 760px) 33vw, 17vw" /><img src="./assets/gallery/team-22.png" alt="GVY 远航档案 22" loading="lazy" width="1902" height="997" /></picture><span>022</span></button>
@@ -430,6 +430,16 @@
               </div>
             </div>
             <div class="archive-gallery-controls" aria-label="团建相册滚动控制">
+              <button
+                class="archive-latest-button"
+                type="button"
+                data-archive-carousel-latest
+                aria-label="跳转到本次新增团建照片"
+              >
+                <span class="archive-latest-signal" aria-hidden="true"></span>
+                <span class="archive-latest-new" aria-hidden="true">NEW</span>
+                <span class="archive-latest-copy">最新</span>
+              </button>
               <button type="button" data-archive-carousel-toggle aria-label="暂停匀速滚动" aria-pressed="false">
                 <svg class="archive-pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7v10M15 7v10" /></svg>
                 <svg class="archive-play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7l8 5-8 5z" /></svg>
@@ -504,6 +514,6 @@
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
-    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260728-zoom-scale-v51"></script>
+    <script type="module" src="./assets/js/cinematic-homepage.js?v=20260729-gallery-latest-preview-v54"></script>
   </body>
 </html>
