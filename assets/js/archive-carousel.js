@@ -178,10 +178,13 @@ export function initArchiveCarousel({
   let touchStartY = null;
   let touchStartedAt = 0;
   let touchDragging = false;
+  let touchSettling = false;
+  let touchResumeTimer = 0;
 
   const DRAG_THRESHOLD_PX = 8;
   const HOLD_SUPPRESSION_MS = 240;
   const POINTER_CLICK_WINDOW_MS = 700;
+  const TOUCH_RESUME_IDLE_MS = 160;
   const now = () => view?.performance?.now?.() ?? Date.now();
 
   function updateToggle() {
@@ -342,6 +345,7 @@ export function initArchiveCarousel({
 
   function handleTouchStart(event) {
     clearPointerClickPermission();
+    cancelTouchResume();
     touchActive = true;
     touchDragging = false;
     touchStartX = event.touches?.[0]?.clientX ?? null;
@@ -357,6 +361,29 @@ export function initArchiveCarousel({
     }
   }
 
+  function cancelTouchResume() {
+    if (touchResumeTimer) cancelSchedule(touchResumeTimer);
+    touchResumeTimer = 0;
+    touchSettling = false;
+  }
+
+  function finishTouchSettle() {
+    touchResumeTimer = 0;
+    touchSettling = false;
+    setPosition(viewport.scrollLeft);
+    touchActive = false;
+    lastTimestamp = null;
+  }
+
+  function scheduleTouchResume() {
+    if (touchResumeTimer) cancelSchedule(touchResumeTimer);
+    touchResumeTimer = schedule(finishTouchSettle, TOUCH_RESUME_IDLE_MS);
+  }
+
+  function handleViewportScroll() {
+    if (touchSettling) scheduleTouchResume();
+  }
+
   function finishTouch(event, { cancelled = false } = {}) {
     const touch = event?.changedTouches?.[0];
     const endedAsDrag = touchDragging || (touchStartX != null && touchStartY != null && touch
@@ -369,12 +396,13 @@ export function initArchiveCarousel({
       holdThreshold: HOLD_SUPPRESSION_MS,
     })) allowNextPointerClick();
     else clearPointerClickPermission();
-    touchActive = false;
     touchDragging = false;
     touchStartX = null;
     touchStartY = null;
     touchStartedAt = 0;
-    setPosition(viewport.scrollLeft);
+    touchActive = true;
+    touchSettling = true;
+    scheduleTouchResume();
     lastTimestamp = null;
   }
 
@@ -474,8 +502,12 @@ export function initArchiveCarousel({
 
   function handleVisibility() {
     clearPointerClickPermission();
+    cancelTouchResume();
     if (!root.hidden) {
       touchActive = false;
+      touchDragging = false;
+      touchStartX = null;
+      touchStartY = null;
       dragging = false;
       dragPointerId = null;
       dragStartedAt = 0;
@@ -488,7 +520,11 @@ export function initArchiveCarousel({
 
   function recoverTransientPause() {
     clearPointerClickPermission();
+    cancelTouchResume();
     touchActive = false;
+    touchDragging = false;
+    touchStartX = null;
+    touchStartY = null;
     dragging = false;
     dragPointerId = null;
     dragStartedAt = 0;
@@ -665,6 +701,7 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchmove", handleTouchMove, { passive: true });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchCancel, { passive: true });
+  viewport.addEventListener("scroll", handleViewportScroll, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   pagination?.addEventListener("mouseenter", handlePaginationMouseEnter);
   pagination?.addEventListener("mouseleave", handlePaginationMouseLeave);
@@ -688,6 +725,7 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
       if (pageScrollTimer) cancelSchedule(pageScrollTimer);
+      if (touchResumeTimer) cancelSchedule(touchResumeTimer);
       if (navigationClickResetTimer) cancelSchedule(navigationClickResetTimer);
       clearNavigationTransition();
       observer?.disconnect();
@@ -703,6 +741,7 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchmove", handleTouchMove);
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchCancel);
+      viewport.removeEventListener("scroll", handleViewportScroll);
       toggle?.removeEventListener("click", toggleAutoPlay);
       pagination?.removeEventListener("mouseenter", handlePaginationMouseEnter);
       pagination?.removeEventListener("mouseleave", handlePaginationMouseLeave);
