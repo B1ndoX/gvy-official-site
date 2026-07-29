@@ -70,6 +70,16 @@ export function isCarouselDrag(startX, currentX, threshold = 8, startY = 0, curr
   return Number.isFinite(distance) && distance >= minimum;
 }
 
+export function getCarouselTouchIntent(startX, startY, currentX, currentY, threshold = 8) {
+  const deltaX = Math.abs(Number(currentX) - Number(startX));
+  const deltaY = Math.abs(Number(currentY) - Number(startY));
+  const minimum = Math.max(0, Number(threshold) || 0);
+  if (!Number.isFinite(deltaX) || !Number.isFinite(deltaY) || Math.max(deltaX, deltaY) < minimum) {
+    return "pending";
+  }
+  return deltaX > deltaY ? "horizontal" : "vertical";
+}
+
 export function shouldAllowCarouselClick({ dragged = false, startedAt = 0, endedAt = 0, holdThreshold = 240 } = {}) {
   const duration = Math.max(0, Number(endedAt) - Number(startedAt));
   return !dragged && duration < Math.max(0, Number(holdThreshold) || 0);
@@ -176,15 +186,16 @@ export function initArchiveCarousel({
   let allowPointerClickUntil = 0;
   let touchStartX = null;
   let touchStartY = null;
+  let touchStartScrollLeft = 0;
+  let touchIntent = "pending";
   let touchStartedAt = 0;
   let touchDragging = false;
-  let touchSettling = false;
   let touchResumeTimer = 0;
 
   const DRAG_THRESHOLD_PX = 8;
   const HOLD_SUPPRESSION_MS = 240;
   const POINTER_CLICK_WINDOW_MS = 700;
-  const TOUCH_RESUME_IDLE_MS = 160;
+  const TOUCH_RESUME_DELAY_MS = 160;
   const now = () => view?.performance?.now?.() ?? Date.now();
 
   function updateToggle() {
@@ -348,40 +359,49 @@ export function initArchiveCarousel({
     cancelTouchResume();
     touchActive = true;
     touchDragging = false;
+    touchIntent = "pending";
     touchStartX = event.touches?.[0]?.clientX ?? null;
     touchStartY = event.touches?.[0]?.clientY ?? null;
+    touchStartScrollLeft = virtualPosition;
     touchStartedAt = now();
+    lastTimestamp = null;
   }
 
   function handleTouchMove(event) {
     if (touchStartX == null || touchStartY == null) return;
+    if (event.touches?.length !== 1) return;
     const touch = event.touches?.[0];
-    if (!touchDragging && touch && isCarouselDrag(touchStartX, touch.clientX, DRAG_THRESHOLD_PX, touchStartY, touch.clientY)) {
-      touchDragging = true;
+    if (!touch) return;
+    if (touchIntent === "pending") {
+      touchIntent = getCarouselTouchIntent(
+        touchStartX,
+        touchStartY,
+        touch.clientX,
+        touch.clientY,
+        DRAG_THRESHOLD_PX,
+      );
     }
+    if (touchIntent !== "horizontal") return;
+    touchDragging = true;
+    viewport.classList.add("is-dragging");
+    if (event.cancelable) event.preventDefault();
+    setPosition(touchStartScrollLeft - (touch.clientX - touchStartX));
   }
 
   function cancelTouchResume() {
     if (touchResumeTimer) cancelSchedule(touchResumeTimer);
     touchResumeTimer = 0;
-    touchSettling = false;
   }
 
-  function finishTouchSettle() {
+  function finishTouchPause() {
     touchResumeTimer = 0;
-    touchSettling = false;
-    setPosition(viewport.scrollLeft);
     touchActive = false;
     lastTimestamp = null;
   }
 
   function scheduleTouchResume() {
     if (touchResumeTimer) cancelSchedule(touchResumeTimer);
-    touchResumeTimer = schedule(finishTouchSettle, TOUCH_RESUME_IDLE_MS);
-  }
-
-  function handleViewportScroll() {
-    if (touchSettling) scheduleTouchResume();
+    touchResumeTimer = schedule(finishTouchPause, TOUCH_RESUME_DELAY_MS);
   }
 
   function finishTouch(event, { cancelled = false } = {}) {
@@ -397,11 +417,13 @@ export function initArchiveCarousel({
     })) allowNextPointerClick();
     else clearPointerClickPermission();
     touchDragging = false;
+    touchIntent = "pending";
     touchStartX = null;
     touchStartY = null;
+    touchStartScrollLeft = 0;
     touchStartedAt = 0;
     touchActive = true;
-    touchSettling = true;
+    viewport.classList.remove("is-dragging");
     scheduleTouchResume();
     lastTimestamp = null;
   }
@@ -506,8 +528,10 @@ export function initArchiveCarousel({
     if (!root.hidden) {
       touchActive = false;
       touchDragging = false;
+      touchIntent = "pending";
       touchStartX = null;
       touchStartY = null;
+      touchStartScrollLeft = 0;
       dragging = false;
       dragPointerId = null;
       dragStartedAt = 0;
@@ -523,8 +547,10 @@ export function initArchiveCarousel({
     cancelTouchResume();
     touchActive = false;
     touchDragging = false;
+    touchIntent = "pending";
     touchStartX = null;
     touchStartY = null;
+    touchStartScrollLeft = 0;
     dragging = false;
     dragPointerId = null;
     dragStartedAt = 0;
@@ -698,10 +724,9 @@ export function initArchiveCarousel({
   viewport.addEventListener("click", handleViewportClick, true);
   viewport.addEventListener("dragstart", preventNativeDrag);
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
-  viewport.addEventListener("touchmove", handleTouchMove, { passive: true });
+  viewport.addEventListener("touchmove", handleTouchMove, { passive: false });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchCancel, { passive: true });
-  viewport.addEventListener("scroll", handleViewportScroll, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   pagination?.addEventListener("mouseenter", handlePaginationMouseEnter);
   pagination?.addEventListener("mouseleave", handlePaginationMouseLeave);
@@ -741,7 +766,6 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchmove", handleTouchMove);
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchCancel);
-      viewport.removeEventListener("scroll", handleViewportScroll);
       toggle?.removeEventListener("click", toggleAutoPlay);
       pagination?.removeEventListener("mouseenter", handlePaginationMouseEnter);
       pagination?.removeEventListener("mouseleave", handlePaginationMouseLeave);

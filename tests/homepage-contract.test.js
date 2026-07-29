@@ -386,19 +386,17 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /updateInViewFromGeometry/);
   assert.match(archiveCarousel, /pageScrolling/);
   assert.doesNotMatch(archiveCarousel, /pageTouchActive/);
-  const finishTouch = archiveCarousel.slice(
-    archiveCarousel.indexOf("function finishTouch(event"),
-    archiveCarousel.indexOf("function handleTouchEnd"),
+  const touchMove = archiveCarousel.slice(
+    archiveCarousel.indexOf("function handleTouchMove"),
+    archiveCarousel.indexOf("function cancelTouchResume"),
   );
-  const finishTouchSettle = archiveCarousel.slice(
-    archiveCarousel.indexOf("function finishTouchSettle"),
-    archiveCarousel.indexOf("function scheduleTouchResume"),
-  );
-  assert.match(finishTouch, /touchSettling\s*=\s*true[\s\S]*scheduleTouchResume/);
-  assert.doesNotMatch(finishTouch, /touchActive\s*=\s*false|setPosition\(viewport\.scrollLeft\)/);
-  assert.match(finishTouchSettle, /setPosition\(viewport\.scrollLeft\)[\s\S]*touchActive\s*=\s*false/);
-  assert.match(archiveCarousel, /TOUCH_RESUME_IDLE_MS\s*=\s*160/);
-  assert.match(archiveCarousel, /addEventListener\("scroll", handleViewportScroll/);
+  assert.match(touchMove, /getCarouselTouchIntent/);
+  assert.match(touchMove, /touchIntent !== "horizontal"/);
+  assert.match(touchMove, /preventDefault/);
+  assert.match(touchMove, /setPosition\(touchStartScrollLeft - \(touch\.clientX - touchStartX\)\)/);
+  assert.match(archiveCarousel, /TOUCH_RESUME_DELAY_MS\s*=\s*160/);
+  assert.match(archiveCarousel, /addEventListener\("touchmove", handleTouchMove, \{ passive: false \}\)/);
+  assert.doesNotMatch(archiveCarousel, /touchSettling|handleViewportScroll/);
   assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
   assert.match(archiveCarousel, /let manuallyPaused\s*=\s*false/);
   assert.match(archiveCarousel, /recoverTransientPause/);
@@ -425,7 +423,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-touch-drag-v66/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-touch-control-v67/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
@@ -452,8 +450,9 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-apple-behavior-v64/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-touch-drag-v66/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-touch-control-v67/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-touch-control-v67/);
+  assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {

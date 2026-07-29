@@ -7,6 +7,7 @@ import {
   getCarouselNavigationIndex,
   getCarouselNavigationRevealPosition,
   getCarouselNavigationTargetIndexes,
+  getCarouselTouchIntent,
   isCarouselDrag,
   normalizeLoopPosition,
   resolveCarouselTargetIndex,
@@ -21,6 +22,13 @@ test("carousel distinguishes a click from an intentional drag", () => {
   assert.equal(isCarouselDrag(100, 108, 8), true);
   assert.equal(isCarouselDrag(100, 82, 8), true);
   assert.equal(isCarouselDrag(100, 104, 8, 100, 107), true);
+});
+
+test("touch gestures lock to one axis after the movement threshold", () => {
+  assert.equal(getCarouselTouchIntent(100, 100, 106, 103, 8), "pending");
+  assert.equal(getCarouselTouchIntent(100, 100, 84, 105, 8), "horizontal");
+  assert.equal(getCarouselTouchIntent(100, 100, 105, 84, 8), "vertical");
+  assert.equal(getCarouselTouchIntent(100, 100, 92, 92, 8), "vertical");
 });
 
 test("only a short stationary press may open a gallery photo", () => {
