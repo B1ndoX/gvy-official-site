@@ -21,16 +21,20 @@ export function shouldOpenArchiveFromClick(event) {
   return !event?.defaultPrevented;
 }
 
-function getArchiveItems(root) {
+export function getArchiveItem(button, index = 0) {
+  const image = button?.querySelector?.("img");
+  const webpSource = button?.querySelector?.('source[type="image/webp"]');
+  return {
+    index,
+    src: image?.getAttribute?.("src") || "",
+    srcset: webpSource?.getAttribute?.("srcset") || "",
+    alt: image?.getAttribute?.("alt") || "GVY 团建回忆",
+  };
+}
+
+export function getArchiveItems(root) {
   return Array.from(root?.querySelectorAll?.("[data-archive-grid] [data-archive-open]") || []).map(
-    (button, index) => {
-      const image = button.querySelector?.("img");
-      return {
-        index,
-        src: image?.getAttribute?.("src") || "",
-        alt: image?.getAttribute?.("alt") || "GVY 团建回忆",
-      };
-    },
+    (button, index) => getArchiveItem(button, index),
   );
 }
 
@@ -53,17 +57,37 @@ export function initArchiveLightbox({ root = globalThis.document } = {}) {
   let touchStartX = null;
 
   dialogImage.removeAttribute?.("src");
+  dialogImage.removeAttribute?.("srcset");
+  dialogImage.removeAttribute?.("sizes");
+
+  const onImageLoad = () => {
+    dialog.dataset.imageState = "ready";
+  };
+  const onImageError = () => {
+    dialog.dataset.imageState = "error";
+  };
 
   const render = (nextIndex) => {
     session.index = wrapArchiveIndex(nextIndex, items.length);
     const item = items[session.index];
-    dialogImage.src = item.src;
+    dialog.dataset.imageState = "loading";
+    dialogImage.removeAttribute?.("src");
+    dialogImage.removeAttribute?.("srcset");
+    dialogImage.removeAttribute?.("sizes");
     dialogImage.alt = item.alt;
+    if (item.srcset) {
+      dialogImage.srcset = item.srcset;
+      dialogImage.sizes = "(max-width: 760px) 100vw, 85vw";
+    }
+    dialogImage.src = item.src;
   };
 
   const close = () => {
     if (dialog.open) dialog.close();
     dialogImage.removeAttribute?.("src");
+    dialogImage.removeAttribute?.("srcset");
+    dialogImage.removeAttribute?.("sizes");
+    delete dialog.dataset.imageState;
     if (body?.style) body.style.overflow = previousBodyOverflow;
     session.restoreFocus?.focus?.({ preventScroll: true });
     session.restoreFocus = null;
@@ -125,6 +149,8 @@ export function initArchiveLightbox({ root = globalThis.document } = {}) {
   dialog.addEventListener("cancel", onCancel);
   dialog.addEventListener("touchstart", onTouchStart, { passive: true });
   dialog.addEventListener("touchend", onTouchEnd, { passive: true });
+  dialogImage.addEventListener("load", onImageLoad);
+  dialogImage.addEventListener("error", onImageError);
   root.addEventListener?.("keydown", onKeyDown);
 
   return {
@@ -139,6 +165,8 @@ export function initArchiveLightbox({ root = globalThis.document } = {}) {
       dialog.removeEventListener("cancel", onCancel);
       dialog.removeEventListener("touchstart", onTouchStart);
       dialog.removeEventListener("touchend", onTouchEnd);
+      dialogImage.removeEventListener("load", onImageLoad);
+      dialogImage.removeEventListener("error", onImageError);
       root.removeEventListener?.("keydown", onKeyDown);
       if (dialog.open) close();
     },

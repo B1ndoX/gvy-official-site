@@ -1,4 +1,4 @@
-import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-carousel-click-gate-v60";
+import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-lightbox-webp-v61";
 import { initArchiveCarousel } from "./archive-carousel.js?v=20260729-carousel-click-gate-v60";
 import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260728-zoom-scale-v51";
 import { initDeferredMedia } from "./deferred-media.js";

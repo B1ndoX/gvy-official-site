@@ -3,10 +3,36 @@ import test from "node:test";
 
 import {
   createArchiveSession,
+  getArchiveItem,
   getSwipeDirection,
   shouldOpenArchiveFromClick,
   wrapArchiveIndex,
 } from "../assets/js/archive-lightbox.js";
+
+test("lightbox uses optimized WebP candidates with the original as fallback", () => {
+  const attributes = {
+    img: {
+      src: "./assets/gallery/team-48.png",
+      alt: "GVY 团建回忆",
+    },
+    source: {
+      srcset: "./assets/gallery/optimized/team-48-1280.webp 1280w, ./assets/gallery/optimized/team-48-1920.webp 1920w",
+    },
+  };
+  const button = {
+    querySelector(selector) {
+      const values = selector === "img" ? attributes.img : attributes.source;
+      return { getAttribute: (name) => values[name] || null };
+    },
+  };
+
+  assert.deepEqual(getArchiveItem(button, 37), {
+    index: 37,
+    src: "./assets/gallery/team-48.png",
+    srcset: "./assets/gallery/optimized/team-48-1280.webp 1280w, ./assets/gallery/optimized/team-48-1920.webp 1920w",
+    alt: "GVY 团建回忆",
+  });
+});
 
 test("archive indexes wrap in both directions", () => {
   assert.equal(wrapArchiveIndex(18, 18), 0);

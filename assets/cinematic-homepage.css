@@ -1603,6 +1603,7 @@ html[data-motion-ready] :is(
 }
 
 .archive-dialog figure {
+  position: relative;
   display: flex;
   width: 100%;
   height: 100%;
@@ -1618,6 +1619,27 @@ html[data-motion-ready] :is(
   min-height: 0;
   max-height: calc(100% - 55px);
   object-fit: contain;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+
+.archive-dialog[data-image-state="ready"] figure img {
+  opacity: 1;
+}
+
+.archive-dialog[data-image-state="loading"] figure::before {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(194, 214, 225, 0.24);
+  border-top-color: var(--route-blue);
+  border-radius: 50%;
+  content: "";
+  animation: archive-image-loading 760ms linear infinite;
+}
+
+@keyframes archive-image-loading {
+  to { transform: rotate(360deg); }
 }
 
 .archive-dialog figcaption {

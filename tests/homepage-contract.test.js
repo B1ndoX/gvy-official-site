@@ -360,7 +360,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-carousel-click-gate-v60/);
+  assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-carousel-click-gate-v60/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
@@ -388,8 +388,8 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-no-numbers-v59/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-startup-interaction-v60/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-lightbox-webp-v61/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-lightbox-webp-v61/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {
