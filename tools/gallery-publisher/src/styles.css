@@ -145,10 +145,11 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .spinner { width: 17px; height: 17px; display: inline-block; flex: 0 0 auto; border: 2px solid rgba(78, 178, 244, 0.25); border-top-color: var(--blue-soft); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
 .modal-backdrop { position: fixed; z-index: 50; inset: 0; display: grid; place-items: center; padding: 24px; background: rgba(0, 5, 12, 0.74); backdrop-filter: blur(5px); }
-.publish-modal, .help-modal, .gallery-manager-modal { position: relative; width: min(560px, 100%); border: 1px solid rgba(163, 184, 196, 0.44); border-radius: 10px; background: linear-gradient(145deg, #091522, #06101a); box-shadow: 0 30px 100px rgba(0,0,0,0.62); }
+.publish-modal, .help-modal, .gallery-manager-modal, .duplicate-review-modal { position: relative; width: min(560px, 100%); border: 1px solid rgba(163, 184, 196, 0.44); border-radius: 10px; background: linear-gradient(145deg, #091522, #06101a); box-shadow: 0 30px 100px rgba(0,0,0,0.62); }
 .publish-modal { padding: 24px 30px 18px; }
 .help-modal { padding: 28px 30px; }
 .gallery-manager-modal { width: min(1120px, 100%); max-height: calc(100vh - 48px); display: flex; flex-direction: column; padding: 24px 28px 18px; }
+.duplicate-review-modal { width: min(980px, 100%); max-height: calc(100vh - 48px); display: flex; flex-direction: column; padding: 24px 28px 18px; }
 .modal-close { position: absolute; top: 18px; right: 18px; width: 38px; height: 38px; display: grid; place-items: center; padding: 0; border: 0; color: #d4dde2; background: transparent; cursor: pointer; }
 .modal-title { display: flex; align-items: flex-start; gap: 14px; padding: 0 45px 18px 0; border-bottom: 1px solid var(--line); }
 .modal-title h2 { margin: 0; font-size: 21px; font-weight: 570; letter-spacing: 0.08em; }
@@ -166,6 +167,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .modal-actions button { height: 48px; border: 1px solid rgba(169, 188, 199, 0.5); border-radius: 8px; color: #c8d2d7; background: transparent; cursor: pointer; }
 .modal-actions .confirm-publish { border-color: var(--amber); color: #f8b43c; background: rgba(112, 65, 5, 0.26); }
 .modal-actions .confirm-delete-preview { display: flex; align-items: center; justify-content: center; gap: 8px; border-color: rgba(255, 114, 111, 0.66); color: #ffaaa6; background: rgba(91, 22, 25, 0.24); }
+.modal-actions .confirm-duplicate-upload { display: flex; align-items: center; justify-content: center; gap: 8px; border-color: rgba(244, 165, 28, 0.72); color: #f8b43c; background: rgba(112, 65, 5, 0.26); }
 .modal-actions button:disabled { opacity: 0.4; cursor: not-allowed; }
 .modal-security { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 13px 0 0; color: #75838c; font-size: 10px; }
 .help-modal ul { display: grid; gap: 14px; margin: 22px 0; padding-left: 22px; color: #a4b0b7; font-size: 13px; line-height: 1.55; }
@@ -198,6 +200,16 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .delete-confirmation dl > div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 10px; }
 .delete-confirmation dt { color: #c9d3d8; font-size: 12px; }
 .delete-confirmation dd { margin: 0; color: #9eabb3; font: 11px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace; overflow-wrap: anywhere; }
+.duplicate-review-list { min-height: 220px; display: grid; gap: 12px; margin-top: 14px; overflow-y: auto; }
+.duplicate-comparison { padding: 12px; border: 1px solid rgba(244, 165, 28, 0.32); background: rgba(5, 14, 23, 0.78); }
+.duplicate-confidence { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; color: #97a5ae; font-size: 11px; }
+.duplicate-confidence strong { padding: 5px 8px; border: 1px solid rgba(244, 165, 28, 0.45); border-radius: 6px; color: #f6b544; background: rgba(112, 65, 5, 0.18); font-size: 11px; font-weight: 550; }
+.duplicate-confidence span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.duplicate-image-pair { display: grid; grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr); align-items: center; gap: 10px; }
+.duplicate-image-pair figure { min-width: 0; margin: 0; border: 1px solid var(--line); background: #020811; }
+.duplicate-image-pair img { width: 100%; height: clamp(190px, 27vh, 290px); display: block; object-fit: contain; background: #02070d; }
+.duplicate-image-pair figcaption { min-height: 40px; display: flex; align-items: center; padding: 7px 10px; color: #9ca9b2; font-size: 10px; line-height: 1.4; overflow-wrap: anywhere; }
+.duplicate-versus { color: #63737d; text-align: center; font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.08em; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes pulse-border { 50% { border-color: #79cbff; } }
@@ -248,6 +260,10 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   .gallery-manager-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .gallery-manager-toolbar { flex-wrap: wrap; padding: 8px 0; }
   .gallery-manager-toolbar span { width: 100%; }
+  .duplicate-review-modal { max-height: calc(100vh - 20px); padding: 20px 14px 14px; }
+  .duplicate-image-pair { grid-template-columns: 1fr; }
+  .duplicate-versus { padding: 2px 0; }
+  .duplicate-image-pair img { height: min(52vw, 240px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

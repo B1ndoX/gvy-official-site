@@ -82,6 +82,85 @@ export function visualFingerprintDistance(left, right) {
   return total / left.length;
 }
 
+function luminanceSamples(fingerprint) {
+  if (!Buffer.isBuffer(fingerprint) || fingerprint.length !== 32 * 32 * 3) return null;
+  const samples = new Float64Array(32 * 32);
+  for (let source = 0, target = 0; source < fingerprint.length; source += 3, target += 1) {
+    samples[target] = (0.2126 * fingerprint[source])
+      + (0.7152 * fingerprint[source + 1])
+      + (0.0722 * fingerprint[source + 2]);
+  }
+  return samples;
+}
+
+export function visualFingerprintMetrics(left, right) {
+  const pixelDistance = visualFingerprintDistance(left, right);
+  const leftLuminance = luminanceSamples(left);
+  const rightLuminance = luminanceSamples(right);
+  if (!leftLuminance || !rightLuminance) {
+    return {
+      pixelDistance,
+      normalizedLuminanceDistance: Number.POSITIVE_INFINITY,
+      gradientDistance: Number.POSITIVE_INFINITY,
+    };
+  }
+
+  const sampleCount = leftLuminance.length;
+  const leftMean = leftLuminance.reduce((total, value) => total + value, 0) / sampleCount;
+  const rightMean = rightLuminance.reduce((total, value) => total + value, 0) / sampleCount;
+  const leftDeviation = Math.sqrt(
+    leftLuminance.reduce((total, value) => total + ((value - leftMean) ** 2), 0) / sampleCount,
+  );
+  const rightDeviation = Math.sqrt(
+    rightLuminance.reduce((total, value) => total + ((value - rightMean) ** 2), 0) / sampleCount,
+  );
+  const safeLeftDeviation = leftDeviation || 1;
+  const safeRightDeviation = rightDeviation || 1;
+  let normalizedDifference = 0;
+  let gradientDifference = 0;
+  let gradientCount = 0;
+
+  for (let index = 0; index < sampleCount; index += 1) {
+    const leftNormalized = (leftLuminance[index] - leftMean) / safeLeftDeviation;
+    const rightNormalized = (rightLuminance[index] - rightMean) / safeRightDeviation;
+    normalizedDifference += Math.abs(leftNormalized - rightNormalized);
+  }
+  for (let row = 0; row < 32; row += 1) {
+    for (let column = 0; column < 31; column += 1) {
+      const index = (row * 32) + column;
+      const leftRises = leftLuminance[index + 1] > leftLuminance[index];
+      const rightRises = rightLuminance[index + 1] > rightLuminance[index];
+      if (leftRises !== rightRises) gradientDifference += 1;
+      gradientCount += 1;
+    }
+  }
+  for (let row = 0; row < 31; row += 1) {
+    for (let column = 0; column < 32; column += 1) {
+      const index = (row * 32) + column;
+      const leftRises = leftLuminance[index + 32] > leftLuminance[index];
+      const rightRises = rightLuminance[index + 32] > rightLuminance[index];
+      if (leftRises !== rightRises) gradientDifference += 1;
+      gradientCount += 1;
+    }
+  }
+
+  return {
+    pixelDistance,
+    normalizedLuminanceDistance: normalizedDifference / sampleCount,
+    gradientDistance: gradientDifference / gradientCount,
+    minimumDeviation: Math.min(leftDeviation, rightDeviation),
+  };
+}
+
+export function isVisualDuplicate(left, right) {
+  const metrics = visualFingerprintMetrics(left, right);
+  const sameRenderedPixels = metrics.pixelDistance <= 8;
+  const samePictureStructure = metrics.minimumDeviation >= 4
+    && metrics.normalizedLuminanceDistance <= 0.12
+    && metrics.gradientDistance <= 0.16;
+  return sameRenderedPixels || samePictureStructure;
+}
+
 export function normalizeUploadExtension(filename, mimeType = "") {
   const extension = extname(filename || "").toLowerCase();
   if (!SUPPORTED_EXTENSIONS.has(extension)) throw new Error(`不支持的照片格式：${extension || mimeType || "未知"}`);

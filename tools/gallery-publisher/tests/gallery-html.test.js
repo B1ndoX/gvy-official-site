@@ -112,3 +112,23 @@ test("new photos never reuse a deleted stable number", () => {
   assert.equal(afterAdd.count, current.count);
   assert.equal(afterAdd.maxPhotoNumber, current.maxPhotoNumber + 1);
 });
+
+test("four photos plus three uploads become seven, then deleting visible four and five leaves visible one through five", () => {
+  const current = parseGalleryState(homepage);
+  const fourPhotoHtml = removeGalleryItems(
+    homepage,
+    current.items.slice(4).map((item) => item.number),
+  );
+  const fourPhotos = parseGalleryState(fourPhotoHtml);
+  const sevenPhotoHtml = appendGalleryBatch(
+    fourPhotoHtml,
+    makeBatch(fourPhotos.maxPhotoNumber + 1, 3),
+  );
+  const sevenPhotos = parseGalleryState(sevenPhotoHtml);
+  const deletedAssetNumbers = [sevenPhotos.items[3].number, sevenPhotos.items[4].number];
+  const fivePhotos = parseGalleryState(removeGalleryItems(sevenPhotoHtml, deletedAssetNumbers));
+
+  assert.deepEqual(fourPhotos.items.map((item) => item.displayNumber), [1, 2, 3, 4]);
+  assert.deepEqual(sevenPhotos.items.map((item) => item.displayNumber), [1, 2, 3, 4, 5, 6, 7]);
+  assert.deepEqual(fivePhotos.items.map((item) => item.displayNumber), [1, 2, 3, 4, 5]);
+});

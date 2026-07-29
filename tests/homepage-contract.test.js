@@ -384,7 +384,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-scrubber-v55/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-card-clean-v56/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-scrubber-v55/);
 });
 
@@ -420,7 +420,7 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
 });
 
-test("gallery exposes stable photo numbers with sequential lightbox indexes before seamless cloning", () => {
+test("gallery keeps upload order with sequential lightbox indexes and no visible card numbers", () => {
   const grid = homepage.match(/<div class="archive-grid" data-archive-grid[^>]*>([\s\S]*?)<\/div>/)?.[1] || "";
   const entries = [...grid.matchAll(/data-archive-open="(\d+)"[\s\S]*?<img src="\.\/assets\/gallery\/team-(\d+)\.(?:jpe?g|png)"/g)]
     .map((match) => ({ openIndex: Number(match[1]), number: Number(match[2]) }));
@@ -431,6 +431,7 @@ test("gallery exposes stable photo numbers with sequential lightbox indexes befo
     assert.equal(entry.openIndex, index);
     if (index > 0) assert.ok(entry.number > entries[index - 1].number);
   });
+  assert.match(cinematicCss, /\.archive-grid button > span\s*\{\s*display:\s*none;/);
 });
 
 test("member brawl popup preserves the published runtime without a nested frame shell", async () => {

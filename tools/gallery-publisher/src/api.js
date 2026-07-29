@@ -2,7 +2,12 @@ let sessionToken = "";
 
 async function parseResponse(response) {
   const payload = await response.json().catch(() => ({}));
-  if (!response.ok) throw new Error(payload.error || `请求失败（${response.status}）`);
+  if (!response.ok) {
+    const error = new Error(payload.error || `请求失败（${response.status}）`);
+    error.code = payload.code;
+    error.duplicates = payload.duplicates;
+    throw error;
+  }
   if (payload.token) sessionToken = payload.token;
   return payload;
 }
@@ -11,12 +16,15 @@ export async function fetchStatus() {
   return parseResponse(await fetch("/api/status", { cache: "no-store" }));
 }
 
-export async function createPreview(files) {
+export async function createPreview(files, { allowDuplicates = false } = {}) {
   const formData = new FormData();
   files.forEach((entry) => formData.append("photos", entry.file, entry.file.name));
   return parseResponse(await fetch("/api/import", {
     method: "POST",
-    headers: { "X-GVY-Publisher-Token": sessionToken },
+    headers: {
+      "X-GVY-Publisher-Token": sessionToken,
+      "X-GVY-Allow-Duplicates": allowDuplicates ? "1" : "0",
+    },
     body: formData,
   }));
 }

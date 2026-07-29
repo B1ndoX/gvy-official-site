@@ -26,7 +26,7 @@ export function DropZone({ onFiles, disabled }) {
       />
       <Icon name="upload" size={48} />
       <h2>拖入本次团建照片</h2>
-      <p>支持 JPG、PNG、HEIC · 单批最多 100 张</p>
+      <p>支持 JPG、PNG、HEIC · 单批最多 100 张 · 文件与画面均在本机去重</p>
       <button type="button" onClick={() => inputRef.current?.click()} disabled={disabled}>选择照片</button>
     </div>
   );

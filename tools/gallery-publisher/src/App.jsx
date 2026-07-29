@@ -5,6 +5,7 @@ import { ActionBar } from "./components/ActionBar.jsx";
 import { AppHeader } from "./components/AppHeader.jsx";
 import { CheckRail } from "./components/CheckRail.jsx";
 import { DropZone } from "./components/DropZone.jsx";
+import { DuplicateReviewModal } from "./components/DuplicateReviewModal.jsx";
 import { HelpModal } from "./components/HelpModal.jsx";
 import { GalleryManagerModal } from "./components/GalleryManagerModal.jsx";
 import { PhotoFilmstrip } from "./components/PhotoFilmstrip.jsx";
@@ -38,6 +39,7 @@ export default function App() {
   const [showPublish, setShowPublish] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [showGalleryManager, setShowGalleryManager] = useState(false);
+  const [duplicateReview, setDuplicateReview] = useState(null);
 
   const refresh = useCallback(async () => {
     const next = await fetchStatus();
@@ -88,14 +90,38 @@ export default function App() {
     setError("");
     try {
       if (status.session) await rollbackPreview();
-      setStatus(await createPreview(photos));
+      const next = await createPreview(photos);
+      if (next.reviewRequired && Array.isArray(next.duplicates)) {
+        setDuplicateReview(next.duplicates);
+        await refresh().catch(() => {});
+      } else {
+        setStatus(next);
+      }
+    } catch (reason) {
+      if (reason.code === "DUPLICATE_REVIEW_REQUIRED" && Array.isArray(reason.duplicates)) {
+        setDuplicateReview(reason.duplicates);
+      } else {
+        setError(reason.message);
+      }
+      await refresh().catch(() => {});
+    } finally {
+      setBusy(false);
+    }
+  }, [photos, refresh, status.session]);
+
+  const continueDuplicatePreview = useCallback(async () => {
+    setBusy(true);
+    setError("");
+    try {
+      setStatus(await createPreview(photos, { allowDuplicates: true }));
+      setDuplicateReview(null);
     } catch (reason) {
       setError(reason.message);
       await refresh().catch(() => {});
     } finally {
       setBusy(false);
     }
-  }, [photos, refresh, status.session]);
+  }, [photos, refresh]);
 
   const clearBatch = useCallback(async () => {
     setBusy(true);
@@ -157,7 +183,7 @@ export default function App() {
       <main className="workspace-layout">
         <section className="main-workspace">
           <div className="gallery-management-bar">
-            <div><Icon name="image" size={18} /><span>官网照片管理</span>{status.gallery.duplicateGroups?.length ? <strong>发现 {status.gallery.duplicateGroups.reduce((total, group) => total + group.length - 1, 0)} 张精确重复</strong> : <small>未发现文件级重复</small>}</div>
+            <div><Icon name="image" size={18} /><span>官网照片管理</span>{status.gallery.duplicateGroups?.length ? <strong>发现 {status.gallery.duplicateGroups.reduce((total, group) => total + group.length - 1, 0)} 张精确重复</strong> : <small>本地文件＋画面去重已启用</small>}</div>
             <button type="button" onClick={() => setShowGalleryManager(true)} disabled={busy}><Icon name="trash" size={17} />选择并删除官网照片</button>
           </div>
           {status.session?.verified ? (
@@ -193,6 +219,7 @@ export default function App() {
       </footer>
       {showPublish && status.session ? <PublishModal session={status.session} onClose={() => setShowPublish(false)} onConfirm={confirmPublish} busy={busy} /> : null}
       {showGalleryManager ? <GalleryManagerModal gallery={status.gallery} session={status.session} busy={busy} onClose={() => setShowGalleryManager(false)} onDelete={handleDeletePreview} /> : null}
+      {duplicateReview ? <DuplicateReviewModal duplicates={duplicateReview} photos={photos} busy={busy} onCancel={() => setDuplicateReview(null)} onConfirm={continueDuplicatePreview} /> : null}
       {showHelp ? <HelpModal onClose={() => setShowHelp(false)} /> : null}
     </div>
   );

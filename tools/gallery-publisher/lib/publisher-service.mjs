@@ -4,7 +4,7 @@ import { dirname, join, relative, resolve } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 
 import { appendGalleryBatch, createBatchNumbers, parseGalleryState, removeGalleryItems } from "./gallery-html.mjs";
-import { createVisualFingerprint, processGalleryPhoto, visualFingerprintDistance } from "./process.mjs";
+import { createVisualFingerprint, isVisualDuplicate, processGalleryPhoto } from "./process.mjs";
 import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
 
 const STEP_LABELS = [
@@ -16,6 +16,15 @@ const STEP_LABELS = [
   "运行完整测试与生产构建",
 ];
 
+export class DuplicateReviewRequiredError extends Error {
+  constructor(duplicates) {
+    super(`检测到 ${duplicates.length} 张重复或疑似相同照片，请确认是否继续上传`);
+    this.name = "DuplicateReviewRequiredError";
+    this.code = "DUPLICATE_REVIEW_REQUIRED";
+    this.duplicates = duplicates;
+  }
+}
+
 function run(command, args, { cwd, maxOutput = 8_000_000 } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
@@ -24,13 +33,23 @@ function run(command, args, { cwd, maxOutput = 8_000_000 } = {}) {
     child.stdout.on("data", (chunk) => { if (stdout.length < maxOutput) stdout += chunk; });
     child.stderr.on("data", (chunk) => { if (stderr.length < maxOutput) stderr += chunk; });
     child.on("error", reject);
-    child.on("close", (code) => {
+    child.on("close", async (code) => {
       if (code === 0) resolve({ stdout, stderr });
       else {
         const output = stderr.trim() || stdout.trim();
         const lines = output.split("\n").map((line) => line.trim()).filter(Boolean);
-        const usefulLine = [...lines].reverse().find((line) => /AssertionError|SyntaxError|ReferenceError|TypeError|✖ failing tests|npm error/i.test(line));
-        const detail = (usefulLine || lines.at(-1) || `退出码 ${code}`).slice(0, 600);
+        const failureTitle = lines.find((line) => /^✖\s+.+\([\d.]+m?s\)$/.test(line));
+        const usefulLine = lines.find((line) => /^error:\s*['"]?.+/i.test(line))
+          || [...lines].reverse().find((line) => /AssertionError|SyntaxError|ReferenceError|TypeError|npm error/i.test(line));
+        const detail = [failureTitle, usefulLine]
+          .filter(Boolean)
+          .join(" — ")
+          .slice(0, 900) || lines.at(-1) || `退出码 ${code}`;
+        if (cwd) {
+          const failureLogPath = join(cwd, "tools/gallery-publisher/.runtime/last-verify-failure.log");
+          await mkdir(dirname(failureLogPath), { recursive: true }).catch(() => {});
+          await writeFile(failureLogPath, `${output}\n`, "utf8").catch(() => {});
+        }
         reject(new Error(`${command} ${args.join(" ")} 失败：${detail}`));
       }
     });
@@ -51,6 +70,7 @@ export class PublisherService {
     this.operation = { type: "idle", status: "idle", message: "等待添加照片", steps: STEP_LABELS.map(() => "pending") };
     this.activity = [];
     this.hashCache = new Map();
+    this.visualFingerprintCache = new Map();
   }
 
   async initialize() {
@@ -90,6 +110,19 @@ export class PublisherService {
     const hash = createHash("sha256").update(await readFile(path)).digest("hex");
     this.hashCache.set(path, { size: details.size, mtimeMs: details.mtimeMs, hash });
     return hash;
+  }
+
+  async fingerprintGalleryFile(path) {
+    const details = await stat(path);
+    const cached = this.visualFingerprintCache.get(path);
+    if (cached?.size === details.size && cached?.mtimeMs === details.mtimeMs) return cached.fingerprint;
+    const fingerprint = await createVisualFingerprint(path);
+    this.visualFingerprintCache.set(path, {
+      size: details.size,
+      mtimeMs: details.mtimeMs,
+      fingerprint,
+    });
+    return fingerprint;
   }
 
   async getGalleryInventory(parsed) {
@@ -210,36 +243,98 @@ export class PublisherService {
     await writeFile(this.statePath, `${JSON.stringify(this.session, null, 2)}\n`, "utf8");
   }
 
-  async validateUploadDuplicates(gallery, uploads) {
-    const existingFingerprints = [];
+  async validateUploadDuplicates(gallery, uploads, { allowDuplicates = false } = {}) {
+    const existingFiles = [];
     for (const item of gallery.items) {
       const path = join(this.root, "assets/gallery", item.fallbackName);
-      existingFingerprints.push({
+      existingFiles.push({
         number: item.number,
         displayNumber: item.displayNumber,
-        fingerprint: await createVisualFingerprint(path),
+        fallbackName: item.fallbackName,
+        path,
+        hash: await this.hashGalleryFile(path),
       });
     }
-    const batchFingerprints = [];
-    for (const upload of uploads) {
-      const fingerprint = await createVisualFingerprint(upload.path);
-      const existingDuplicate = existingFingerprints.find(
-        (entry) => visualFingerprintDistance(entry.fingerprint, fingerprint) <= 2.5,
-      );
-      if (existingDuplicate) {
-        throw new Error(`${upload.originalName} 与官网照片 ${String(existingDuplicate.displayNumber).padStart(3, "0")} 内容相同，已拒绝重复添加`);
+
+    const batchFiles = [];
+    const duplicatesByUpload = new Map();
+    for (let uploadIndex = 0; uploadIndex < uploads.length; uploadIndex += 1) {
+      const upload = uploads[uploadIndex];
+      const hash = await this.hashGalleryFile(upload.path);
+      const exactExistingDuplicate = existingFiles.find((entry) => entry.hash === hash);
+      if (exactExistingDuplicate) {
+        duplicatesByUpload.set(uploadIndex, {
+          uploadIndex,
+          uploadName: upload.originalName,
+          matchType: "exact",
+          matchSource: "gallery",
+          matchDisplayNumber: exactExistingDuplicate.displayNumber,
+          matchUrl: `/preview/assets/gallery/${exactExistingDuplicate.fallbackName}`,
+        });
       }
-      const batchDuplicate = batchFingerprints.find(
-        (entry) => visualFingerprintDistance(entry.fingerprint, fingerprint) <= 2.5,
-      );
-      if (batchDuplicate) {
-        throw new Error(`${upload.originalName} 与本批 ${batchDuplicate.name} 内容相同，已拒绝重复添加`);
+      const exactBatchDuplicate = batchFiles.find((entry) => entry.hash === hash);
+      if (!exactExistingDuplicate && exactBatchDuplicate) {
+        duplicatesByUpload.set(uploadIndex, {
+          uploadIndex,
+          uploadName: upload.originalName,
+          matchType: "exact",
+          matchSource: "batch",
+          matchUploadIndex: exactBatchDuplicate.uploadIndex,
+          matchName: exactBatchDuplicate.originalName,
+        });
       }
-      batchFingerprints.push({ name: upload.originalName, fingerprint });
+      batchFiles.push({ ...upload, uploadIndex, hash });
     }
+
+    this.setOperation({ message: "文件指纹检查完成，正在本机进行画面检测" });
+    for (const entry of existingFiles) {
+      entry.fingerprint = await this.fingerprintGalleryFile(entry.path);
+    }
+    const batchFingerprints = [];
+    for (const upload of batchFiles) {
+      const fingerprint = await createVisualFingerprint(upload.path);
+      if (!duplicatesByUpload.has(upload.uploadIndex)) {
+        const visualExistingDuplicate = existingFiles.find(
+          (entry) => isVisualDuplicate(entry.fingerprint, fingerprint),
+        );
+        if (visualExistingDuplicate) {
+          duplicatesByUpload.set(upload.uploadIndex, {
+            uploadIndex: upload.uploadIndex,
+            uploadName: upload.originalName,
+            matchType: "visual",
+            matchSource: "gallery",
+            matchDisplayNumber: visualExistingDuplicate.displayNumber,
+            matchUrl: `/preview/assets/gallery/${visualExistingDuplicate.fallbackName}`,
+          });
+        } else {
+          const visualBatchDuplicate = batchFingerprints.find(
+            (entry) => isVisualDuplicate(entry.fingerprint, fingerprint),
+          );
+          if (visualBatchDuplicate) {
+            duplicatesByUpload.set(upload.uploadIndex, {
+              uploadIndex: upload.uploadIndex,
+              uploadName: upload.originalName,
+              matchType: "visual",
+              matchSource: "batch",
+              matchUploadIndex: visualBatchDuplicate.uploadIndex,
+              matchName: visualBatchDuplicate.name,
+            });
+          }
+        }
+      }
+      batchFingerprints.push({
+        uploadIndex: upload.uploadIndex,
+        name: upload.originalName,
+        fingerprint,
+      });
+    }
+
+    const duplicates = [...duplicatesByUpload.values()].sort((left, right) => left.uploadIndex - right.uploadIndex);
+    if (duplicates.length && !allowDuplicates) throw new DuplicateReviewRequiredError(duplicates);
+    return duplicates;
   }
 
-  async createPreview(uploads) {
+  async createPreview(uploads, { allowDuplicates = false } = {}) {
     if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
     if (this.session) throw new Error("已有本地预览，请先发布或清空当前批次");
     if (!Array.isArray(uploads) || uploads.length < 1) throw new Error("请先选择照片");
@@ -248,11 +343,22 @@ export class PublisherService {
     const originalHtml = await readFile(this.indexPath, "utf8");
     const gallery = parseGalleryState(originalHtml);
     const duplicateSteps = STEP_LABELS.map(() => "pending");
-    this.setOperation({ type: "preview", status: "running", message: "检查照片内容指纹，防止官网或本批重复", steps: duplicateSteps });
+    this.setOperation({ type: "preview", status: "running", message: "正在本机检查文件与画面，防止官网或本批重复", steps: duplicateSteps });
     try {
-      await this.validateUploadDuplicates(gallery, uploads);
+      const duplicateReview = await this.validateUploadDuplicates(gallery, uploads, { allowDuplicates });
+      this.setOperation({
+        message: duplicateReview.length
+          ? `已按你的确认继续处理 ${duplicateReview.length} 张重复或疑似相同照片`
+          : `本地双重去重通过：${uploads.length} 张照片均为新画面`,
+      });
     } catch (error) {
-      this.setOperation({ type: "preview", status: "error", message: error.message, steps: duplicateSteps });
+      const duplicateReviewNeeded = error?.code === "DUPLICATE_REVIEW_REQUIRED";
+      this.setOperation({
+        type: "preview",
+        status: duplicateReviewNeeded ? "idle" : "error",
+        message: error.message,
+        steps: duplicateSteps,
+      });
       throw error;
     }
     const baselineDirty = await listGitChanges(this.root);
@@ -277,7 +383,7 @@ export class PublisherService {
         const item = await processGalleryPhoto({ upload: uploads[index], number: numbers[index], root: this.root });
         items.push(item);
         createdPaths.push(...item.createdPaths);
-        this.setOperation({ message: `已处理 ${index + 1} / ${uploads.length}：${String(item.number).padStart(3, "0")}` });
+        this.setOperation({ message: `已处理 ${index + 1} / ${uploads.length}` });
       }
       steps.fill("done", 0, 4);
       steps[4] = "running";

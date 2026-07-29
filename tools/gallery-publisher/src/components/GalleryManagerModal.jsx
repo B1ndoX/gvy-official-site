@@ -34,7 +34,7 @@ export function GalleryManagerModal({ gallery, session, busy, onClose, onDelete 
 
         {gallery.duplicateGroups.length ? (
           <div className="duplicate-notice"><Icon name="info" size={18} /><span>已找到 <strong>{suggested.length}</strong> 张文件级精确重复，已预选后加入的副本：{suggestedDisplayNumbers.map(formatPhotoNumber).join("、")}</span></div>
-        ) : <div className="duplicate-notice is-clear"><Icon name="check" size={18} />未发现文件级精确重复</div>}
+        ) : <div className="duplicate-notice is-clear"><Icon name="check" size={18} />当前官网未发现文件级精确重复；新增照片仍会执行本地画面检测</div>}
 
         {blocked ? <div className="manager-blocked"><Icon name="lock" size={18} />当前已有{session.type === "delete" ? "删除" : "新增照片"}预览，请先发布或清空当前批次。为了避免两次操作互相覆盖，此处暂不生成新预览。</div> : null}
 
@@ -58,7 +58,7 @@ export function GalleryManagerModal({ gallery, session, busy, onClose, onDelete 
           })}
         </div>
 
-        <div className="manager-safety-note"><Icon name="shield" size={18} />官网可见序号会自动连续重排；内部资源编号不改名、不复用，避免覆盖和缓存串图。</div>
+        <div className="manager-safety-note"><Icon name="shield" size={18} />删除后剩余照片会自动向前补位并连续排列；下次新增从最后一张继续。</div>
         <div className="modal-actions">
           <button type="button" onClick={onClose} disabled={busy}>取消</button>
           <button className="confirm-delete-preview" type="button" onClick={() => setConfirming(true)} disabled={busy || blocked || !selected.size}><Icon name="trash" size={18} />生成删除预览</button>
@@ -72,7 +72,7 @@ export function GalleryManagerModal({ gallery, session, busy, onClose, onDelete 
                 <div><dt>删除数量</dt><dd>{orderedSelection.length} 张</dd></div>
                 <div><dt>照片编号</dt><dd>{orderedSelectedItems.map((item) => formatPhotoNumber(item.displayNumber)).join("、")}</dd></div>
                 <div><dt>操作范围</dt><dd>移除官网相册条目和对应原图、WebP、缩略图</dd></div>
-                <div><dt>编号规则</dt><dd>官网可见序号自动向前补位；内部资源编号不改名、不复用</dd></div>
+                <div><dt>编号规则</dt><dd>删除后剩余照片自动向前补位并连续排列</dd></div>
               </dl>
               <div className="publish-warning"><Icon name="info" size={19} />这一步只生成本地预览，不会立即改动正式网站</div>
               <div className="modal-actions">

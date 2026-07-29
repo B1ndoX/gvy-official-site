@@ -1294,14 +1294,7 @@ html[data-motion-ready] :is(
 }
 
 .archive-grid button > span {
-  position: absolute;
-  z-index: 2;
-  right: 7px;
-  bottom: 5px;
-  color: rgba(255, 255, 255, 0.72);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.14em;
+  display: none;
 }
 
 .archive-gallery-controls {

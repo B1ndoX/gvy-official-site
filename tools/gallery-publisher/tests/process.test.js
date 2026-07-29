@@ -4,7 +4,14 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { createVisualFingerprint, normalizeUploadExtension, processGalleryPhoto, visualFingerprintDistance } from "../lib/process.mjs";
+import {
+  createVisualFingerprint,
+  isVisualDuplicate,
+  normalizeUploadExtension,
+  processGalleryPhoto,
+  visualFingerprintDistance,
+  visualFingerprintMetrics,
+} from "../lib/process.mjs";
 
 test("publisher accepts the supported camera formats and rejects unsupported files", () => {
   assert.deepEqual(normalizeUploadExtension("fleet.JPG", "image/jpeg"), {
@@ -27,16 +34,18 @@ test("visual duplicate distance is exact, tolerant, and rejects incompatible buf
   assert.equal(visualFingerprintDistance(original, Buffer.from([1])), Number.POSITIVE_INFINITY);
 });
 
-test("visual fingerprints detect identical content while separating another photo", async () => {
+test("local visual fingerprints detect resized or recompressed copies while separating another photo", async () => {
   const gallery = new URL("../../../assets/gallery/", import.meta.url);
-  const [original, duplicate, different] = await Promise.all([
+  const [original, recompressed, different] = await Promise.all([
     createVisualFingerprint(new URL("team-37.png", gallery).pathname),
-    createVisualFingerprint(new URL("team-37.png", gallery).pathname),
+    createVisualFingerprint(new URL("optimized/team-37-1280.webp", gallery).pathname),
     createVisualFingerprint(new URL("team-01.jpg", gallery).pathname),
   ]);
 
-  assert.equal(visualFingerprintDistance(original, duplicate), 0);
-  assert.ok(visualFingerprintDistance(original, different) > 2.5);
+  const duplicateMetrics = visualFingerprintMetrics(original, recompressed);
+  assert.equal(isVisualDuplicate(original, recompressed), true);
+  assert.ok(duplicateMetrics.normalizedLuminanceDistance < 0.12);
+  assert.equal(isVisualDuplicate(original, different), false);
 });
 
 test("publisher creates the fallback, responsive WebP, and thumbnail without overwriting", async () => {

@@ -182,7 +182,8 @@ const server = createServer(async (request, response) => {
     if (request.method === "POST" && url.pathname === "/api/import") {
       const { tempDir, uploads } = await parseUploads(request);
       try {
-        sendJson(response, 200, await service.createPreview(uploads));
+        const allowDuplicates = request.headers["x-gvy-allow-duplicates"] === "1";
+        sendJson(response, 200, await service.createPreview(uploads, { allowDuplicates }));
       } finally {
         await rm(tempDir, { recursive: true, force: true });
       }
@@ -237,6 +238,15 @@ const server = createServer(async (request, response) => {
     }
     sendJson(response, 404, { error: "未找到请求" });
   } catch (error) {
+    if (error?.code === "DUPLICATE_REVIEW_REQUIRED") {
+      sendJson(response, 200, {
+        reviewRequired: true,
+        message: error.message,
+        code: error.code,
+        duplicates: error.duplicates,
+      });
+      return;
+    }
     sendJson(response, 400, { error: error.message || "发布器操作失败" });
   }
 });

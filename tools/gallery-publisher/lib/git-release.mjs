@@ -22,7 +22,9 @@ export async function gitOutput(root, args) {
 export async function listGitChanges(root) {
   const output = await gitOutput(root, ["status", "--porcelain"]);
   if (!output) return [];
-  return output.split("\n").map((line) => line.slice(3).trim()).filter(Boolean);
+  return output.split("\n")
+    .map((line) => line.replace(/^[ MADRCU?!]{1,2}\s+/, "").trim())
+    .filter(Boolean);
 }
 
 function createBackupTag(date = new Date()) {
@@ -41,14 +43,16 @@ function createBackupTag(date = new Date()) {
 }
 
 export function buildReleaseSummary(session, date = new Date()) {
-  const start = String(session.batchStart).padStart(3, "0");
-  const end = String(session.batchEnd).padStart(3, "0");
   const isDelete = session.type === "delete";
+  const itemCount = session.itemCount
+    ?? session.items?.length
+    ?? Math.max(1, session.batchEnd - session.batchStart + 1);
+  const photoWord = itemCount === 1 ? "photo" : "photos";
   return {
     tag: createBackupTag(date),
     commitMessage: isDelete
-      ? `fix: remove gallery entries ${session.deletedNumbers.map((number) => String(number).padStart(3, "0")).join(",")}`
-      : `feat: publish gallery photos ${start}-${end}`,
+      ? `fix: remove ${itemCount} gallery ${photoWord}`
+      : `feat: publish ${itemCount} gallery ${photoWord}`,
     branch: "main",
     remoteBranch: "origin/main",
     project: "gvy-official-site",

@@ -11,9 +11,16 @@ PUBLISHER_PID_FILE="$PUBLISHER_RUNTIME_DIR/publisher.pid"
 
 /bin/mkdir -p "$PUBLISHER_RUNTIME_DIR"
 
-if /usr/bin/curl --max-time 1 -fsS "$PUBLISHER_HEALTH_URL" >/dev/null 2>&1; then
+open_publisher_page() {
+  if [[ "${GVY_PUBLISHER_NO_OPEN:-0}" == "1" ]]; then
+    return 0
+  fi
   /usr/bin/open "$PUBLISHER_URL"
   /usr/bin/osascript -e 'display notification "发布器已在运行，浏览器已打开" with title "GVY 相册发布器"' >/dev/null 2>&1 || true
+}
+
+if /usr/bin/curl --max-time 1 -fsS "$PUBLISHER_HEALTH_URL" >/dev/null 2>&1; then
+  open_publisher_page
   exit 0
 fi
 
@@ -25,8 +32,7 @@ disown "$PUBLISHER_PID" 2>/dev/null || true
 
 for attempt in {1..240}; do
   if /usr/bin/curl --max-time 1 -fsS "$PUBLISHER_HEALTH_URL" >/dev/null 2>&1; then
-    /usr/bin/open "$PUBLISHER_URL"
-    /usr/bin/osascript -e 'display notification "启动成功，浏览器已打开" with title "GVY 相册发布器"' >/dev/null 2>&1 || true
+    open_publisher_page
     exit 0
   fi
   /bin/sleep 0.5

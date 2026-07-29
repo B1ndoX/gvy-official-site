@@ -11,7 +11,20 @@ import { PublisherService } from "../lib/publisher-service.mjs";
 
 const runFile = promisify(execFile);
 const projectRoot = new URL("../../../", import.meta.url).pathname;
-const homepage = await readFile(join(projectRoot, "index.html"), "utf8");
+
+async function readDeploymentBaseline() {
+  try {
+    const { stdout } = await runFile("git", ["show", "HEAD:index.html"], {
+      cwd: projectRoot,
+      encoding: "utf8",
+    });
+    return stdout;
+  } catch {
+    return readFile(join(projectRoot, "index.html"), "utf8");
+  }
+}
+
+const homepage = await readDeploymentBaseline();
 
 async function copyFixtureAsset(root, relativePath) {
   const target = join(root, relativePath);
@@ -21,6 +34,7 @@ async function copyFixtureAsset(root, relativePath) {
 
 test("delete preview physically removes selected assets, closes visible gaps, and rolls back safely", async () => {
   const root = await mkdtemp(join(tmpdir(), "gvy-gallery-delete-"));
+  const startingGallery = parseGalleryState(homepage);
   const selectedAssetNumbers = [4, 5];
   const selectedPaths = selectedAssetNumbers.flatMap((number) => {
     const padded = String(number).padStart(2, "0");
@@ -42,7 +56,7 @@ test("delete preview physically removes selected assets, closes visible gaps, an
     const status = await service.createDeletePreview(selectedAssetNumbers);
     const preview = parseGalleryState(await readFile(join(root, "index.html"), "utf8"));
 
-    assert.equal(preview.count, 35);
+    assert.equal(preview.count, startingGallery.count - selectedAssetNumbers.length);
     assert.equal(preview.items[3].number, 6);
     assert.equal(preview.items[3].displayNumber, 4);
     assert.deepEqual(status.session.items.map((item) => item.displayNumber), [4, 5]);
@@ -54,4 +68,71 @@ test("delete preview physically removes selected assets, closes visible gaps, an
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("local duplicate review reports exact and visual matches and only continues after explicit override", async () => {
+  const gallery = parseGalleryState(homepage);
+  const lastItem = gallery.items.at(-1);
+  const exactPath = join(projectRoot, "assets/gallery", lastItem.fallbackName);
+  const recompressedPath = join(
+    projectRoot,
+    `assets/gallery/optimized/team-${String(lastItem.number).padStart(2, "0")}-1280.webp`,
+  );
+  const service = new PublisherService({ root: projectRoot });
+
+  await assert.rejects(
+    service.validateUploadDuplicates(gallery, [{
+      path: exactPath,
+      originalName: "renamed-copy.png",
+      mimeType: "image/png",
+    }]),
+    (error) => {
+      assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
+      assert.equal(error.duplicates[0].matchType, "exact");
+      assert.equal(error.duplicates[0].matchSource, "gallery");
+      assert.equal(error.duplicates[0].matchDisplayNumber, gallery.count);
+      assert.match(error.duplicates[0].matchUrl, /^\/preview\/assets\/gallery\//);
+      return true;
+    },
+  );
+
+  await assert.rejects(
+    service.validateUploadDuplicates(gallery, [{
+      path: recompressedPath,
+      originalName: "resized-copy.jpg",
+      mimeType: "image/jpeg",
+    }]),
+    (error) => {
+      assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
+      assert.equal(error.duplicates[0].matchType, "visual");
+      assert.equal(error.duplicates[0].matchDisplayNumber, gallery.count);
+      return true;
+    },
+  );
+
+  const confirmed = await service.validateUploadDuplicates(gallery, [{
+    path: recompressedPath,
+    originalName: "resized-copy.jpg",
+    mimeType: "image/jpeg",
+  }], { allowDuplicates: true });
+  assert.equal(confirmed.length, 1);
+  assert.equal(confirmed[0].matchType, "visual");
+});
+
+test("a photo removed from the current gallery can be uploaded again without a stale duplicate block", async () => {
+  const gallery = parseGalleryState(homepage);
+  const removedItem = gallery.items.at(-1);
+  const galleryAfterDeletion = {
+    ...gallery,
+    count: gallery.count - 1,
+    items: gallery.items.slice(0, -1),
+  };
+  const service = new PublisherService({ root: projectRoot });
+  const result = await service.validateUploadDuplicates(galleryAfterDeletion, [{
+    path: join(projectRoot, "assets/gallery", removedItem.fallbackName),
+    originalName: "previously-deleted-photo.png",
+    mimeType: "image/png",
+  }]);
+
+  assert.deepEqual(result, []);
 });

@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
+import { mkdtemp, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { promisify } from "node:util";
 import test from "node:test";
 
-import { buildReleaseSummary } from "../lib/git-release.mjs";
+import { buildReleaseSummary, listGitChanges } from "../lib/git-release.mjs";
+
+const runFile = promisify(execFile);
 
 test("release summary is stable, scoped to main, and includes a pre-release rollback tag", () => {
   const summary = buildReleaseSummary(
@@ -11,7 +18,7 @@ test("release summary is stable, scoped to main, and includes a pre-release roll
 
   assert.deepEqual(summary, {
     tag: "backup-production-before-gallery-20260729-120506-CST",
-    commitMessage: "feat: publish gallery photos 048-053",
+    commitMessage: "feat: publish 6 gallery photos",
     branch: "main",
     remoteBranch: "origin/main",
     project: "gvy-official-site",
@@ -19,11 +26,32 @@ test("release summary is stable, scoped to main, and includes a pre-release roll
   });
 });
 
-test("deletion releases identify the exact stable gallery numbers", () => {
+test("release summaries describe deletion counts without exposing internal asset numbers", () => {
   const summary = buildReleaseSummary(
-    { type: "delete", batchStart: 38, batchEnd: 47, deletedNumbers: [38, 39, 47] },
+    { type: "delete", batchStart: 38, batchEnd: 47, itemCount: 3, deletedNumbers: [38, 39, 47] },
     new Date("2026-07-29T04:05:06.000Z"),
   );
 
-  assert.equal(summary.commitMessage, "fix: remove gallery entries 038,039,047");
+  assert.equal(summary.commitMessage, "fix: remove 3 gallery photos");
+});
+
+test("git safety checks preserve the first character of the first changed path", async () => {
+  const root = await mkdtemp(join(tmpdir(), "gvy-gallery-git-status-"));
+  try {
+    await runFile("git", ["init", "-b", "main", root]);
+    await writeFile(join(root, "assets.css"), "before\n", "utf8");
+    await runFile("git", ["-C", root, "add", "assets.css"]);
+    await runFile("git", [
+      "-C", root,
+      "-c", "user.name=GVY Test",
+      "-c", "user.email=gvy-test@example.invalid",
+      "commit", "-m", "fixture",
+    ]);
+    await writeFile(join(root, "assets.css"), "after\n", "utf8");
+    await writeFile(join(root, "new-file.txt"), "new\n", "utf8");
+
+    assert.deepEqual(await listGitChanges(root), ["assets.css", "new-file.txt"]);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
