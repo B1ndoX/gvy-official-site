@@ -114,7 +114,7 @@ export function shouldAdvanceCarousel({
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
-  pixelsPerSecond = 48,
+  pixelsPerSecond = 56,
   Observer = view?.IntersectionObserver,
 } = {}) {
   const archiveIndex = root?.querySelector?.("[data-archive-index]");

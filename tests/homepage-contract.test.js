@@ -373,7 +373,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /handleViewportClick, true/);
   assert.match(archiveCarousel, /ArrowRight/);
   assert.match(archiveCarousel, /requestAnimationFrame/);
-  assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*48/);
+  assert.match(archiveCarousel, /pixelsPerSecond\s*=\s*56/);
   assert.match(archiveCarousel, /resolveCarouselTargetIndex/);
   assert.match(archiveCarousel, /getCarouselCardPosition/);
   assert.match(archiveCarousel, /getCarouselNavigationTargetIndexes/);
@@ -423,7 +423,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-touch-control-v67/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260730-gallery-speed-v68/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
@@ -450,7 +450,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-touch-control-v67/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260730-gallery-speed-v68/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-touch-control-v67/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
