@@ -10,6 +10,7 @@ import {
   isCarouselDrag,
   normalizeLoopPosition,
   resolveCarouselTargetIndex,
+  shouldActivateCarouselNavigationPress,
   shouldAdvanceCarousel,
   shouldAllowCarouselClick,
   wrapCarouselIndex,
@@ -27,6 +28,13 @@ test("only a short stationary press may open a gallery photo", () => {
   assert.equal(shouldAllowCarouselClick({ dragged: false, startedAt: 100, endedAt: 340 }), false);
   assert.equal(shouldAllowCarouselClick({ dragged: true, startedAt: 100, endedAt: 120 }), false);
   assert.equal(shouldAllowCarouselClick({ dragged: true, startedAt: 100, endedAt: 500 }), false);
+});
+
+test("a navigation node activates on release unless the gesture became a drag", () => {
+  assert.equal(shouldActivateCarouselNavigationPress({ startedOnNode: true }), true);
+  assert.equal(shouldActivateCarouselNavigationPress({ startedOnNode: true, dragged: true }), false);
+  assert.equal(shouldActivateCarouselNavigationPress({ startedOnNode: true, cancelled: true }), false);
+  assert.equal(shouldActivateCarouselNavigationPress({ startedOnNode: false }), false);
 });
 
 test("carousel indexes wrap in both directions", () => {

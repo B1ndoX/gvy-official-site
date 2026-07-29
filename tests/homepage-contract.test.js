@@ -347,6 +347,16 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /pointerdown/);
   assert.match(archiveCarousel, /pointermove/);
   assert.match(archiveCarousel, /setPointerCapture/);
+  const paginationPointerDown = archiveCarousel.slice(
+    archiveCarousel.indexOf("function handlePaginationPointerDown"),
+    archiveCarousel.indexOf("function handlePaginationPointerMove"),
+  );
+  const paginationPointerMove = archiveCarousel.slice(
+    archiveCarousel.indexOf("function handlePaginationPointerMove"),
+    archiveCarousel.indexOf("function finishPaginationPointer"),
+  );
+  assert.doesNotMatch(paginationPointerDown, /setPointerCapture/);
+  assert.match(paginationPointerMove, /paginationDragging[\s\S]*setPointerCapture/);
   assert.match(archiveCarousel, /DRAG_THRESHOLD_PX\s*=\s*8/);
   assert.match(archiveCarousel, /HOLD_SUPPRESSION_MS\s*=\s*240/);
   assert.match(archiveCarousel, /查看团建照片 \$\{targetIndex \+ 1\}，共 \$\{cards\.length\} 张/);
@@ -402,7 +412,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-apple-behavior-v64/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-node-click-v65/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
@@ -430,7 +440,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-apple-behavior-v64/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-apple-behavior-v64/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-node-click-v65/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {

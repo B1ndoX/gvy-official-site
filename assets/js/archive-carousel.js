@@ -75,6 +75,14 @@ export function shouldAllowCarouselClick({ dragged = false, startedAt = 0, ended
   return !dragged && duration < Math.max(0, Number(holdThreshold) || 0);
 }
 
+export function shouldActivateCarouselNavigationPress({
+  startedOnNode = false,
+  dragged = false,
+  cancelled = false,
+} = {}) {
+  return Boolean(startedOnNode) && !dragged && !cancelled;
+}
+
 export function shouldAdvanceCarousel({
   loopWidth,
   manuallyPaused,
@@ -157,6 +165,7 @@ export function initArchiveCarousel({
   let paginationStartScrollLeft = 0;
   let paginationDragging = false;
   let paginationHovered = false;
+  let paginationPressedButton = null;
   let suppressNavigationClick = false;
   let dragPointerId = null;
   let dragStartX = 0;
@@ -519,14 +528,15 @@ export function initArchiveCarousel({
 
   function handlePaginationPointerDown(event) {
     if (event.pointerType !== "mouse" || event.button !== 0 || paginationPointerId != null) return;
+    const button = event.target?.closest?.("[data-archive-carousel-node]");
     paginationPointerId = event.pointerId;
     paginationStartX = event.clientX;
     paginationStartY = event.clientY;
     paginationStartScrollLeft = pagination.scrollLeft;
     paginationDragging = false;
+    paginationPressedButton = button && pagination.contains(button) ? button : null;
     suppressNavigationClick = false;
     touchActive = true;
-    pagination.setPointerCapture?.(event.pointerId);
   }
 
   function handlePaginationPointerMove(event) {
@@ -540,10 +550,20 @@ export function initArchiveCarousel({
     )) {
       paginationDragging = true;
       pagination.classList.add("is-dragging");
+      pagination.setPointerCapture?.(event.pointerId);
     }
     if (!paginationDragging) return;
     event.preventDefault();
     pagination.scrollLeft = paginationStartScrollLeft - (event.clientX - paginationStartX);
+  }
+
+  function blockNextNavigationClick() {
+    suppressNavigationClick = true;
+    if (navigationClickResetTimer) cancelSchedule(navigationClickResetTimer);
+    navigationClickResetTimer = schedule(() => {
+      navigationClickResetTimer = 0;
+      suppressNavigationClick = false;
+    }, 0);
   }
 
   function finishPaginationPointer(event, { cancelled = false } = {}) {
@@ -555,20 +575,21 @@ export function initArchiveCarousel({
       paginationStartY,
       event.clientY,
     );
-    if (endedAsDrag || cancelled) {
-      suppressNavigationClick = true;
-      if (navigationClickResetTimer) cancelSchedule(navigationClickResetTimer);
-      navigationClickResetTimer = schedule(() => {
-        navigationClickResetTimer = 0;
-        suppressNavigationClick = false;
-      }, 0);
-    }
+    const pressedButton = paginationPressedButton;
+    const shouldActivate = shouldActivateCarouselNavigationPress({
+      startedOnNode: Boolean(pressedButton),
+      dragged: endedAsDrag,
+      cancelled,
+    });
+    if (endedAsDrag || cancelled || shouldActivate) blockNextNavigationClick();
     if (pagination.hasPointerCapture?.(event.pointerId)) pagination.releasePointerCapture?.(event.pointerId);
     paginationPointerId = null;
     paginationDragging = false;
+    paginationPressedButton = null;
     touchActive = false;
     pagination.classList.remove("is-dragging");
     lastTimestamp = null;
+    if (shouldActivate) navigateToNavigationButton(pressedButton, event);
   }
 
   function handlePaginationPointerUp(event) {
@@ -579,13 +600,7 @@ export function initArchiveCarousel({
     finishPaginationPointer(event, { cancelled: true });
   }
 
-  function jumpToNavigationTarget(event) {
-    if (suppressNavigationClick) {
-      event?.preventDefault?.();
-      event?.stopPropagation?.();
-      return;
-    }
-    const button = event?.target?.closest?.("[data-archive-carousel-node]");
+  function navigateToNavigationButton(button, event) {
     if (!button || !pagination?.contains?.(button)) return;
     event?.preventDefault?.();
     event?.stopPropagation?.();
@@ -612,6 +627,16 @@ export function initArchiveCarousel({
 
     if (reducedMotion) move();
     else navigationTransitionTimer = schedule(move, 150);
+  }
+
+  function jumpToNavigationTarget(event) {
+    if (suppressNavigationClick) {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      return;
+    }
+    const button = event?.target?.closest?.("[data-archive-carousel-node]");
+    navigateToNavigationButton(button, event);
   }
 
   const observer = Observer
