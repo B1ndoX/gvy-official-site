@@ -1,9 +1,8 @@
 import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-lightbox-webp-v61";
 import { initArchiveCarousel } from "./archive-carousel.js?v=20260729-carousel-click-gate-v60";
 import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260728-zoom-scale-v51";
-import { initDeferredMedia } from "./deferred-media.js";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
-import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
+import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260729-production-trim-v62";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
 import { initSectionNavigation } from "./section-navigation.js?v=20260726-nav-video-quality-v32";
 
@@ -23,7 +22,6 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   if (motionAvailable) root.documentElement?.setAttribute("data-motion-ready", "true");
 
   const hero = initHeroVideo({ root });
-  const deferred = initDeferredMedia({ root, rootMargin: "100% 0px" });
   const carousel = initArchiveCarousel({ root, view });
   const archive = initArchiveLightbox({ root });
   const brawl = initMemberBrawlDialog({ root });
@@ -32,7 +30,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.setAttribute("data-motion-initialized", "true");
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [hero, deferred, carousel, archive, brawl, operationMotion, sectionNavigation, timelines].map(asCleanup);
+  const cleanups = [hero, carousel, archive, brawl, operationMotion, sectionNavigation, timelines].map(asCleanup);
   let cleaned = false;
 
   const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());

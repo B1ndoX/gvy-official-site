@@ -40,9 +40,33 @@ const activeOperationAssets = new Set([
   "exploration-mobile-1280-v1.mp4",
 ]);
 
+const excludedProductionAssets = new Set([
+  "assets/archive-planet-feed.mp4",
+  "assets/operations-planet-video.mp4",
+  "assets/hero-random/fleet-hero-01.mp4",
+  "assets/hero-random/fleet-hero-02.mp4",
+  "assets/fleet-command.js",
+  "assets/js/deferred-media.js",
+  "assets/js/fleet-data.js",
+]);
+
+const excludedProductionDirectories = [
+  "assets/gallery/thumbs",
+  "assets/gallery/originals",
+];
+
+function isExcludedProductionAsset(source) {
+  const relativeSource = source.slice(root.length + 1).replaceAll("\\", "/");
+  return excludedProductionAssets.has(relativeSource)
+    || excludedProductionDirectories.some(
+      (directory) => relativeSource === directory || relativeSource.startsWith(`${directory}/`),
+    );
+}
+
 await cp(resolve(root, "assets"), resolve(output, "assets"), {
   recursive: true,
   filter(source) {
+    if (isExcludedProductionAsset(source)) return false;
     const inVersionedHeroDirectory = dirname(source).endsWith("assets/hero-random/v2");
     if (inVersionedHeroDirectory && !activeHeroAssets.has(basename(source))) return false;
     if (source.includes("assets/operations-motion/v1")) return false;

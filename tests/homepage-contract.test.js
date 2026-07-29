@@ -23,6 +23,7 @@ const cinematicCss = await readOptional("assets/cinematic-homepage.css");
 const fleetData = await readOptional("assets/js/fleet-data.js");
 const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js");
 const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
+const heroVideoController = await readOptional("assets/js/hero-video-controller.js");
 const archiveCarousel = await readOptional("assets/js/archive-carousel.js");
 const memberBrawlDialog = await readOptional("assets/js/member-brawl-dialog.js");
 const operationMotion = await readOptional("assets/js/operation-motion.js");
@@ -55,6 +56,10 @@ test("EdgeOne gives operation motion immutable browser and edge cache lifetimes"
   const headers = new Map(operationRule.headers.map(({ key, value }) => [key, value]));
   assert.equal(headers.get("Cache-Control"), "public, max-age=31536000, immutable");
   assert.equal(headers.get("Pages-Cache-Control"), "s-maxage=7776000");
+  assert.equal(
+    edgeoneConfig.headers.some((rule) => rule.source === "/assets/operations-motion/v1/*"),
+    false,
+  );
 });
 
 test("production build copies local GSAP browser bundles", () => {
@@ -74,6 +79,32 @@ test("production build includes all three active hero variants", () => {
   assert.match(buildScript, /fleet-hero-03-1080p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-03-mobile-720p-v1\.mp4/);
   assert.match(buildScript, /fleet-hero-03-poster-v1\.webp/);
+});
+
+test("homepage, controller, and production build share the exact active hero assets", () => {
+  const activePattern = /fleet-hero-(?:01|02|03)-(?:1080p-v4|mobile-720p-v1|poster-v2|1440p-v4|poster-1440p-v3|1080p-v1|poster-v1)\.(?:mp4|webp)/g;
+  const getActiveAssets = (source) => [...new Set(source.match(activePattern) || [])].sort();
+  const expected = getActiveAssets(homepage);
+
+  assert.equal(expected.length, 10);
+  assert.deepEqual(getActiveAssets(heroVideoController), expected);
+  assert.deepEqual(getActiveAssets(buildScript), expected);
+});
+
+test("production build excludes publisher-only and confirmed unused assets", () => {
+  for (const path of [
+    "assets/archive-planet-feed.mp4",
+    "assets/operations-planet-video.mp4",
+    "assets/hero-random/fleet-hero-01.mp4",
+    "assets/hero-random/fleet-hero-02.mp4",
+    "assets/fleet-command.js",
+    "assets/js/deferred-media.js",
+    "assets/js/fleet-data.js",
+    "assets/gallery/thumbs",
+    "assets/gallery/originals",
+  ]) {
+    assert.match(buildScript, new RegExp(path.replaceAll("/", "\\/")));
+  }
 });
 
 test("production build includes one dedicated mobile encode for every operation", () => {
@@ -357,7 +388,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
 
 test("homepage lifecycle initializes every controller once and cleans up", () => {
   assert.match(cinematicHomepage, /initHeroVideo/);
-  assert.match(cinematicHomepage, /initDeferredMedia/);
+  assert.doesNotMatch(cinematicHomepage, /initDeferredMedia|deferred-media\.js/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
@@ -365,7 +396,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
-  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
+  assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260729-production-trim-v62/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initOperationMotion/);
   assert.match(cinematicHomepage, /initSectionNavigation/);
@@ -389,7 +420,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-lightbox-webp-v61/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-production-trim-v62/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {
@@ -449,7 +480,8 @@ test("member brawl popup preserves the published runtime without a nested frame 
   assert.match(memberBrawlPage, /data-brawl-start/);
   assert.match(memberBrawlPage, /INITIATE MEMBER ARENA/);
   assert.match(memberBrawlPage, /fleet-command-brawl\.js\?v=20260712-audit-fixes/);
-  assert.match(memberBrawlPage, /fleet-command\.js\?v=20260712-audit-fixes/);
+  assert.doesNotMatch(memberBrawlPage, /<script[^>]+fleet-command\.js/);
+  assert.match(memberBrawlPage, /class="member-brawl-terminal reveal is-visible"/);
   assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_WIDTH\s*=\s*1440/);
   assert.match(memberBrawlDialog, /BRAWL_DESIGN_HEIGHT\s*=\s*900/);
@@ -459,7 +491,7 @@ test("member brawl popup preserves the published runtime without a nested frame 
   assert.match(cinematicCss, /\.hero-title h1 span[\s\S]*?font-weight:\s*900/);
   assert.match(cinematicTimelines, /ease:\s*"power2\.out"/);
   assert.match(homepage, /scrolling="no"/);
-  assert.match(memberBrawlDialog, /member-brawl\.html\?v=20260720-brawl-frame-v16/);
+  assert.match(memberBrawlDialog, /member-brawl\.html\?v=20260729-production-trim-v62/);
   assert.match(memberBrawlPage, /\.brawl-section[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/);
   assert.match(memberBrawlPage, /\.member-brawl-terminal[\s\S]*?width:\s*100%;[\s\S]*?height:\s*100%/);
   assert.match(buildScript, /"member-brawl\.html"/);
@@ -468,7 +500,6 @@ test("member brawl popup preserves the published runtime without a nested frame 
     ["assets/fleet-command-brawl.js", "a7a88d8a42b1c6412238f0a5581e9cb9b3a91c65e930bbee33425d7bdc5af793"],
     ["assets/fleet-command.css", "96c55b6d0d8e5f196e44c310cbd0486c88f561bb6e854d0df2a18cffdcbd6a89"],
     ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],
-    ["assets/fleet-command.js", "ab0d6e1f29a97c751f259112e4ff1e60606091f5afd1fdddfba518b4d2c88cb9"],
   ]);
 
   for (const [path, expected] of expectedHashes) {
