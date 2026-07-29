@@ -17,10 +17,8 @@ export function createArchiveSession(index = 0, restoreFocus = null) {
   return { index, restoreFocus };
 }
 
-export function shouldOpenArchiveFromClick(event, trigger) {
-  if (event?.defaultPrevented) return false;
-  const archiveIndex = trigger?.closest?.("[data-archive-index]");
-  return archiveIndex?.dataset?.dragSuppressClick !== "true";
+export function shouldOpenArchiveFromClick(event) {
+  return !event?.defaultPrevented;
 }
 
 function getArchiveItems(root) {
@@ -84,7 +82,7 @@ export function initArchiveLightbox({ root = globalThis.document } = {}) {
 
   const onOpen = (event) => {
     const trigger = event.currentTarget;
-    if (!shouldOpenArchiveFromClick(event, trigger)) return;
+    if (!shouldOpenArchiveFromClick(event)) return;
     open(Number(trigger.dataset.archiveOpen), trigger);
   };
   const onDialogClick = (event) => {

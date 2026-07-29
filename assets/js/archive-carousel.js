@@ -42,9 +42,9 @@ export function isCarouselDrag(startX, currentX, threshold = 8, startY = 0, curr
   return Number.isFinite(distance) && distance >= minimum;
 }
 
-export function shouldSuppressCarouselClick({ dragged = false, startedAt = 0, endedAt = 0, holdThreshold = 240 } = {}) {
+export function shouldAllowCarouselClick({ dragged = false, startedAt = 0, endedAt = 0, holdThreshold = 240 } = {}) {
   const duration = Math.max(0, Number(endedAt) - Number(startedAt));
-  return Boolean(dragged) || duration >= Math.max(0, Number(holdThreshold) || 0);
+  return !dragged && duration < Math.max(0, Number(holdThreshold) || 0);
 }
 
 export function shouldAdvanceCarousel({
@@ -123,8 +123,7 @@ export function initArchiveCarousel({
   let dragStartScrollLeft = 0;
   let dragStartedAt = 0;
   let dragging = false;
-  let suppressClickUntil = 0;
-  let suppressClickTimer = 0;
+  let allowPointerClickUntil = 0;
   let touchStartX = null;
   let touchStartY = null;
   let touchStartedAt = 0;
@@ -132,7 +131,7 @@ export function initArchiveCarousel({
 
   const DRAG_THRESHOLD_PX = 8;
   const HOLD_SUPPRESSION_MS = 240;
-  const CLICK_SUPPRESSION_MS = 900;
+  const POINTER_CLICK_WINDOW_MS = 700;
   const latestIndex = getLatestBatchStartIndex(cards);
   const now = () => view?.performance?.now?.() ?? Date.now();
 
@@ -224,22 +223,16 @@ export function initArchiveCarousel({
     nudge(event.key === "ArrowRight" ? 1 : -1);
   }
 
-  function clearDragSuppression() {
-    suppressClickUntil = 0;
-    archiveIndex.dataset.dragSuppressClick = "false";
-    if (suppressClickTimer) cancelSchedule(suppressClickTimer);
-    suppressClickTimer = 0;
+  function clearPointerClickPermission() {
+    allowPointerClickUntil = 0;
   }
 
-  function armDragSuppression() {
-    suppressClickUntil = now() + CLICK_SUPPRESSION_MS;
-    archiveIndex.dataset.dragSuppressClick = "true";
-    if (suppressClickTimer) cancelSchedule(suppressClickTimer);
-    suppressClickTimer = schedule(clearDragSuppression, CLICK_SUPPRESSION_MS);
+  function allowNextPointerClick() {
+    allowPointerClickUntil = now() + POINTER_CLICK_WINDOW_MS;
   }
 
   function handleTouchStart(event) {
-    clearDragSuppression();
+    clearPointerClickPermission();
     touchActive = true;
     touchDragging = false;
     touchStartX = event.touches?.[0]?.clientX ?? null;
@@ -255,13 +248,18 @@ export function initArchiveCarousel({
     }
   }
 
-  function handleTouchEnd() {
-    if (shouldSuppressCarouselClick({
-      dragged: touchDragging,
+  function finishTouch(event, { cancelled = false } = {}) {
+    const touch = event?.changedTouches?.[0];
+    const endedAsDrag = touchDragging || (touchStartX != null && touchStartY != null && touch
+      ? isCarouselDrag(touchStartX, touch.clientX, DRAG_THRESHOLD_PX, touchStartY, touch.clientY)
+      : false);
+    if (!cancelled && shouldAllowCarouselClick({
+      dragged: endedAsDrag,
       startedAt: touchStartedAt,
       endedAt: now(),
       holdThreshold: HOLD_SUPPRESSION_MS,
-    })) armDragSuppression();
+    })) allowNextPointerClick();
+    else clearPointerClickPermission();
     touchActive = false;
     touchDragging = false;
     touchStartX = null;
@@ -271,15 +269,30 @@ export function initArchiveCarousel({
     lastTimestamp = null;
   }
 
+  function handleTouchEnd(event) {
+    finishTouch(event);
+  }
+
+  function handleTouchCancel(event) {
+    finishTouch(event, { cancelled: true });
+  }
+
   function finishPointerDrag(event, { cancelled = false } = {}) {
     if (event?.pointerId !== dragPointerId) return;
-    if (cancelled) clearDragSuppression();
-    else if (shouldSuppressCarouselClick({
-      dragged: dragging,
+    const endedAsDrag = dragging || isCarouselDrag(
+      dragStartX,
+      event.clientX,
+      DRAG_THRESHOLD_PX,
+      dragStartY,
+      event.clientY,
+    );
+    if (!cancelled && shouldAllowCarouselClick({
+      dragged: endedAsDrag,
       startedAt: dragStartedAt,
       endedAt: now(),
       holdThreshold: HOLD_SUPPRESSION_MS,
-    })) armDragSuppression();
+    })) allowNextPointerClick();
+    else clearPointerClickPermission();
     dragging = false;
     dragPointerId = null;
     dragStartedAt = 0;
@@ -294,7 +307,7 @@ export function initArchiveCarousel({
 
   function handlePointerDown(event) {
     if (event.pointerType !== "mouse" || event.button !== 0 || dragPointerId != null) return;
-    clearDragSuppression();
+    clearPointerClickPermission();
     dragPointerId = event.pointerId;
     dragStartX = event.clientX;
     dragStartY = event.clientY;
@@ -327,10 +340,12 @@ export function initArchiveCarousel({
   }
 
   function handleViewportClick(event) {
-    if (!dragging && now() > suppressClickUntil) return;
+    if (event.detail === 0) return;
+    const clickIsAllowed = now() <= allowPointerClickUntil;
+    clearPointerClickPermission();
+    if (clickIsAllowed) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    clearDragSuppression();
   }
 
   function preventNativeDrag(event) {
@@ -348,6 +363,7 @@ export function initArchiveCarousel({
   }
 
   function handleVisibility() {
+    clearPointerClickPermission();
     if (!root.hidden) {
       touchActive = false;
       dragging = false;
@@ -361,6 +377,7 @@ export function initArchiveCarousel({
   }
 
   function recoverTransientPause() {
+    clearPointerClickPermission();
     touchActive = false;
     dragging = false;
     dragPointerId = null;
@@ -438,7 +455,7 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchstart", handleTouchStart, { passive: true });
   viewport.addEventListener("touchmove", handleTouchMove, { passive: true });
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
-  viewport.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+  viewport.addEventListener("touchcancel", handleTouchCancel, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
   latest?.addEventListener("click", jumpToLatest);
   view?.addEventListener?.("resize", handleResize, { passive: true });
@@ -456,7 +473,6 @@ export function initArchiveCarousel({
       if (resizeFrame) cancelFrame(resizeFrame);
       if (visibilityFrame) cancelFrame(visibilityFrame);
       if (pageScrollTimer) cancelSchedule(pageScrollTimer);
-      if (suppressClickTimer) cancelSchedule(suppressClickTimer);
       clearLatestTransition();
       observer?.disconnect();
       viewport.removeEventListener("keydown", handleKeydown);
@@ -470,7 +486,7 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchstart", handleTouchStart);
       viewport.removeEventListener("touchmove", handleTouchMove);
       viewport.removeEventListener("touchend", handleTouchEnd);
-      viewport.removeEventListener("touchcancel", handleTouchEnd);
+      viewport.removeEventListener("touchcancel", handleTouchCancel);
       toggle?.removeEventListener("click", toggleAutoPlay);
       latest?.removeEventListener("click", jumpToLatest);
       view?.removeEventListener?.("resize", handleResize);
@@ -481,7 +497,6 @@ export function initArchiveCarousel({
       view?.removeEventListener?.("focus", recoverTransientPause);
       root.removeEventListener?.("visibilitychange", handleVisibility);
       delete archiveIndex.dataset.carouselState;
-      delete archiveIndex.dataset.dragSuppressClick;
       cloneHandlers.forEach(([clone, handler]) => {
         clone.removeEventListener("click", handler);
         clone.remove();

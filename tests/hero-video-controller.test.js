@@ -208,6 +208,7 @@ test("browser controller reuses the synchronously bootstrapped source", () => {
   const harness = createHeroHarness();
   const media = resolveHeroVideo(getHeroMedia(1), { viewportWidth: 390, pixelRatio: 3 });
   harness.video.src = media.video;
+  harness.video.poster = media.poster;
   harness.video.dataset.heroVideoSelected = media.id;
   harness.video.dataset.heroVideoQuality = media.quality;
   harness.video.readyState = 4;
@@ -215,13 +216,20 @@ test("browser controller reuses the synchronously bootstrapped source", () => {
 
   const controller = initHeroVideo({
     root: harness.root,
-    bootstrap: { index: 1 },
+    bootstrap: {
+      index: 1,
+      id: media.id,
+      video: media.video,
+      poster: media.poster,
+      quality: media.quality,
+    },
     reducedMotion: false,
-    viewportWidth: 390,
-    pixelRatio: 3,
+    viewportWidth: 2_560,
+    pixelRatio: 1,
   });
 
   assert.equal(controller.index, 1);
+  assert.equal(controller.media.quality, "720p");
   assert.equal(harness.video.src, media.video);
   assert.equal(harness.video.loadCalls, 0);
   assert.equal(harness.video.playCalls, 0);

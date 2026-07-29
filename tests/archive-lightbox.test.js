@@ -33,11 +33,6 @@ test("archive session retains the element that should receive restored focus", (
 });
 
 test("lightbox opens only for a real click, never for a suppressed drag release", () => {
-  const makeTrigger = (dragSuppressClick) => ({
-    closest: () => ({ dataset: { dragSuppressClick } }),
-  });
-
-  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: false }, makeTrigger("false")), true);
-  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: false }, makeTrigger("true")), false);
-  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: true }, makeTrigger("false")), false);
+  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: false }), true);
+  assert.equal(shouldOpenArchiveFromClick({ defaultPrevented: true }), false);
 });

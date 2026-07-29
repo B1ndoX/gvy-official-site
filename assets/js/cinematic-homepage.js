@@ -1,8 +1,8 @@
-import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-no-numbers-v59";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260729-gallery-no-numbers-v59";
+import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-carousel-click-gate-v60";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260729-carousel-click-gate-v60";
 import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260728-zoom-scale-v51";
 import { initDeferredMedia } from "./deferred-media.js";
-import { initHeroVideo } from "./hero-video-controller.js?v=20260722-breathing-media-v26";
+import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260720-brawl-frame-v16";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
 import { initSectionNavigation } from "./section-navigation.js?v=20260726-nav-video-quality-v32";

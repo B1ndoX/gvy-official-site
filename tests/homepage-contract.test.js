@@ -316,8 +316,10 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /setPointerCapture/);
   assert.match(archiveCarousel, /DRAG_THRESHOLD_PX\s*=\s*8/);
   assert.match(archiveCarousel, /HOLD_SUPPRESSION_MS\s*=\s*240/);
-  assert.match(archiveCarousel, /shouldSuppressCarouselClick/);
-  assert.match(archiveCarousel, /suppressClickUntil/);
+  assert.match(archiveCarousel, /shouldAllowCarouselClick/);
+  assert.match(archiveCarousel, /allowPointerClickUntil/);
+  assert.match(archiveCarousel, /event\.detail === 0/);
+  assert.doesNotMatch(archiveCarousel, /suppressClickUntil|suppressClickTimer|dragSuppressClick/);
   assert.match(archiveCarousel, /handleViewportClick, true/);
   assert.match(archiveCarousel, /ArrowRight/);
   assert.match(archiveCarousel, /requestAnimationFrame/);
@@ -358,11 +360,11 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-no-numbers-v59/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-no-numbers-v59/);
+  assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-carousel-click-gate-v60/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-carousel-click-gate-v60/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
-  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
+  assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260720-brawl-frame-v16/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initOperationMotion/);
@@ -387,7 +389,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-no-numbers-v59/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-no-numbers-v59/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-startup-interaction-v60/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {

@@ -9,7 +9,7 @@ import {
   normalizeLoopPosition,
   resolveCarouselTargetIndex,
   shouldAdvanceCarousel,
-  shouldSuppressCarouselClick,
+  shouldAllowCarouselClick,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
 
@@ -21,10 +21,10 @@ test("carousel distinguishes a click from an intentional drag", () => {
 });
 
 test("only a short stationary press may open a gallery photo", () => {
-  assert.equal(shouldSuppressCarouselClick({ dragged: false, startedAt: 100, endedAt: 339 }), false);
-  assert.equal(shouldSuppressCarouselClick({ dragged: false, startedAt: 100, endedAt: 340 }), true);
-  assert.equal(shouldSuppressCarouselClick({ dragged: true, startedAt: 100, endedAt: 120 }), true);
-  assert.equal(shouldSuppressCarouselClick({ dragged: true, startedAt: 100, endedAt: 500 }), true);
+  assert.equal(shouldAllowCarouselClick({ dragged: false, startedAt: 100, endedAt: 339 }), true);
+  assert.equal(shouldAllowCarouselClick({ dragged: false, startedAt: 100, endedAt: 340 }), false);
+  assert.equal(shouldAllowCarouselClick({ dragged: true, startedAt: 100, endedAt: 120 }), false);
+  assert.equal(shouldAllowCarouselClick({ dragged: true, startedAt: 100, endedAt: 500 }), false);
 });
 
 test("carousel indexes wrap in both directions", () => {

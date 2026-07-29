@@ -153,12 +153,29 @@ export function initHeroVideo({
   const selection = bootstrapIsValid
     ? { index: bootstrapIndex, shouldPersist: false }
     : resolveHeroSelection({ record, random, now, stickyTtlMs });
-  const media = resolveHeroVideo(getHeroMedia(selection.index), {
+  const selectedMedia = getHeroMedia(selection.index);
+  const resolvedMedia = resolveHeroVideo(selectedMedia, {
     viewportWidth,
     pixelRatio,
     saveData: connection?.saveData === true,
     effectiveType: connection?.effectiveType || "",
   });
+  const bootstrapSourceIsValid = bootstrapIsValid
+    && bootstrap?.id === selectedMedia.id
+    && typeof bootstrap?.video === "string"
+    && bootstrap.video.length > 0
+    && typeof bootstrap?.poster === "string"
+    && bootstrap.poster.length > 0
+    && typeof bootstrap?.quality === "string"
+    && bootstrap.quality.length > 0;
+  const media = bootstrapSourceIsValid
+    ? {
+        ...resolvedMedia,
+        video: bootstrap.video,
+        poster: bootstrap.poster,
+        quality: bootstrap.quality,
+      }
+    : resolvedMedia;
   const sourceAlreadyAssigned = video.dataset.heroVideoSelected === media.id
     && video.dataset.heroVideoQuality === media.quality
     && Boolean(video.src);
