@@ -32,6 +32,28 @@ export function getCarouselNavigationIndex(position, loopWidth, navigationCount)
   return wrapCarouselIndex(Math.round(progress * nodeCount), nodeCount);
 }
 
+export function getCarouselNavigationRevealPosition({
+  scrollLeft = 0,
+  viewportWidth = 0,
+  contentWidth = 0,
+  nodeLeft = 0,
+  nodeWidth = 0,
+  padding = 12,
+} = {}) {
+  const viewport = Math.max(0, Number(viewportWidth) || 0);
+  const maximum = Math.max(0, (Number(contentWidth) || 0) - viewport);
+  const current = Math.min(maximum, Math.max(0, Number(scrollLeft) || 0));
+  const inset = Math.min(viewport / 2, Math.max(0, Number(padding) || 0));
+  const start = Math.max(0, Number(nodeLeft) || 0);
+  const end = start + Math.max(0, Number(nodeWidth) || 0);
+  let target = current;
+
+  if (start < current + inset) target = start - inset;
+  else if (end > current + viewport - inset) target = end - viewport + inset;
+
+  return Math.min(maximum, Math.max(0, target));
+}
+
 export function getCarouselCardPosition(cards, index) {
   if (!cards?.length) return 0;
   const targetIndex = resolveCarouselTargetIndex(index, cards.length);
@@ -57,6 +79,7 @@ export function shouldAdvanceCarousel({
   loopWidth,
   manuallyPaused,
   touchActive,
+  controlHovered = false,
   pageScrolling = false,
   inView,
   hidden,
@@ -64,6 +87,7 @@ export function shouldAdvanceCarousel({
   return loopWidth > 0
     && !manuallyPaused
     && !touchActive
+    && !controlHovered
     && !pageScrolling
     && inView
     && !hidden;
@@ -132,6 +156,7 @@ export function initArchiveCarousel({
   let paginationStartY = 0;
   let paginationStartScrollLeft = 0;
   let paginationDragging = false;
+  let paginationHovered = false;
   let suppressNavigationClick = false;
   let dragPointerId = null;
   let dragStartX = 0;
@@ -181,9 +206,14 @@ export function initArchiveCarousel({
     });
     const activeButton = navigationButtons[nextIndex];
     if (!activeButton || paginationDragging) return;
-    const maximumScroll = Math.max(0, pagination.scrollWidth - pagination.clientWidth);
-    const centeredLeft = activeButton.offsetLeft + (activeButton.offsetWidth / 2) - (pagination.clientWidth / 2);
-    const targetLeft = Math.min(maximumScroll, Math.max(0, centeredLeft));
+    const targetLeft = getCarouselNavigationRevealPosition({
+      scrollLeft: pagination.scrollLeft,
+      viewportWidth: pagination.clientWidth,
+      contentWidth: pagination.scrollWidth,
+      nodeLeft: activeButton.offsetLeft,
+      nodeWidth: activeButton.offsetWidth,
+    });
+    if (Math.abs(targetLeft - pagination.scrollLeft) < 0.5) return;
     if (pagination.scrollTo) {
       pagination.scrollTo({ left: targetLeft, behavior: isInitialUpdate ? "auto" : "smooth" });
     } else {
@@ -252,6 +282,7 @@ export function initArchiveCarousel({
       loopWidth,
       manuallyPaused,
       touchActive,
+      controlHovered: paginationHovered,
       pageScrolling,
       inView,
       hidden: root.hidden,
@@ -476,6 +507,16 @@ export function initArchiveCarousel({
     viewport.classList.remove("is-returning-target");
   }
 
+  function handlePaginationMouseEnter() {
+    paginationHovered = true;
+    lastTimestamp = null;
+  }
+
+  function handlePaginationMouseLeave() {
+    paginationHovered = false;
+    lastTimestamp = null;
+  }
+
   function handlePaginationPointerDown(event) {
     if (event.pointerType !== "mouse" || event.button !== 0 || paginationPointerId != null) return;
     paginationPointerId = event.pointerId;
@@ -600,6 +641,8 @@ export function initArchiveCarousel({
   viewport.addEventListener("touchend", handleTouchEnd, { passive: true });
   viewport.addEventListener("touchcancel", handleTouchCancel, { passive: true });
   toggle?.addEventListener("click", toggleAutoPlay);
+  pagination?.addEventListener("mouseenter", handlePaginationMouseEnter);
+  pagination?.addEventListener("mouseleave", handlePaginationMouseLeave);
   pagination?.addEventListener("pointerdown", handlePaginationPointerDown);
   pagination?.addEventListener("pointermove", handlePaginationPointerMove, { passive: false });
   pagination?.addEventListener("pointerup", handlePaginationPointerUp);
@@ -636,6 +679,8 @@ export function initArchiveCarousel({
       viewport.removeEventListener("touchend", handleTouchEnd);
       viewport.removeEventListener("touchcancel", handleTouchCancel);
       toggle?.removeEventListener("click", toggleAutoPlay);
+      pagination?.removeEventListener("mouseenter", handlePaginationMouseEnter);
+      pagination?.removeEventListener("mouseleave", handlePaginationMouseLeave);
       pagination?.removeEventListener("pointerdown", handlePaginationPointerDown);
       pagination?.removeEventListener("pointermove", handlePaginationPointerMove);
       pagination?.removeEventListener("pointerup", handlePaginationPointerUp);

@@ -5,6 +5,7 @@ import {
   advanceCarouselPosition,
   getCarouselCardPosition,
   getCarouselNavigationIndex,
+  getCarouselNavigationRevealPosition,
   getCarouselNavigationTargetIndexes,
   isCarouselDrag,
   normalizeLoopPosition,
@@ -59,6 +60,21 @@ test("gallery navigation follows the exact photo across continuous loop progress
   assert.equal(getCarouselNavigationIndex(1000, 1000, 10), 0);
 });
 
+test("gallery navigation reveals the active node with the smallest possible movement", () => {
+  const base = {
+    scrollLeft: 100,
+    viewportWidth: 220,
+    contentWidth: 1200,
+    padding: 12,
+  };
+
+  assert.equal(getCarouselNavigationRevealPosition({ ...base, nodeLeft: 150, nodeWidth: 54 }), 100);
+  assert.equal(getCarouselNavigationRevealPosition({ ...base, nodeLeft: 50, nodeWidth: 30 }), 38);
+  assert.equal(getCarouselNavigationRevealPosition({ ...base, nodeLeft: 300, nodeWidth: 54 }), 146);
+  assert.equal(getCarouselNavigationRevealPosition({ ...base, scrollLeft: 970, nodeLeft: 1170, nodeWidth: 54 }), 980);
+  assert.equal(getCarouselNavigationRevealPosition({ ...base, scrollLeft: 10, nodeLeft: 0, nodeWidth: 54 }), 0);
+});
+
 test("carousel converts a target card to the loop-relative scroll position", () => {
   const cards = [
     { offsetLeft: 24 },
@@ -98,6 +114,7 @@ test("continuous carousel pauses only for direct interaction, visibility, or its
 
   assert.equal(shouldAdvanceCarousel(baseState), true);
   assert.equal(shouldAdvanceCarousel({ ...baseState, touchActive: true }), false);
+  assert.equal(shouldAdvanceCarousel({ ...baseState, controlHovered: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, pageScrolling: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, manuallyPaused: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, inView: false }), false);
