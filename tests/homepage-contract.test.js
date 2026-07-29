@@ -306,8 +306,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /data-hero-exit-complete/);
   assert.match(cinematicTimelines, /gsap\.set\(heroText,\s*\{[\s\S]*?autoAlpha:\s*0/);
   assert.match(cinematicTimelines, /const heroExitText = \[\.\.\.heroText\]\.reverse\(\)/);
-  assert.match(cinematicTimelines, /const enterDuration = 3\.8/);
-  assert.match(cinematicTimelines, /const enterStagger = 0\.76/);
+  assert.match(cinematicTimelines, /enterDuration = 3\.8/);
+  assert.match(cinematicTimelines, /enterStagger = 0\.76/);
   assert.match(cinematicTimelines, /exitStart = 16\.5/);
   assert.match(cinematicTimelines, /exitDuration = 1\.15/);
   assert.match(cinematicTimelines, /exitStagger = 0\.62/);
@@ -424,7 +424,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260730-gallery-speed-v68/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260730-2k-hero-copy-v70/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260729-production-trim-v62/);
@@ -450,8 +450,9 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260730-gallery-speed-v68/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260730-2k-scroll-pacing-v69/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260730-2k-hero-copy-v70/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260730-2k-hero-copy-v70/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260730-2k-hero-copy-v70/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
 
@@ -460,6 +461,17 @@ test("desktop operation scenes follow continuous scroll progress without forced 
   assert.match(cinematicTimelines, /const stageSettleOffset = 0\.82/);
   assert.match(cinematicTimelines, /scrub:\s*0\.42/);
   assert.doesNotMatch(cinematicTimelines, /snapToSettledOperation|snap:\s*\{/);
+});
+
+test("large 16:9 hero restores its breathing room while only accelerating entry", () => {
+  assert.match(cinematicTimelines, /const LARGE_16_9_DESKTOP_QUERY = "\(min-width: 1920px\)[^"]+\(min-aspect-ratio: 17 \/ 10\)"/);
+  assert.match(cinematicTimelines, /enterDuration:\s*large16x9Desktop \? 3\.5 : 3\.8/);
+  assert.match(cinematicTimelines, /enterStagger:\s*large16x9Desktop \? 0\.7 : 0\.76/);
+  assert.match(cinematicTimelines, /exitStart = 16\.5/);
+  assert.match(cinematicTimelines, /exitDuration = 1\.15/);
+  assert.match(cinematicTimelines, /exitStagger = 0\.62/);
+  assert.match(cinematicCss, /\.hero-motto\s*\{[\s\S]*?bottom:\s*15vh/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-sequence\s*\{\s*height:\s*220svh;\s*\}[\s\S]*?\.hero-motto\s*\{\s*right:\s*20px;\s*bottom:\s*17vh;/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {
@@ -487,7 +499,7 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
   assert.match(
     cinematicCss,
-    /@media \(min-width: 1920px\) and \(max-width: 2560px\) and \(min-height: 1100px\) and \(min-aspect-ratio: 17 \/ 10\)[\s\S]*?\.hero-sequence\s*\{[\s\S]*?height:\s*180svh[\s\S]*?\.operations-section\s*\{[\s\S]*?min-height:\s*330svh[\s\S]*?\.archive-section\s*\{[\s\S]*?padding:\s*12vh 0 8vh[\s\S]*?\.recruit-section\s*\{[\s\S]*?min-height:\s*90svh/,
+    /@media \(min-width: 1920px\) and \(max-width: 2560px\) and \(min-height: 1100px\) and \(min-aspect-ratio: 17 \/ 10\)[\s\S]*?\.hero-sequence\s*\{[\s\S]*?height:\s*250svh[\s\S]*?\.hero-motto\s*\{[\s\S]*?bottom:\s*clamp\(220px, 17vh, 270px\)[\s\S]*?max-width:\s*clamp\(420px, 21vw, 520px\)[\s\S]*?\.hero-motto p\s*\{[\s\S]*?font-size:\s*clamp\(1\.18rem, 1vw, 1\.38rem\)[\s\S]*?\.hero-motto span\s*\{[\s\S]*?font-size:\s*clamp\(0\.82rem, 0\.7vw, 1rem\)[\s\S]*?\.operations-section\s*\{[\s\S]*?min-height:\s*330svh[\s\S]*?\.archive-section\s*\{[\s\S]*?padding:\s*12vh 0 8vh[\s\S]*?\.recruit-section\s*\{[\s\S]*?min-height:\s*90svh/,
   );
 });
 

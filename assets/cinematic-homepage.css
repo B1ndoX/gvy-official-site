@@ -411,7 +411,7 @@ a:focus-visible {
   position: absolute;
   z-index: 5;
   right: var(--page-gutter);
-  bottom: 13vh;
+  bottom: 15vh;
   display: flex;
   max-width: 360px;
   flex-direction: column;
@@ -1809,7 +1809,20 @@ noscript {
    on their existing values. */
 @media (min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10) {
   .hero-sequence {
-    height: 180svh;
+    height: 250svh;
+  }
+
+  .hero-motto {
+    bottom: clamp(220px, 17vh, 270px);
+    max-width: clamp(420px, 21vw, 520px);
+  }
+
+  .hero-motto p {
+    font-size: clamp(1.18rem, 1vw, 1.38rem);
+  }
+
+  .hero-motto span {
+    font-size: clamp(0.82rem, 0.7vw, 1rem);
   }
 
   .operations-section {
@@ -1886,7 +1899,7 @@ noscript {
   .hero-title h1 span { font-size: clamp(2.35rem, 12.5vw, 4.6rem); white-space: normal; }
   .hero-title h1 small,
   .hero-title h1 em { font-size: 0.68rem; }
-  .hero-motto { right: 20px; bottom: 15vh; max-width: 270px; }
+  .hero-motto { right: 20px; bottom: 17vh; max-width: 270px; }
   .hero-motto p { font-size: 0.87rem; }
   .hero-scroll { bottom: 25px; }
   html[data-hero-exit-complete] :is(

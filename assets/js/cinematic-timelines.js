@@ -1,4 +1,5 @@
 const TIMELINE_PREFIX = "gvy-";
+const LARGE_16_9_DESKTOP_QUERY = "(min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10)";
 
 function fadeThroughViewport(
   gsap,
@@ -103,6 +104,8 @@ function createHeroTimeline(
   {
     animateMedia,
     animateBlur = true,
+    enterDuration = 3.8,
+    enterStagger = 0.76,
     exitStart = 16.5,
     exitDuration = 1.15,
     exitStagger = 0.62,
@@ -123,8 +126,6 @@ function createHeroTimeline(
   ];
   const heroExitText = [...heroText].reverse();
   const enterStart = 1;
-  const enterDuration = 3.8;
-  const enterStagger = 0.76;
   const enterEnd = enterStart + enterDuration + (heroText.length - 1) * enterStagger;
   const exitEnd = exitStart + exitDuration + (heroExitText.length - 1) * exitStagger;
   const rootElement = root.documentElement;
@@ -215,7 +216,12 @@ function createHeroTimeline(
 
 function createDesktopTimelines(gsap, ScrollTrigger, root) {
   const cleanups = [];
-  createHeroTimeline(gsap, root, { animateMedia: true });
+  const large16x9Desktop = root.defaultView?.matchMedia?.(LARGE_16_9_DESKTOP_QUERY).matches === true;
+  createHeroTimeline(gsap, root, {
+    animateMedia: true,
+    enterDuration: large16x9Desktop ? 3.5 : 3.8,
+    enterStagger: large16x9Desktop ? 0.7 : 0.76,
+  });
 
   const signal = root.querySelector("[data-signal-section]");
   if (signal) {
