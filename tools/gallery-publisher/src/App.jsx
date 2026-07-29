@@ -16,7 +16,7 @@ import { Icon } from "./icons.jsx";
 import { moveItem, validateSelectedFiles } from "./utils.js";
 
 const EMPTY_STATUS = {
-  gallery: { count: 0, latestStart: 0, latestEnd: 0, maxPhotoNumber: 0, previewCount: 0, items: [], duplicateGroups: [] },
+  gallery: { count: 0, previewCount: 0, items: [], duplicateGroups: [] },
   repository: { branch: "检查中", connected: false, changes: [] },
   operation: { status: "idle", message: "正在读取官网相册", steps: [] },
   session: null,
@@ -57,7 +57,6 @@ export default function App() {
     return () => window.clearInterval(timer);
   }, [busy, refresh]);
 
-  const startNumber = (status.session?.displayStart || status.gallery.count + 1);
   const activityMessage = status.operation?.message || status.activity?.[0]?.message || "等待添加照片";
   const repositoryDirty = status.repository?.changes?.length > 0;
 
@@ -193,13 +192,12 @@ export default function App() {
           )}
           <PhotoFilmstrip
             photos={photos}
-            startNumber={startNumber}
             onRemove={removePhoto}
             onMove={reorderPhoto}
             disabled={busy || Boolean(status.session)}
           />
           {!photos.length && status.session?.verified ? null : !photos.length ? (
-            <div className="empty-filmstrip"><span>选择照片后将在这里确认编号与顺序</span></div>
+            <div className="empty-filmstrip"><span>选择照片后将在这里确认本批内容与先后顺序</span></div>
           ) : null}
         </section>
         <CheckRail operation={status.operation} />

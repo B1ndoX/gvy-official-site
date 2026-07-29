@@ -1293,10 +1293,6 @@ html[data-motion-ready] :is(
   -webkit-user-drag: none;
 }
 
-.archive-grid button > span {
-  display: none;
-}
-
 .archive-gallery-controls {
   display: flex;
   width: max-content;
@@ -1323,100 +1319,6 @@ html[data-motion-ready] :is(
   background: rgba(255, 255, 255, 0.06);
   cursor: pointer;
   transition: color 180ms ease, background 180ms ease, transform 180ms ease;
-}
-
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
-
-.archive-scrubber {
-  width: clamp(150px, 20vw, 260px);
-  height: 38px;
-  display: grid;
-  grid-template-columns: minmax(92px, 1fr) 32px;
-  align-items: center;
-  gap: 9px;
-  padding: 0 11px 0 13px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.archive-scrubber input {
-  --archive-scrubber-progress: 0%;
-  width: 100%;
-  height: 18px;
-  margin: 0;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: ew-resize;
-  background: transparent;
-  touch-action: none;
-}
-
-.archive-scrubber:focus-within {
-  box-shadow: inset 0 0 0 1px rgba(182, 216, 233, 0.34);
-}
-
-.archive-scrubber input:focus,
-.archive-scrubber input:focus-visible {
-  outline: none;
-}
-
-.archive-scrubber input::-webkit-slider-runnable-track {
-  height: 3px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(225, 238, 245, 0.88) 0 var(--archive-scrubber-progress), rgba(154, 184, 201, 0.2) var(--archive-scrubber-progress) 100%);
-}
-
-.archive-scrubber input::-moz-range-track {
-  height: 3px;
-  border: 0;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(225, 238, 245, 0.88) 0 var(--archive-scrubber-progress), rgba(154, 184, 201, 0.2) var(--archive-scrubber-progress) 100%);
-}
-
-.archive-scrubber input::-webkit-slider-thumb {
-  width: 13px;
-  height: 13px;
-  margin-top: -5px;
-  appearance: none;
-  -webkit-appearance: none;
-  border: 2px solid #edf7fb;
-  border-radius: 50%;
-  background: #09131d;
-  box-shadow: 0 0 0 4px rgba(222, 239, 247, 0.08), 0 2px 12px rgba(0, 0, 0, 0.5);
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.archive-scrubber input::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border: 2px solid #edf7fb;
-  border-radius: 50%;
-  background: #09131d;
-  box-shadow: 0 0 0 4px rgba(222, 239, 247, 0.08), 0 2px 12px rgba(0, 0, 0, 0.5);
-}
-
-.archive-index.is-scrubbing .archive-scrubber input::-webkit-slider-thumb,
-.archive-scrubber input:hover::-webkit-slider-thumb {
-  transform: scale(1.16);
-  box-shadow: 0 0 0 5px rgba(222, 239, 247, 0.12), 0 2px 14px rgba(0, 0, 0, 0.58);
-}
-
-.archive-scrubber output {
-  color: rgba(205, 220, 228, 0.72);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.61rem;
-  letter-spacing: 0.08em;
-  text-align: right;
 }
 
 .archive-gallery-controls > .archive-latest-button {
@@ -1723,7 +1625,7 @@ html[data-motion-ready] :is(
   width: min(960px, 100%);
   margin-top: 16px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   color: var(--text-secondary);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
@@ -2066,7 +1968,6 @@ noscript {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
-  .archive-scrubber { width: clamp(122px, 37vw, 168px); grid-template-columns: minmax(76px, 1fr) 28px; padding-inline: 10px; gap: 7px; }
 
   .recruit-section { min-height: 100svh; }
   .recruit-image img { object-position: 62% center; }
@@ -2096,8 +1997,7 @@ noscript {
   .archive-dialog-nav { top: auto; bottom: 22px; width: 45px; height: 45px; transform: none; }
   .archive-dialog-prev { left: 20px; }
   .archive-dialog-next { right: 20px; }
-  .archive-dialog figcaption { padding: 0 58px; justify-content: center; }
-  .archive-dialog figcaption p { display: none; }
+  .archive-dialog figcaption { padding: 0 58px; justify-content: flex-end; }
   .member-brawl-dialog {
     width: min(1440px, calc(100vw - 24px), calc(160svh - 38.4px));
     border: 1px solid rgba(102, 188, 229, 0.3);

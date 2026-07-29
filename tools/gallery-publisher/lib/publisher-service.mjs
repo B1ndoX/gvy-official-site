@@ -6,7 +6,7 @@ import { createHash, randomUUID } from "node:crypto";
 import {
   appendGalleryBatch,
   assertOnlyManagedGalleryChanged,
-  createBatchNumbers,
+  createBatchAssetIds,
   parseGalleryState,
   removeGalleryItems,
 } from "./gallery-html.mjs";
@@ -27,12 +27,11 @@ const OFFICIAL_ORIGINS = ["https://www.gvyvoyagers.vip", "https://gvyvoyagers.vi
 function galleryDeploymentIdentity(gallery) {
   return JSON.stringify({
     count: gallery.count,
-    latestStart: gallery.latestStart,
     maxPhotoNumber: gallery.maxPhotoNumber,
     items: gallery.items.map((item) => ({
       number: item.number,
       fallbackName: item.fallbackName,
-      displayNumber: item.displayNumber,
+      latestStart: item.latestStart,
     })),
   });
 }
@@ -223,18 +222,14 @@ export class PublisherService {
       .sort((left, right) => left[0] - right[0]);
     const originalByDuplicate = new Map();
     duplicateGroups.forEach((numbers) => numbers.slice(1).forEach((number) => originalByDuplicate.set(number, numbers[0])));
-    const displayByAssetNumber = new Map(withHashes.map((item) => [item.number, item.displayNumber]));
     return {
       items: withHashes.map((item) => ({
         number: item.number,
-        displayNumber: item.displayNumber,
         fallbackName: item.fallbackName,
         publicUrl: this.session?.type === "delete" && !this.session.published && this.session.deletedNumbers?.includes(item.number)
           ? `/deleted-preview/${this.session.id}/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`
           : `/preview/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
-        latestStart: item.latestStart,
         duplicateOf: originalByDuplicate.get(item.number) || null,
-        duplicateOfDisplayNumber: displayByAssetNumber.get(originalByDuplicate.get(item.number)) || null,
       })),
       duplicateGroups,
     };
@@ -250,20 +245,10 @@ export class PublisherService {
     const inventory = await this.getGalleryInventory(officialParsed);
     const repository = await this.getRepositoryInfo();
     const baseCount = officialParsed.count;
-    const latestStart = officialParsed.latestStart;
-    const latestEnd = officialParsed.latestEnd;
     const release = this.session ? this.session.release || buildReleaseSummary(this.session) : null;
-    const sessionDisplayStart = this.session?.displayStart
-      ?? (this.session?.type === "add" ? this.session.baseCount + 1 : null);
-    const previousPreviewItem = sessionDisplayStart > 1
-      ? previewParsed.items[sessionDisplayStart - 2]
-      : null;
     return {
       gallery: {
         count: baseCount,
-        latestStart,
-        latestEnd,
-        maxPhotoNumber: officialParsed.maxPhotoNumber,
         previewCount: previewParsed.count,
         items: inventory.items,
         duplicateGroups: inventory.duplicateGroups,
@@ -273,33 +258,21 @@ export class PublisherService {
       session: this.session ? {
         id: this.session.id,
         type: this.session.type || "add",
-        batchStart: this.session.batchStart,
-        batchEnd: this.session.batchEnd,
-        displayStart: sessionDisplayStart,
-        displayEnd: this.session.displayEnd
-          ?? (this.session.type === "add" ? this.session.baseCount + this.session.items.length : null),
         itemCount: this.session.items.length,
-        items: this.session.items.map(({ number, displayNumber, fallbackName, publicUrl, width, height, has1920 }, index) => ({
+        items: this.session.items.map(({ number, fallbackName, publicUrl, width, height, has1920 }) => ({
           number,
-          displayNumber: displayNumber ?? (this.session.type === "add" ? sessionDisplayStart + index : null),
           fallbackName,
           publicUrl,
           width,
           height,
           has1920,
         })),
-        previousItem: previousPreviewItem ? {
-          number: previousPreviewItem.number,
-          displayNumber: previousPreviewItem.displayNumber,
-          publicUrl: `/preview/assets/gallery/thumbs/team-${String(previousPreviewItem.number).padStart(2, "0")}.jpg`,
-        } : null,
         verified: this.session.verified,
         published: Boolean(this.session.published),
         deploymentVerified: Boolean(this.session.deploymentVerified),
         commitSha: this.session.commitSha || null,
         baselineDirty: this.session.baselineDirty,
         resultCount: previewParsed.count,
-        nextLatestStart: previewParsed.latestStart,
         publishAllowed: this.session.verified
           && this.session.baselineDirty.length === 0
           && repository.branch === "main"
@@ -324,7 +297,6 @@ export class PublisherService {
       const path = join(this.root, "assets/gallery", item.fallbackName);
       existingFiles.push({
         number: item.number,
-        displayNumber: item.displayNumber,
         fallbackName: item.fallbackName,
         path,
         hash: await this.hashGalleryFile(path),
@@ -343,7 +315,6 @@ export class PublisherService {
           uploadName: upload.originalName,
           matchType: "exact",
           matchSource: "gallery",
-          matchDisplayNumber: exactExistingDuplicate.displayNumber,
           matchUrl: `/preview/assets/gallery/${exactExistingDuplicate.fallbackName}`,
         });
       }
@@ -378,7 +349,6 @@ export class PublisherService {
             uploadName: upload.originalName,
             matchType: "visual",
             matchSource: "gallery",
-            matchDisplayNumber: visualExistingDuplicate.displayNumber,
             matchUrl: `/preview/assets/gallery/${visualExistingDuplicate.fallbackName}`,
           });
         } else {
@@ -438,7 +408,7 @@ export class PublisherService {
       throw error;
     }
     const baselineDirty = [];
-    const numbers = createBatchNumbers(gallery.maxPhotoNumber, uploads.length);
+    const assetIds = createBatchAssetIds(gallery.maxPhotoNumber, uploads.length);
     const id = randomUUID();
     const sessionDir = join(this.runtimeDir, id);
     const backupPath = join(sessionDir, "index.html.before-preview");
@@ -456,14 +426,14 @@ export class PublisherService {
       this.setOperation({ steps: [...steps], message: "保留原图并生成响应式图片" });
       const items = [];
       for (let index = 0; index < uploads.length; index += 1) {
-        const item = await processGalleryPhoto({ upload: uploads[index], number: numbers[index], root: this.root });
+        const item = await processGalleryPhoto({ upload: uploads[index], number: assetIds[index], root: this.root });
         items.push(item);
         createdPaths.push(...item.createdPaths);
         this.setOperation({ message: `已处理 ${index + 1} / ${uploads.length}` });
       }
       steps.fill("done", 0, 4);
       steps[4] = "running";
-      this.setOperation({ steps: [...steps], message: "更新相册数量与本批精准起点" });
+      this.setOperation({ steps: [...steps], message: "按本批顺序将照片追加到相册末尾" });
       const nextHtml = appendGalleryBatch(originalHtml, items);
       assertOnlyManagedGalleryChanged(originalHtml, nextHtml);
       await writeFile(this.indexPath, nextHtml, "utf8");
@@ -482,13 +452,9 @@ export class PublisherService {
         createdAt: new Date().toISOString(),
         backupPath,
         baseCount: gallery.count,
-        previousLatestStart: gallery.latestStart,
-        previousLatestEnd: gallery.latestEnd,
-        batchStart: numbers[0],
-        batchEnd: numbers.at(-1),
-        displayStart: gallery.count + 1,
-        displayEnd: gallery.count + uploads.length,
-        items: items.map((item, index) => ({ ...item, displayNumber: gallery.count + index + 1 })),
+        batchStart: assetIds[0],
+        batchEnd: assetIds.at(-1),
+        items,
         createdPaths,
         changedFiles,
         baselineDirty,
@@ -498,7 +464,7 @@ export class PublisherService {
       sessionDraft.release = buildReleaseSummary(sessionDraft);
       this.session = sessionDraft;
       await this.persistSession();
-      this.setOperation({ type: "preview", status: "done", message: `本地预览已通过，最新精准定位 ${String(gallery.count + 1).padStart(3, "0")}`, steps: [...steps] });
+      this.setOperation({ type: "preview", status: "done", message: `本地预览已通过，本批 ${uploads.length} 张已追加到相册末尾`, steps: [...steps] });
       return this.getStatus();
     } catch (error) {
       await writeFile(this.indexPath, originalHtml, "utf8");
@@ -568,7 +534,7 @@ export class PublisherService {
     try {
       steps.fill("done", 0, 4);
       steps[4] = "running";
-      this.setOperation({ steps: [...steps], message: "移除相册条目并自动重排可见序号，原图文件保留可回滚" });
+      this.setOperation({ steps: [...steps], message: "移除所选相册条目，其他照片保持原有顺序；原图文件保留可回滚" });
       const nextHtml = removeGalleryItems(originalHtml, numbers);
       assertOnlyManagedGalleryChanged(originalHtml, nextHtml);
       const assetPaths = (await Promise.all(selectedItems.map((item) => this.findGalleryAssetPaths(item)))).flat();
@@ -591,7 +557,6 @@ export class PublisherService {
       const orderedNumbers = selectedItems.map((item) => item.number);
       const items = selectedItems.map((item) => ({
         number: item.number,
-        displayNumber: item.displayNumber,
         fallbackName: item.fallbackName,
         width: 0,
         height: 0,
@@ -607,12 +572,8 @@ export class PublisherService {
         createdAt: new Date().toISOString(),
         backupPath,
         baseCount: gallery.count,
-        previousLatestStart: gallery.latestStart,
-        previousLatestEnd: gallery.latestEnd,
         batchStart: Math.min(...orderedNumbers),
         batchEnd: Math.max(...orderedNumbers),
-        displayStart: Math.min(...selectedItems.map((item) => item.displayNumber)),
-        displayEnd: Math.max(...selectedItems.map((item) => item.displayNumber)),
         items,
         deletedNumbers: orderedNumbers,
         createdPaths: [],
@@ -621,7 +582,6 @@ export class PublisherService {
         changedFiles,
         baselineDirty,
         resultCount: nextGallery.count,
-        nextLatestStart: nextGallery.latestStart,
         verified: true,
         published: false,
       };

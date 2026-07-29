@@ -1,7 +1,3 @@
-export function formatPhotoNumber(number, width = 3) {
-  return String(number).padStart(width, "0");
-}
-
 export function moveItem(items, fromIndex, toIndex) {
   if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= items.length || toIndex >= items.length) {
     return items;

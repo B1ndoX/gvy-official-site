@@ -18,9 +18,12 @@ async function readDeploymentBaseline() {
       cwd: projectRoot,
       encoding: "utf8",
     });
+    parseGalleryState(stdout);
     return stdout;
   } catch {
-    return readFile(join(projectRoot, "index.html"), "utf8");
+    const current = await readFile(join(projectRoot, "index.html"), "utf8");
+    parseGalleryState(current);
+    return current;
   }
 }
 
@@ -32,7 +35,7 @@ async function copyFixtureAsset(root, relativePath) {
   await copyFile(join(projectRoot, relativePath), target);
 }
 
-test("delete preview physically removes selected assets, closes visible gaps, and rolls back safely", async () => {
+test("delete preview physically removes selected assets, preserves order, and rolls back safely", async () => {
   const root = await mkdtemp(join(tmpdir(), "gvy-gallery-delete-"));
   const startingGallery = parseGalleryState(homepage);
   const selectedAssetNumbers = [4, 5];
@@ -66,8 +69,7 @@ test("delete preview physically removes selected assets, closes visible gaps, an
 
     assert.equal(preview.count, startingGallery.count - selectedAssetNumbers.length);
     assert.equal(preview.items[3].number, 6);
-    assert.equal(preview.items[3].displayNumber, 4);
-    assert.deepEqual(status.session.items.map((item) => item.displayNumber), [4, 5]);
+    assert.deepEqual(status.session.items.map((item) => item.number), selectedAssetNumbers);
     await Promise.all(selectedPaths.map((path) => assert.rejects(access(join(root, path)))));
 
     await service.rollback();
@@ -110,7 +112,6 @@ test("local duplicate review reports exact and visual matches and only continues
       assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
       assert.equal(error.duplicates[0].matchType, "exact");
       assert.equal(error.duplicates[0].matchSource, "gallery");
-      assert.equal(error.duplicates[0].matchDisplayNumber, gallery.count);
       assert.match(error.duplicates[0].matchUrl, /^\/preview\/assets\/gallery\//);
       return true;
     },
@@ -125,7 +126,6 @@ test("local duplicate review reports exact and visual matches and only continues
     (error) => {
       assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
       assert.equal(error.duplicates[0].matchType, "visual");
-      assert.equal(error.duplicates[0].matchDisplayNumber, gallery.count);
       return true;
     },
   );

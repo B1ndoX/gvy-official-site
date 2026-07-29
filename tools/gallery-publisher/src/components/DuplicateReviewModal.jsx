@@ -4,7 +4,7 @@ function comparisonTarget(duplicate, photos) {
   if (duplicate.matchSource === "gallery") {
     return {
       url: duplicate.matchUrl,
-      label: `官网已有照片 · 当前顺序第 ${duplicate.matchDisplayNumber} 张`,
+      label: "官网已有照片",
     };
   }
   return {

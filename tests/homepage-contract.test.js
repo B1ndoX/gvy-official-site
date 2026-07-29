@@ -296,8 +296,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(homepage, /data-archive-carousel-toggle/);
   assert.equal((homepage.match(/data-archive-latest-start/g) || []).length, 1);
   assert.match(homepage, /data-archive-carousel-latest/);
-  assert.match(homepage, /data-archive-carousel-scrubber/);
-  assert.match(homepage, /data-archive-carousel-scrubber-output/);
+  assert.doesNotMatch(homepage, /data-archive-carousel-scrubber/);
+  assert.doesNotMatch(homepage, /data-archive-carousel-scrubber-output/);
   assert.match(homepage, />NEW</);
   assert.match(homepage, />最新</);
   assert.match(homepage, /A-007 \/ MUSTER/);
@@ -315,6 +315,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /pointermove/);
   assert.match(archiveCarousel, /setPointerCapture/);
   assert.match(archiveCarousel, /DRAG_THRESHOLD_PX\s*=\s*8/);
+  assert.match(archiveCarousel, /HOLD_SUPPRESSION_MS\s*=\s*240/);
+  assert.match(archiveCarousel, /shouldSuppressCarouselClick/);
   assert.match(archiveCarousel, /suppressClickUntil/);
   assert.match(archiveCarousel, /handleViewportClick, true/);
   assert.match(archiveCarousel, /ArrowRight/);
@@ -323,8 +325,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /resolveCarouselTargetIndex/);
   assert.match(archiveCarousel, /getCarouselCardPosition/);
   assert.match(archiveCarousel, /getLatestBatchStartIndex/);
-  assert.match(archiveCarousel, /getCarouselScrubberIndex/);
-  assert.match(archiveCarousel, /startScrubbing/);
+  assert.doesNotMatch(archiveCarousel, /getCarouselScrubberIndex|startScrubbing|is-scrubbing/);
   assert.match(archiveCarousel, /is-returning-latest/);
   assert.match(archiveCarousel, /data-archive-clone/);
   assert.match(archiveCarousel, /virtualPosition/);
@@ -357,7 +358,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initDeferredMedia/);
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-scrubber-v55/);
+  assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-no-numbers-v59/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260729-gallery-no-numbers-v59/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260728-zoom-scale-v51/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260722-breathing-media-v26/);
@@ -384,8 +386,8 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-card-clean-v56/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-scrubber-v55/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-no-numbers-v59/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260729-gallery-no-numbers-v59/);
 });
 
 test("desktop operation scenes follow continuous scroll progress without forced snapping", () => {
@@ -426,12 +428,15 @@ test("gallery keeps upload order with sequential lightbox indexes and no visible
     .map((match) => ({ openIndex: Number(match[1]), number: Number(match[2]) }));
   const galleryCount = entries.length;
   assert.ok(galleryCount >= 2);
-  assert.match(homepage, new RegExp(`aria-label="${galleryCount} 张舰队团建照片`));
+  assert.equal(new Set(entries.map((entry) => entry.number)).size, galleryCount);
+  assert.match(homepage, /aria-label="舰队团建照片匀速滚动相册，可点击放大或按住拖拽切换"/);
   entries.forEach((entry, index) => {
     assert.equal(entry.openIndex, index);
-    if (index > 0) assert.ok(entry.number > entries[index - 1].number);
   });
-  assert.match(cinematicCss, /\.archive-grid button > span\s*\{\s*display:\s*none;/);
+  assert.doesNotMatch(grid, /<span>\d+<\/span>|远航档案\s*\d+/);
+  assert.doesNotMatch(cinematicCss, /\.archive-grid button > span|archive-scrubber/);
+  assert.doesNotMatch(homepage, /data-archive-dialog-count|data-archive-dialog-caption/);
+  assert.match(homepage, /<figcaption><p>团建回忆<\/p><\/figcaption>/);
 });
 
 test("member brawl popup preserves the published runtime without a nested frame shell", async () => {

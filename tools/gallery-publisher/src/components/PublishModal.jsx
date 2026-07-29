@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { Icon } from "../icons.jsx";
-import { formatPhotoNumber } from "../utils.js";
 
 export function PublishModal({ session, onClose, onConfirm, busy }) {
   const [acknowledged, setAcknowledged] = useState(false);
   const release = session.release;
   const isDelete = session.type === "delete";
   const rows = [
-    ["发布内容", isDelete ? `从相册移除 ${session.itemCount} 张：${session.items.map((item) => formatPhotoNumber(item.displayNumber)).join("、")}` : `本批 ${session.itemCount} 张 · ${formatPhotoNumber(session.displayStart)}–${formatPhotoNumber(session.displayEnd)}`],
-    [isDelete ? "删除后数量" : "最新起点", isDelete ? `${session.resultCount} 张` : formatPhotoNumber(session.displayStart)],
+    ["发布内容", isDelete ? `从相册移除所选 ${session.itemCount} 张` : `向相册末尾追加 ${session.itemCount} 张`],
+    ["发布后数量", `${session.resultCount} 张`],
     ["目标分支", release.remoteBranch],
     ["回滚标签", release.tag],
     ["提交说明", release.commitMessage],

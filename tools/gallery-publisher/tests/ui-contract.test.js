@@ -7,6 +7,12 @@ const app = await readFile(new URL("../src/App.jsx", import.meta.url), "utf8");
 const duplicateReview = await readFile(new URL("../src/components/DuplicateReviewModal.jsx", import.meta.url), "utf8");
 const actionBar = await readFile(new URL("../src/components/ActionBar.jsx", import.meta.url), "utf8");
 const dropZone = await readFile(new URL("../src/components/DropZone.jsx", import.meta.url), "utf8");
+const photoFilmstrip = await readFile(new URL("../src/components/PhotoFilmstrip.jsx", import.meta.url), "utf8");
+const previewPanel = await readFile(new URL("../src/components/PreviewPanel.jsx", import.meta.url), "utf8");
+const galleryManager = await readFile(new URL("../src/components/GalleryManagerModal.jsx", import.meta.url), "utf8");
+const publishModal = await readFile(new URL("../src/components/PublishModal.jsx", import.meta.url), "utf8");
+const statusStrip = await readFile(new URL("../src/components/StatusStrip.jsx", import.meta.url), "utf8");
+const utils = await readFile(new URL("../src/utils.js", import.meta.url), "utf8");
 
 test("selected photo previews keep a bounded card and show the complete source ratio", () => {
   const cardRule = styles.match(/\.photo-card\s*\{([^}]+)\}/)?.[1] || "";
@@ -35,4 +41,14 @@ test("publisher explains local two-layer deduplication and requires a visual com
 test("a deployed batch can clear only its local completed session", () => {
   assert.match(actionBar, /!session\?\.commitSha \|\| session\?\.published/);
   assert.match(actionBar, /开始下一批/);
+});
+
+test("publisher exposes only append order and counts, never photo numbering", () => {
+  const publisherUi = [app, photoFilmstrip, previewPanel, galleryManager, publishModal, statusStrip, utils].join("\n");
+
+  assert.doesNotMatch(publisherUi, /formatPhotoNumber|displayNumber|精准定位|本批起点|照片编号/);
+  assert.match(photoFilmstrip, /追加到官网相册末尾/);
+  assert.match(galleryManager, /其他照片保持当前先后关系/);
+  assert.match(statusStrip, /排列方式/);
+  assert.match(statusStrip, /按当前顺序/);
 });

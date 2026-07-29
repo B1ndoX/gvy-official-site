@@ -30,7 +30,7 @@ function getArchiveItems(root) {
       return {
         index,
         src: image?.getAttribute?.("src") || "",
-        alt: image?.getAttribute?.("alt") || `GVY 远航档案 ${String(index + 1).padStart(2, "0")}`,
+        alt: image?.getAttribute?.("alt") || "GVY 团建回忆",
       };
     },
   );
@@ -39,8 +39,6 @@ function getArchiveItems(root) {
 export function initArchiveLightbox({ root = globalThis.document } = {}) {
   const dialog = root?.querySelector?.("[data-archive-dialog]");
   const dialogImage = dialog?.querySelector?.("[data-archive-dialog-image]");
-  const dialogCount = dialog?.querySelector?.("[data-archive-dialog-count]");
-  const dialogCaption = dialog?.querySelector?.("[data-archive-dialog-caption]");
   const previousButton = dialog?.querySelector?.("[data-archive-prev]");
   const nextButton = dialog?.querySelector?.("[data-archive-next]");
   const closeButton = dialog?.querySelector?.("[data-archive-close]");
@@ -63,10 +61,6 @@ export function initArchiveLightbox({ root = globalThis.document } = {}) {
     const item = items[session.index];
     dialogImage.src = item.src;
     dialogImage.alt = item.alt;
-    if (dialogCount) {
-      dialogCount.textContent = `${String(session.index + 1).padStart(3, "0")} / ${String(items.length).padStart(3, "0")}`;
-    }
-    if (dialogCaption) dialogCaption.textContent = item.alt;
   };
 
   const close = () => {
