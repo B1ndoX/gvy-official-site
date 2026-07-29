@@ -1803,6 +1803,28 @@ noscript {
   color: #fff;
 }
 
+/* A tall 16:9 desktop otherwise turns viewport-based scenes into a much longer
+   raw pixel track than a laptop. Keep the same story and stage order while
+   tightening only this large-display pacing; laptop and mobile rhythms stay
+   on their existing values. */
+@media (min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10) {
+  .hero-sequence {
+    height: 180svh;
+  }
+
+  .operations-section {
+    min-height: 330svh;
+  }
+
+  .archive-section {
+    padding: 12vh 0 8vh;
+  }
+
+  .recruit-section {
+    min-height: 90svh;
+  }
+}
+
 @media (max-width: 980px) {
   .nav-links a:nth-child(-n + 3) { display: none; }
 }

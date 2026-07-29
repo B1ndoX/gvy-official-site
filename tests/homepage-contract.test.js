@@ -451,7 +451,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260730-gallery-speed-v68/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260729-gallery-touch-control-v67/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260730-2k-scroll-pacing-v69/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
 
@@ -485,6 +485,10 @@ test("non-hero narrative pacing removes empty travel without changing the hero s
   assert.match(cinematicCss, /grid-template-rows:\s*repeat\(4, 56\.25vw auto\)/);
   assert.match(cinematicCss, /\.operation-visual:nth-child\(4\)\s*\{\s*grid-row:\s*7/);
   assert.match(cinematicCss, /\.archive-section\s*\{[\s\S]*?padding:\s*24vh 0 16vh/);
+  assert.match(
+    cinematicCss,
+    /@media \(min-width: 1920px\) and \(max-width: 2560px\) and \(min-height: 1100px\) and \(min-aspect-ratio: 17 \/ 10\)[\s\S]*?\.hero-sequence\s*\{[\s\S]*?height:\s*180svh[\s\S]*?\.operations-section\s*\{[\s\S]*?min-height:\s*330svh[\s\S]*?\.archive-section\s*\{[\s\S]*?padding:\s*12vh 0 8vh[\s\S]*?\.recruit-section\s*\{[\s\S]*?min-height:\s*90svh/,
+  );
 });
 
 test("gallery keeps upload order with sequential lightbox indexes and no visible card numbers", () => {
