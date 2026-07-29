@@ -7,7 +7,7 @@ import { promisify } from "node:util";
 import test from "node:test";
 
 import { parseGalleryState } from "../lib/gallery-html.mjs";
-import { PublisherService } from "../lib/publisher-service.mjs";
+import { assertSameDeployedGallery, PublisherService } from "../lib/publisher-service.mjs";
 
 const runFile = promisify(execFile);
 const projectRoot = new URL("../../../", import.meta.url).pathname;
@@ -48,10 +48,18 @@ test("delete preview physically removes selected assets, closes visible gaps, an
   try {
     await writeFile(join(root, "index.html"), homepage, "utf8");
     await writeFile(join(root, "package.json"), `${JSON.stringify({ scripts: { verify: "node -e \"process.exit(0)\"" } }, null, 2)}\n`, "utf8");
+    await writeFile(join(root, ".gitignore"), "tools/gallery-publisher/.runtime/\n", "utf8");
     await Promise.all(selectedPaths.map((path) => copyFixtureAsset(root, path)));
     await runFile("git", ["init", "-b", "main", root]);
+    await runFile("git", ["-C", root, "add", "."]);
+    await runFile("git", [
+      "-C", root,
+      "-c", "user.name=GVY Test",
+      "-c", "user.email=gvy-test@example.invalid",
+      "commit", "-m", "fixture",
+    ]);
 
-    const service = new PublisherService({ root });
+    const service = new PublisherService({ root, officialGalleryLoader: async () => startingGallery });
     await service.initialize();
     const status = await service.createDeletePreview(selectedAssetNumbers);
     const preview = parseGalleryState(await readFile(join(root, "index.html"), "utf8"));
@@ -68,6 +76,18 @@ test("delete preview physically removes selected assets, closes visible gaps, an
   } finally {
     await rm(root, { recursive: true, force: true });
   }
+});
+
+test("official deployed gallery is the calibration authority", () => {
+  const official = parseGalleryState(homepage);
+  const staleLocal = {
+    ...official,
+    count: official.count - 1,
+    items: official.items.slice(0, -1),
+  };
+
+  assert.doesNotThrow(() => assertSameDeployedGallery(official, official));
+  assert.throws(() => assertSameDeployedGallery(staleLocal, official), /正式官网当前相册不一致/);
 });
 
 test("local duplicate review reports exact and visual matches and only continues after explicit override", async () => {

@@ -22,8 +22,8 @@ test("selected photo previews keep a bounded card and show the complete source r
 });
 
 test("publisher explains local two-layer deduplication and requires a visual comparison decision", () => {
-  assert.match(app, /本地文件＋画面去重已启用/);
-  assert.match(dropZone, /文件与画面均在本机去重/);
+  assert.match(app, /正式官网基准＋本机画面去重已启用/);
+  assert.match(dropZone, /只与正式官网当前相册及本批照片比对/);
   assert.match(duplicateReview, /检测到疑似相同照片，是否继续上传/);
   assert.match(duplicateReview, /本次上传/);
   assert.match(duplicateReview, /官网已有照片/);

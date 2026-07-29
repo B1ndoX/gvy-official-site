@@ -34,7 +34,7 @@ export function GalleryManagerModal({ gallery, session, busy, onClose, onDelete 
 
         {gallery.duplicateGroups.length ? (
           <div className="duplicate-notice"><Icon name="info" size={18} /><span>已找到 <strong>{suggested.length}</strong> 张文件级精确重复，已预选后加入的副本：{suggestedDisplayNumbers.map(formatPhotoNumber).join("、")}</span></div>
-        ) : <div className="duplicate-notice is-clear"><Icon name="check" size={18} />当前官网未发现文件级精确重复；新增照片仍会执行本地画面检测</div>}
+        ) : <div className="duplicate-notice is-clear"><Icon name="check" size={18} />当前官网未发现文件级精确重复；新增照片会以正式官网当前相册为准执行本机画面检测</div>}
 
         {blocked ? <div className="manager-blocked"><Icon name="lock" size={18} />当前已有{session.type === "delete" ? "删除" : "新增照片"}预览，请先发布或清空当前批次。为了避免两次操作互相覆盖，此处暂不生成新预览。</div> : null}
 

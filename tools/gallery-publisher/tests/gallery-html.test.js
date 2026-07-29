@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   appendGalleryBatch,
+  assertOnlyManagedGalleryChanged,
   createBatchNumbers,
   parseGalleryState,
   removeGalleryItems,
@@ -51,6 +52,17 @@ test("a six-photo batch continues stable numbering and moves latest to the first
   assert.doesNotMatch(grid, /\bNEW\b/i);
   assert.match(nextHtml, new RegExp(`aria-label="${current.count + 6} 张舰队团建照片`));
   assert.match(nextHtml, new RegExp(`<input(?=[^>]*data-archive-carousel-scrubber)(?=[^>]*max="${current.count + 5}")`));
+});
+
+test("publisher changes are byte-identical outside the managed gallery regions", () => {
+  const current = parseGalleryState(homepage);
+  const nextHtml = appendGalleryBatch(homepage, makeBatch(current.maxPhotoNumber + 1, 1));
+
+  assert.doesNotThrow(() => assertOnlyManagedGalleryChanged(homepage, nextHtml));
+  assert.throws(
+    () => assertOnlyManagedGalleryChanged(homepage, nextHtml.replace("GVY", "BROKEN")),
+    /团建相册区域之外/,
+  );
 });
 
 test("a twenty-photo batch still marks its exact first photo, not an arbitrary last-ten window", () => {

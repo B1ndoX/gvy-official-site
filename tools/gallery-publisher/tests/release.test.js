@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 
-import { buildReleaseSummary, listGitChanges } from "../lib/git-release.mjs";
+import { assertGalleryOnlyPaths, buildReleaseSummary, listGitChanges } from "../lib/git-release.mjs";
 
 const runFile = promisify(execFile);
 
@@ -33,6 +33,23 @@ test("release summaries describe deletion counts without exposing internal asset
   );
 
   assert.equal(summary.commitMessage, "fix: remove 3 gallery photos");
+});
+
+test("release staging rejects every path outside the team gallery allowlist", () => {
+  assert.doesNotThrow(() => assertGalleryOnlyPaths([
+    "index.html",
+    "assets/gallery/team-48.png",
+    "assets/gallery/optimized/team-48-1280.webp",
+    "assets/gallery/thumbs/team-48.jpg",
+  ]));
+  assert.throws(
+    () => assertGalleryOnlyPaths(["index.html", "assets/cinematic-homepage.css"]),
+    /白名单之外/,
+  );
+  assert.throws(
+    () => assertGalleryOnlyPaths(["assets/js/cinematic-homepage.js"]),
+    /白名单之外/,
+  );
 });
 
 test("git safety checks preserve the first character of the first changed path", async () => {

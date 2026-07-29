@@ -3,7 +3,13 @@ import { copyFile, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises
 import { dirname, join, relative, resolve } from "node:path";
 import { createHash, randomUUID } from "node:crypto";
 
-import { appendGalleryBatch, createBatchNumbers, parseGalleryState, removeGalleryItems } from "./gallery-html.mjs";
+import {
+  appendGalleryBatch,
+  assertOnlyManagedGalleryChanged,
+  createBatchNumbers,
+  parseGalleryState,
+  removeGalleryItems,
+} from "./gallery-html.mjs";
 import { createVisualFingerprint, isVisualDuplicate, processGalleryPhoto } from "./process.mjs";
 import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
 
@@ -15,6 +21,27 @@ const STEP_LABELS = [
   "更新相册与最新批次标记",
   "运行完整测试与生产构建",
 ];
+
+const OFFICIAL_ORIGINS = ["https://www.gvyvoyagers.vip", "https://gvyvoyagers.vip"];
+
+function galleryDeploymentIdentity(gallery) {
+  return JSON.stringify({
+    count: gallery.count,
+    latestStart: gallery.latestStart,
+    maxPhotoNumber: gallery.maxPhotoNumber,
+    items: gallery.items.map((item) => ({
+      number: item.number,
+      fallbackName: item.fallbackName,
+      displayNumber: item.displayNumber,
+    })),
+  });
+}
+
+export function assertSameDeployedGallery(localGallery, officialGallery) {
+  if (galleryDeploymentIdentity(localGallery) !== galleryDeploymentIdentity(officialGallery)) {
+    throw new Error("本地相册与正式官网当前相册不一致，已停止操作；请等待正式部署完成后重试");
+  }
+}
 
 export class DuplicateReviewRequiredError extends Error {
   constructor(duplicates) {
@@ -60,8 +87,22 @@ function relativePaths(root, paths) {
   return paths.map((path) => relative(root, path)).sort();
 }
 
+function assertExactChangedFiles(actual, expected, action) {
+  const actualSet = new Set(actual);
+  const expectedSet = new Set(expected);
+  const unexpected = actual.filter((path) => !expectedSet.has(path));
+  const missing = expected.filter((path) => !actualSet.has(path));
+  if (unexpected.length || missing.length) {
+    const detail = [
+      unexpected.length ? `额外：${unexpected.join("、")}` : "",
+      missing.length ? `缺少：${missing.join("、")}` : "",
+    ].filter(Boolean).join("；");
+    throw new Error(`${action}产生了团建相册批次之外的文件变化，已停止操作${detail ? `（${detail}）` : ""}`);
+  }
+}
+
 export class PublisherService {
-  constructor({ root }) {
+  constructor({ root, officialGalleryLoader = null, fetchImpl = globalThis.fetch } = {}) {
     this.root = resolve(root);
     this.runtimeDir = join(this.root, "tools/gallery-publisher/.runtime");
     this.statePath = join(this.runtimeDir, "active-session.json");
@@ -71,6 +112,8 @@ export class PublisherService {
     this.activity = [];
     this.hashCache = new Map();
     this.visualFingerprintCache = new Map();
+    this.officialGalleryLoader = officialGalleryLoader;
+    this.fetchImpl = fetchImpl;
   }
 
   async initialize() {
@@ -101,6 +144,38 @@ export class PublisherService {
       listGitChanges(this.root).catch(() => []),
     ]);
     return { branch, remote, connected: Boolean(remote), changes };
+  }
+
+  async loadOfficialGalleryState() {
+    if (this.officialGalleryLoader) return this.officialGalleryLoader();
+    if (typeof this.fetchImpl !== "function") throw new Error("当前环境无法读取正式官网相册");
+
+    const snapshots = await Promise.all(OFFICIAL_ORIGINS.map(async (origin) => {
+      const response = await this.fetchImpl(`${origin}/?gallery-publisher-calibration=${Date.now()}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(15_000),
+      });
+      if (!response.ok) throw new Error(`${origin} 返回 HTTP ${response.status}`);
+      return { origin, gallery: parseGalleryState(await response.text()) };
+    }));
+    const identity = galleryDeploymentIdentity(snapshots[0].gallery);
+    if (snapshots.some((snapshot) => galleryDeploymentIdentity(snapshot.gallery) !== identity)) {
+      throw new Error("两个正式域名的团建相册尚未同步，已停止操作；请稍后重试");
+    }
+    return snapshots[0].gallery;
+  }
+
+  async calibrateCleanOfficialBaseline(localGallery) {
+    const changes = await listGitChanges(this.root);
+    if (changes.length) {
+      throw new Error(`发布器要求工作区先保持干净，检测到 ${changes.length} 个本地改动；不会把其他代码带入相册操作`);
+    }
+    const branch = await gitOutput(this.root, ["branch", "--show-current"]);
+    if (branch !== "main") throw new Error(`当前分支是 ${branch || "未知"}，发布器只允许在 main 操作团建相册`);
+    this.setOperation({ message: "正在以两个正式域名当前已部署的团建相册为唯一基准进行校准" });
+    const officialGallery = await this.loadOfficialGalleryState();
+    assertSameDeployedGallery(localGallery, officialGallery);
+    return officialGallery;
   }
 
   async hashGalleryFile(path) {
@@ -343,13 +418,14 @@ export class PublisherService {
     const originalHtml = await readFile(this.indexPath, "utf8");
     const gallery = parseGalleryState(originalHtml);
     const duplicateSteps = STEP_LABELS.map(() => "pending");
-    this.setOperation({ type: "preview", status: "running", message: "正在本机检查文件与画面，防止官网或本批重复", steps: duplicateSteps });
+    this.setOperation({ type: "preview", status: "running", message: "正在校准正式官网当前团建相册", steps: duplicateSteps });
     try {
-      const duplicateReview = await this.validateUploadDuplicates(gallery, uploads, { allowDuplicates });
+      const officialGallery = await this.calibrateCleanOfficialBaseline(gallery);
+      const duplicateReview = await this.validateUploadDuplicates(officialGallery, uploads, { allowDuplicates });
       this.setOperation({
         message: duplicateReview.length
           ? `已按你的确认继续处理 ${duplicateReview.length} 张重复或疑似相同照片`
-          : `本地双重去重通过：${uploads.length} 张照片均为新画面`,
+          : `正式官网当前相册双重去重通过：${uploads.length} 张照片均为新画面`,
       });
     } catch (error) {
       const duplicateReviewNeeded = error?.code === "DUPLICATE_REVIEW_REQUIRED";
@@ -361,7 +437,7 @@ export class PublisherService {
       });
       throw error;
     }
-    const baselineDirty = await listGitChanges(this.root);
+    const baselineDirty = [];
     const numbers = createBatchNumbers(gallery.maxPhotoNumber, uploads.length);
     const id = randomUUID();
     const sessionDir = join(this.runtimeDir, id);
@@ -389,6 +465,7 @@ export class PublisherService {
       steps[4] = "running";
       this.setOperation({ steps: [...steps], message: "更新相册数量与本批精准起点" });
       const nextHtml = appendGalleryBatch(originalHtml, items);
+      assertOnlyManagedGalleryChanged(originalHtml, nextHtml);
       await writeFile(this.indexPath, nextHtml, "utf8");
       steps[4] = "done";
       steps[5] = "running";
@@ -397,6 +474,8 @@ export class PublisherService {
       steps[5] = "done";
 
       const changedFiles = ["index.html", ...relativePaths(this.root, createdPaths)].sort();
+      const actualChangedFiles = await listGitChanges(this.root);
+      assertExactChangedFiles(actualChangedFiles, changedFiles, "预览");
       const sessionDraft = {
         id,
         type: "add",
@@ -466,9 +545,17 @@ export class PublisherService {
 
     const originalHtml = await readFile(this.indexPath, "utf8");
     const gallery = parseGalleryState(originalHtml);
+    const calibrationSteps = STEP_LABELS.map(() => "pending");
+    this.setOperation({ type: "delete-preview", status: "running", message: "正在校准正式官网当前团建相册", steps: calibrationSteps });
+    try {
+      await this.calibrateCleanOfficialBaseline(gallery);
+    } catch (error) {
+      this.setOperation({ type: "delete-preview", status: "error", message: error.message, steps: calibrationSteps });
+      throw error;
+    }
     const selectedSet = new Set(numbers.map(Number));
     const selectedItems = gallery.items.filter((item) => selectedSet.has(item.number));
-    const baselineDirty = await listGitChanges(this.root);
+    const baselineDirty = [];
     const id = randomUUID();
     const sessionDir = join(this.runtimeDir, id);
     const backupPath = join(sessionDir, "index.html.before-preview");
@@ -483,6 +570,7 @@ export class PublisherService {
       steps[4] = "running";
       this.setOperation({ steps: [...steps], message: "移除相册条目并自动重排可见序号，原图文件保留可回滚" });
       const nextHtml = removeGalleryItems(originalHtml, numbers);
+      assertOnlyManagedGalleryChanged(originalHtml, nextHtml);
       const assetPaths = (await Promise.all(selectedItems.map((item) => this.findGalleryAssetPaths(item)))).flat();
       for (const path of assetPaths) {
         const itemRelativePath = relative(this.root, path);
@@ -510,6 +598,9 @@ export class PublisherService {
         has1920: false,
         publicUrl: `/deleted-preview/${id}/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
       }));
+      const changedFiles = ["index.html", ...relativePaths(this.root, assetBackups.map((entry) => entry.path))].sort();
+      const actualChangedFiles = await listGitChanges(this.root);
+      assertExactChangedFiles(actualChangedFiles, changedFiles, "删除预览");
       const sessionDraft = {
         id,
         type: "delete",
@@ -527,7 +618,7 @@ export class PublisherService {
         createdPaths: [],
         removedPaths: assetBackups.map((entry) => entry.path),
         assetBackups,
-        changedFiles: ["index.html", ...relativePaths(this.root, assetBackups.map((entry) => entry.path))].sort(),
+        changedFiles,
         baselineDirty,
         resultCount: nextGallery.count,
         nextLatestStart: nextGallery.latestStart,

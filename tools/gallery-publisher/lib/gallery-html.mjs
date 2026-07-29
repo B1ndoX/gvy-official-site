@@ -15,6 +15,23 @@ export function findGalleryGridBounds(html) {
   return { tagStart, tag: match[0], contentStart, contentEnd };
 }
 
+function maskManagedGalleryRegions(html) {
+  const bounds = findGalleryGridBounds(html);
+  const afterGrid = bounds.contentEnd + "</div>".length;
+  return `${html.slice(0, bounds.tagStart)}__GVY_MANAGED_GALLERY_GRID__${html.slice(afterGrid)}`
+    .replace(/aria-label="\d+ 张舰队团建照片匀速滚动相册/, 'aria-label="__GVY_GALLERY_COUNT__ 张舰队团建照片匀速滚动相册')
+    .replace(
+      /<input(?=[^>]*data-archive-carousel-scrubber)[^>]*>/,
+      (tag) => tag.replace(/\bmax="\d+"/, 'max="__GVY_GALLERY_MAX__"'),
+    );
+}
+
+export function assertOnlyManagedGalleryChanged(beforeHtml, afterHtml) {
+  if (maskManagedGalleryRegions(beforeHtml) !== maskManagedGalleryRegions(afterHtml)) {
+    throw new Error("发布器检测到团建相册区域之外的官网代码变化，已停止操作");
+  }
+}
+
 export function parseGalleryState(html) {
   const { tag, contentStart, contentEnd } = findGalleryGridBounds(html);
   const grid = html.slice(contentStart, contentEnd);

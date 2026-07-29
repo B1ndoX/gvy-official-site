@@ -1,4 +1,7 @@
 import { spawn } from "node:child_process";
+import { readFile } from "node:fs/promises";
+
+import { assertOnlyManagedGalleryChanged } from "./gallery-html.mjs";
 
 function run(command, args, { cwd, maxOutput = 6_000_000 } = {}) {
   return new Promise((resolve, reject) => {
@@ -66,6 +69,14 @@ function samePathSet(actual, expected) {
   return left.length === right.length && left.every((value, index) => value === right[index]);
 }
 
+export function assertGalleryOnlyPaths(paths) {
+  const allowedAsset = /^assets\/gallery\/(?:optimized\/|thumbs\/|originals\/)?team-\d+[^/]*\.(?:jpe?g|png|webp|heic|heif)$/i;
+  const unexpected = paths.filter((path) => path !== "index.html" && !allowedAsset.test(path));
+  if (unexpected.length) {
+    throw new Error(`检测到团建相册白名单之外的文件：${unexpected.join("、")}；已停止发布`);
+  }
+}
+
 async function verifyDeployment({ session, domains, onUpdate }) {
   const lastNumber = String(session.batchEnd).padStart(2, "0");
   const firstNumber = String(session.batchStart).padStart(2, "0");
@@ -111,6 +122,12 @@ async function verifyDeployment({ session, domains, onUpdate }) {
 export async function publishGallerySession({ root, session, onUpdate, onCommitted, onPushed }) {
   if (!session?.verified) throw new Error("必须先生成并通过本地预览");
   if (session.baselineDirty?.length) throw new Error("生成预览前已有未提交改动，正式发布保持锁定");
+  assertGalleryOnlyPaths(session.changedFiles || []);
+  const [beforeHtml, currentHtml] = await Promise.all([
+    readFile(session.backupPath, "utf8"),
+    readFile(`${root}/index.html`, "utf8"),
+  ]);
+  assertOnlyManagedGalleryChanged(beforeHtml, currentHtml);
 
   const branch = await gitOutput(root, ["branch", "--show-current"]);
   if (branch !== "main") throw new Error(`当前分支是 ${branch || "未知"}，只允许从 main 发布`);
@@ -132,6 +149,7 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     }
   } else {
     const changedPaths = await listGitChanges(root);
+    assertGalleryOnlyPaths(changedPaths);
     if (!samePathSet(changedPaths, session.changedFiles)) {
       throw new Error("预览后出现了批次之外的文件变化，已停止发布");
     }
@@ -140,6 +158,11 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     onUpdate?.(`建立回滚标签 ${summary.tag}`);
     await run("git", ["tag", summary.tag, "HEAD"], { cwd: root });
     await run("git", ["add", "--", ...session.changedFiles], { cwd: root });
+    const stagedPaths = (await gitOutput(root, ["diff", "--cached", "--name-only"])).split("\n").filter(Boolean);
+    assertGalleryOnlyPaths(stagedPaths);
+    if (!samePathSet(stagedPaths, session.changedFiles)) {
+      throw new Error("暂存内容与本批团建相册文件不一致，已停止发布");
+    }
     await run("git", ["commit", "-m", summary.commitMessage], { cwd: root });
     head = await gitOutput(root, ["rev-parse", "HEAD"]);
     session.commitSha = head;

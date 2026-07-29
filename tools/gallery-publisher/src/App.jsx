@@ -178,12 +178,12 @@ export default function App() {
     <div className="publisher-shell">
       <AppHeader repository={status.repository} onHelp={() => setShowHelp(true)} />
       <StatusStrip gallery={status.gallery} repository={status.repository} />
-      {repositoryDirty && !status.session ? <div className="baseline-warning"><Icon name="info" size={17} />当前仓库已有本地改动：可以生成预览，但正式发布将在工作区恢复干净前保持锁定。</div> : null}
+      {repositoryDirty && !status.session ? <div className="baseline-warning"><Icon name="info" size={17} />当前仓库已有本地改动：发布器只操作团建相册，因此在工作区恢复干净前不会生成预览。</div> : null}
       {error ? <div className="error-banner" role="alert"><Icon name="info" size={18} /><span>{error}</span><button type="button" aria-label="关闭错误" onClick={() => setError("")}><Icon name="close" size={17} /></button></div> : null}
       <main className="workspace-layout">
         <section className="main-workspace">
           <div className="gallery-management-bar">
-            <div><Icon name="image" size={18} /><span>官网照片管理</span>{status.gallery.duplicateGroups?.length ? <strong>发现 {status.gallery.duplicateGroups.reduce((total, group) => total + group.length - 1, 0)} 张精确重复</strong> : <small>本地文件＋画面去重已启用</small>}</div>
+            <div><Icon name="image" size={18} /><span>官网照片管理</span>{status.gallery.duplicateGroups?.length ? <strong>发现 {status.gallery.duplicateGroups.reduce((total, group) => total + group.length - 1, 0)} 张精确重复</strong> : <small>正式官网基准＋本机画面去重已启用</small>}</div>
             <button type="button" onClick={() => setShowGalleryManager(true)} disabled={busy}><Icon name="trash" size={17} />选择并删除官网照片</button>
           </div>
           {status.session?.verified ? (
