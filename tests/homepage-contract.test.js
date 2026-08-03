@@ -239,7 +239,7 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   assert.doesNotMatch(cinematicCss, /min-height:\s*4838px/);
   assert.match(cinematicCss, /grid-template-rows:\s*repeat\(4, 945px\)/);
   assert.match(cinematicCss, /\.operation-visuals,[\s\S]*?\.operation-copy-stack\s*\{\s*display:\s*contents;/);
-  assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*1440px;/);
+  assert.match(cinematicCss, /@media \(min-width: 2561px\)[\s\S]*?\.hero-sequence\s*\{[\s\S]*?height:\s*1440px;/);
   assert.match(cinematicCss, /overflow-x:\s*clip/);
   assert.match(
     cinematicCss,
@@ -308,9 +308,10 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /const heroExitText = \[\.\.\.heroText\]\.reverse\(\)/);
   assert.match(cinematicTimelines, /enterDuration = 3\.8/);
   assert.match(cinematicTimelines, /enterStagger = 0\.76/);
-  assert.match(cinematicTimelines, /exitStart = 16\.5/);
-  assert.match(cinematicTimelines, /exitDuration = 1\.15/);
-  assert.match(cinematicTimelines, /exitStagger = 0\.62/);
+  assert.match(cinematicTimelines, /holdDuration = 7\.8/);
+  assert.match(cinematicTimelines, /exitDuration = 5\.8/);
+  assert.match(cinematicTimelines, /exitStagger = 0\.18/);
+  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ holdDuration/);
   assert.match(cinematicTimelines, /\.addLabel\("hero-exit", exitStart\)[\s\S]*?\.to\(\s*heroExitText/);
   const heroExitBlock = cinematicTimelines.match(
     /\.to\(\s*heroExitText,[\s\S]*?"hero-exit",\s*\)/,
@@ -320,6 +321,9 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
   )?.[0] || "";
+  assert.match(mobileTimelineBlock, /holdDuration:\s*15/);
+  assert.match(mobileTimelineBlock, /exitDuration:\s*10\.4/);
+  assert.match(mobileTimelineBlock, /exitStagger:\s*0\.12/);
   assert.match(mobileTimelineBlock, /showMobileStableContent/);
   assert.doesNotMatch(mobileTimelineBlock, /fadeTextSequenceThroughViewport|fadeThroughViewport/);
   assert.match(homepage, /data-motion-pending/);
@@ -424,7 +428,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
   assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260730-gallery-speed-v68/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260730-2k-hero-copy-v70/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260729-production-trim-v62/);
@@ -450,9 +454,9 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260730-2k-hero-copy-v70/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260730-2k-hero-copy-v70/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260730-2k-hero-copy-v70/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260804-hero-mask-stack-v74/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
 
@@ -463,15 +467,29 @@ test("desktop operation scenes follow continuous scroll progress without forced 
   assert.doesNotMatch(cinematicTimelines, /snapToSettledOperation|snap:\s*\{/);
 });
 
-test("large 16:9 hero restores its breathing room while only accelerating entry", () => {
+test("large 16:9 hero only accelerates entry while keeping the restored breathing exit", () => {
   assert.match(cinematicTimelines, /const LARGE_16_9_DESKTOP_QUERY = "\(min-width: 1920px\)[^"]+\(min-aspect-ratio: 17 \/ 10\)"/);
   assert.match(cinematicTimelines, /enterDuration:\s*large16x9Desktop \? 3\.5 : 3\.8/);
   assert.match(cinematicTimelines, /enterStagger:\s*large16x9Desktop \? 0\.7 : 0\.76/);
-  assert.match(cinematicTimelines, /exitStart = 16\.5/);
-  assert.match(cinematicTimelines, /exitDuration = 1\.15/);
-  assert.match(cinematicTimelines, /exitStagger = 0\.62/);
+  assert.match(cinematicTimelines, /holdDuration = 7\.8/);
+  assert.match(cinematicTimelines, /exitDuration = 5\.8/);
+  assert.match(cinematicTimelines, /exitStagger = 0\.18/);
   assert.match(cinematicCss, /\.hero-motto\s*\{[\s\S]*?bottom:\s*15vh/);
   assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-sequence\s*\{\s*height:\s*220svh;\s*\}[\s\S]*?\.hero-motto\s*\{\s*right:\s*20px;\s*bottom:\s*17vh;/);
+});
+
+test("hero exit remains visible before fleet positioning begins at every viewport", () => {
+  assert.match(cinematicCss, /\.hero-sequence\s*\{[\s\S]*?--hero-transition-opacity:\s*0;/);
+  assert.doesNotMatch(cinematicCss, /\.hero-sequence::after/);
+  assert.match(cinematicCss, /\.hero-sticky::after\s*\{[\s\S]*?z-index:\s*4;[\s\S]*?opacity:\s*var\(--hero-transition-opacity\)/);
+  assert.match(cinematicCss, /\.hero-title\s*\{[\s\S]*?z-index:\s*5;/);
+  assert.match(cinematicCss, /\.hero-motto\s*\{[\s\S]*?z-index:\s*5;/);
+  assert.match(cinematicCss, /\.signal-section\s*\{[\s\S]*?margin-top:\s*0;/);
+  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ holdDuration/);
+  assert.match(cinematicTimelines, /const exitSpan = exitDuration \+ \(heroExitText\.length - 1\) \* exitStagger/);
+  assert.match(cinematicTimelines, /"--hero-transition-opacity":\s*1[\s\S]*?duration:\s*exitSpan[\s\S]*?"hero-exit"/);
+  assert.match(cinematicTimelines, /exitDuration = 5\.8/);
+  assert.match(cinematicTimelines, /exitStagger = 0\.18/);
 });
 
 test("non-hero narrative pacing removes empty travel without changing the hero sequence", () => {

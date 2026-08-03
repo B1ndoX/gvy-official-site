@@ -106,9 +106,9 @@ function createHeroTimeline(
     animateBlur = true,
     enterDuration = 3.8,
     enterStagger = 0.76,
-    exitStart = 16.5,
-    exitDuration = 1.15,
-    exitStagger = 0.62,
+    holdDuration = 7.8,
+    exitDuration = 5.8,
+    exitStagger = 0.18,
     lockExit = false,
   },
 ) {
@@ -127,7 +127,9 @@ function createHeroTimeline(
   const heroExitText = [...heroText].reverse();
   const enterStart = 1;
   const enterEnd = enterStart + enterDuration + (heroText.length - 1) * enterStagger;
-  const exitEnd = exitStart + exitDuration + (heroExitText.length - 1) * exitStagger;
+  const exitStart = enterEnd + holdDuration;
+  const exitSpan = exitDuration + (heroExitText.length - 1) * exitStagger;
+  const exitEnd = exitStart + exitSpan;
   const rootElement = root.documentElement;
   gsap.set(heroText, {
     autoAlpha: 0,
@@ -199,7 +201,16 @@ function createHeroTimeline(
         y: -18,
         duration: exitDuration,
         stagger: exitStagger,
-        ease: "power2.in",
+        ease: "power2.inOut",
+      },
+      "hero-exit",
+    )
+    .to(
+      hero,
+      {
+        "--hero-transition-opacity": 1,
+        duration: exitSpan,
+        ease: "none",
       },
       "hero-exit",
     )
@@ -500,6 +511,9 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
   createHeroTimeline(gsap, root, {
     animateMedia: false,
     animateBlur: false,
+    holdDuration: 15,
+    exitDuration: 10.4,
+    exitStagger: 0.12,
     lockExit: true,
   });
   showMobileStableContent(gsap, root);

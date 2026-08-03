@@ -1,6 +1,6 @@
 import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-lightbox-webp-v61";
 import { initArchiveCarousel } from "./archive-carousel.js?v=20260730-gallery-speed-v68";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260730-2k-hero-copy-v70";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260804-hero-mask-stack-v74";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260729-production-trim-v62";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";

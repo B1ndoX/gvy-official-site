@@ -273,21 +273,32 @@ a:focus-visible {
 
 /* Hero */
 .hero-sequence {
+  --hero-transition-opacity: 0;
   position: relative;
   z-index: 2;
   height: 250svh;
   background: #000;
 }
 
-.hero-sequence::after {
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+  background: #020508;
+}
+
+.hero-sticky::after {
   position: absolute;
-  z-index: 7;
+  z-index: 4;
   right: 0;
   bottom: -112px;
   left: 0;
   height: 620px;
   pointer-events: none;
   content: "";
+  opacity: var(--hero-transition-opacity);
+  will-change: opacity;
   background: linear-gradient(
     180deg,
     rgba(2, 4, 8, 0) 0%,
@@ -297,14 +308,6 @@ a:focus-visible {
     #020408 76%,
     #020408 100%
   );
-}
-
-.hero-sticky {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  overflow: hidden;
-  background: #020508;
 }
 
 .hero-media,
@@ -518,7 +521,7 @@ html[data-motion-ready] :is(
   position: relative;
   z-index: 3;
   min-height: 100svh;
-  margin-top: -176px;
+  margin-top: 0;
   padding: 0 0 clamp(30px, 4vh, 52px);
   background:
     linear-gradient(180deg, #020408 0%, rgba(5, 13, 23, 0.95) 42%, #03070d 100%);
@@ -2111,7 +2114,10 @@ noscript {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  .hero-sequence { height: 100svh; }
+  .hero-sequence {
+    --hero-transition-opacity: 1;
+    height: 100svh;
+  }
   .operation-visual,
   .operation-copy { transform: none; }
   .operation-motion { display: none; }
@@ -2140,6 +2146,7 @@ noscript {
   }
 
   .hero-sequence {
+    --hero-transition-opacity: 1;
     height: 1440px;
   }
 
