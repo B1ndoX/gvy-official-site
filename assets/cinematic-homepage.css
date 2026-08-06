@@ -238,7 +238,7 @@ a:focus-visible {
   transition: color 180ms ease;
 }
 
-.nav-links a:not(.nav-blueprint-link)::after {
+.nav-links a:not(.nav-tool-link)::after {
   position: absolute;
   bottom: -10px;
   left: 0;
@@ -265,10 +265,11 @@ a:focus-visible {
   color: #fff;
 }
 
-.nav-blueprint-link {
+.nav-tool-link {
   padding: 8px 13px;
   border: 1px solid rgba(216, 182, 106, 0.42);
   color: var(--fleet-gold) !important;
+  white-space: nowrap;
 }
 
 /* Hero */
@@ -1887,9 +1888,14 @@ noscript {
   .brand-sigil { width: 34px; height: 34px; }
   .brand-copy strong { font-size: 0.76rem; }
   .brand-copy small { font-size: 0.75rem; }
-  .nav-links { gap: 10px; }
+  .nav-links { gap: 6px; }
   .nav-links a { display: none; }
-  .nav-links .nav-blueprint-link { display: inline-block; padding: 7px 10px; font-size: 0.75rem; }
+  .nav-links .nav-tool-link {
+    display: inline-block;
+    padding: 6px 8px;
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+  }
 
   .hero-sequence { height: 220svh; }
   .hero-title {
@@ -2104,6 +2110,10 @@ noscript {
     border: 1px solid rgba(102, 188, 229, 0.3);
   }
   .member-brawl-dialog-close { top: 8px; right: 8px; width: 36px; height: 36px; }
+}
+
+@media (max-width: 350px) {
+  .brand-copy small { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -219,6 +219,19 @@ test("archive controls use SVG icons and compliance copy is exact", () => {
   assert.doesNotMatch(homepage, /不提供游戏下载、充值、账号交易、虚拟物品交易或游戏运营服务/);
 });
 
+test("navigation keeps the blueprint and Wikelo query tools side by side", () => {
+  assert.match(
+    homepage,
+    /<a class="nav-tool-link nav-blueprint-link" href="https:\/\/lantu\.gvyvoyagers\.vip">蓝图查询<\/a>\s*<a class="nav-tool-link nav-wikelo-link" href="https:\/\/wikelo\.gvyvoyagers\.vip">维科洛查询<\/a>/,
+  );
+  assert.match(cinematicCss, /\.nav-tool-link\s*\{[\s\S]*?white-space:\s*nowrap/);
+  assert.match(
+    cinematicCss,
+    /@media \(max-width: 760px\)[\s\S]*?\.nav-links \.nav-tool-link\s*\{[\s\S]*?display:\s*inline-block/,
+  );
+  assert.match(cinematicCss, /@media \(max-width: 350px\)[\s\S]*?\.brand-copy small\s*\{\s*display:\s*none;/);
+});
+
 test("cinematic design system defines responsive and reduced-motion contracts", () => {
   for (const token of [
     "--space-black",
@@ -455,7 +468,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260804-hero-mask-stack-v74/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260806-wikelo-nav-v75/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
