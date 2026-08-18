@@ -5,6 +5,7 @@ import { spawnSync } from "node:child_process";
 import test from "node:test";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
+const skipMediaMetadata = process.env.GVY_SKIP_MEDIA_METADATA === "1";
 
 const outputs = [
   {
@@ -60,6 +61,11 @@ const outputs = [
 
 function inspectMedia(path) {
   const result = spawnSync("ffmpeg", ["-hide_banner", "-i", path], { encoding: "utf8" });
+  if (result.error) {
+    throw new Error(
+      `ffmpeg is required for full media metadata verification: ${result.error.message}`,
+    );
+  }
   return `${result.stdout || ""}\n${result.stderr || ""}`;
 }
 
@@ -69,6 +75,7 @@ for (const output of outputs) {
     assert.equal(existsSync(path), true, `${output.video} must exist`);
     assert.ok(statSync(path).size > 1_000_000, "video must not be a placeholder");
     assert.ok(statSync(path).size < output.maxBytes, "video must remain within its delivery budget");
+    if (skipMediaMetadata) return;
 
     const metadata = inspectMedia(path);
     assert.match(metadata, new RegExp(`Duration: ${output.duration.replaceAll(".", "\\.")}`));
@@ -85,6 +92,7 @@ test("hero 02 poster is a lightweight 1440p WebP", () => {
   assert.equal(existsSync(path), true);
   assert.ok(statSync(path).size > 50_000);
   assert.ok(statSync(path).size < 250_000);
+  if (skipMediaMetadata) return;
   assert.match(inspectMedia(path), /Video: webp, .*2560x1440/);
 });
 
@@ -93,6 +101,7 @@ test("hero 01 poster is a lightweight 1080p WebP", () => {
   assert.equal(existsSync(path), true);
   assert.ok(statSync(path).size > 40_000);
   assert.ok(statSync(path).size < 250_000);
+  if (skipMediaMetadata) return;
   assert.match(inspectMedia(path), /Video: webp, .*1920x1080/);
 });
 
@@ -101,6 +110,7 @@ test("hero 03 poster is a lightweight 1080p WebP", () => {
   assert.equal(existsSync(path), true);
   assert.ok(statSync(path).size > 40_000);
   assert.ok(statSync(path).size < 250_000);
+  if (skipMediaMetadata) return;
   assert.match(inspectMedia(path), /Video: webp, .*1920x1080/);
 });
 
@@ -117,6 +127,7 @@ for (const clip of operationClips) {
     assert.equal(existsSync(path), true);
     assert.ok(statSync(path).size > 1 * 1024 * 1024, "mobile clip must not be a placeholder");
     assert.ok(statSync(path).size < 7 * 1024 * 1024, "mobile clip must remain within its per-scene budget");
+    if (skipMediaMetadata) return;
 
     const metadata = inspectMedia(path);
     assert.match(metadata, new RegExp(`Duration: ${clip.duration.replaceAll(".", "\\.")}`));
@@ -137,6 +148,7 @@ for (const clip of operationClips) {
       assert.equal(existsSync(path), true);
       assert.ok(statSync(path).size > 3 * 1024 * 1024, "clip must not be the previous low-bitrate encode");
       assert.ok(statSync(path).size < 21 * 1024 * 1024, "clip must remain within its lazy-load budget");
+      if (skipMediaMetadata) return;
 
       const metadata = inspectMedia(path);
       assert.match(metadata, new RegExp(`Duration: ${clip.duration.replaceAll(".", "\\.")}`));

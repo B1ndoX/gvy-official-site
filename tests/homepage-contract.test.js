@@ -35,9 +35,13 @@ test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts["check:js"], "node scripts/check-js.mjs");
   assert.equal(packageJson.scripts["check:edgeone"], "node scripts/check-edgeone-media.mjs");
   assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
+  assert.equal(
+    packageJson.scripts["verify:edgeone"],
+    "GVY_SKIP_MEDIA_METADATA=1 npm run test:site && npm run check:js && npm run build",
+  );
   assert.equal(packageJson.scripts["verify:site"], "npm run test:site && npm run check:js && npm run build");
   assert.equal(packageJson.scripts.verify, "npm run verify:site && npm run gallery:publisher:test && npm run gallery:publisher:build");
-  assert.equal(edgeoneConfig.buildCommand, "npm run verify:site");
+  assert.equal(edgeoneConfig.buildCommand, "npm run verify:edgeone");
   assert.equal(edgeoneConfig.installCommand, "npm ci --ignore-scripts --omit=dev");
 });
 

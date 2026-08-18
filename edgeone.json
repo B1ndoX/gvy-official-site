@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run verify:site",
+  "buildCommand": "npm run verify:edgeone",
   "installCommand": "npm ci --ignore-scripts --omit=dev",
   "outputDirectory": "./dist",
   "nodeVersion": "22.11.0",

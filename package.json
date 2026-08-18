@@ -13,6 +13,7 @@
     "gallery:publisher:build": "vite build --config tools/gallery-publisher/vite.config.js",
     "gallery:publisher:test": "node --test tools/gallery-publisher/tests/*.test.js",
     "test:e2e": "npm run build && playwright test",
+    "verify:edgeone": "GVY_SKIP_MEDIA_METADATA=1 npm run test:site && npm run check:js && npm run build",
     "verify:site": "npm run test:site && npm run check:js && npm run build",
     "verify": "npm run verify:site && npm run gallery:publisher:test && npm run gallery:publisher:build"
   },

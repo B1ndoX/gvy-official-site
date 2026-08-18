@@ -22,8 +22,10 @@ test("development and EdgeOne runtimes are explicit and independently verified",
   assert.equal((await read(".node-version")).trim(), "24.19.0");
   assert.equal(edgeone.nodeVersion, "22.11.0");
   assert.equal(edgeone.installCommand, "npm ci --ignore-scripts --omit=dev");
-  assert.equal(edgeone.buildCommand, "npm run verify:site");
+  assert.equal(edgeone.buildCommand, "npm run verify:edgeone");
   assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
+  assert.match(packageJson.scripts["verify:edgeone"], /GVY_SKIP_MEDIA_METADATA=1/);
+  assert.match(packageJson.scripts["verify:edgeone"], /npm run test:site && npm run check:js && npm run build/);
   assert.match(packageJson.scripts["verify:site"], /npm run test:site && npm run check:js && npm run build/);
   assert.match(packageJson.scripts.verify, /gallery:publisher:test/);
   assert.match(verifyWorkflow, /node-version:\s*22\.11\.0/);
