@@ -57,7 +57,8 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
 test("mobile navigation keeps all destinations in its own rail and touch-style gallery drag stays under user control", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const runtimeFailures = collectRuntimeFailures(page);
-  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.goto("/#fleet-signal", { waitUntil: "domcontentloaded" });
+  await expect(page.locator(".command-nav")).toBeVisible();
 
   const mobileNavigation = await page.locator(".nav-item").evaluateAll((links) =>
     links.map((link) => ({ display: getComputedStyle(link).display, title: link.querySelector("strong")?.textContent })));
@@ -78,7 +79,7 @@ test("mobile navigation keeps all destinations in its own rail and touch-style g
   }));
   expect(navigationRail.overflowX).toBe("auto");
   expect(navigationRail.scrollWidth).toBeGreaterThan(navigationRail.clientWidth);
-  await page.locator(".nav-wikelo-link").evaluate((link) => link.scrollIntoView({ inline: "end", block: "nearest" }));
+  await page.locator(".nav-links").evaluate((rail) => rail.scrollTo({ left: rail.scrollWidth, behavior: "instant" }));
   await expect(page.locator(".nav-wikelo-link")).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
