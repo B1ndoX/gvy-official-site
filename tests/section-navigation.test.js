@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { resolveActiveSectionId } from "../assets/js/section-navigation.js";
+import {
+  resolveActiveSectionId,
+  resolveHorizontalFollowTarget,
+} from "../assets/js/section-navigation.js";
 
 const positions = [
   { id: "fleet-signal", top: 300 },
@@ -23,4 +26,43 @@ test("section navigation selects the latest section that crossed the viewport pr
 
 test("section navigation ignores invalid bounds without inventing an active item", () => {
   assert.equal(resolveActiveSectionId([{ id: "fleet-signal", top: Number.NaN }], 500), "");
+});
+
+test("navigation rail follows an active item that moves beyond the right edge", () => {
+  assert.equal(resolveHorizontalFollowTarget({
+    scrollLeft: 0,
+    scrollWidth: 900,
+    clientWidth: 320,
+    railLeft: 100,
+    railRight: 420,
+    itemLeft: 390,
+    itemRight: 510,
+    edgePadding: 12,
+  }), 102);
+});
+
+test("navigation rail follows an active item that moves beyond the left edge", () => {
+  assert.equal(resolveHorizontalFollowTarget({
+    scrollLeft: 260,
+    scrollWidth: 900,
+    clientWidth: 320,
+    railLeft: 100,
+    railRight: 420,
+    itemLeft: 60,
+    itemRight: 180,
+    edgePadding: 12,
+  }), 208);
+});
+
+test("navigation rail does not move when the active item is already visible", () => {
+  assert.equal(resolveHorizontalFollowTarget({
+    scrollLeft: 180,
+    scrollWidth: 900,
+    clientWidth: 320,
+    railLeft: 100,
+    railRight: 420,
+    itemLeft: 160,
+    itemRight: 300,
+    edgePadding: 12,
+  }), 180);
 });

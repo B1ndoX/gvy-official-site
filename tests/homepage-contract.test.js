@@ -456,9 +456,12 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initOperationMotion/);
   assert.match(cinematicHomepage, /initSectionNavigation/);
-  assert.match(cinematicHomepage, /section-navigation\.js\?v=20260726-nav-video-quality-v32/);
+  assert.match(cinematicHomepage, /section-navigation\.js\?v=20260818-nav-track-follow-v78/);
   assert.match(sectionNavigation, /aria-current/);
+  assert.match(cinematicCss, /\.nav-links\s*\{[\s\S]*?touch-action:\s*pan-x/);
   assert.match(cinematicCss, /\.nav-item\.is-active::after/);
+  assert.doesNotMatch(cinematicCss, /--nav-active-panel/);
+  assert.match(sectionNavigation, /resolveHorizontalFollowTarget/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -476,7 +479,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260818-icon-navigation-v77/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260818-nav-track-follow-v78/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });

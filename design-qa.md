@@ -1,55 +1,49 @@
-# GVY 相册苹果节点交互 v64 Design QA
+# Navigation local-preview design QA
 
-- Reference: [Apple homepage](https://www.apple.com/) and its official `endless-entertainment-gallery.built.js` runtime.
-- User source screenshot: `/var/folders/rd/5vqxbv0522j_08nn62qj_bhr0000gn/T/TemporaryItems/NSIRD_screencaptureui_nMC89o/截屏2026-07-29 22.35.03.png`
-- Implementation URL: `http://127.0.0.1:4179/preview/`
-- Apple live-state screenshot: `/tmp/apple-gallery-click-v64.png` (`1030 × 720`)
-- GVY desktop screenshot: `/tmp/gvy-gallery-apple-behavior-v64.png` (`1030 × 720`)
-- GVY mobile screenshot: `/tmp/gvy-gallery-mobile-v64.png` (`390 × 844`)
-- Same-viewport side-by-side comparison: `/tmp/apple-gvy-gallery-comparison-v64.png`
+- Source visual truth: `/Users/bindox/Desktop/IMG_8447.PNG`
+- Rendered implementation: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/mobile-operations-blue-underline.png`
+- Full comparison: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/comparison-mobile-full.png`
+- Focused navigation comparison: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/comparison-mobile-nav-focused.png`
+- Additional behavior evidence: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/mobile-later-tools-horizontal-scroll.png`
+- Desktop evidence: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/desktop-blue-underline.png`
+- Viewports: mobile `390 × 844` CSS px; desktop `1440 × 900` CSS px
+- Density normalization: source `1170 × 2532` px was normalized from `3×` to `390 × 844`; implementation was captured at `390 × 844` px and device scale `1`. The focused source navigation crop `1170 × 192` was normalized to `390 × 64` and compared with the implementation's `390 × 64` header crop.
+- State: `选择航向` active for the source/implementation comparison; `加入舰队` active for forward-follow and horizontal-scroll evidence.
 
-## Selected behavior
+## Full-view comparison evidence
 
-- Every deployed photo keeps one exact navigation node. Clicking a node jumps to that exact photo.
-- The current node expands from a circle into a pill and surrounding nodes shift naturally.
-- The node window is bounded and internally scrollable. Desktop exposes about seven positions and the 390px layout exposes about five without shrinking the markers.
-- Per the user's explicit correction, the active pill is **not centered**. If it is already visible, the node window does not move. If it crosses an edge, the window moves only far enough to reveal it with a 12px inset.
-- Hovering the node window suspends automatic gallery movement. Leaving it resumes only the automatic mode; it does not overwrite the user's manual pause state.
+The source and local implementation retain the same fleet header hierarchy, icon-and-caption navigation, transparent black navigation surface, and cyan active underline. The source includes mobile browser chrome while the implementation capture starts at the webpage viewport; this expected framing difference was excluded from navigation fidelity judgment. Differences in the operation media frame are scroll-timeline content state and are outside this navigation-only change.
 
-## Visual comparison
+## Focused navigation comparison evidence
 
-The Apple and GVY screenshots use the same browser raster. Both show a bounded rounded node surface, fixed circular markers, one elongated current marker, and a separate circular playback control. GVY preserves its existing dark visual tokens, larger playback glyph, border/focus treatment, gallery geometry, and real fleet photos.
+The same-state focused crop shows no filled active tile, the cyan underline beneath `选择航向`, consistent icon scale, two-line captions, spacing, and header height. No actionable visual mismatch remains in the requested navigation region.
 
-No `NEW`/“最新” copy, photo numbering, count label, scrubber, page-width expansion, or new graphic asset was introduced.
+## Required fidelity surfaces
 
-## Interaction evidence
+- Fonts and typography: existing GVY Sans/PingFang fallback, weights, line heights, tracking, and caption hierarchy remain unchanged.
+- Spacing and layout rhythm: the original navigation padding and item gaps are preserved; the new overflow rules do not alter vertical header geometry.
+- Colors and visual tokens: active state continues to use `--route-blue`; item background remains transparent.
+- Image quality and asset fidelity: existing logo and Phosphor navigation assets are unchanged; no asset was recreated or replaced.
+- Copy and content: all six existing navigation destinations and their captions are unchanged and remain in order.
 
-- 38 deployed photos produced 38 exact node buttons.
-- Clicking node 1 produced gallery `scrollLeft 0`, active node 1, and node-window `scrollLeft 0`.
-- Clicking visible node 4 produced gallery `scrollLeft 1132`, active node 4, while node-window `scrollLeft` remained `0`. This directly proves that the active pill is not forced to center.
-- Clicking edge node 8 produced node-window `scrollLeft 34`; the calculated center position was `122`. The implementation therefore used the required minimal edge reveal.
-- Active node width remained `54px`; inactive node width remained `30px`. Neighbor offsets changed with the active pill.
-- A real gallery drag moved `scrollLeft 2641 → 2821` without opening the lightbox.
-- A short click still opened the optimized `team-09-1280.webp` lightbox.
-- A real node-window drag moved its `scrollLeft 34 → 144` without changing active photo 8, gallery position, or dialog state.
-- The manual pause button reported `aria-pressed="true"` and retained the paused state during exact-node navigation.
-- `shouldAdvanceCarousel` is covered for automatic, manual-pause, direct-touch, page-scroll, visibility, hidden-page, and node-hover states. The in-app browser's coordinate mouse backend did not expose CSS `:hover`, so the native hover transition could not be visually sampled there; the runtime listener wiring and advance gate are covered by source-contract and unit tests.
+## Interaction and responsive checks
 
-## Responsive evidence
-
-At `390 × 844`, the node surface measured `220 × 50px`, the inner window measured `218px`, all 38 nodes remained present, active/inactive widths stayed `54/30px`, and document overflow was `0`. The node control did not collapse into tiny dots or expand with the photo count.
-
-## Verification
-
-- `git diff --check`: passed.
-- Focused carousel and homepage-contract tests: 37/37 passed.
-- `npm run verify`: 115/115 tests passed; 27 JavaScript files passed syntax checks; production site and gallery publisher builds completed.
-- The formal comparison found no actionable P0/P1/P2 visual mismatch.
+- Active section changes from `选择航向` to `团建图册` to `加入舰队` and advances the mobile rail horizontally only when the active item needs to be revealed.
+- Horizontal input changed the rail by `120px` while page vertical position changed by `0px`.
+- Mobile rail computed styles: `touch-action: pan-x`, `overflow-y: hidden`.
+- Manual horizontal movement reveals `加入舰队`, `蓝图查询`, and `维科洛查询` together.
+- Desktop has no page-level horizontal overflow at `1440 × 900`.
+- Browser console errors checked: none.
+- Automated verification: final `npm run verify` passed after the visual-direction adjustment (103 site tests, JavaScript syntax check, site build, 28 publisher tests, and publisher build).
 
 ## Findings
 
-- No actionable P0/P1/P2 findings.
+- No actionable P0, P1, or P2 findings.
 
-## Final result
+## Comparison history
+
+- Initial local direction used a dark-blue active panel. The user changed the visual direction to the site's original cyan underline before handoff.
+- The active panel was removed, the original underline behavior was restored, and the mobile forward-follow plus horizontal gesture lock were retained.
+- Post-fix evidence is recorded in both comparison images above.
 
 final result: passed

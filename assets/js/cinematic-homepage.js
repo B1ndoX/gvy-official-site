@@ -4,7 +4,7 @@ import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260804-hero
 import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260729-production-trim-v62";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
-import { initSectionNavigation } from "./section-navigation.js?v=20260726-nav-video-quality-v32";
+import { initSectionNavigation } from "./section-navigation.js?v=20260818-nav-track-follow-v78";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 
