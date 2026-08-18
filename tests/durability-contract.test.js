@@ -19,7 +19,7 @@ const verifyWorkflow = await read(".github/workflows/verify.yml");
 const monitorWorkflow = await read(".github/workflows/production-monitor.yml");
 
 test("development and EdgeOne runtimes are explicit and independently verified", async () => {
-  assert.equal((await read(".node-version")).trim(), "24.18.0");
+  assert.equal((await read(".node-version")).trim(), "24.19.0");
   assert.equal(edgeone.nodeVersion, "22.11.0");
   assert.equal(edgeone.installCommand, "npm ci --ignore-scripts --omit=dev");
   assert.equal(edgeone.buildCommand, "npm run verify:site");
@@ -28,10 +28,14 @@ test("development and EdgeOne runtimes are explicit and independently verified",
   assert.match(packageJson.scripts.verify, /gallery:publisher:test/);
   assert.match(verifyWorkflow, /node-version:\s*22\.11\.0/);
   assert.match(verifyWorkflow, /node-version-file:\s*\.node-version/);
+  assert.match(verifyWorkflow, /Node 24 LTS/);
+  assert.match(verifyWorkflow, /ffmpeg@7/);
+  assert.match(verifyWorkflow, /libwebp/);
 });
 
 test("deployed brawl runtime is included in JavaScript syntax checks", () => {
   assert.match(checkJavaScript, /assets\/fleet-command-brawl\.js/);
+  assert.match(checkJavaScript, /ignoredDirectories/);
 });
 
 test("one production manifest drives build and EdgeOne media verification", () => {
@@ -89,6 +93,7 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorWorkflow, /cron:\s*"17 \*\/6 \* \* \*"/);
   assert.match(monitorWorkflow, /scripts\/monitor-production\.mjs/);
   assert.match(monitorWorkflow, /scripts\/check-edgeone-media\.mjs/);
+  assert.match(monitorWorkflow, /node-version-file:\s*\.node-version/);
   assert.match(monitorWorkflow, /GVY production monitor failure/);
   assert.match(monitorWorkflow, /issues:\s*write/);
   assert.match(monitorScript, /https:\/\/data\.iana\.org\/rdap\/dns\.json/);

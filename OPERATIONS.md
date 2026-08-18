@@ -2,8 +2,8 @@
 
 ## 运行时边界
 
-- EdgeOne 正式静态构建固定使用平台预装的 Node `22.11.0`，只执行 `npm run verify:site`。
-- 相册发布器和完整开发验证使用 `.node-version` 中的 Node `24.18.0`，执行 `npm run verify`。
+- EdgeOne 正式静态构建固定使用平台官方推荐、预装的 Node `22.11.0`，只执行 `npm run verify:site`；这是部署平台兼容性边界，不代表开发主版本。
+- 相册发布器、定时监控和完整开发验证统一使用 `.node-version` 中的 Node `24.19.0`（当前官方 Active LTS），执行 `npm run verify`。不跟随尚未进入 LTS 的 Current 版本。
 - 两条链路由 GitHub Actions 分别验证。不得让 EdgeOne 执行 Vite 8，也不得把发布器构建加入 EdgeOne 正式部署命令。
 
 ## 发布门禁
@@ -11,7 +11,8 @@
 - 普通官网修改必须先运行 `npm run verify`。
 - EdgeOne 自身还会运行 `npm run verify:site`；验证失败时不得生成新生产部署。
 - 相册发布器继续在本机运行完整验证、限制相册白名单并推送 `main`。主分支保护不得启用管理员强制，否则会破坏既有一键发布。
-- GitHub Actions 的 `Verify / Site on EdgeOne Node 22.11` 与 `Verify / Full runtime and publisher on Node 24` 是长期健康证据。前者在 Linux 上验证官网，后者在真实 macOS 运行环境验证完整官网、浏览器交互和发布器，避免 `/usr/bin/sips` 被 Linux 误判为故障。
+- GitHub Actions 的 `Verify / Site on EdgeOne Node 22.11` 与 `Verify / Full runtime and publisher on Node 24 LTS` 是长期健康证据。前者在 Linux 上验证官网，后者在真实 macOS 运行环境验证完整官网、浏览器交互和发布器，避免 `/usr/bin/sips` 被 Linux 误判为故障。
+- macOS CI 的系统 ffmpeg 可能缺少 `libwebp`；工作流会自动切换到带 WebP 编码器的 `ffmpeg@7`。不得把该环境差异误判为 Node 故障，也不得因此跳过发布器图片处理测试。
 
 ## 监控
 

@@ -32,7 +32,7 @@ jobs:
         run: npm run verify:site
 
   publisher:
-    name: Full runtime and publisher on Node 24
+    name: Full runtime and publisher on Node 24 LTS
     runs-on: macos-14
     timeout-minutes: 30
     steps:
@@ -43,8 +43,12 @@ jobs:
           cache: npm
       - name: Install all dependencies
         run: npm ci --ignore-scripts
-      - name: Ensure ffmpeg is available
-        run: command -v ffmpeg || brew install ffmpeg
+      - name: Ensure ffmpeg has WebP support
+        run: |
+          if ! command -v ffmpeg >/dev/null || ! ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libwebp; then
+            brew install ffmpeg@7
+            echo "$(brew --prefix ffmpeg@7)/bin" >> "$GITHUB_PATH"
+          fi
       - name: Verify website and macOS publisher
         run: npm run verify
       - name: Install Chromium

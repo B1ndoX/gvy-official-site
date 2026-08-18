@@ -9,6 +9,7 @@ const targets = [
   resolve(root, "tools/gallery-publisher"),
 ];
 const files = [resolve(root, "assets/fleet-command-brawl.js")];
+const ignoredDirectories = new Set(["node_modules", "dist", ".runtime"]);
 
 async function collectJavaScript(directory) {
   let entries = [];
@@ -21,7 +22,7 @@ async function collectJavaScript(directory) {
 
   for (const entry of entries) {
     const path = resolve(directory, entry.name);
-    if (entry.isDirectory()) await collectJavaScript(path);
+    if (entry.isDirectory() && !ignoredDirectories.has(entry.name)) await collectJavaScript(path);
     else if (/\.(?:js|mjs)$/.test(entry.name)) files.push(path);
   }
 }
