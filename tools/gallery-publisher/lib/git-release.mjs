@@ -3,6 +3,8 @@ import { readFile } from "node:fs/promises";
 
 import { assertOnlyManagedGalleryChanged } from "./gallery-html.mjs";
 
+export const DEPLOYMENT_VERIFY_TIMEOUT_MINUTES = 12;
+
 function run(command, args, { cwd, maxOutput = 6_000_000 } = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, { cwd, stdio: ["ignore", "pipe", "pipe"] });
@@ -81,7 +83,7 @@ async function verifyDeployment({ session, domains, onUpdate }) {
   const lastNumber = String(session.batchEnd).padStart(2, "0");
   const firstNumber = String(session.batchStart).padStart(2, "0");
   const expectedAsset = `/assets/gallery/optimized/team-${lastNumber}-1280.webp`;
-  const deadline = Date.now() + 5 * 60 * 1000;
+  const deadline = Date.now() + DEPLOYMENT_VERIFY_TIMEOUT_MINUTES * 60 * 1000;
   let lastError = "等待 EdgeOne 部署";
 
   while (Date.now() < deadline) {
@@ -116,7 +118,7 @@ async function verifyDeployment({ session, domains, onUpdate }) {
     onUpdate?.(`EdgeOne 尚在部署，继续复查：${lastError}`);
     await new Promise((resolve) => setTimeout(resolve, 8_000));
   }
-  throw new Error(`推送成功，但 5 分钟内未完成线上复查：${lastError}`);
+  throw new Error(`推送成功，但 ${DEPLOYMENT_VERIFY_TIMEOUT_MINUTES} 分钟内未完成线上复查：${lastError}`);
 }
 
 export async function publishGallerySession({ root, session, onUpdate, onCommitted, onPushed }) {

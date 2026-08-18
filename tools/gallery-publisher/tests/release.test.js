@@ -6,9 +6,18 @@ import { join } from "node:path";
 import { promisify } from "node:util";
 import test from "node:test";
 
-import { assertGalleryOnlyPaths, buildReleaseSummary, listGitChanges } from "../lib/git-release.mjs";
+import {
+  assertGalleryOnlyPaths,
+  buildReleaseSummary,
+  DEPLOYMENT_VERIFY_TIMEOUT_MINUTES,
+  listGitChanges,
+} from "../lib/git-release.mjs";
 
 const runFile = promisify(execFile);
+
+test("publisher waits long enough for the current EdgeOne deployment window", () => {
+  assert.equal(DEPLOYMENT_VERIFY_TIMEOUT_MINUTES, 12);
+});
 
 test("release summary is stable, scoped to main, and includes a pre-release rollback tag", () => {
   const summary = buildReleaseSummary(
