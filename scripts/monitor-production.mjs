@@ -108,20 +108,28 @@ async function checkDomainRegistration() {
   });
 }
 
-const checks = [
+const requiredChecks = [
   ["www homepage", () => checkPage({ url: "https://www.gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
   ["apex homepage", () => checkPage({ url: "https://gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
-  ["blueprint service", () => checkPage({ url: "https://lantu.gvyvoyagers.vip/", marker: "星际公民蓝图查询" })],
-  ["Wikelo service", () => checkPage({ url: "https://wikelo.gvyvoyagers.vip/", marker: "GVY 维科洛交易查询" })],
   ["www forced HTTPS", () => checkHttpsRedirect("http://www.gvyvoyagers.vip/")],
   ["apex forced HTTPS", () => checkHttpsRedirect("http://gvyvoyagers.vip/")],
-  ...["www.gvyvoyagers.vip", "gvyvoyagers.vip", "lantu.gvyvoyagers.vip", "wikelo.gvyvoyagers.vip"]
+  ...["www.gvyvoyagers.vip", "gvyvoyagers.vip"]
     .map((host) => [`${host} TLS`, () => checkCertificate(host)]),
   ["domain registration", checkDomainRegistration],
 ];
 
+// Child services are independently maintained and may be under maintenance while the
+// official site is healthy. Observe them here, but never turn their downtime into an
+// official-site incident or trigger changes in those projects.
+const advisoryChecks = [
+  ["blueprint service", () => checkPage({ url: "https://lantu.gvyvoyagers.vip/", marker: "星际公民蓝图查询" })],
+  ["Wikelo service", () => checkPage({ url: "https://wikelo.gvyvoyagers.vip/", marker: "GVY 维科洛交易查询" })],
+  ...["lantu.gvyvoyagers.vip", "wikelo.gvyvoyagers.vip"]
+    .map((host) => [`${host} TLS`, () => checkCertificate(host)]),
+];
+
 const failures = [];
-for (const [label, check] of checks) {
+for (const [label, check] of requiredChecks) {
   try {
     await check();
     console.log(`Production monitor OK: ${label}`);
@@ -131,9 +139,25 @@ for (const [label, check] of checks) {
   }
 }
 
+const advisories = [];
+for (const [label, check] of advisoryChecks) {
+  try {
+    await check();
+    console.log(`Child service observer OK: ${label}`);
+  } catch (error) {
+    const message = `${label}: ${error.message}`;
+    advisories.push(message);
+    console.warn(`Child service observer WARNING: ${message}`);
+    if (process.env.GITHUB_ACTIONS === "true") {
+      console.log(`::warning title=Independent child service unavailable::${message}`);
+    }
+  }
+}
+
 assert.equal(
   failures.length,
   0,
-  `Production monitor failed for ${failures.length}/${checks.length} checks:\n${failures.join("\n")}`,
+  `Production monitor failed for ${failures.length}/${requiredChecks.length} required checks:\n${failures.join("\n")}`,
 );
-console.log(`Production monitor passed: ${checks.length} checks.`);
+console.log(`Production monitor passed: ${requiredChecks.length} required checks.`);
+console.log(`Child service observer completed: ${advisoryChecks.length - advisories.length}/${advisoryChecks.length} available.`);

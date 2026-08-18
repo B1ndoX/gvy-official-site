@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   monitor:
-    name: Website, media, TLS and domain
+    name: Official website, media, TLS and domain
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -31,7 +31,7 @@ jobs:
         with:
           node-version-file: .node-version
           package-manager-cache: false
-      - name: Check pages, HTTPS, TLS and domain expiry
+      - name: Check official site and observe independent child services
         run: node scripts/monitor-production.mjs
       - name: Check all active EdgeOne media
         run: node scripts/check-edgeone-media.mjs

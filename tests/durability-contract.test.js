@@ -101,4 +101,7 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorScript, /https:\/\/data\.iana\.org\/rdap\/dns\.json/);
   assert.match(monitorScript, /registryBaseUrl/);
   assert.doesNotMatch(monitorScript, /rdap\.verisign\.com/);
+  assert.match(monitorScript, /const requiredChecks =/);
+  assert.match(monitorScript, /const advisoryChecks =/);
+  assert.match(monitorScript, /Independent child service unavailable/);
 });
