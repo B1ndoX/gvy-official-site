@@ -54,7 +54,7 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   expect(runtimeFailures).toEqual([]);
 });
 
-test("mobile navigation keeps all destinations in its own rail and touch-style gallery drag stays under user control", async ({ page }) => {
+test("mobile navigation fits all destinations in one row and touch-style gallery drag stays under user control", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const runtimeFailures = collectRuntimeFailures(page);
   await page.goto("/#fleet-signal", { waitUntil: "domcontentloaded" });
@@ -76,11 +76,13 @@ test("mobile navigation keeps all destinations in its own rail and touch-style g
     clientWidth: rail.clientWidth,
     scrollWidth: rail.scrollWidth,
     overflowX: getComputedStyle(rail).overflowX,
+    columns: getComputedStyle(rail).gridTemplateColumns.split(" ").length,
   }));
-  expect(navigationRail.overflowX).toBe("auto");
-  expect(navigationRail.scrollWidth).toBeGreaterThan(navigationRail.clientWidth);
-  await page.locator(".nav-links").evaluate((rail) => rail.scrollTo({ left: rail.scrollWidth, behavior: "instant" }));
-  await expect(page.locator(".nav-wikelo-link")).toBeInViewport();
+  expect(navigationRail.overflowX).toBe("hidden");
+  expect(navigationRail.scrollWidth).toBe(navigationRail.clientWidth);
+  expect(navigationRail.columns).toBe(6);
+  for (const item of await page.locator(".nav-item").all()) await expect(item).toBeInViewport();
+  for (const caption of await page.locator(".nav-item small").all()) await expect(caption).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
   const galleryViewport = page.locator(".archive-grid-viewport");
