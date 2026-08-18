@@ -104,4 +104,6 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorScript, /const requiredChecks =/);
   assert.match(monitorScript, /const advisoryChecks =/);
   assert.match(monitorScript, /Independent child service unavailable/);
+  assert.match(monitorScript, /GVY_MONITOR_ATTEMPTS \|\| 5/);
+  assert.match(monitorScript, /Math\.min\(5_000 \* attempt, 20_000\)/);
 });

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import tls from "node:tls";
 
-const retries = Number(process.env.GVY_MONITOR_ATTEMPTS || 3);
+const retries = Number(process.env.GVY_MONITOR_ATTEMPTS || 5);
 const minimumCertificateDays = Number(process.env.GVY_MIN_CERTIFICATE_DAYS || 21);
 const minimumDomainDays = Number(process.env.GVY_MIN_DOMAIN_DAYS || 180);
 
@@ -16,7 +16,9 @@ async function withRetry(label, operation) {
       return await operation();
     } catch (error) {
       lastError = error;
-      if (attempt < retries) await wait(750 * attempt);
+      // EdgeOne can briefly return 502 while a deployment is switching over. Confirm
+      // the outage across a wider window without masking a sustained failure.
+      if (attempt < retries) await wait(Math.min(5_000 * attempt, 20_000));
     }
   }
   throw new Error(`${label} failed after ${retries} attempts: ${lastError?.message || lastError}`);
