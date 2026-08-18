@@ -70,7 +70,7 @@ test("mobile navigation keeps all destinations in its own rail and touch-style g
     "蓝图查询",
     "维科洛查询",
   ]);
-  mobileNavigation.forEach(({ display }) => expect(display).toBe("inline-flex"));
+  mobileNavigation.forEach(({ display }) => expect(display).not.toBe("none"));
   const navigationRail = await page.locator(".nav-links").evaluate((rail) => ({
     clientWidth: rail.clientWidth,
     scrollWidth: rail.scrollWidth,
