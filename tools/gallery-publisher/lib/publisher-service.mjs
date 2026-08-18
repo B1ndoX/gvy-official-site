@@ -228,7 +228,7 @@ export class PublisherService {
         fallbackName: item.fallbackName,
         publicUrl: this.session?.type === "delete" && !this.session.published && this.session.deletedNumbers?.includes(item.number)
           ? `/deleted-preview/${this.session.id}/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`
-          : `/preview/assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
+          : `/site-assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
         duplicateOf: originalByDuplicate.get(item.number) || null,
       })),
       duplicateGroups,
@@ -315,7 +315,7 @@ export class PublisherService {
           uploadName: upload.originalName,
           matchType: "exact",
           matchSource: "gallery",
-          matchUrl: `/preview/assets/gallery/${exactExistingDuplicate.fallbackName}`,
+          matchUrl: `/site-assets/gallery/${exactExistingDuplicate.fallbackName}`,
         });
       }
       const exactBatchDuplicate = batchFiles.find((entry) => entry.hash === hash);
@@ -349,7 +349,7 @@ export class PublisherService {
             uploadName: upload.originalName,
             matchType: "visual",
             matchSource: "gallery",
-            matchUrl: `/preview/assets/gallery/${visualExistingDuplicate.fallbackName}`,
+            matchUrl: `/site-assets/gallery/${visualExistingDuplicate.fallbackName}`,
           });
         } else {
           const visualBatchDuplicate = batchFingerprints.find(

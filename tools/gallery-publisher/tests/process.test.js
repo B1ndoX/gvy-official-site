@@ -60,6 +60,7 @@ test("publisher creates the fallback, responsive WebP, and thumbnail without ove
 
     assert.equal(item.number, 48);
     assert.equal(item.fallbackName, "team-48.jpg");
+    assert.equal(item.publicUrl, "/site-assets/gallery/team-48.jpg");
     assert.equal(item.has1920, false);
     assert.equal(item.createdPaths.length, 3);
     await Promise.all(item.createdPaths.map((path) => access(path)));

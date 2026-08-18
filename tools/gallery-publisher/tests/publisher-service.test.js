@@ -70,6 +70,9 @@ test("delete preview physically removes selected assets, preserves order, and ro
     assert.equal(preview.count, startingGallery.count - selectedAssetNumbers.length);
     assert.equal(preview.items[3].number, 6);
     assert.deepEqual(status.session.items.map((item) => item.number), selectedAssetNumbers);
+    status.session.items.forEach((item) => {
+      assert.match(item.publicUrl, /^\/deleted-preview\/[a-f0-9-]{36}\/assets\/gallery\/thumbs\/team-\d+\.jpg$/i);
+    });
     await Promise.all(selectedPaths.map((path) => assert.rejects(access(join(root, path)))));
 
     await service.rollback();
@@ -92,6 +95,17 @@ test("official deployed gallery is the calibration authority", () => {
   assert.throws(() => assertSameDeployedGallery(staleLocal, official), /正式官网当前相册不一致/);
 });
 
+test("current gallery thumbnails use the publisher's read-only source asset route", async () => {
+  const gallery = parseGalleryState(homepage);
+  const service = new PublisherService({ root: projectRoot });
+  const inventory = await service.getGalleryInventory(gallery);
+
+  assert.equal(inventory.items.length, gallery.count);
+  inventory.items.forEach((item) => {
+    assert.match(item.publicUrl, /^\/site-assets\/gallery\/thumbs\/team-\d+\.jpg$/);
+  });
+});
+
 test("local duplicate review reports exact and visual matches and only continues after explicit override", async () => {
   const gallery = parseGalleryState(homepage);
   const lastItem = gallery.items.at(-1);
@@ -112,7 +126,7 @@ test("local duplicate review reports exact and visual matches and only continues
       assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
       assert.equal(error.duplicates[0].matchType, "exact");
       assert.equal(error.duplicates[0].matchSource, "gallery");
-      assert.match(error.duplicates[0].matchUrl, /^\/preview\/assets\/gallery\//);
+      assert.match(error.duplicates[0].matchUrl, /^\/site-assets\/gallery\//);
       return true;
     },
   );
@@ -126,6 +140,7 @@ test("local duplicate review reports exact and visual matches and only continues
     (error) => {
       assert.equal(error.code, "DUPLICATE_REVIEW_REQUIRED");
       assert.equal(error.duplicates[0].matchType, "visual");
+      assert.match(error.duplicates[0].matchUrl, /^\/site-assets\/gallery\//);
       return true;
     },
   );

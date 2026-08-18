@@ -253,7 +253,7 @@ export async function processGalleryPhoto({ upload, number, root }) {
       height: dimensions.height,
       has1920,
       createdPaths,
-      publicUrl: `/preview/assets/gallery/${fallbackName}`,
+      publicUrl: `/site-assets/gallery/${fallbackName}`,
     };
   } catch (error) {
     await Promise.all([...new Set(collisionPaths)].map((path) => rm(path, { force: true })));
