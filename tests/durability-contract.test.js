@@ -1,0 +1,97 @@
+import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+
+import { middleware } from "../middleware.js";
+
+const root = new URL("../", import.meta.url);
+const read = (path) => readFile(new URL(path, root), "utf8");
+const packageJson = JSON.parse(await read("package.json"));
+const edgeone = JSON.parse(await read("edgeone.json"));
+const media = JSON.parse(await read("config/production-media.json"));
+const homepage = await read("index.html");
+const heroController = await read("assets/js/hero-video-controller.js");
+const checkJavaScript = await read("scripts/check-js.mjs");
+const checkEdgeOne = await read("scripts/check-edgeone-media.mjs");
+const monitorScript = await read("scripts/monitor-production.mjs");
+const verifyWorkflow = await read(".github/workflows/verify.yml");
+const monitorWorkflow = await read(".github/workflows/production-monitor.yml");
+
+test("development and EdgeOne runtimes are explicit and independently verified", async () => {
+  assert.equal((await read(".node-version")).trim(), "24.18.0");
+  assert.equal(edgeone.nodeVersion, "22.11.0");
+  assert.equal(edgeone.installCommand, "npm ci --ignore-scripts --omit=dev");
+  assert.equal(edgeone.buildCommand, "npm run verify:site");
+  assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
+  assert.match(packageJson.scripts["verify:site"], /npm run test:site && npm run check:js && npm run build/);
+  assert.match(packageJson.scripts.verify, /gallery:publisher:test/);
+  assert.match(verifyWorkflow, /node-version:\s*22\.11\.0/);
+  assert.match(verifyWorkflow, /node-version-file:\s*\.node-version/);
+});
+
+test("deployed brawl runtime is included in JavaScript syntax checks", () => {
+  assert.match(checkJavaScript, /assets\/fleet-command-brawl\.js/);
+});
+
+test("one production manifest drives build and EdgeOne media verification", () => {
+  assert.equal(media.heroAssets.length, 10);
+  assert.equal(media.heroAssets.filter((file) => file.endsWith(".mp4")).length, 7);
+  assert.equal(media.operationAssets.length, 12);
+  for (const asset of media.heroAssets) {
+    assert.ok(homepage.includes(asset));
+    assert.ok(heroController.includes(asset));
+  }
+  for (const asset of media.operationAssets) assert.ok(homepage.includes(asset));
+  assert.match(checkEdgeOne, /config\/production-media\.json/);
+  assert.match(checkEdgeOne, /GVY_EDGEONE_ATTEMPTS/);
+  assert.match(checkEdgeOne, /failures\.push/);
+});
+
+test("security headers authorize only the two intentional inline homepage scripts", () => {
+  const globalRule = edgeone.headers.find((rule) => rule.source === "/*");
+  const headers = new Map(globalRule.headers.map(({ key, value }) => [key, value]));
+  assert.equal(headers.get("Strict-Transport-Security"), "max-age=15552000");
+  assert.equal(headers.get("Permissions-Policy"), "camera=(), microphone=(), geolocation=()");
+  const csp = headers.get("Content-Security-Policy");
+  assert.match(csp, /default-src 'self'/);
+  assert.match(csp, /object-src 'none'/);
+  assert.match(csp, /frame-ancestors 'self'/);
+  assert.match(csp, /upgrade-insecure-requests/);
+
+  const inlineScripts = [...homepage.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)]
+    .map((match) => `'sha256-${createHash("sha256").update(match[1]).digest("base64")}'`);
+  assert.equal(inlineScripts.length, 2);
+  inlineScripts.forEach((hash) => assert.ok(csp.includes(hash), `CSP is missing ${hash}`));
+});
+
+test("EdgeOne middleware upgrades HTTP without changing HTTPS requests", () => {
+  const redirectResult = middleware({
+    request: new Request("http://www.gvyvoyagers.vip/gallery?x=1"),
+    redirect: (url, status) => ({ url, status }),
+    next: () => ({ next: true }),
+  });
+  assert.deepEqual(redirectResult, {
+    url: "https://www.gvyvoyagers.vip/gallery?x=1",
+    status: 308,
+  });
+
+  const nextResult = middleware({
+    request: new Request("https://www.gvyvoyagers.vip/"),
+    redirect: () => ({ redirected: true }),
+    next: () => ({ next: true }),
+  });
+  assert.deepEqual(nextResult, { next: true });
+});
+
+test("scheduled production monitoring covers live pages, media and expiry alerts", () => {
+  assert.match(packageJson.scripts["monitor:production"], /monitor-production\.mjs/);
+  assert.match(monitorWorkflow, /cron:\s*"17 \*\/6 \* \* \*"/);
+  assert.match(monitorWorkflow, /scripts\/monitor-production\.mjs/);
+  assert.match(monitorWorkflow, /scripts\/check-edgeone-media\.mjs/);
+  assert.match(monitorWorkflow, /GVY production monitor failure/);
+  assert.match(monitorWorkflow, /issues:\s*write/);
+  assert.match(monitorScript, /https:\/\/data\.iana\.org\/rdap\/dns\.json/);
+  assert.match(monitorScript, /registryBaseUrl/);
+  assert.doesNotMatch(monitorScript, /rdap\.verisign\.com/);
+});

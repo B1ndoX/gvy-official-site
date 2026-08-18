@@ -1,0 +1,53 @@
+name: Verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  site:
+    name: Site on EdgeOne Node 22.11
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22.11.0
+          cache: npm
+      - name: Install production dependencies
+        run: npm ci --ignore-scripts --omit=dev
+      - name: Ensure ffmpeg is available
+        run: command -v ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+      - name: Verify deployable website
+        run: npm run verify:site
+
+  publisher:
+    name: Full runtime and publisher on Node 24
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install all dependencies
+        run: npm ci --ignore-scripts
+      - name: Ensure ffmpeg is available
+        run: command -v ffmpeg || brew install ffmpeg
+      - name: Verify website and macOS publisher
+        run: npm run verify
+      - name: Install Chromium
+        run: npx playwright install chromium
+      - name: Run browser smoke tests
+        run: npm run test:e2e

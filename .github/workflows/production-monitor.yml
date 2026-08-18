@@ -1,0 +1,56 @@
+name: Production Monitor
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: production-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    name: Website, media, TLS and domain
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /scripts/
+            /config/
+            /package.json
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24.18.0
+          package-manager-cache: false
+      - name: Check pages, HTTPS, TLS and domain expiry
+        run: node scripts/monitor-production.mjs
+      - name: Check all active EdgeOne media
+        run: node scripts/check-edgeone-media.mjs
+      - name: Open one incident issue when monitoring fails
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing="$(gh issue list --state open --search 'GVY production monitor failure in:title' --json number --jq '.[0].number // empty')"
+          if [ -z "$existing" ]; then
+            gh issue create --title "GVY production monitor failure" --body "The scheduled production monitor failed. Inspect: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          else
+            gh issue comment "$existing" --body "Monitoring failed again: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi
+      - name: Close the incident after recovery
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing="$(gh issue list --state open --search 'GVY production monitor failure in:title' --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "Production monitoring recovered: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+          fi

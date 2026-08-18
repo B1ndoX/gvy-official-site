@@ -1,9 +1,12 @@
-import { cp, copyFile, mkdir, rm } from "node:fs/promises";
+import { cp, copyFile, mkdir, readFile, rm } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
+const productionMedia = JSON.parse(
+  await readFile(resolve(root, "config/production-media.json"), "utf8"),
+);
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -12,33 +15,8 @@ for (const file of ["index.html", "member-brawl.html", "site.webmanifest", "robo
   await copyFile(resolve(root, file), resolve(output, file));
 }
 
-const activeHeroAssets = new Set([
-  "fleet-hero-01-1080p-v4.mp4",
-  "fleet-hero-01-mobile-720p-v1.mp4",
-  "fleet-hero-01-poster-v2.webp",
-  "fleet-hero-02-1080p-v4.mp4",
-  "fleet-hero-02-mobile-720p-v1.mp4",
-  "fleet-hero-02-1440p-v4.mp4",
-  "fleet-hero-02-poster-1440p-v3.webp",
-  "fleet-hero-03-1080p-v1.mp4",
-  "fleet-hero-03-mobile-720p-v1.mp4",
-  "fleet-hero-03-poster-v1.webp",
-]);
-
-const activeOperationAssets = new Set([
-  "combat-1920-v2.mp4",
-  "combat-2560-v2.mp4",
-  "combat-mobile-1280-v1.mp4",
-  "industry-1920-v2.mp4",
-  "industry-2560-v2.mp4",
-  "industry-mobile-1280-v1.mp4",
-  "logistics-1920-v2.mp4",
-  "logistics-2560-v2.mp4",
-  "logistics-mobile-1280-v1.mp4",
-  "exploration-1920-v2.mp4",
-  "exploration-2560-v2.mp4",
-  "exploration-mobile-1280-v1.mp4",
-]);
+const activeHeroAssets = new Set(productionMedia.heroAssets);
+const activeOperationAssets = new Set(productionMedia.operationAssets);
 
 const excludedProductionAssets = new Set([
   "assets/archive-planet-feed.mp4",

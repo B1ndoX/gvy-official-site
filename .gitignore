@@ -2,3 +2,5 @@ dist/
 node_modules/
 tools/gallery-publisher/dist/
 tools/gallery-publisher/.runtime/
+test-results/
+playwright-report/

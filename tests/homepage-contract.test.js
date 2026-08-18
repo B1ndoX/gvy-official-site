@@ -6,6 +6,7 @@ import test from "node:test";
 const root = new URL("../", import.meta.url);
 const packageJson = JSON.parse(await readFile(new URL("package.json", root), "utf8"));
 const edgeoneConfig = JSON.parse(await readFile(new URL("edgeone.json", root), "utf8"));
+const productionMedia = JSON.parse(await readFile(new URL("config/production-media.json", root), "utf8"));
 const buildScript = await readFile(new URL("scripts/build-site.mjs", root), "utf8");
 const homepage = await readFile(new URL("index.html", root), "utf8");
 const memberBrawlPage = await readFile(new URL("member-brawl.html", root), "utf8");
@@ -33,9 +34,11 @@ test("project exposes repeatable verification commands", () => {
   assert.equal(packageJson.scripts.test, "node --test");
   assert.equal(packageJson.scripts["check:js"], "node scripts/check-js.mjs");
   assert.equal(packageJson.scripts["check:edgeone"], "node scripts/check-edgeone-media.mjs");
-  assert.match(packageJson.scripts.verify, /npm run test/);
-  assert.match(packageJson.scripts.verify, /npm run check:js/);
-  assert.match(packageJson.scripts.verify, /npm run build/);
+  assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
+  assert.equal(packageJson.scripts["verify:site"], "npm run test:site && npm run check:js && npm run build");
+  assert.equal(packageJson.scripts.verify, "npm run verify:site && npm run gallery:publisher:test && npm run gallery:publisher:build");
+  assert.equal(edgeoneConfig.buildCommand, "npm run verify:site");
+  assert.equal(edgeoneConfig.installCommand, "npm ci --ignore-scripts --omit=dev");
 });
 
 test("EdgeOne gives versioned hero media long browser and edge cache lifetimes", () => {
@@ -70,15 +73,12 @@ test("production build copies local GSAP browser bundles", () => {
 });
 
 test("production build includes all three active hero variants", () => {
-  assert.match(buildScript, /fleet-hero-01-1080p-v4\.mp4/);
-  assert.match(buildScript, /fleet-hero-01-mobile-720p-v1\.mp4/);
-  assert.match(buildScript, /fleet-hero-01-poster-v2\.webp/);
-  assert.match(buildScript, /fleet-hero-02-1080p-v4\.mp4/);
-  assert.match(buildScript, /fleet-hero-02-mobile-720p-v1\.mp4/);
-  assert.match(buildScript, /fleet-hero-02-1440p-v4\.mp4/);
-  assert.match(buildScript, /fleet-hero-03-1080p-v1\.mp4/);
-  assert.match(buildScript, /fleet-hero-03-mobile-720p-v1\.mp4/);
-  assert.match(buildScript, /fleet-hero-03-poster-v1\.webp/);
+  assert.equal(productionMedia.heroAssets.length, 10);
+  for (const id of ["01", "02", "03"]) {
+    assert.ok(productionMedia.heroAssets.some((asset) => asset.startsWith(`fleet-hero-${id}-`) && asset.endsWith(".mp4")));
+    assert.ok(productionMedia.heroAssets.some((asset) => asset.startsWith(`fleet-hero-${id}-poster`) && asset.endsWith(".webp")));
+  }
+  assert.match(buildScript, /productionMedia\.heroAssets/);
 });
 
 test("homepage, controller, and production build share the exact active hero assets", () => {
@@ -88,7 +88,7 @@ test("homepage, controller, and production build share the exact active hero ass
 
   assert.equal(expected.length, 10);
   assert.deepEqual(getActiveAssets(heroVideoController), expected);
-  assert.deepEqual(getActiveAssets(buildScript), expected);
+  assert.deepEqual([...productionMedia.heroAssets].sort(), expected);
 });
 
 test("production build excludes publisher-only and confirmed unused assets", () => {
@@ -109,8 +109,10 @@ test("production build excludes publisher-only and confirmed unused assets", () 
 
 test("production build includes one dedicated mobile encode for every operation", () => {
   for (const name of ["combat", "industry", "logistics", "exploration"]) {
-    assert.match(buildScript, new RegExp(`${name}-mobile-1280-v1\\.mp4`));
+    assert.ok(productionMedia.operationAssets.includes(`${name}-mobile-1280-v1.mp4`));
   }
+  assert.equal(productionMedia.operationAssets.length, 12);
+  assert.match(buildScript, /productionMedia\.operationAssets/);
 });
 
 test("homepage selects and starts one hero before the first paint", () => {

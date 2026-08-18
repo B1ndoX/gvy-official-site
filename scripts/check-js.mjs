@@ -8,7 +8,7 @@ const targets = [
   resolve(root, "scripts"),
   resolve(root, "tools/gallery-publisher"),
 ];
-const files = [];
+const files = [resolve(root, "assets/fleet-command-brawl.js")];
 
 async function collectJavaScript(directory) {
   let entries = [];

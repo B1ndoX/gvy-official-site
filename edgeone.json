@@ -1,6 +1,6 @@
 {
-  "buildCommand": "npm run build",
-  "installCommand": "npm install --ignore-scripts",
+  "buildCommand": "npm run verify:site",
+  "installCommand": "npm ci --ignore-scripts --omit=dev",
   "outputDirectory": "./dist",
   "nodeVersion": "22.11.0",
   "headers": [
@@ -9,7 +9,10 @@
       "headers": [
         { "key": "X-Content-Type-Options", "value": "nosniff" },
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "Strict-Transport-Security", "value": "max-age=15552000" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'sha256-szxYQZsMSXG+XZNia3uWiWmh/3b3EtKPk55KzJes4fo=' 'sha256-Mv4k9zj7o6c8f8690kR+RnCMC4cx6UyroYLzQcukX2c='; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://robertsspaceindustries.com https://cdn.robertsspaceindustries.com; media-src 'self'; font-src 'self' data:; connect-src 'self'; frame-src 'self'; frame-ancestors 'self'; form-action 'self'; upgrade-insecure-requests" }
       ]
     },
     {
