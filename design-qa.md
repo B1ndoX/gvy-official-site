@@ -1,40 +1,37 @@
-# Navigation local-preview design QA
+# Mobile six-up navigation local-preview design QA
 
-- Source visual truth: `/Users/bindox/Desktop/IMG_8447.PNG`
-- Rendered implementation: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/mobile-operations-blue-underline.png`
-- Full comparison: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/comparison-mobile-full.png`
-- Focused navigation comparison: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/comparison-mobile-nav-focused.png`
-- Additional behavior evidence: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/mobile-later-tools-horizontal-scroll.png`
-- Desktop evidence: `/Users/bindox/.codex/visualizations/2026/08/18/gvy-nav-preview/desktop-blue-underline.png`
-- Viewports: mobile `390 × 844` CSS px; desktop `1440 × 900` CSS px
-- Density normalization: source `1170 × 2532` px was normalized from `3×` to `390 × 844`; implementation was captured at `390 × 844` px and device scale `1`. The focused source navigation crop `1170 × 192` was normalized to `390 × 64` and compared with the implementation's `390 × 64` header crop.
-- State: `选择航向` active for the source/implementation comparison; `加入舰队` active for forward-follow and horizontal-scroll evidence.
+- Source visual truth: `/Users/bindox/Desktop/IMG_8448.PNG`
+- Rendered implementation: `/Users/bindox/.codex/visualizations/2026/08/19/gvy-mobile-six-up-preview/mobile-390-recruit-nav-final-r2.png`
+- Full comparison: `/Users/bindox/.codex/visualizations/2026/08/19/gvy-mobile-six-up-preview/full-before-after.png`
+- Focused navigation comparison: `/Users/bindox/.codex/visualizations/2026/08/19/gvy-mobile-six-up-preview/nav-before-after.png`
+- Viewport: mobile `390 × 844` CSS px; additional responsive checks at `320 × 720`, `430 × 932`, and desktop `1440 × 900`.
+- Density normalization: source `1170 × 2532` px is a `3×` capture normalized to `390 × 844`; implementation is `390 × 844` at device scale `1`. The focused comparison uses the source webpage crop beginning below its 91px normalized browser chrome and the implementation's 106px navigation region.
+- State: `加入舰队` active in the final mobile implementation; the source also shows the recruit section.
 
 ## Full-view comparison evidence
 
-The source and local implementation retain the same fleet header hierarchy, icon-and-caption navigation, transparent black navigation surface, and cyan active underline. The source includes mobile browser chrome while the implementation capture starts at the webpage viewport; this expected framing difference was excluded from navigation fidelity judgment. Differences in the operation media frame are scroll-timeline content state and are outside this navigation-only change.
+The existing fleet identity, black translucent navigation surface, cyan active rule, recruit imagery, typography, buttons, and copy remain visually consistent. The source contains 91 CSS px of mobile browser chrome that is not part of the website; the implementation capture begins at the website viewport. The requested intentional change is confined to the website header: the fleet brand occupies a compact first row and all six destinations occupy one equal-width second row.
 
 ## Focused navigation comparison evidence
 
-The same-state focused crop shows no filled active tile, the cyan underline beneath `选择航向`, consistent icon scale, two-line captions, spacing, and header height. No actionable visual mismatch remains in the requested navigation region.
+The combined header crop confirms that all six items—舰队定位、选择航向、团建图册、加入舰队、蓝图查询、维科洛查询—are simultaneously visible at 390px. The existing Phosphor icons and cyan active underline are preserved. Mobile captions are intentionally hidden to keep labels readable without horizontal scrolling; this is the approved compact direction, not fidelity drift.
 
 ## Required fidelity surfaces
 
-- Fonts and typography: existing GVY Sans/PingFang fallback, weights, line heights, tracking, and caption hierarchy remain unchanged.
-- Spacing and layout rhythm: the original navigation padding and item gaps are preserved; the new overflow rules do not alter vertical header geometry.
-- Colors and visual tokens: active state continues to use `--route-blue`; item background remains transparent.
-- Image quality and asset fidelity: existing logo and Phosphor navigation assets are unchanged; no asset was recreated or replaced.
-- Copy and content: all six existing navigation destinations and their captions are unchanged and remain in order.
+- Fonts and typography: existing site fonts and weights are retained. Mobile primary labels render at 9.165px at 390px and 8px at 320px; all titles remain on one line without truncation.
+- Spacing and layout rhythm: mobile header is `106px` high with a 50px brand row and 56px navigation row. Six equal columns measure about 64px each at 390px and 52px each at 320px; every touch target remains 55px high.
+- Colors and visual tokens: black navigation surface and `--route-blue` active underline are unchanged; no filled active tile was introduced.
+- Image quality and asset fidelity: the supplied GVY logo and existing local Phosphor navigation assets are reused unchanged; no placeholder or replacement asset was created.
+- Copy and content: all six destinations retain their original titles, order, hrefs, and desktop captions. Only mobile captions are visually hidden.
 
 ## Interaction and responsive checks
 
-- Active section changes from `选择航向` to `团建图册` to `加入舰队` and advances the mobile rail horizontally only when the active item needs to be revealed.
-- Horizontal input changed the rail by `120px` while page vertical position changed by `0px`.
-- Mobile rail computed styles: `touch-action: pan-x`, `overflow-y: hidden`.
-- Manual horizontal movement reveals `加入舰队`, `蓝图查询`, and `维科洛查询` together.
-- Desktop has no page-level horizontal overflow at `1440 × 900`.
-- Browser console errors checked: none.
-- Automated verification: final `npm run verify` passed after the visual-direction adjustment (103 site tests, JavaScript syntax check, site build, 28 publisher tests, and publisher build).
+- Clicking `团建图册` at 430px navigates to `#archive` and updates the active underline.
+- At 320px and 430px, all six navigation items are inside the viewport and `scrollWidth === clientWidth`.
+- At 1440px, the original one-row desktop navigation remains `75px` high and all six captions remain visible.
+- Page-level horizontal overflow: none at all tested widths.
+- Browser console warning/error check: none.
+- Automated verification: full `npm run verify` passed with 103 site tests, JavaScript syntax checks, production build, 28 publisher tests, and publisher build. A final site-only retest also passed 103/103 after the 320px font floor adjustment.
 
 ## Findings
 
@@ -42,8 +39,8 @@ The same-state focused crop shows no filled active tile, the cyan underline bene
 
 ## Comparison history
 
-- Initial local direction used a dark-blue active panel. The user changed the visual direction to the site's original cyan underline before handoff.
-- The active panel was removed, the original underline behavior was restored, and the mobile forward-follow plus horizontal gesture lock were retained.
-- Post-fix evidence is recorded in both comparison images above.
+- Initial compact pass fit six items at all target widths. The 320px override rendered labels at 7.68px, recorded as a readability polish issue.
+- The minimum 320px label size was raised to 8px without changing column fit or creating overflow.
+- Post-fix evidence confirms all six items remain visible and interactive.
 
 final result: passed

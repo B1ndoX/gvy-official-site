@@ -235,7 +235,8 @@ test("navigation keeps six ordered icon-and-caption destinations without item fr
   assert.match(cinematicCss, /\.nav-tool-link\s*\{[\s\S]*?border:\s*0/);
   assert.match(cinematicCss, /\.nav-item-icon\s*\{[\s\S]*?mask-size:\s*contain/);
   assert.match(cinematicCss, /\.nav-item-copy small\s*\{[\s\S]*?white-space:\s*nowrap/);
-  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.nav-item\s*\{\s*display:\s*inline-flex/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?grid-template-columns:\s*repeat\(6,\s*minmax\(0,\s*1fr\)\)/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.nav-item-copy small\s*\{\s*display:\s*none;/);
   assert.doesNotMatch(cinematicCss, /\.nav-links a\s*\{\s*display:\s*none/);
   assert.match(cinematicCss, /@media \(max-width: 350px\)[\s\S]*?\.brand-copy small\s*\{\s*display:\s*none;/);
 });
@@ -479,7 +480,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260818-nav-track-follow-v78/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260819-mobile-six-up-v79-r2/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
