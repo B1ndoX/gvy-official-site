@@ -139,7 +139,10 @@ function createHeroTimeline(
 
   const syncLockedExit = () => {
     if (!lockExit || !rootElement) return;
-    const viewportHeight = root.defaultView?.innerHeight || 1;
+    const stableHeight = Number.parseFloat(
+      root.documentElement?.style?.getPropertyValue("--gvy-mobile-full-height") || "",
+    );
+    const viewportHeight = stableHeight > 0 ? stableHeight : root.defaultView?.innerHeight || 1;
     const bottomRatio = hero.getBoundingClientRect().bottom / viewportHeight;
     if (bottomRatio <= 0.42) {
       rootElement.setAttribute("data-hero-exit-complete", "true");

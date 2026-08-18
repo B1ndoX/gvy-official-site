@@ -51,6 +51,7 @@ export function initSectionNavigation({
 
   let frame = 0;
   let activeId = null;
+  let resizeWidth = Number(view.innerWidth || 0);
 
   const followActiveLink = (link) => {
     if (!rail || !link) return;
@@ -106,16 +107,22 @@ export function initSectionNavigation({
     frame = view.requestAnimationFrame?.(update) || 0;
     if (!frame) update();
   };
+  const handleResize = () => {
+    const nextWidth = Number(view.innerWidth || 0);
+    if (nextWidth <= 760 && Math.abs(nextWidth - resizeWidth) < 1) return;
+    resizeWidth = nextWidth;
+    requestUpdate();
+  };
 
   view.addEventListener?.("scroll", requestUpdate, { passive: true });
-  view.addEventListener?.("resize", requestUpdate, { passive: true });
+  view.addEventListener?.("resize", handleResize, { passive: true });
   view.addEventListener?.("hashchange", requestUpdate);
   requestUpdate();
 
   return () => {
     if (frame) view.cancelAnimationFrame?.(frame);
     view.removeEventListener?.("scroll", requestUpdate);
-    view.removeEventListener?.("resize", requestUpdate);
+    view.removeEventListener?.("resize", handleResize);
     view.removeEventListener?.("hashchange", requestUpdate);
     delete nav.dataset.activeSection;
     links.forEach((link) => {

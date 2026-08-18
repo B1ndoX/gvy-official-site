@@ -1950,7 +1950,6 @@ noscript {
   body::before { display: none; }
 
   html[data-motion-ready] :is(
-    .command-nav,
     .hero-title,
     .hero-motto,
     .signal-lockup,
@@ -1985,6 +1984,7 @@ noscript {
     background: rgba(2, 5, 9, 0.94);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+    will-change: transform, opacity;
   }
 
   .fleet-brand {
@@ -2032,7 +2032,8 @@ noscript {
   }
   .nav-item-copy small { display: none; }
 
-  .hero-sequence { height: 220svh; }
+  .hero-sequence { height: var(--gvy-mobile-hero-height, 220svh); }
+  .hero-sticky { height: var(--gvy-mobile-full-height, 100svh); }
   .hero-title {
     top: auto;
     right: 20px;
@@ -2211,7 +2212,7 @@ noscript {
     backdrop-filter: none;
   }
 
-  .recruit-section { min-height: 100svh; }
+  .recruit-section { min-height: var(--gvy-mobile-full-height, 100svh); }
   .recruit-image img { object-position: 62% center; }
   .recruit-copy h2 > span { font-size: 0.75rem; }
   .recruit-copy h2 strong { font-size: clamp(2.7rem, 12vw, 4.2rem); }

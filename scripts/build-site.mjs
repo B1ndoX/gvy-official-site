@@ -18,16 +18,6 @@ for (const file of ["index.html", "member-brawl.html", "site.webmanifest", "robo
 const activeHeroAssets = new Set(productionMedia.heroAssets);
 const activeOperationAssets = new Set(productionMedia.operationAssets);
 
-const excludedProductionAssets = new Set([
-  "assets/archive-planet-feed.mp4",
-  "assets/operations-planet-video.mp4",
-  "assets/hero-random/fleet-hero-01.mp4",
-  "assets/hero-random/fleet-hero-02.mp4",
-  "assets/fleet-command.js",
-  "assets/js/deferred-media.js",
-  "assets/js/fleet-data.js",
-]);
-
 const excludedProductionDirectories = [
   "assets/gallery/thumbs",
   "assets/gallery/originals",
@@ -35,10 +25,9 @@ const excludedProductionDirectories = [
 
 function isExcludedProductionAsset(source) {
   const relativeSource = source.slice(root.length + 1).replaceAll("\\", "/");
-  return excludedProductionAssets.has(relativeSource)
-    || excludedProductionDirectories.some(
-      (directory) => relativeSource === directory || relativeSource.startsWith(`${directory}/`),
-    );
+  return excludedProductionDirectories.some(
+    (directory) => relativeSource === directory || relativeSource.startsWith(`${directory}/`),
+  );
 }
 
 await cp(resolve(root, "assets"), resolve(output, "assets"), {

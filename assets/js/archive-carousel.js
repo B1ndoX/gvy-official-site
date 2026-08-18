@@ -160,6 +160,7 @@ export function initArchiveCarousel({
   let inView = false;
   let manuallyPaused = false;
   let touchActive = false;
+  let resizeWidth = Number(view?.innerWidth || 0);
   let pageScrolling = false;
   let pageScrollTimer = 0;
   let navigationTransitionTimer = 0;
@@ -511,7 +512,7 @@ export function initArchiveCarousel({
     event.preventDefault();
   }
 
-  function handleResize() {
+  function refreshMeasurements() {
     if (resizeFrame) cancelFrame(resizeFrame);
     resizeFrame = frame(() => {
       resizeFrame = 0;
@@ -521,6 +522,12 @@ export function initArchiveCarousel({
       lastTimestamp = null;
     });
   }
+  const handleResize = () => {
+    const nextWidth = Number(view?.innerWidth || 0);
+    if (nextWidth <= 760 && Math.abs(nextWidth - resizeWidth) < 1) return;
+    resizeWidth = nextWidth;
+    refreshMeasurements();
+  };
 
   function handleVisibility() {
     clearPointerClickPermission();

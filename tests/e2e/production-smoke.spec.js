@@ -85,6 +85,32 @@ test("mobile navigation fits all destinations in one row and touch-style gallery
   for (const caption of await page.locator(".nav-item small").all()) await expect(caption).toBeHidden();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
+  const stableBefore = await page.evaluate(() => ({
+    fullHeight: getComputedStyle(document.documentElement).getPropertyValue("--gvy-mobile-full-height").trim(),
+    heroHeight: document.querySelector("[data-hero-sequence]")?.getBoundingClientRect().height,
+    navWillChange: getComputedStyle(document.querySelector(".command-nav")).willChange,
+  }));
+  expect(stableBefore.fullHeight).toBe("844px");
+  expect(stableBefore.navWillChange).toContain("transform");
+  await page.setViewportSize({ width: 390, height: 760 });
+  await page.waitForTimeout(300);
+  const stableAfterHeightOnlyResize = await page.evaluate(() => ({
+    fullHeight: getComputedStyle(document.documentElement).getPropertyValue("--gvy-mobile-full-height").trim(),
+    heroHeight: document.querySelector("[data-hero-sequence]")?.getBoundingClientRect().height,
+  }));
+  expect(stableAfterHeightOnlyResize.fullHeight).toBe(stableBefore.fullHeight);
+  expect(stableAfterHeightOnlyResize.heroHeight).toBeCloseTo(stableBefore.heroHeight, 3);
+  await page.mouse.wheel(0, 900);
+  await page.waitForTimeout(300);
+  const downwardPosition = await page.evaluate(() => window.scrollY);
+  await page.mouse.wheel(0, -500);
+  await page.waitForTimeout(180);
+  const upwardPosition = await page.evaluate(() => window.scrollY);
+  expect(upwardPosition).toBeLessThan(downwardPosition);
+  await expect(page.locator(".command-nav")).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await page.setViewportSize({ width: 390, height: 844 });
+
   const galleryViewport = page.locator(".archive-grid-viewport");
   await galleryViewport.scrollIntoViewIfNeeded();
   await page.locator("[data-archive-carousel-toggle]").click();

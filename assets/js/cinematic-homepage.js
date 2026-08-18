@@ -1,12 +1,66 @@
 import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-lightbox-webp-v61";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260730-gallery-speed-v68";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260804-hero-mask-stack-v74";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260819-mobile-viewport-stability-v80";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260819-mobile-viewport-stability-v80";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260729-production-trim-v62";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
-import { initSectionNavigation } from "./section-navigation.js?v=20260818-nav-track-follow-v78";
+import { initSectionNavigation } from "./section-navigation.js?v=20260819-mobile-viewport-stability-v80";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
+const MOBILE_BREAKPOINT = 760;
+
+function viewportWidth(view) {
+  return Math.max(0, Number(view?.innerWidth || 0));
+}
+
+function viewportHeight(view) {
+  const heights = [view?.innerHeight, view?.visualViewport?.height]
+    .map(Number)
+    .filter((value) => Number.isFinite(value) && value > 0);
+  return heights.length ? Math.min(...heights) : 1;
+}
+
+export function shouldIgnoreMobileHeightResize(previousWidth, nextWidth) {
+  return previousWidth > 0
+    && nextWidth > 0
+    && Math.min(previousWidth, nextWidth) <= MOBILE_BREAKPOINT
+    && Math.abs(nextWidth - previousWidth) < 1;
+}
+
+export function initMobileViewportStability({
+  root = globalThis.document,
+  view = root?.defaultView || globalThis,
+} = {}) {
+  const style = root?.documentElement?.style;
+  let stableWidth = viewportWidth(view);
+
+  const apply = () => {
+    if (!style) return;
+    if (stableWidth <= MOBILE_BREAKPOINT) {
+      const height = viewportHeight(view);
+      style.setProperty("--gvy-mobile-full-height", `${height}px`);
+      style.setProperty("--gvy-mobile-hero-height", `${Number((height * 2.2).toFixed(3))}px`);
+    } else {
+      style.removeProperty("--gvy-mobile-full-height");
+      style.removeProperty("--gvy-mobile-hero-height");
+    }
+  };
+
+  const handleResize = () => {
+    const nextWidth = viewportWidth(view);
+    if (shouldIgnoreMobileHeightResize(stableWidth, nextWidth)) return;
+    stableWidth = nextWidth;
+    apply();
+  };
+
+  apply();
+  view.addEventListener?.("resize", handleResize, { passive: true });
+  return () => {
+    view.removeEventListener?.("resize", handleResize);
+    style?.removeProperty("--gvy-mobile-full-height");
+    style?.removeProperty("--gvy-mobile-hero-height");
+  };
+}
 
 function asCleanup(controller) {
   if (typeof controller === "function") return controller;
@@ -21,6 +75,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const motionAvailable = Boolean(view.gsap && view.ScrollTrigger);
   if (motionAvailable) root.documentElement?.setAttribute("data-motion-ready", "true");
 
+  const viewportStability = initMobileViewportStability({ root, view });
   const hero = initHeroVideo({ root });
   const carousel = initArchiveCarousel({ root, view });
   const archive = initArchiveLightbox({ root });
@@ -30,7 +85,8 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   root.documentElement?.setAttribute("data-motion-initialized", "true");
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [hero, carousel, archive, brawl, operationMotion, sectionNavigation, timelines].map(asCleanup);
+  const cleanups = [viewportStability, hero, carousel, archive, brawl, operationMotion, sectionNavigation, timelines]
+    .map(asCleanup);
   let cleaned = false;
 
   const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());

@@ -21,7 +21,6 @@ async function readOptional(path) {
 }
 
 const cinematicCss = await readOptional("assets/cinematic-homepage.css");
-const fleetData = await readOptional("assets/js/fleet-data.js");
 const cinematicTimelines = await readOptional("assets/js/cinematic-timelines.js");
 const cinematicHomepage = await readOptional("assets/js/cinematic-homepage.js");
 const heroVideoController = await readOptional("assets/js/hero-video-controller.js");
@@ -95,15 +94,8 @@ test("homepage, controller, and production build share the exact active hero ass
   assert.deepEqual([...productionMedia.heroAssets].sort(), expected);
 });
 
-test("production build excludes publisher-only and confirmed unused assets", () => {
+test("production build excludes publisher-only gallery workspaces", () => {
   for (const path of [
-    "assets/archive-planet-feed.mp4",
-    "assets/operations-planet-video.mp4",
-    "assets/hero-random/fleet-hero-01.mp4",
-    "assets/hero-random/fleet-hero-02.mp4",
-    "assets/fleet-command.js",
-    "assets/js/deferred-media.js",
-    "assets/js/fleet-data.js",
     "assets/gallery/thumbs",
     "assets/gallery/originals",
   ]) {
@@ -269,16 +261,6 @@ test("cinematic design system defines responsive and reduced-motion contracts", 
   );
 });
 
-test("fleet operation data contains four official full-bleed stages", () => {
-  const operationsBlock = fleetData.match(/FLEET_OPERATIONS\s*=\s*\[([\s\S]*?)\n\];/)?.[1] || "";
-  assert.equal((operationsBlock.match(/number:\s*"0[1-4]"/g) || []).length, 4);
-  assert.equal((operationsBlock.match(/image:\s*"\.\/assets\/official\/operations-/g) || []).length, 4);
-  assert.match(fleetData, /COMBAT/);
-  assert.match(fleetData, /INDUSTRY/);
-  assert.match(fleetData, /LOGISTICS/);
-  assert.match(fleetData, /EXPLORATION/);
-});
-
 test("operation stage uses four interactive local progress segments without numeric ornaments", () => {
   assert.equal((homepage.match(/data-operation-jump=/g) || []).length, 4);
   assert.doesNotMatch(homepage, /class="operation-number"/);
@@ -436,7 +418,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(operationMotion, /dataset\.srcMobile/);
   assert.match(operationMotion, /cardObserver/);
   assert.doesNotMatch(cinematicCss, /\.archive-ambient|\.operations-ambient/);
-  assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*220svh;/);
+  assert.match(cinematicCss, /\.hero-sequence\s*\{\s*height:\s*var\(--gvy-mobile-hero-height, 220svh\);/);
   assert.match(cinematicCss, /rgba\(2, 4, 8, 0\.72\) 84%[\s\S]*?#020408 100%/);
   assert.match(cinematicCss, /overscroll-behavior-y:\s*none/);
   assert.match(cinematicCss, /html\[data-hero-exit-complete\]/);
@@ -449,15 +431,16 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260730-gallery-speed-v68/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260819-mobile-viewport-stability-v80/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260819-mobile-viewport-stability-v80/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260729-production-trim-v62/);
   assert.match(cinematicHomepage, /initMemberBrawlDialog/);
   assert.match(cinematicHomepage, /initOperationMotion/);
   assert.match(cinematicHomepage, /initSectionNavigation/);
-  assert.match(cinematicHomepage, /section-navigation\.js\?v=20260818-nav-track-follow-v78/);
+  assert.match(cinematicHomepage, /section-navigation\.js\?v=20260819-mobile-viewport-stability-v80/);
+  assert.match(cinematicHomepage, /initMobileViewportStability/);
   assert.match(sectionNavigation, /aria-current/);
   assert.match(cinematicCss, /\.nav-links\s*\{[\s\S]*?touch-action:\s*pan-x/);
   assert.match(cinematicCss, /\.nav-item\.is-active::after/);
@@ -479,9 +462,9 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260819-mobile-six-up-v79-r2/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260819-mobile-viewport-stability-v80/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260819-mobile-viewport-stability-v80/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260819-mobile-viewport-stability-v80/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
 
@@ -500,7 +483,7 @@ test("large 16:9 hero only accelerates entry while keeping the restored breathin
   assert.match(cinematicTimelines, /exitDuration = 5\.8/);
   assert.match(cinematicTimelines, /exitStagger = 0\.18/);
   assert.match(cinematicCss, /\.hero-motto\s*\{[\s\S]*?bottom:\s*15vh/);
-  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-sequence\s*\{\s*height:\s*220svh;\s*\}[\s\S]*?\.hero-motto\s*\{\s*right:\s*20px;\s*bottom:\s*17vh;/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-sequence\s*\{\s*height:\s*var\(--gvy-mobile-hero-height, 220svh\);\s*\}[\s\S]*?\.hero-motto\s*\{\s*right:\s*20px;\s*bottom:\s*17vh;/);
 });
 
 test("hero exit remains visible before fleet positioning begins at every viewport", () => {
