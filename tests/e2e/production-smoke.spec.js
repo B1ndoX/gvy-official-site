@@ -54,22 +54,32 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   expect(runtimeFailures).toEqual([]);
 });
 
-test("mobile navigation fits and touch-style gallery drag stays under user control", async ({ page }) => {
+test("mobile navigation keeps all destinations in its own rail and touch-style gallery drag stays under user control", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const runtimeFailures = collectRuntimeFailures(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
 
-  const mobileNavigation = await page.locator(".nav-tool-link").evaluateAll((links) =>
-    links.map((link) => {
-      const rect = link.getBoundingClientRect();
-      return { display: getComputedStyle(link).display, left: rect.left, right: rect.right };
-    }));
-  expect(mobileNavigation).toHaveLength(2);
-  mobileNavigation.forEach(({ display, left, right }) => {
-    expect(display).not.toBe("none");
-    expect(left).toBeGreaterThanOrEqual(0);
-    expect(right).toBeLessThanOrEqual(390);
-  });
+  const mobileNavigation = await page.locator(".nav-item").evaluateAll((links) =>
+    links.map((link) => ({ display: getComputedStyle(link).display, title: link.querySelector("strong")?.textContent })));
+  expect(mobileNavigation).toHaveLength(6);
+  expect(mobileNavigation.map(({ title }) => title)).toEqual([
+    "舰队定位",
+    "选择航向",
+    "团建图册",
+    "加入舰队",
+    "蓝图查询",
+    "维科洛查询",
+  ]);
+  mobileNavigation.forEach(({ display }) => expect(display).toBe("inline-flex"));
+  const navigationRail = await page.locator(".nav-links").evaluate((rail) => ({
+    clientWidth: rail.clientWidth,
+    scrollWidth: rail.scrollWidth,
+    overflowX: getComputedStyle(rail).overflowX,
+  }));
+  expect(navigationRail.overflowX).toBe("auto");
+  expect(navigationRail.scrollWidth).toBeGreaterThan(navigationRail.clientWidth);
+  await page.locator(".nav-wikelo-link").evaluate((link) => link.scrollIntoView({ inline: "end", block: "nearest" }));
+  await expect(page.locator(".nav-wikelo-link")).toBeInViewport();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
   const galleryViewport = page.locator(".archive-grid-viewport");

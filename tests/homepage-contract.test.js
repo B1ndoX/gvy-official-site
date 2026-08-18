@@ -225,16 +225,18 @@ test("archive controls use SVG icons and compliance copy is exact", () => {
   assert.doesNotMatch(homepage, /不提供游戏下载、充值、账号交易、虚拟物品交易或游戏运营服务/);
 });
 
-test("navigation keeps the blueprint and Wikelo query tools side by side", () => {
+test("navigation keeps six ordered icon-and-caption destinations without item frames", () => {
   assert.match(
     homepage,
-    /<a class="nav-tool-link nav-blueprint-link" href="https:\/\/lantu\.gvyvoyagers\.vip">蓝图查询<\/a>\s*<a class="nav-tool-link nav-wikelo-link" href="https:\/\/wikelo\.gvyvoyagers\.vip">维科洛查询<\/a>/,
+    /nav-icon-map[\s\S]*?<strong>舰队定位<\/strong><small>远航档案<\/small>[\s\S]*?nav-icon-compass[\s\S]*?<strong>选择航向<\/strong><small>探索 \/ 行动<\/small>[\s\S]*?nav-icon-images[\s\S]*?<strong>团建图册<\/strong><small>团建回忆<\/small>[\s\S]*?nav-icon-users[\s\S]*?<strong>加入舰队<\/strong><small>招募开放<\/small>[\s\S]*?nav-icon-blueprint[\s\S]*?<strong>蓝图查询<\/strong><small>制造 \/ 拆解<\/small>[\s\S]*?nav-icon-hand-coins[\s\S]*?<strong>维科洛查询<\/strong><small>合同 \/ 奖励<\/small>/,
   );
-  assert.match(cinematicCss, /\.nav-tool-link\s*\{[\s\S]*?white-space:\s*nowrap/);
-  assert.match(
-    cinematicCss,
-    /@media \(max-width: 760px\)[\s\S]*?\.nav-links \.nav-tool-link\s*\{[\s\S]*?display:\s*inline-block/,
-  );
+  assert.match(homepage, /class="nav-item nav-tool-link nav-blueprint-link" href="https:\/\/lantu\.gvyvoyagers\.vip"/);
+  assert.match(homepage, /class="nav-item nav-tool-link nav-wikelo-link" href="https:\/\/wikelo\.gvyvoyagers\.vip"/);
+  assert.match(cinematicCss, /\.nav-tool-link\s*\{[\s\S]*?border:\s*0/);
+  assert.match(cinematicCss, /\.nav-item-icon\s*\{[\s\S]*?mask-size:\s*contain/);
+  assert.match(cinematicCss, /\.nav-item-copy small\s*\{[\s\S]*?white-space:\s*nowrap/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.nav-item\s*\{\s*display:\s*inline-flex/);
+  assert.doesNotMatch(cinematicCss, /\.nav-links a\s*\{\s*display:\s*none/);
   assert.match(cinematicCss, /@media \(max-width: 350px\)[\s\S]*?\.brand-copy small\s*\{\s*display:\s*none;/);
 });
 
@@ -456,7 +458,7 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initSectionNavigation/);
   assert.match(cinematicHomepage, /section-navigation\.js\?v=20260726-nav-video-quality-v32/);
   assert.match(sectionNavigation, /aria-current/);
-  assert.match(cinematicCss, /\.nav-links a\.is-active::after/);
+  assert.match(cinematicCss, /\.nav-item\.is-active::after/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
@@ -474,7 +476,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
   assert.match(homepage, /cinematic-homepage\.js\?v=20260804-hero-mask-stack-v74/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260806-wikelo-nav-v75/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260818-icon-navigation-v77/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260804-hero-mask-stack-v74/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
 });
