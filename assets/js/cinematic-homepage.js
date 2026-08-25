@@ -1,6 +1,6 @@
 import { initArchiveLightbox } from "./archive-lightbox.js?v=20260729-gallery-lightbox-webp-v61";
-import { initArchiveCarousel } from "./archive-carousel.js?v=20260819-mobile-viewport-stability-v80";
-import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260819-mobile-viewport-stability-v80";
+import { initArchiveCarousel } from "./archive-carousel.js?v=20260825-mobile-cold-start-v81";
+import { initCinematicTimelines } from "./cinematic-timelines.js?v=20260825-mobile-cold-start-v81";
 import { initHeroVideo } from "./hero-video-controller.js?v=20260729-hero-source-lock-v60";
 import { initMemberBrawlDialog } from "./member-brawl-dialog.js?v=20260729-production-trim-v62";
 import { initOperationMotion } from "./operation-motion.js?v=20260727-operation-preplay-v37";
@@ -89,16 +89,10 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
     .map(asCleanup);
   let cleaned = false;
 
-  const refresh = () => view.requestAnimationFrame?.(() => timelines.refresh?.());
-  const fontsReady = root.fonts?.ready || Promise.resolve();
-  Promise.resolve(fontsReady).then(refresh).catch(() => {});
-  view.addEventListener?.("load", refresh, { once: true });
-
   const controller = {
     cleanup() {
       if (cleaned) return;
       cleaned = true;
-      view.removeEventListener?.("load", refresh);
       view.removeEventListener?.("pagehide", controller.cleanup);
       cleanups.reverse().forEach((cleanup) => cleanup());
       root.documentElement?.removeAttribute("data-motion-ready");

@@ -14,8 +14,16 @@ import {
   shouldActivateCarouselNavigationPress,
   shouldAdvanceCarousel,
   shouldAllowCarouselClick,
+  shouldInitializeCarousel,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
+
+test("gallery work stays deferred until the archive approaches the viewport", () => {
+  assert.equal(shouldInitializeCarousel({ top: 3_000, bottom: 3_600, viewportHeight: 844 }), false);
+  assert.equal(shouldInitializeCarousel({ top: 1_800, bottom: 2_400, viewportHeight: 844 }), true);
+  assert.equal(shouldInitializeCarousel({ top: 200, bottom: 800, viewportHeight: 844 }), true);
+  assert.equal(shouldInitializeCarousel({ top: Number.NaN, bottom: 800, viewportHeight: 844 }), true);
+});
 
 test("carousel distinguishes a click from an intentional drag", () => {
   assert.equal(isCarouselDrag(100, 105, 8), false);

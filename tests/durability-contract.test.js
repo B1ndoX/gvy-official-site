@@ -102,6 +102,12 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorScript, /registryBaseUrl/);
   assert.doesNotMatch(monitorScript, /rdap\.verisign\.com/);
   assert.match(monitorScript, /const requiredChecks =/);
+  assert.match(monitorScript, /checkOfficialAssetIntegrity/);
+  assert.match(monitorScript, /gallery WebP/);
+  assert.match(monitorScript, /optimized/);
+  assert.match(monitorScript, /content-type/);
+  assert.match(monitorScript, /--space-black/);
+  assert.match(monitorScript, /initCinematicHomepage/);
   assert.match(monitorScript, /const advisoryChecks =/);
   assert.match(monitorScript, /Independent child service unavailable/);
   assert.match(monitorScript, /GVY_MONITOR_ATTEMPTS \|\| 5/);
