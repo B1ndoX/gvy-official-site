@@ -149,7 +149,7 @@ test("mobile navigation fits all destinations in one row and touch-style gallery
   expect(runtimeFailures).toEqual([]);
 });
 
-test("mobile cold startup keeps immediate reverse scrolling stable while heavy work stays deferred", async ({ page }) => {
+test("mobile cold startup keeps immediate reverse scrolling stable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   const runtimeFailures = collectRuntimeFailures(page);
   await page.route(/fleet-hero-\d+-mobile-720p-v1\.mp4/, async (route) => {
@@ -164,12 +164,10 @@ test("mobile cold startup keeps immediate reverse scrolling stable while heavy w
     scrollHeight: document.documentElement.scrollHeight,
     heroState: document.querySelector("[data-hero-shell]")?.dataset.heroState,
     videoReadyState: document.querySelector("[data-hero-video]")?.readyState,
-    galleryClones: document.querySelectorAll("[data-archive-clone]").length,
   }));
   expect(initial.fullHeight).toBe("844px");
   expect(initial.heroState).toBe("loading");
   expect(initial.videoReadyState).toBeLessThan(2);
-  expect(initial.galleryClones).toBe(0);
 
   await page.mouse.wheel(0, 900);
   await page.waitForTimeout(150);
@@ -184,13 +182,11 @@ test("mobile cold startup keeps immediate reverse scrolling stable while heavy w
     fullHeight: getComputedStyle(document.documentElement).getPropertyValue("--gvy-mobile-full-height").trim(),
     heroHeight: document.querySelector("[data-hero-sequence]")?.getBoundingClientRect().height,
     scrollHeight: document.documentElement.scrollHeight,
-    galleryClones: document.querySelectorAll("[data-archive-clone]").length,
     horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
   }));
   expect(afterReverse.fullHeight).toBe(initial.fullHeight);
   expect(afterReverse.heroHeight).toBeCloseTo(initial.heroHeight, 3);
   expect(afterReverse.scrollHeight).toBe(initial.scrollHeight);
-  expect(afterReverse.galleryClones).toBe(0);
   expect(afterReverse.horizontalOverflow).toBe(false);
   expect(runtimeFailures).toEqual([]);
 });

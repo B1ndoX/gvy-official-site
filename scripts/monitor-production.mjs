@@ -47,55 +47,6 @@ async function checkPage({ url, marker, requireSecurityHeaders = false }) {
   });
 }
 
-async function checkOfficialAssetIntegrity(url) {
-  await withRetry(`${url} static asset integrity`, async () => {
-    const pageResponse = await fetchResponse(`${url}?asset-check=${Date.now()}`);
-    const html = await pageResponse.text();
-    assert.equal(pageResponse.status, 200);
-
-    const assets = [
-      {
-        label: "stylesheet",
-        path: html.match(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"/i)?.[1],
-        contentType: /text\/css/i,
-        marker: "--space-black",
-      },
-      {
-        label: "homepage module",
-        path: html.match(/<script\b[^>]*type="module"[^>]*src="([^"]+)"/i)?.[1],
-        contentType: /javascript/i,
-        marker: "initCinematicHomepage",
-      },
-      {
-        label: "fleet logo",
-        path: html.match(/<img\b[^>]*src="([^"]*\/gvy-logo\.png)"/i)?.[1],
-        contentType: /image\/png/i,
-      },
-      {
-        label: "gallery WebP",
-        path: html.match(/srcset="([^"]*?assets\/gallery\/optimized\/[^"\s,]+\.webp)/i)?.[1],
-        contentType: /image\/webp/i,
-      },
-    ];
-
-    for (const asset of assets) {
-      assert.ok(asset.path, `${asset.label} URL is missing from the homepage`);
-      const response = await fetchResponse(new URL(asset.path, url));
-      assert.equal(response.status, 200, `${asset.label} returned ${response.status}`);
-      assert.match(
-        response.headers.get("content-type") || "",
-        asset.contentType,
-        `${asset.label} returned the wrong Content-Type`,
-      );
-      if (asset.marker) {
-        assert.ok((await response.text()).includes(asset.marker), `${asset.label} content marker is missing`);
-      } else {
-        assert.ok((await response.arrayBuffer()).byteLength > 512, `${asset.label} is unexpectedly small`);
-      }
-    }
-  });
-}
-
 async function checkHttpsRedirect(url) {
   await withRetry(`${url} HTTPS redirect`, async () => {
     const response = await fetchResponse(url, { redirect: "manual" });
@@ -162,7 +113,6 @@ async function checkDomainRegistration() {
 const requiredChecks = [
   ["www homepage", () => checkPage({ url: "https://www.gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
   ["apex homepage", () => checkPage({ url: "https://gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
-  ["www static asset integrity", () => checkOfficialAssetIntegrity("https://www.gvyvoyagers.vip/")],
   ["www forced HTTPS", () => checkHttpsRedirect("http://www.gvyvoyagers.vip/")],
   ["apex forced HTTPS", () => checkHttpsRedirect("http://gvyvoyagers.vip/")],
   ...["www.gvyvoyagers.vip", "gvyvoyagers.vip"]

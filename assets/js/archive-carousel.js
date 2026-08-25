@@ -111,7 +111,7 @@ export function shouldAdvanceCarousel({
     && !hidden;
 }
 
-function initArchiveCarouselCore({
+export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
   pixelsPerSecond = 56,
@@ -793,56 +793,6 @@ function initArchiveCarouselCore({
         clone.removeEventListener("click", handler);
         clone.remove();
       });
-    },
-  };
-}
-
-export function shouldInitializeCarousel({
-  top,
-  bottom,
-  viewportHeight,
-  preloadViewports = 1.25,
-} = {}) {
-  const values = [top, bottom, viewportHeight].map(Number);
-  if (!values.every(Number.isFinite) || values[2] <= 0) return true;
-  const margin = values[2] * Math.max(0, Number(preloadViewports) || 0);
-  return values[1] >= -margin && values[0] <= values[2] + margin;
-}
-
-export function initArchiveCarousel(options = {}) {
-  const root = options.root || globalThis.document;
-  const view = options.view || root?.defaultView || globalThis;
-  const Observer = options.Observer || view?.IntersectionObserver;
-  const archiveIndex = root?.querySelector?.("[data-archive-index]");
-  const viewportHeight = Number(view?.innerHeight || root?.documentElement?.clientHeight || 0);
-  const rect = archiveIndex?.getBoundingClientRect?.();
-
-  if (!archiveIndex || typeof Observer !== "function" || shouldInitializeCarousel({
-    top: rect?.top,
-    bottom: rect?.bottom,
-    viewportHeight,
-  })) {
-    return initArchiveCarouselCore({ ...options, root, view, Observer });
-  }
-
-  let controller = null;
-  let cleaned = false;
-  const activationObserver = new Observer((entries) => {
-    if (cleaned || !entries.some((entry) => entry.isIntersecting)) return;
-    activationObserver.disconnect();
-    controller = initArchiveCarouselCore({ ...options, root, view, Observer });
-  }, {
-    rootMargin: `${Math.round(viewportHeight * 1.25)}px 0px`,
-    threshold: 0,
-  });
-  activationObserver.observe(archiveIndex);
-
-  return {
-    get isPaused() { return controller?.isPaused || false; },
-    cleanup() {
-      cleaned = true;
-      activationObserver.disconnect();
-      controller?.cleanup?.();
     },
   };
 }

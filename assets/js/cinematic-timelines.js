@@ -586,7 +586,7 @@ export function initCinematicTimelines({
   gsap = globalThis.gsap,
   ScrollTrigger = globalThis.ScrollTrigger,
 } = {}) {
-  if (!root || !gsap || !ScrollTrigger) return { cleanup() {} };
+  if (!root || !gsap || !ScrollTrigger) return { refresh() {}, cleanup() {} };
 
   gsap.registerPlugin(ScrollTrigger);
   // Mobile browser chrome changes the visual viewport height while the user
@@ -611,6 +611,9 @@ export function initCinematicTimelines({
   );
 
   return {
+    refresh() {
+      ScrollTrigger.refresh();
+    },
     cleanup() {
       root.documentElement?.removeAttribute("data-hero-exit-complete");
       media.revert();

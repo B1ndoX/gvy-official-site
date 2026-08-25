@@ -412,10 +412,7 @@ a:focus-visible {
 
 .hero-media {
   transform: scale(1);
-}
-
-@media (min-width: 761px) and (max-width: 2560px) and (prefers-reduced-motion: no-preference) {
-  .hero-media { will-change: transform; }
+  will-change: transform;
 }
 
 .hero-media img,
@@ -2037,6 +2034,7 @@ noscript {
 
   .hero-sequence { height: var(--gvy-mobile-hero-height, 220svh); }
   .hero-sticky { height: var(--gvy-mobile-full-height, 100svh); }
+  .hero-media { will-change: auto; }
   .hero-media video { transition-duration: 240ms; }
   .hero-title {
     top: auto;

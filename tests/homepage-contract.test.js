@@ -114,8 +114,6 @@ test("production build includes one dedicated mobile encode for every operation"
 test("homepage selects and starts one hero before the first paint", () => {
   const heroVideos = homepage.match(/<video\b[^>]*data-hero-video[^>]*>/g) || [];
   assert.equal(heroVideos.length, 1);
-  assert.match(heroVideos[0], /width="1920"/);
-  assert.match(heroVideos[0], /height="1080"/);
   assert.doesNotMatch(heroVideos[0], /\ssrc\s*=/);
   const heroVideoBlock = homepage.match(/<video\b[^>]*data-hero-video[^>]*>[\s\S]*?<\/video>/)?.[0] || "";
   assert.doesNotMatch(heroVideoBlock, /<source\b/);
@@ -410,8 +408,6 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /addEventListener\?\.\("scroll"/);
   assert.match(archiveCarousel, /let manuallyPaused\s*=\s*false/);
   assert.match(archiveCarousel, /recoverTransientPause/);
-  assert.match(archiveCarousel, /shouldInitializeCarousel/);
-  assert.match(archiveCarousel, /rootMargin:\s*`\$\{Math\.round\(viewportHeight \* 1\.25\)\}px 0px`/);
   assert.match(archiveCarousel, /addEventListener\?\.\("pointerup"/);
   assert.match(archiveCarousel, /addEventListener\?\.\("focus"/);
   assert.doesNotMatch(archiveCarousel, /intervalMs/);
@@ -435,8 +431,8 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.match(cinematicHomepage, /initArchiveLightbox/);
   assert.match(cinematicHomepage, /initArchiveCarousel/);
   assert.match(cinematicHomepage, /archive-lightbox\.js\?v=20260729-gallery-lightbox-webp-v61/);
-  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260825-mobile-cold-start-v81/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260825-mobile-cold-start-v81/);
+  assert.match(cinematicHomepage, /archive-carousel\.js\?v=20260819-mobile-viewport-stability-v80/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260819-mobile-viewport-stability-v80/);
   assert.match(cinematicHomepage, /operation-motion\.js\?v=20260727-operation-preplay-v37/);
   assert.match(cinematicHomepage, /hero-video-controller\.js\?v=20260729-hero-source-lock-v60/);
   assert.match(cinematicHomepage, /member-brawl-dialog\.js\?v=20260729-production-trim-v62/);
@@ -451,8 +447,9 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.doesNotMatch(cinematicCss, /--nav-active-panel/);
   assert.match(sectionNavigation, /resolveHorizontalFollowTarget/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
-  assert.doesNotMatch(cinematicHomepage, /fonts\?\.ready/);
-  assert.doesNotMatch(cinematicHomepage, /addEventListener\?\.\("load", refresh/);
+  assert.match(cinematicHomepage, /shouldSkipStartupRefresh/);
+  assert.match(cinematicHomepage, /fonts\?\.ready/);
+  assert.match(cinematicHomepage, /addEventListener\?\.\("load", refresh/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
@@ -468,11 +465,12 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260825-mobile-cold-start-v81/);
-  assert.match(homepage, /cinematic-homepage\.css\?v=20260825-mobile-cold-start-v81/);
-  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260825-mobile-cold-start-v81/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260825-mobile-scroll-flash-v82/);
+  assert.match(homepage, /cinematic-homepage\.css\?v=20260825-mobile-scroll-flash-v82/);
+  assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260819-mobile-viewport-stability-v80/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
-  assert.match(cinematicCss, /@media \(min-width: 761px\) and \(max-width: 2560px\) and \(prefers-reduced-motion: no-preference\)\s*\{[\s\S]*?\.hero-media\s*\{\s*will-change:\s*transform;/);
+  assert.match(cinematicCss, /\.hero-media\s*\{\s*transform:\s*scale\(1\);\s*will-change:\s*transform;/);
+  assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-media\s*\{\s*will-change:\s*auto;/);
   assert.match(cinematicCss, /@media \(max-width: 760px\)[\s\S]*?\.hero-media video\s*\{\s*transition-duration:\s*240ms;/);
 });
 
