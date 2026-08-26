@@ -119,14 +119,10 @@ test("EdgeOne middleware upgrades HTTP without changing HTTPS requests", () => {
 test("EdgeOne catch-all returns the branded document with a real 404 status", async () => {
   const response = await notFoundHandler({
     request: new Request("https://www.gvyvoyagers.vip/unknown/route"),
-    fetch: async (url) => {
-      assert.equal(url.toString(), "https://www.gvyvoyagers.vip/404.html");
-      return new Response(notFoundPage, { status: 200 });
-    },
   });
   assert.equal(response.status, 404);
   assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
-  assert.match(await response.text(), /ROUTE NOT FOUND \/ 404/);
+  assert.equal(await response.text(), notFoundPage);
 });
 
 test("scheduled production monitoring covers live pages, media and expiry alerts", () => {
