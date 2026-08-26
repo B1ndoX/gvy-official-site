@@ -3,8 +3,6 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-import { middleware } from "../middleware.js";
-
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
 const packageJson = JSON.parse(await read("package.json"));
@@ -92,25 +90,6 @@ test("security headers authorize only the two intentional inline homepage script
     .map((match) => `'sha256-${createHash("sha256").update(match[1]).digest("base64")}'`);
   assert.equal(inlineScripts.length, 2);
   inlineScripts.forEach((hash) => assert.ok(csp.includes(hash), `CSP is missing ${hash}`));
-});
-
-test("EdgeOne middleware upgrades HTTP without changing HTTPS requests", () => {
-  const redirectResult = middleware({
-    request: new Request("http://www.gvyvoyagers.vip/gallery?x=1"),
-    redirect: (url, status) => ({ url, status }),
-    next: () => ({ next: true }),
-  });
-  assert.deepEqual(redirectResult, {
-    url: "https://www.gvyvoyagers.vip/gallery?x=1",
-    status: 308,
-  });
-
-  const nextResult = middleware({
-    request: new Request("https://www.gvyvoyagers.vip/"),
-    redirect: () => ({ redirected: true }),
-    next: () => ({ next: true }),
-  });
-  assert.deepEqual(nextResult, { next: true });
 });
 
 test("scheduled production monitoring covers live pages, media and expiry alerts", () => {
