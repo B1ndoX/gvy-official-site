@@ -111,6 +111,10 @@ export function shouldAdvanceCarousel({
     && !hidden;
 }
 
+export function shouldRunCarouselFrame({ inView, hidden }) {
+  return Boolean(inView) && !hidden;
+}
+
 export function initArchiveCarousel({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
@@ -136,11 +140,11 @@ export function initArchiveCarousel({
   const cancelSchedule = view?.clearTimeout?.bind(view) || clearTimeout;
   const cloneHandlers = [];
   const cloneCards = cards.map((card, index) => {
-    const clone = card.cloneNode(true);
-    clone.removeAttribute("data-archive-open");
+    const clone = root.createElement("div");
+    clone.className = "archive-loop-clone";
+    card.childNodes.forEach((child) => clone.append(child.cloneNode(true)));
     clone.setAttribute("data-archive-clone", String(index));
     clone.setAttribute("aria-hidden", "true");
-    clone.tabIndex = -1;
     const openOriginal = (event) => {
       event.preventDefault();
       cards[index].click();
@@ -291,12 +295,14 @@ export function initArchiveCarousel({
       pageScrollTimer = 0;
       pageScrolling = false;
       updateInViewFromGeometry();
+      ensureAnimationRunning();
       lastTimestamp = null;
     }, 160);
     if (visibilityFrame) return;
     visibilityFrame = frame(() => {
       visibilityFrame = 0;
       updateInViewFromGeometry();
+      ensureAnimationRunning();
       lastTimestamp = null;
     });
   }
@@ -314,6 +320,11 @@ export function initArchiveCarousel({
   }
 
   function tick(timestamp) {
+    if (!shouldRunCarouselFrame({ inView, hidden: root.hidden })) {
+      animationFrame = 0;
+      lastTimestamp = null;
+      return;
+    }
     animationFrame = frame(tick);
     if (!canMove()) {
       lastTimestamp = timestamp;
@@ -333,6 +344,12 @@ export function initArchiveCarousel({
       elapsed,
       loopWidth,
     ));
+  }
+
+  function ensureAnimationRunning() {
+    if (animationFrame || !shouldRunCarouselFrame({ inView, hidden: root.hidden })) return;
+    lastTimestamp = null;
+    animationFrame = frame(tick);
   }
 
   function nudge(direction) {
@@ -519,6 +536,7 @@ export function initArchiveCarousel({
       measureLoop();
       rebuildPagination();
       updateInViewFromGeometry();
+      ensureAnimationRunning();
       lastTimestamp = null;
     });
   }
@@ -545,6 +563,7 @@ export function initArchiveCarousel({
       touchStartedAt = 0;
       viewport.classList.remove("is-dragging");
       updateInViewFromGeometry();
+      ensureAnimationRunning();
     }
     lastTimestamp = null;
   }
@@ -564,6 +583,7 @@ export function initArchiveCarousel({
     touchStartedAt = 0;
     viewport.classList.remove("is-dragging");
     updateInViewFromGeometry();
+    ensureAnimationRunning();
     lastTimestamp = null;
   }
 
@@ -712,6 +732,7 @@ export function initArchiveCarousel({
     ? new Observer((entries) => {
         inView = entries.some((entry) => entry.isIntersecting);
         lastTimestamp = null;
+        ensureAnimationRunning();
       }, { threshold: [0, 0.01] })
     : null;
 
@@ -720,7 +741,7 @@ export function initArchiveCarousel({
   updateInViewFromGeometry();
   updateToggle();
   observer?.observe(viewport);
-  animationFrame = frame(tick);
+  ensureAnimationRunning();
 
   viewport.addEventListener("keydown", handleKeydown);
   viewport.addEventListener("pointerdown", handlePointerDown);

@@ -1,5 +1,7 @@
 # GVY Cinematic Homepage Redesign Implementation Plan
 
+> 已完成阶段的历史实施计划，不是当前可执行任务。旧分支、文件表和版本数据仅供追溯；不得让 agent 按此计划重新实施或覆盖现状。
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a production-preview-only cinematic GVY homepage with clear 1080P hero media, single-video loading, reversible scroll storytelling, a real-photo archive, responsive fallbacks, and preserved compliance content.

@@ -60,8 +60,8 @@ async function firstExecutable(candidates) {
 export async function createVisualFingerprint(path) {
   const ffmpeg = await firstExecutable([
     process.env.GVY_FFMPEG,
-    "/Users/bindox/.local/bin/ffmpeg",
     "/opt/homebrew/bin/ffmpeg",
+    "/usr/local/bin/ffmpeg",
     "ffmpeg",
   ]);
   const pixels = await runBuffer(ffmpeg, [
@@ -221,8 +221,8 @@ export async function processGalleryPhoto({ upload, number, root }) {
 
     const ffmpeg = await firstExecutable([
       process.env.GVY_FFMPEG,
-      "/Users/bindox/.local/bin/ffmpeg",
       "/opt/homebrew/bin/ffmpeg",
+      "/usr/local/bin/ffmpeg",
       "ffmpeg",
     ]);
     const webpArgs = (width, output) => [

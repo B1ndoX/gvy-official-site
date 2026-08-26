@@ -10,7 +10,8 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : "list",
   use: {
     baseURL: "http://127.0.0.1:8001",
-    browserName: "chromium",
+    browserName: process.env.GVY_BROWSER_NAME || "chromium",
+    ...(process.env.GVY_BROWSER_CHANNEL ? { channel: process.env.GVY_BROWSER_CHANNEL } : {}),
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
   },

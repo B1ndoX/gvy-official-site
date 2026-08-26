@@ -1,5 +1,7 @@
 # GVY Cinematic Homepage Redesign
 
+> 已实施阶段的历史设计规格，不是当前待办。新维护者应以根目录 `README.md`、`OPERATIONS.md`、当前代码和测试为权威，不得按本文旧基线重新改版。
+
 Date: 2026-07-17  
 Status: Approved design, pending written-spec review  
 Project: `gvy-official-site`

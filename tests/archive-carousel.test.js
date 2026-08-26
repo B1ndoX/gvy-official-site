@@ -13,6 +13,7 @@ import {
   resolveCarouselTargetIndex,
   shouldActivateCarouselNavigationPress,
   shouldAdvanceCarousel,
+  shouldRunCarouselFrame,
   shouldAllowCarouselClick,
   wrapCarouselIndex,
 } from "../assets/js/archive-carousel.js";
@@ -135,4 +136,10 @@ test("continuous carousel pauses only for direct interaction, visibility, or its
   assert.equal(shouldAdvanceCarousel({ ...baseState, manuallyPaused: true }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, inView: false }), false);
   assert.equal(shouldAdvanceCarousel({ ...baseState, hidden: true }), false);
+});
+
+test("carousel schedules animation frames only while its viewport is visible", () => {
+  assert.equal(shouldRunCarouselFrame({ inView: true, hidden: false }), true);
+  assert.equal(shouldRunCarouselFrame({ inView: false, hidden: false }), false);
+  assert.equal(shouldRunCarouselFrame({ inView: true, hidden: true }), false);
 });
