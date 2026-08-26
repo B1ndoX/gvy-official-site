@@ -5,10 +5,14 @@ import { spawnSync } from "node:child_process";
 const root = resolve(new URL("..", import.meta.url).pathname);
 const targets = [
   resolve(root, "assets/js"),
+  resolve(root, "edge-functions"),
   resolve(root, "scripts"),
   resolve(root, "tools/gallery-publisher"),
 ];
-const files = [resolve(root, "assets/fleet-command-brawl.js")];
+const files = [
+  resolve(root, "assets/fleet-command-brawl.js"),
+  resolve(root, "middleware.js"),
+];
 const ignoredDirectories = new Set(["node_modules", "dist", ".runtime"]);
 
 async function collectJavaScript(directory) {

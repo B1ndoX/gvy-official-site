@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+import notFoundHandler from "../edge-functions/[[default]].js";
 import { middleware } from "../middleware.js";
 
 const root = new URL("../", import.meta.url);
@@ -60,6 +61,8 @@ test("publisher bootstrap is reproducible and contains no maintainer-specific ru
 
 test("deployed brawl runtime is included in JavaScript syntax checks", () => {
   assert.match(checkJavaScript, /assets\/fleet-command-brawl\.js/);
+  assert.match(checkJavaScript, /edge-functions/);
+  assert.match(checkJavaScript, /middleware\.js/);
   assert.match(checkJavaScript, /ignoredDirectories/);
 });
 
@@ -111,6 +114,19 @@ test("EdgeOne middleware upgrades HTTP without changing HTTPS requests", () => {
     next: () => ({ next: true }),
   });
   assert.deepEqual(nextResult, { next: true });
+});
+
+test("EdgeOne catch-all returns the branded document with a real 404 status", async () => {
+  const response = await notFoundHandler({
+    request: new Request("https://www.gvyvoyagers.vip/unknown/route"),
+    fetch: async (url) => {
+      assert.equal(url.toString(), "https://www.gvyvoyagers.vip/404.html");
+      return new Response(notFoundPage, { status: 200 });
+    },
+  });
+  assert.equal(response.status, 404);
+  assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
+  assert.match(await response.text(), /ROUTE NOT FOUND \/ 404/);
 });
 
 test("scheduled production monitoring covers live pages, media and expiry alerts", () => {

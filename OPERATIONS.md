@@ -63,7 +63,7 @@ npm run check:edgeone
 
 | 现象 | 先检查 | 禁止做法 |
 | --- | --- | --- |
-| 页面无样式/图片全失效 | 缺失资源是否返回 `200 text/html`；`dist` 是否完整；EdgeOne 是否只发布入口页 | 重复空提交、改 DNS、把首页 fallback 当资源成功 |
+| 页面无样式/图片全失效 | 缺失资源是否返回 `200 text/html`；`dist` 是否完整；EdgeOne 的 `/*` 兜底函数是否仍只处理静态未命中请求 | 重复空提交、改 DNS、把首页 fallback 当资源成功 |
 | 手机刚打开反向滚动闪屏 | 视口高度变量、是否触发全局 refresh、手机 `will-change` 与海报/视频过渡 | 新增第二套滚动监听、改桌面时间线、降低视频清晰度 |
 | 首屏先播一段又切片 | 同步 bootstrap 与控制器是否共用同一 10 分钟选择记录 | 同时预载三段或异步二次随机 |
 | 相册拖拽后误开大图 | 短点、长按、横拖阈值及 touch 方向锁 | 叠加浏览器 click 兜底、恢复拖拽条 |
@@ -81,7 +81,7 @@ git log <rollback-tag>..main --oneline
 
 从新到旧用 `git revert <commit>` 生成可审计的回滚提交，重新执行全部门禁后普通推送 `main`。不得 `git reset --hard`、`git checkout --` 覆盖用户改动或强推历史。若只需恢复单项行为，先完整回到确认过的基线，再只重做该单项；不要在故障版本上继续层层补丁。
 
-历史关键治理标签包括 `backup-production-before-durability-v76-20260818-154738-CST`。本机离线 bundle 仅是机器相关灾备线索，不能代替远端标签或独立存储；每月应验证仍可读取并复制到独立介质。当前商业交接审计的本地保护点是 `backup-commercial-handoff-audit-20260826`，审计分支为 `audit-commercial-handoff-20260826`，未推送、未部署。
+历史关键治理标签包括 `backup-production-before-durability-v76-20260818-154738-CST`。本机离线 bundle 仅是机器相关灾备线索，不能代替远端标签或独立存储；每月应验证仍可读取并复制到独立介质。商业交接审计前的远端保护点是 `backup-production-before-commercial-handoff-20260826-151513-CST`，对应基线 `208c3b7`。
 
 ## 7. 每月维护
 
@@ -93,8 +93,8 @@ git log <rollback-tag>..main --oneline
 6. 检查备份标签与离线副本可恢复性。
 7. 记录当前任务、完成项、卡点、下一步和不可重复踩坑到唯一外部交接文档。
 
-## 8. 当前需人工决策的技术债
+## 8. 已治理的平台差异与当前技术债
 
-- EdgeOne 曾把不存在页面和资源回退为首页 `200 text/html`。仓库包含并构建 `404.html`，同时在 `edgeone.json` 显式保留空 `rewrites` 以禁用 SPA 首页回退；每次部署仍必须由定时监控核对双域真实 404，不能只看文件已上传。
+- EdgeOne 该历史项目即使没有显式 rewrite，仍曾把不存在页面和资源回退为首页 `200 text/html`。空 `rewrites` 和移除全局 middleware 的隔离预览都证明无法改变托管层行为；最终使用单个 `edge-functions/[[default]].js`，依靠平台“静态文件优先于函数”的规则，只给未命中路径返回真实 404。不要再重复清缓存、空提交、删除 middleware 或增加路径白名单；每次相关部署仍由定时监控核对双域真实 404。
 - Git 媒体历史使 `.git` 体积较大。Git LFS/历史迁移收益明确但风险高，必须独立备份、演练和授权，不能混入普通修复。
 - Safari、Edge、Firefox 的最终实体设备冒烟测试需要相应浏览器/设备；自动门禁当前以 Chromium 和 macOS 运行环境为主。
