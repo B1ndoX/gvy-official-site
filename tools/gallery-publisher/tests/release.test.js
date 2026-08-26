@@ -10,6 +10,7 @@ import {
   assertGalleryOnlyPaths,
   buildReleaseSummary,
   DEPLOYMENT_VERIFY_TIMEOUT_MINUTES,
+  isExpectedGalleryAssetResponse,
   listGitChanges,
 } from "../lib/git-release.mjs";
 
@@ -17,6 +18,14 @@ const runFile = promisify(execFile);
 
 test("publisher waits long enough for the current EdgeOne deployment window", () => {
   assert.equal(DEPLOYMENT_VERIFY_TIMEOUT_MINUTES, 12);
+});
+
+test("deployment verification rejects EdgeOne homepage fallbacks disguised as successful assets", () => {
+  const response = (ok, contentType) => ({ ok, headers: new Headers({ "content-type": contentType }) });
+  assert.equal(isExpectedGalleryAssetResponse(response(true, "image/webp")), true);
+  assert.equal(isExpectedGalleryAssetResponse(response(true, "image/webp; charset=binary")), true);
+  assert.equal(isExpectedGalleryAssetResponse(response(true, "text/html")), false);
+  assert.equal(isExpectedGalleryAssetResponse(response(false, "image/webp")), false);
 });
 
 test("release summary is stable, scoped to main, and includes a pre-release rollback tag", () => {

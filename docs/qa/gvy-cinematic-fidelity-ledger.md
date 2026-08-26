@@ -1,5 +1,7 @@
 # GVY Cinematic Homepage Preview QA Ledger
 
+> 历史预览证据（2026-07-17），其中提交、资源数量和本机路径已过期。不得用本文替代根目录 `README.md`、`OPERATIONS.md` 或当前测试结果。
+
 Date: 2026-07-17  
 Branch: `gvy-cinematic-redesign-v1`  
 Scope: local production preview only  

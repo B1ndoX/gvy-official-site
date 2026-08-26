@@ -79,6 +79,11 @@ export function assertGalleryOnlyPaths(paths) {
   }
 }
 
+export function isExpectedGalleryAssetResponse(response) {
+  const contentType = response?.headers?.get?.("content-type") || "";
+  return Boolean(response?.ok) && /^image\/webp(?:;|$)/i.test(contentType);
+}
+
 async function verifyDeployment({ session, domains, onUpdate }) {
   const lastNumber = String(session.batchEnd).padStart(2, "0");
   const firstNumber = String(session.batchStart).padStart(2, "0");
@@ -106,7 +111,7 @@ async function verifyDeployment({ session, domains, onUpdate }) {
           signal: AbortSignal.timeout(15_000),
         });
         return htmlResponse.ok
-          && assetResponse.ok
+          && isExpectedGalleryAssetResponse(assetResponse)
           && html.includes(`team-${lastNumber}-1280.webp`)
           && html.includes(`team-${firstNumber}-1280.webp`);
       }));

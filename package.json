@@ -7,14 +7,15 @@
     "test": "node --test",
     "test:site": "node --test tests/*.test.js",
     "check:js": "node scripts/check-js.mjs",
+    "check:dist": "node scripts/check-production-output.mjs",
     "check:edgeone": "node scripts/check-edgeone-media.mjs",
     "monitor:production": "node scripts/monitor-production.mjs",
     "gallery:publisher": "npm run gallery:publisher:build && node tools/gallery-publisher/server.mjs",
     "gallery:publisher:build": "vite build --config tools/gallery-publisher/vite.config.js",
     "gallery:publisher:test": "node --test tools/gallery-publisher/tests/*.test.js",
     "test:e2e": "npm run build && playwright test",
-    "verify:edgeone": "GVY_SKIP_MEDIA_METADATA=1 npm run test:site && npm run check:js && npm run build",
-    "verify:site": "npm run test:site && npm run check:js && npm run build",
+    "verify:edgeone": "GVY_SKIP_MEDIA_METADATA=1 npm run test:site && npm run check:js && npm run build && npm run check:dist",
+    "verify:site": "npm run test:site && npm run check:js && npm run build && npm run check:dist",
     "verify": "npm run verify:site && npm run gallery:publisher:test && npm run gallery:publisher:build"
   },
   "dependencies": {

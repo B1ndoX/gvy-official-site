@@ -21,6 +21,8 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   const gallery = page.locator("[data-archive-grid]");
   const galleryViewport = page.locator(".archive-grid-viewport");
   await galleryViewport.scrollIntoViewIfNeeded();
+  await expect(gallery.locator("[data-archive-clone]")).toHaveCount(39);
+  await expect(gallery.locator("button[data-archive-clone]")).toHaveCount(0);
   const playback = page.locator("[data-archive-carousel-toggle]");
   await playback.click();
   const pausedAt = await galleryViewport.evaluate((element) => element.scrollLeft);

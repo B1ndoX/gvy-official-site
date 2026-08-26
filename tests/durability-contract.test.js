@@ -17,6 +17,11 @@ const checkEdgeOne = await read("scripts/check-edgeone-media.mjs");
 const monitorScript = await read("scripts/monitor-production.mjs");
 const verifyWorkflow = await read(".github/workflows/verify.yml");
 const monitorWorkflow = await read(".github/workflows/production-monitor.yml");
+const notFoundPage = await read("404.html");
+const buildScript = await read("scripts/build-site.mjs");
+const outputAudit = await read("scripts/check-production-output.mjs");
+const publisherRunner = await read("tools/gallery-publisher/run-server-macos.zsh");
+const publisherProcess = await read("tools/gallery-publisher/lib/process.mjs");
 
 test("development and EdgeOne runtimes are explicit and independently verified", async () => {
   assert.equal((await read(".node-version")).trim(), "24.19.0");
@@ -25,14 +30,31 @@ test("development and EdgeOne runtimes are explicit and independently verified",
   assert.equal(edgeone.buildCommand, "npm run verify:edgeone");
   assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
   assert.match(packageJson.scripts["verify:edgeone"], /GVY_SKIP_MEDIA_METADATA=1/);
-  assert.match(packageJson.scripts["verify:edgeone"], /npm run test:site && npm run check:js && npm run build/);
-  assert.match(packageJson.scripts["verify:site"], /npm run test:site && npm run check:js && npm run build/);
+  assert.match(packageJson.scripts["verify:edgeone"], /npm run test:site && npm run check:js && npm run build && npm run check:dist/);
+  assert.match(packageJson.scripts["verify:site"], /npm run test:site && npm run check:js && npm run build && npm run check:dist/);
   assert.match(packageJson.scripts.verify, /gallery:publisher:test/);
   assert.match(verifyWorkflow, /node-version:\s*22\.11\.0/);
   assert.match(verifyWorkflow, /node-version-file:\s*\.node-version/);
   assert.match(verifyWorkflow, /Node 24 LTS/);
   assert.match(verifyWorkflow, /ffmpeg@7/);
   assert.match(verifyWorkflow, /libwebp/);
+});
+
+test("production output is self-audited and includes a crawl-safe 404 document", () => {
+  assert.equal(packageJson.scripts["check:dist"], "node scripts/check-production-output.mjs");
+  assert.match(buildScript, /"404\.html"/);
+  assert.match(outputAudit, /missing production references/);
+  assert.match(outputAudit, /non-production directory leaked into dist/);
+  assert.match(notFoundPage, /name="robots" content="noindex, nofollow"/);
+  assert.match(notFoundPage, /返回舰队主页/);
+});
+
+test("publisher bootstrap is reproducible and contains no maintainer-specific runtime path", () => {
+  assert.match(publisherRunner, /npm ci --ignore-scripts --no-audit --no-fund/);
+  assert.doesNotMatch(publisherRunner, /npm install/);
+  assert.doesNotMatch(publisherProcess, /\/Users\/bindox/);
+  assert.match(publisherProcess, /GVY_FFMPEG/);
+  assert.match(publisherProcess, /\/usr\/local\/bin\/ffmpeg/);
 });
 
 test("deployed brawl runtime is included in JavaScript syntax checks", () => {

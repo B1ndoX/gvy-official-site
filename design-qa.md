@@ -1,5 +1,7 @@
 # Mobile six-up navigation local-preview design QA
 
+> 历史 QA 证据（2026-08-19），不是当前运行状态或发布说明。接手时以根目录 `README.md`、`OPERATIONS.md`、当前代码与重新执行的测试为准。
+
 - Source visual truth: `/Users/bindox/Desktop/IMG_8448.PNG`
 - Rendered implementation: `/Users/bindox/.codex/visualizations/2026/08/19/gvy-mobile-six-up-preview/mobile-390-recruit-nav-final-r2.png`
 - Full comparison: `/Users/bindox/.codex/visualizations/2026/08/19/gvy-mobile-six-up-preview/full-before-after.png`
