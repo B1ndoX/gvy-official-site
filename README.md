@@ -54,7 +54,7 @@ python3 -m http.server 8001 --bind 127.0.0.1 --directory dist
 | `npm run verify` | 完整官网、媒体、发布器测试与两套构建；日常修改的最低门禁 |
 | `npm run test:e2e` | Chromium 桌面、手机导航、相册、灯箱、大乱斗及手机冷启动反向滚动 |
 | `npm run check:dist` | 确认成品无断链，也未泄漏源码、文档或 source map |
-| `npm run monitor:production` | 只读检查双域、HTTPS、TLS、域名期限和两个独立子站 |
+| `npm run monitor:production` | 只读检查双域、真实 404、HTTPS、TLS、域名期限和两个独立子站 |
 | `npm run check:edgeone` | 只读检查 19 个正式视频的部署、Range 与 EdgeOne 缓存 |
 | `npm run gallery:publisher` | 构建并启动本机相册发布器 |
 
@@ -73,7 +73,7 @@ python3 -m http.server 8001 --bind 127.0.0.1 --directory dist
 - 首屏必须打开即选择并播放 1 段视频；不得预载三段或为了提速降低现有清晰度。
 - 行动视频保持接近视口才赋予当前片源；相册原图只作灯箱回退，列表使用响应式 WebP。
 - 手机地址栏高度变化不得触发整页时间线刷新；修复滚动问题时禁止叠加第二套监听或时间线。
-- 不存在的页面应由 EdgeOne 返回仓库内 `404.html` 且使用真实 HTTP 404。代码已具备页面，云端路由状态必须在每次相关部署后单独核对。
+- 不存在的页面应由 EdgeOne 返回仓库内 `404.html` 且使用真实 HTTP 404。`edgeone.json` 显式声明空 `rewrites`，用于阻止托管项目沿用 SPA 首页回退；不得改成 `/* → /index.html`。云端路由状态必须在每次相关部署后单独核对。
 - 当前 Git 历史包含大量媒体，`.git` 体积较大。未来如迁移 Git LFS 或重写历史，必须作为独立、可回滚项目处理，不能夹带在普通官网修改中。
 
 ## 文档权威顺序

@@ -52,7 +52,7 @@ npm run check:edgeone
 
 ## 4. 监控与告警
 
-- `Production Monitor` 每 6 小时检查双域首页、HTTP→HTTPS、主站 TLS、域名期限；蓝图与维科洛作为独立子站只告警，不把其维护故障算作主站事故。
+- `Production Monitor` 每 6 小时检查双域首页、未知页面/静态资源的真实 404、HTTP→HTTPS、主站 TLS、域名期限；蓝图与维科洛作为独立子站只告警，不把其维护故障算作主站事故。
 - `check-edgeone-media` 检查全部 19 个正式 MP4：存在、Range `206`、一年 immutable 浏览器缓存以及预热后的 EdgeOne 命中。
 - 监控连续失败会维护唯一 GitHub Issue，恢复后自动关闭。GitHub 公共仓库长时间无活动可能停用定时任务，每月需确认工作流仍启用。
 - EdgeOne 部署切换期间允许有限重试；重试耗尽才是事故。不得通过跳过监控或扩大无限重试掩盖持续故障。
@@ -95,6 +95,6 @@ git log <rollback-tag>..main --oneline
 
 ## 8. 当前需人工决策的技术债
 
-- EdgeOne 当前生产配置曾把不存在页面和资源回退为首页 `200 text/html`。仓库已包含并构建 `404.html`，但真实 404 状态只能在获得云端修改/部署授权后验证；未验证前不能宣称该项闭环。
+- EdgeOne 曾把不存在页面和资源回退为首页 `200 text/html`。仓库包含并构建 `404.html`，同时在 `edgeone.json` 显式保留空 `rewrites` 以禁用 SPA 首页回退；每次部署仍必须由定时监控核对双域真实 404，不能只看文件已上传。
 - Git 媒体历史使 `.git` 体积较大。Git LFS/历史迁移收益明确但风险高，必须独立备份、演练和授权，不能混入普通修复。
 - Safari、Edge、Firefox 的最终实体设备冒烟测试需要相应浏览器/设备；自动门禁当前以 Chromium 和 macOS 运行环境为主。

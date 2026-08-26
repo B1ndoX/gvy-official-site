@@ -3,6 +3,7 @@
   "installCommand": "npm ci --ignore-scripts --omit=dev",
   "outputDirectory": "./dist",
   "nodeVersion": "22.11.0",
+  "rewrites": [],
   "headers": [
     {
       "source": "/*",
