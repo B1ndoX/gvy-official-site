@@ -57,6 +57,27 @@ async function checkHttpsRedirect(url) {
   });
 }
 
+async function checkNotFoundResponses(url) {
+  await withRetry(`${url} 404 check`, async () => {
+    const nonce = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const paths = [
+      `route-not-found-${nonce}`,
+      `assets/route-not-found-${nonce}.webp`,
+    ];
+
+    for (const path of paths) {
+      const response = await fetchResponse(new URL(path, url));
+      const body = await response.text();
+      assert.equal(response.status, 404, `${path} returned ${response.status}`);
+      assert.match(response.headers.get("server") || "", /edgeone/i);
+      assert.match(response.headers.get("content-type") || "", /text\/html/i);
+      assert.ok(body.includes("ROUTE NOT FOUND / 404"), `${path} did not use the branded 404 page`);
+      assert.match(body, /name="robots" content="noindex, nofollow"/);
+      assert.doesNotMatch(body, /data-hero-sequence/, `${path} fell back to the homepage`);
+    }
+  });
+}
+
 function readCertificate(host) {
   return new Promise((resolveCertificate, rejectCertificate) => {
     const socket = tls.connect({
@@ -115,6 +136,8 @@ const requiredChecks = [
   ["apex homepage", () => checkPage({ url: "https://gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
   ["www forced HTTPS", () => checkHttpsRedirect("http://www.gvyvoyagers.vip/")],
   ["apex forced HTTPS", () => checkHttpsRedirect("http://gvyvoyagers.vip/")],
+  ["www true 404", () => checkNotFoundResponses("https://www.gvyvoyagers.vip/")],
+  ["apex true 404", () => checkNotFoundResponses("https://gvyvoyagers.vip/")],
   ...["www.gvyvoyagers.vip", "gvyvoyagers.vip"]
     .map((host) => [`${host} TLS`, () => checkCertificate(host)]),
   ["domain registration", checkDomainRegistration],
