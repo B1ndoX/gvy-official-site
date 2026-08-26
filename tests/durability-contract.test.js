@@ -42,6 +42,7 @@ test("development and EdgeOne runtimes are explicit and independently verified",
 
 test("production output is self-audited and includes a crawl-safe 404 document", () => {
   assert.equal(packageJson.scripts["check:dist"], "node scripts/check-production-output.mjs");
+  assert.deepEqual(edgeone.rewrites, []);
   assert.match(buildScript, /"404\.html"/);
   assert.match(outputAudit, /missing production references/);
   assert.match(outputAudit, /non-production directory leaked into dist/);
