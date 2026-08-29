@@ -18,6 +18,22 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   await expect(page.locator("[data-hero-shell]")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 
+  const operationSection = page.locator("[data-operations-section]");
+  const operationVideos = operationSection.locator("[data-operation-video]");
+  const operationCases = [
+    ["切换到战斗与护航", "0", /combat-2560-v2\.mp4$/],
+    ["切换到工业与资源", "1", /industry-2560-v2\.mp4$/],
+    ["切换到运输与后勤", "2", /logistics-2560-v2\.mp4$/],
+    ["切换到探索与勘测", "3", /exploration-2560-v2\.mp4$/],
+  ];
+  for (const [name, index, source] of operationCases) {
+    await page.getByRole("button", { name, exact: true }).click();
+    await expect(operationSection).toHaveAttribute("data-operation-active", index);
+    await expect(operationVideos.nth(Number(index))).toHaveAttribute("src", source);
+    await expect.poll(async () => operationVideos.evaluateAll((videos) =>
+      videos.filter((video) => video.src && !video.paused).length)).toBe(1);
+  }
+
   const gallery = page.locator("[data-archive-grid]");
   const galleryViewport = page.locator(".archive-grid-viewport");
   await galleryViewport.scrollIntoViewIfNeeded();
@@ -190,5 +206,34 @@ test("mobile cold startup keeps immediate reverse scrolling stable", async ({ pa
   expect(afterReverse.heroHeight).toBeCloseTo(initial.heroHeight, 3);
   expect(afterReverse.scrollHeight).toBe(initial.scrollHeight);
   expect(afterReverse.horizontalOverflow).toBe(false);
+  expect(runtimeFailures).toEqual([]);
+});
+
+test("2K 16:9 keeps the dedicated pacing and selects the available 1440p hero", async ({ page }) => {
+  await page.setViewportSize({ width: 2560, height: 1440 });
+  const runtimeFailures = collectRuntimeFailures(page);
+  await page.addInitScript(() => {
+    localStorage.setItem("gvy-command-hero-video:v6", JSON.stringify({ index: 1, selectedAt: Date.now() }));
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+
+  const state = await page.evaluate(() => {
+    const hero = document.querySelector("[data-hero-sequence]");
+    const video = document.querySelector("[data-hero-video]");
+    const operations = document.querySelector("[data-operations-section]");
+    return {
+      heroHeight: hero.getBoundingClientRect().height,
+      heroQuality: video.dataset.heroVideoQuality,
+      heroSource: video.src,
+      operationsMinHeight: Number.parseFloat(getComputedStyle(operations).minHeight),
+      horizontalOverflow: document.documentElement.scrollWidth > window.innerWidth,
+    };
+  });
+
+  expect(state.heroHeight).toBeCloseTo(3600, 0);
+  expect(state.operationsMinHeight).toBeCloseTo(4752, 0);
+  expect(state.heroQuality).toBe("1440p");
+  expect(state.heroSource).toMatch(/fleet-hero-02-1440p-v4\.mp4/);
+  expect(state.horizontalOverflow).toBe(false);
   expect(runtimeFailures).toEqual([]);
 });

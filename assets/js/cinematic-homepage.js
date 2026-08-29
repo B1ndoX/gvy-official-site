@@ -32,6 +32,40 @@ export function shouldSkipStartupRefresh({ width, coarsePointer = false } = {}) 
     || Boolean(coarsePointer);
 }
 
+export function initStartupTimelineRefresh({
+  root = globalThis.document,
+  view = root?.defaultView || globalThis,
+  timelines,
+} = {}) {
+  const coarsePointer = view.matchMedia?.("(pointer: coarse)")?.matches || false;
+  if (shouldSkipStartupRefresh({ width: viewportWidth(view), coarsePointer })) return () => {};
+
+  let cleaned = false;
+  let refreshed = false;
+  let frame = 0;
+  const refreshOnce = () => {
+    if (cleaned || refreshed) return;
+    refreshed = true;
+    if (typeof view.requestAnimationFrame === "function") {
+      frame = view.requestAnimationFrame(() => {
+        frame = 0;
+        if (!cleaned) timelines?.refresh?.();
+      });
+    } else {
+      timelines?.refresh?.();
+    }
+  };
+
+  if (root?.readyState === "complete") refreshOnce();
+  else view.addEventListener?.("load", refreshOnce, { once: true });
+
+  return () => {
+    cleaned = true;
+    view.removeEventListener?.("load", refreshOnce);
+    if (frame) view.cancelAnimationFrame?.(frame);
+  };
+}
+
 export function initMobileViewportStability({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
@@ -88,26 +122,27 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const operationMotion = initOperationMotion({ root, view });
   const sectionNavigation = initSectionNavigation({ root, view });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
+  const startupRefresh = initStartupTimelineRefresh({ root, view, timelines });
   root.documentElement?.setAttribute("data-motion-initialized", "true");
   root.documentElement?.removeAttribute("data-motion-pending");
-  const cleanups = [viewportStability, hero, carousel, archive, brawl, operationMotion, sectionNavigation, timelines]
+  const cleanups = [
+    viewportStability,
+    hero,
+    carousel,
+    archive,
+    brawl,
+    operationMotion,
+    sectionNavigation,
+    timelines,
+    startupRefresh,
+  ]
     .map(asCleanup);
   let cleaned = false;
-
-  const refresh = () => {
-    const coarsePointer = view.matchMedia?.("(pointer: coarse)")?.matches || false;
-    if (shouldSkipStartupRefresh({ width: viewportWidth(view), coarsePointer })) return;
-    view.requestAnimationFrame?.(() => timelines.refresh?.());
-  };
-  const fontsReady = root.fonts?.ready || Promise.resolve();
-  Promise.resolve(fontsReady).then(refresh).catch(() => {});
-  view.addEventListener?.("load", refresh, { once: true });
 
   const controller = {
     cleanup() {
       if (cleaned) return;
       cleaned = true;
-      view.removeEventListener?.("load", refresh);
       view.removeEventListener?.("pagehide", controller.cleanup);
       cleanups.reverse().forEach((cleanup) => cleanup());
       root.documentElement?.removeAttribute("data-motion-ready");

@@ -19,6 +19,8 @@
 
 要求：Git、Node `24.19.0`、npm、Python 3；完整媒体验证还需要 `ffmpeg`，相册发布器在 macOS 上还使用系统 `sips`。
 
+先读 `ARCHITECTURE.md` 的状态归属与防叠加规则，再按 `OPERATIONS.md` 执行验证、发布和回滚。
+
 ```bash
 git clone https://github.com/B1ndoX/gvy-official-site.git
 cd gvy-official-site
@@ -79,8 +81,8 @@ python3 -m http.server 8001 --bind 127.0.0.1 --directory dist
 ## 文档权威顺序
 
 1. 当前代码、测试、Git 与线上只读检查结果。
-2. 本文件和 `OPERATIONS.md`。
-3. `/Users/bindox/Documents/项目交接文档/舰队官网相关.md` 的最新状态区。
-4. `docs/`、`design-qa.md` 中带日期的历史证据。
+2. 本文件、`ARCHITECTURE.md` 和 `OPERATIONS.md`。
+3. `/Users/bindox/Documents/项目交接文档/舰队官网相关.md` 的当前状态区。
+4. `/Users/bindox/Documents/项目交接文档/舰队官网历史记录.md`、`docs/`、`design-qa.md` 中带日期的历史证据。
 
 历史文档中的旧提交、旧数量和本机绝对路径不得直接当作当前事实；接手后必须重新核对。

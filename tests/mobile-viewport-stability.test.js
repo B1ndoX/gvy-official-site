@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  initStartupTimelineRefresh,
   initMobileViewportStability,
   shouldIgnoreMobileHeightResize,
   shouldSkipStartupRefresh,
@@ -13,10 +14,59 @@ test("mobile browser chrome height changes are not treated as layout resizes", (
   assert.equal(shouldIgnoreMobileHeightResize(1440, 1440), false);
 });
 
-test("startup refresh stays unchanged on desktop and is skipped only on phones", () => {
+test("startup refresh is allowed on desktop and skipped on phones", () => {
   assert.equal(shouldSkipStartupRefresh({ width: 390 }), true);
   assert.equal(shouldSkipStartupRefresh({ width: 844, coarsePointer: true }), true);
   assert.equal(shouldSkipStartupRefresh({ width: 1512 }), false);
+});
+
+test("desktop startup performs one timeline refresh after page load", () => {
+  const listeners = new Map();
+  let refreshCount = 0;
+  let frameCallback;
+  const root = { readyState: "loading" };
+  const view = {
+    innerWidth: 1512,
+    matchMedia: () => ({ matches: false }),
+    addEventListener(type, callback) { listeners.set(type, callback); },
+    removeEventListener(type) { listeners.delete(type); },
+    requestAnimationFrame(callback) { frameCallback = callback; return 7; },
+    cancelAnimationFrame() {},
+  };
+
+  const cleanup = initStartupTimelineRefresh({
+    root,
+    view,
+    timelines: { refresh() { refreshCount += 1; } },
+  });
+  const onLoad = listeners.get("load");
+  assert.equal(typeof onLoad, "function");
+  onLoad();
+  onLoad();
+  assert.equal(refreshCount, 0);
+  frameCallback();
+  assert.equal(refreshCount, 1);
+
+  cleanup();
+  assert.equal(listeners.has("load"), false);
+});
+
+test("phone startup never registers or performs a global timeline refresh", () => {
+  const listeners = new Map();
+  let refreshCount = 0;
+  const cleanup = initStartupTimelineRefresh({
+    root: { readyState: "loading" },
+    view: {
+      innerWidth: 390,
+      matchMedia: () => ({ matches: true }),
+      addEventListener(type, callback) { listeners.set(type, callback); },
+    },
+    timelines: { refresh() { refreshCount += 1; } },
+  });
+
+  assert.equal(listeners.has("load"), false);
+  assert.equal(refreshCount, 0);
+  cleanup();
 });
 
 test("mobile stability keeps one height until width or orientation really changes", () => {

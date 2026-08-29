@@ -94,6 +94,17 @@ test("homepage, controller, and production build share the exact active hero ass
   assert.deepEqual([...productionMedia.heroAssets].sort(), expected);
 });
 
+test("homepage, controller, and production checks share one hero cache version", () => {
+  const controllerVersion = heroVideoController.match(/HERO_MEDIA_VERSION\s*=\s*"([^"]+)"/)?.[1];
+  const homepageVersions = [...homepage.matchAll(/hero-random\/v2\/[^"']+\?v=([^"']+)/g)]
+    .map((match) => match[1]);
+
+  assert.ok(controllerVersion);
+  assert.ok(homepageVersions.length >= productionMedia.heroAssets.length);
+  assert.deepEqual([...new Set(homepageVersions)], [productionMedia.edgeCacheVersion]);
+  assert.equal(controllerVersion, productionMedia.edgeCacheVersion);
+});
+
 test("production build excludes publisher-only gallery workspaces", () => {
   for (const path of [
     "assets/gallery/thumbs",
@@ -447,9 +458,10 @@ test("homepage lifecycle initializes every controller once and cleans up", () =>
   assert.doesNotMatch(cinematicCss, /--nav-active-panel/);
   assert.match(sectionNavigation, /resolveHorizontalFollowTarget/);
   assert.match(cinematicHomepage, /initCinematicTimelines/);
+  assert.match(cinematicHomepage, /initStartupTimelineRefresh/);
   assert.match(cinematicHomepage, /shouldSkipStartupRefresh/);
-  assert.match(cinematicHomepage, /fonts\?\.ready/);
-  assert.match(cinematicHomepage, /addEventListener\?\.\("load", refresh/);
+  assert.doesNotMatch(cinematicHomepage, /fonts\?\.ready/);
+  assert.match(cinematicHomepage, /addEventListener\?\.\("load", refreshOnce/);
   assert.match(cinematicHomepage, /data-motion-initialized/);
   assert.match(cinematicHomepage, /pagehide/);
   assert.match(cinematicHomepage, /cleanup/);
@@ -465,7 +477,7 @@ test("operation stage fades its entry and exit edges with scroll progress", () =
   );
   assert.match(cinematicTimelines, /"--operations-entry-shade":\s*0[\s\S]*?duration:\s*1\.25/);
   assert.match(cinematicTimelines, /"--operations-exit-shade":\s*1[\s\S]*?duration:\s*1\.46/);
-  assert.match(homepage, /cinematic-homepage\.js\?v=20260825-mobile-scroll-flash-v82/);
+  assert.match(homepage, /cinematic-homepage\.js\?v=20260829-startup-refresh-v83/);
   assert.match(homepage, /cinematic-homepage\.css\?v=20260825-mobile-scroll-flash-v82/);
   assert.match(cinematicHomepage, /cinematic-timelines\.js\?v=20260819-mobile-viewport-stability-v80/);
   assert.match(cinematicCss, /\.archive-grid-viewport\s*\{[\s\S]*?touch-action:\s*pan-y pinch-zoom/);
