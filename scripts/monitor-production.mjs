@@ -1,8 +1,19 @@
 import assert from "node:assert/strict";
 import tls from "node:tls";
 
+import {
+  CERTIFICATE_CRITICAL_DAYS,
+  CERTIFICATE_WARNING_DAYS,
+  classifyCertificateLifetime,
+} from "./monitor-certificate-policy.mjs";
+
 const retries = Number(process.env.GVY_MONITOR_ATTEMPTS || 5);
-const minimumCertificateDays = Number(process.env.GVY_MIN_CERTIFICATE_DAYS || 21);
+const certificateWarningDays = Number(
+  process.env.GVY_CERTIFICATE_WARNING_DAYS || CERTIFICATE_WARNING_DAYS,
+);
+const certificateCriticalDays = Number(
+  process.env.GVY_MIN_CERTIFICATE_DAYS || CERTIFICATE_CRITICAL_DAYS,
+);
 const minimumDomainDays = Number(process.env.GVY_MIN_DOMAIN_DAYS || 180);
 
 function wait(milliseconds) {
@@ -98,16 +109,25 @@ function readCertificate(host) {
 }
 
 async function checkCertificate(host) {
-  await withRetry(`${host} certificate`, async () => {
+  const daysRemaining = await withRetry(`${host} certificate`, async () => {
     const certificate = await readCertificate(host);
     const expiresAt = Date.parse(certificate.valid_to);
     assert.ok(Number.isFinite(expiresAt), `${host} certificate has no valid expiry`);
-    const daysRemaining = (expiresAt - Date.now()) / 86_400_000;
-    assert.ok(
-      daysRemaining >= minimumCertificateDays,
-      `${host} certificate expires in ${daysRemaining.toFixed(1)} days`,
-    );
+    return (expiresAt - Date.now()) / 86_400_000;
   });
+
+  const level = classifyCertificateLifetime(daysRemaining, {
+    warningDays: certificateWarningDays,
+    criticalDays: certificateCriticalDays,
+  });
+  const message = `${host} certificate expires in ${daysRemaining.toFixed(1)} days`;
+  assert.notEqual(level, "critical", message);
+  if (level === "warning") {
+    console.warn(`Certificate renewal watch: ${message}`);
+    if (process.env.GITHUB_ACTIONS === "true") {
+      console.log(`::warning title=TLS certificate renewal watch::${message}`);
+    }
+  }
 }
 
 async function checkDomainRegistration() {

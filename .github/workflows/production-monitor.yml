@@ -34,6 +34,7 @@ jobs:
       - name: Check official site and observe independent child services
         run: node scripts/monitor-production.mjs
       - name: Check all active EdgeOne media
+        if: ${{ always() }}
         run: node scripts/check-edgeone-media.mjs
       - name: Open one incident issue when monitoring fails
         if: failure()

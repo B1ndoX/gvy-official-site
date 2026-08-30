@@ -130,6 +130,10 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorWorkflow, /cron:\s*"17 \*\/6 \* \* \*"/);
   assert.match(monitorWorkflow, /scripts\/monitor-production\.mjs/);
   assert.match(monitorWorkflow, /scripts\/check-edgeone-media\.mjs/);
+  assert.match(
+    monitorWorkflow,
+    /name:\s*Check all active EdgeOne media[\s\S]*?if:\s*\$\{\{\s*always\(\)\s*\}\}/,
+  );
   assert.match(monitorWorkflow, /node-version-file:\s*\.node-version/);
   assert.match(monitorWorkflow, /GVY production monitor failure/);
   assert.match(monitorWorkflow, /issues:\s*write/);
