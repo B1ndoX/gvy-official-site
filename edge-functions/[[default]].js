@@ -5,7 +5,7 @@ const notFoundDocument = `<!doctype html>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#03060b" />
-    <title>航线未找到 | 星际远航者 GVY</title>
+    <title>航线未找到 | 星远舰队 GVY</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
     <link rel="stylesheet" href="/assets/cinematic-homepage.css?v=20260826-commercial-handoff" />
   </head>

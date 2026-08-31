@@ -152,8 +152,8 @@ async function checkDomainRegistration() {
 }
 
 const requiredChecks = [
-  ["www homepage", () => checkPage({ url: "https://www.gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
-  ["apex homepage", () => checkPage({ url: "https://gvyvoyagers.vip/", marker: "星际远航者", requireSecurityHeaders: true })],
+  ["www homepage", () => checkPage({ url: "https://www.gvyvoyagers.vip/", marker: "星远舰队", requireSecurityHeaders: true })],
+  ["apex homepage", () => checkPage({ url: "https://gvyvoyagers.vip/", marker: "星远舰队", requireSecurityHeaders: true })],
   ["www forced HTTPS", () => checkHttpsRedirect("http://www.gvyvoyagers.vip/")],
   ["apex forced HTTPS", () => checkHttpsRedirect("http://gvyvoyagers.vip/")],
   ["www true 404", () => checkNotFoundResponses("https://www.gvyvoyagers.vip/")],

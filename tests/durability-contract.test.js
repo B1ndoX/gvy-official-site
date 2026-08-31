@@ -123,6 +123,8 @@ test("EdgeOne catch-all returns the branded document with a real 404 status", as
   assert.equal(response.status, 404);
   assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
   assert.equal(await response.text(), notFoundPage);
+  assert.match(notFoundPage, /航线未找到 \| 星远舰队 GVY/);
+  assert.doesNotMatch(notFoundPage, /星际远航者/);
 });
 
 test("scheduled production monitoring covers live pages, media and expiry alerts", () => {
@@ -146,6 +148,8 @@ test("scheduled production monitoring covers live pages, media and expiry alerts
   assert.match(monitorScript, /ROUTE NOT FOUND \/ 404/);
   assert.match(monitorScript, /response\.status, 404/);
   assert.match(monitorScript, /data-hero-sequence/);
+  assert.match(monitorScript, /marker: "星远舰队"/);
+  assert.doesNotMatch(monitorScript, /marker: "星际远航者"/);
   assert.match(monitorScript, /www true 404/);
   assert.match(monitorScript, /apex true 404/);
   assert.match(monitorScript, /Independent child service unavailable/);

@@ -14,7 +14,7 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   const runtimeFailures = collectRuntimeFailures(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
 
-  await expect(page).toHaveTitle(/星际远航者/);
+  await expect(page).toHaveTitle(/星远舰队/);
   await expect(page.locator("[data-hero-shell]")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 

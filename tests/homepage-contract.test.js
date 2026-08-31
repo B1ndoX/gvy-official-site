@@ -146,11 +146,13 @@ test("homepage follows the approved voyage narrative", () => {
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
 
   assert.match(homepage, /FLEET POSITIONING \/ GALACTIC VOYAGERS/);
+  assert.match(homepage, /星远舰队/);
+  assert.doesNotMatch(homepage, /星际远航者/);
   assert.match(homepage, /综合型玩家舰队/);
   assert.match(homepage, /探索未知为方向/);
   assert.match(homepage, /工业体系构筑远航基础/);
   assert.match(homepage, /协同作战与成员互助/);
-  assert.match(homepage, /<dt>舰队名称<\/dt><dd>星际远航者<\/dd>/);
+  assert.match(homepage, /<dt>舰队名称<\/dt><dd>星远<\/dd>/);
   assert.match(homepage, /因远航而集结/);
   assert.match(homepage, /未知值得共同见证，险途值得并肩穿越/);
   assert.match(homepage, /第一次驾驶飞船，还是早已熟悉量子航线/);
