@@ -146,7 +146,11 @@ test("homepage follows the approved voyage narrative", () => {
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
 
   assert.match(homepage, /FLEET POSITIONING \/ GALACTIC VOYAGERS/);
-  assert.match(homepage, /星远舰队/);
+  assert.match(homepage, /<a class="fleet-brand"[^>]*aria-label="星远 GALACTIC VOYAGERS 首页">/);
+  assert.match(homepage, /<span class="brand-copy">\s*<strong>星远<\/strong>/);
+  assert.match(homepage, /<div class="hero-title"[\s\S]*?<h1>\s*<span>星远<\/span>/);
+  assert.match(homepage, /<div class="footer-brand">[\s\S]*?<strong>星远<\/strong>/);
+  assert.match(homepage, /星远舰队（GVY）是一支面向长期发展的综合型玩家舰队/);
   assert.doesNotMatch(homepage, /星际远航者/);
   assert.match(homepage, /综合型玩家舰队/);
   assert.match(homepage, /探索未知为方向/);

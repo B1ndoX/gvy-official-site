@@ -123,7 +123,7 @@ test("EdgeOne catch-all returns the branded document with a real 404 status", as
   assert.equal(response.status, 404);
   assert.equal(response.headers.get("X-Robots-Tag"), "noindex, nofollow");
   assert.equal(await response.text(), notFoundPage);
-  assert.match(notFoundPage, /航线未找到 \| 星远舰队 GVY/);
+  assert.match(notFoundPage, /航线未找到 \| 星远 GVY/);
   assert.doesNotMatch(notFoundPage, /星际远航者/);
 });
 
