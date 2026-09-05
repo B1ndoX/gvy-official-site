@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { parseGalleryState, removeGalleryItems } from "../../tools/gallery-publisher/lib/gallery-html.mjs";
 
 function collectRuntimeFailures(page) {
   const failures = [];
@@ -37,7 +38,8 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   const gallery = page.locator("[data-archive-grid]");
   const galleryViewport = page.locator(".archive-grid-viewport");
   await galleryViewport.scrollIntoViewIfNeeded();
-  await expect(gallery.locator("[data-archive-clone]")).toHaveCount(39);
+  const originals = gallery.locator("button[data-archive-open]:not([data-archive-clone])");
+  await expect(gallery.locator("[data-archive-clone]")).toHaveCount(await originals.count());
   await expect(gallery.locator("button[data-archive-clone]")).toHaveCount(0);
   const playback = page.locator("[data-archive-carousel-toggle]");
   await playback.click();
@@ -54,9 +56,11 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   await page.mouse.up();
   await expect(page.locator("[data-archive-dialog]")).not.toHaveAttribute("open", "");
 
-  await page.locator("[data-archive-open='2']").click();
+  const targetPhoto = originals.nth(Math.min(2, (await originals.count()) - 1));
+  const expectedSource = await targetPhoto.locator("source").getAttribute("srcset");
+  await targetPhoto.click();
   await expect(page.locator("[data-archive-dialog]")).toHaveAttribute("open", "");
-  await expect(page.locator("[data-archive-dialog-image]")).toHaveAttribute("srcset", /optimized\/team-03-1280\.webp/);
+  await expect(page.locator("[data-archive-dialog-image]")).toHaveAttribute("srcset", expectedSource);
   await page.locator("[data-archive-close]").click();
 
   const brawlOpener = page.locator("[data-member-brawl-open]");
@@ -236,4 +240,96 @@ test("2K 16:9 keeps the dedicated pacing and selects the available 1440p hero", 
   expect(state.heroSource).toMatch(/fleet-hero-02-1440p-v4\.mp4/);
   expect(state.horizontalOverflow).toBe(false);
   expect(runtimeFailures).toEqual([]);
+});
+
+test("cached page lifecycle preserves exactly one controller and gallery interaction", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const lifecycle = await page.evaluate(() => {
+    const controller = window.__gvyCinematicHomepage;
+    const count = document.querySelectorAll("[data-archive-clone]").length;
+    for (let i = 0; i < 3; i++) {
+      dispatchEvent(new PageTransitionEvent("pagehide", { persisted: true }));
+      dispatchEvent(new PageTransitionEvent("pageshow", { persisted: true }));
+    }
+    return { same: window.__gvyCinematicHomepage === controller, count,
+      after: document.querySelectorAll("[data-archive-clone]").length };
+  });
+  expect(lifecycle.same).toBe(true);
+  expect(lifecycle.count).toBeGreaterThan(0);
+  expect(lifecycle.after).toBe(lifecycle.count);
+  await page.locator("[data-archive-carousel-toggle]").scrollIntoViewIfNeeded();
+  await page.locator("[data-archive-carousel-toggle]").click();
+  await expect(page.locator("[data-archive-index]")).toHaveAttribute("data-carousel-state", "paused");
+  await page.goto("/404.html");
+  await page.goBack({ waitUntil: "commit" });
+  await expect.poll(() => page.evaluate(() => !!window.__gvyCinematicHomepage)).toBe(true);
+});
+
+test("transient stalled and waiting events preserve the playing hero and locked source", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-hero-shell]")).toHaveAttribute("data-hero-state", "playing");
+  const before = await page.locator("[data-hero-video]").evaluate((video) => {
+    const state = { src: video.src, time: video.currentTime };
+    video.dispatchEvent(new Event("stalled"));
+    video.dispatchEvent(new Event("waiting"));
+    return state;
+  });
+  await expect(page.locator("[data-hero-shell]")).toHaveAttribute("data-hero-state", "playing");
+  await expect.poll(() => page.locator("[data-hero-video]").evaluate((v) => v.currentTime)).toBeGreaterThan(before.time);
+  expect(await page.locator("[data-hero-video]").evaluate((v) => v.src)).toBe(before.src);
+});
+
+test("operation state follows both breakpoint directions without duplicate players", async ({ page }) => {
+  await page.setViewportSize({ width: 1512, height: 982 });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  const section = page.locator("[data-operations-section]");
+  for (let i = 0; i < 2; i++) {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.locator("[data-operation-visual='3']").evaluate((v) => v.scrollIntoView({ block: "center" }));
+    await expect(section).toHaveAttribute("data-operation-active", "3");
+    await expect.poll(() => section.locator("video").nth(3).evaluate((v) => !!v.src && !v.paused)).toBe(true);
+    await page.setViewportSize({ width: 1512, height: 982 });
+    await page.getByRole("button", { name: "切换到工业与资源", exact: true }).click();
+    await expect(section).toHaveAttribute("data-operation-active", "1");
+    await expect.poll(() => section.locator("video").evaluateAll((vs) => vs.filter((v) => v.src && !v.paused).length)).toBe(1);
+  }
+});
+
+test("closed arena stops physics and reopens the same iframe", async ({ page }) => {
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  const arena = page.frameLocator("[data-member-brawl-frame]");
+  await arena.locator("[data-brawl-start]").click();
+  const positions = () => arena.locator(".member-fighter").evaluateAll((vs) => vs.map((v) => v.style.cssText));
+  await expect.poll(async () => (await positions()).some((s) => s.includes("--chip-x"))).toBe(true);
+  await page.waitForTimeout(500);
+  await page.locator("[data-member-brawl-close]").click();
+  await page.waitForTimeout(200);
+  const closed = await positions();
+  await page.waitForTimeout(500);
+  expect(await positions()).toEqual(closed);
+  const frame = page.frames().find((f) => f.url().includes("member-brawl.html"));
+  await frame.evaluate(() => { window.__arenaAuditIdentity = true; });
+  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  expect(await frame.evaluate(() => window.__arenaAuditIdentity)).toBe(true);
+  await expect.poll(positions).not.toEqual(closed);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("[data-member-brawl-dialog]")).not.toHaveAttribute("open", "");
+});
+
+test("a legally reduced two-photo gallery still supports nodes, cloning and the correct lightbox", async ({ page }) => {
+  await page.route("http://127.0.0.1:8001/", async (route) => {
+    const response = await route.fetch();
+    const html = await response.text();
+    const gallery = parseGalleryState(html);
+    const body = removeGalleryItems(html, gallery.items.slice(2).map((item) => item.number));
+    await route.fulfill({ response, body });
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-archive-grid] [data-archive-clone]")).toHaveCount(2);
+  const photo = page.locator("[data-archive-grid] button[data-archive-open]").nth(1);
+  const expected = await photo.locator("source").getAttribute("srcset");
+  await photo.click();
+  await expect(page.locator("[data-archive-dialog-image]")).toHaveAttribute("srcset", expected);
+  await page.locator("[data-archive-close]").click();
 });

@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
 import { readFile } from "node:fs/promises";
 
-import { assertOnlyManagedGalleryChanged } from "./gallery-html.mjs";
+import { assertOnlyManagedGalleryChanged, parseGalleryState } from "./gallery-html.mjs";
+import { assertPreviewUnchanged } from "./preview-state.mjs";
 
 export const DEPLOYMENT_VERIFY_TIMEOUT_MINUTES = 12;
 
@@ -84,9 +85,18 @@ export function isExpectedGalleryAssetResponse(response) {
   return Boolean(response?.ok) && /^image\/webp(?:;|$)/i.test(contentType);
 }
 
-async function verifyDeployment({ session, domains, onUpdate }) {
+export function matchesExpectedGallery(html, expected) {
+  try {
+    const actual = parseGalleryState(html);
+    return actual.maxPhotoNumber === expected.maxPhotoNumber
+      && actual.latestAssetNumber === expected.latestAssetNumber
+      && actual.count === expected.count
+      && actual.items.every((item, index) => item.markup === expected.items[index].markup);
+  } catch { return false; }
+}
+
+async function verifyDeployment({ session, domains, onUpdate, expectedGallery }) {
   const lastNumber = String(session.batchEnd).padStart(2, "0");
-  const firstNumber = String(session.batchStart).padStart(2, "0");
   const expectedAsset = `/assets/gallery/optimized/team-${lastNumber}-1280.webp`;
   const deadline = Date.now() + DEPLOYMENT_VERIFY_TIMEOUT_MINUTES * 60 * 1000;
   let lastError = "等待 EdgeOne 部署";
@@ -100,20 +110,16 @@ async function verifyDeployment({ session, domains, onUpdate }) {
           signal: AbortSignal.timeout(15_000),
         });
         const html = await htmlResponse.text();
+        const galleryMatches = htmlResponse.ok && matchesExpectedGallery(html, expectedGallery);
         if (session.type === "delete") {
-          return htmlResponse.ok
-            && session.items.every((item) => !html.includes(`./assets/gallery/${item.fallbackName}`))
-            && html.includes(`aria-label="${session.resultCount} 张舰队团建照片`);
+          return galleryMatches;
         }
         const assetResponse = await fetch(`${origin}${expectedAsset}?gallery-publisher=${nonce}`, {
           method: "HEAD",
           cache: "no-store",
           signal: AbortSignal.timeout(15_000),
         });
-        return htmlResponse.ok
-          && isExpectedGalleryAssetResponse(assetResponse)
-          && html.includes(`team-${lastNumber}-1280.webp`)
-          && html.includes(`team-${firstNumber}-1280.webp`);
+        return galleryMatches && isExpectedGalleryAssetResponse(assetResponse);
       }));
       if (results.every(Boolean)) return;
       lastError = "域名尚未全部显示新相册资源";
@@ -135,6 +141,8 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     readFile(`${root}/index.html`, "utf8"),
   ]);
   assertOnlyManagedGalleryChanged(beforeHtml, currentHtml);
+  const expectedGallery = parseGalleryState(currentHtml);
+  if (!session.commitSha) await assertPreviewUnchanged(session.previewState, await gitOutput(root, ["rev-parse", "HEAD"]));
 
   const branch = await gitOutput(root, ["branch", "--show-current"]);
   if (branch !== "main") throw new Error(`当前分支是 ${branch || "未知"}，只允许从 main 发布`);
@@ -155,6 +163,7 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
       throw new Error("origin/main 已被其他提交更新，已停止重试");
     }
   } else {
+    await assertPreviewUnchanged(session.previewState, head);
     const changedPaths = await listGitChanges(root);
     assertGalleryOnlyPaths(changedPaths);
     if (!samePathSet(changedPaths, session.changedFiles)) {
@@ -183,6 +192,6 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
   if (remoteHead !== session.commitSha) await run("git", ["push", "origin", "main"], { cwd: root });
   await onPushed?.({ commitSha: session.commitSha, release: summary });
   onUpdate?.("等待 EdgeOne 并复查两个正式域名");
-  await verifyDeployment({ session, domains: summary.domains, onUpdate });
+  await verifyDeployment({ session, domains: summary.domains, onUpdate, expectedGallery });
   return { ...summary, commitSha: session.commitSha };
 }

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { access, mkdtemp, rm, stat } from "node:fs/promises";
+import { access, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
+import { testPng, withImageGallery } from "./fixtures.mjs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -35,32 +36,35 @@ test("visual duplicate distance is exact, tolerant, and rejects incompatible buf
 });
 
 test("local visual fingerprints detect resized or recompressed copies while separating another photo", async () => {
-  const gallery = new URL("../../../assets/gallery/", import.meta.url);
-  const [original, recompressed, different] = await Promise.all([
-    createVisualFingerprint(new URL("team-37.png", gallery).pathname),
-    createVisualFingerprint(new URL("optimized/team-37-1280.webp", gallery).pathname),
-    createVisualFingerprint(new URL("team-01.jpg", gallery).pathname),
-  ]);
+  await withImageGallery(async (root) => {
+    const gallery = join(root, "assets/gallery");
+    const [original, recompressed, different] = await Promise.all([
+      createVisualFingerprint(join(gallery, "team-01.png")),
+      createVisualFingerprint(join(gallery, "optimized/team-01-1280.webp")),
+      createVisualFingerprint(join(gallery, "team-02.png")),
+    ]);
 
-  const duplicateMetrics = visualFingerprintMetrics(original, recompressed);
-  assert.equal(isVisualDuplicate(original, recompressed), true);
-  assert.ok(duplicateMetrics.normalizedLuminanceDistance < 0.12);
-  assert.equal(isVisualDuplicate(original, different), false);
+    const duplicateMetrics = visualFingerprintMetrics(original, recompressed);
+    assert.equal(isVisualDuplicate(original, recompressed), true);
+    assert.ok(duplicateMetrics.normalizedLuminanceDistance < 0.12);
+    assert.equal(isVisualDuplicate(original, different), false);
+  });
 });
 
 test("publisher creates the fallback, responsive WebP, and thumbnail without overwriting", async () => {
   const root = await mkdtemp(join(tmpdir(), "gvy-gallery-process-"));
-  const source = new URL("../../../assets/gallery/team-01.jpg", import.meta.url).pathname;
+  const source = join(root, "fixture.png");
   try {
+    await writeFile(source, testPng());
     const item = await processGalleryPhoto({
-      upload: { path: source, originalName: "fleet.jpg", mimeType: "image/jpeg" },
+      upload: { path: source, originalName: "fleet.png", mimeType: "image/png" },
       number: 48,
       root,
     });
 
     assert.equal(item.number, 48);
-    assert.equal(item.fallbackName, "team-48.jpg");
-    assert.equal(item.publicUrl, "/site-assets/gallery/team-48.jpg");
+    assert.equal(item.fallbackName, "team-48.png");
+    assert.equal(item.publicUrl, "/site-assets/gallery/team-48.png");
     assert.equal(item.has1920, false);
     assert.equal(item.createdPaths.length, 3);
     await Promise.all(item.createdPaths.map((path) => access(path)));
@@ -68,7 +72,7 @@ test("publisher creates the fallback, responsive WebP, and thumbnail without ove
     assert.ok((await stat(join(root, "assets/gallery/thumbs/team-48.jpg"))).size > 0);
     await assert.rejects(
       processGalleryPhoto({
-        upload: { path: source, originalName: "fleet.jpg", mimeType: "image/jpeg" },
+        upload: { path: source, originalName: "fleet.png", mimeType: "image/png" },
         number: 48,
         root,
       }),

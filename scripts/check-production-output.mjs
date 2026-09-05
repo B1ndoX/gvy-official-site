@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { access, readdir, readFile, stat } from "node:fs/promises";
 import { dirname, extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
+import { assetDigest, codeReferences, codeReferenceTarget } from "./fingerprint-assets.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -55,6 +57,14 @@ function collectMarkupReferences(source) {
 }
 
 const files = await walk(output);
+const builtHome = await readFile(resolve(output, "index.html"), "utf8");
+const edgeConfig = JSON.parse(await readFile(resolve(root, "edgeone.json"), "utf8"));
+const csp = edgeConfig.headers.find((rule) => rule.source === "/*").headers
+  .find((header) => header.key === "Content-Security-Policy").value;
+for (const match of builtHome.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
+  const hash = createHash("sha256").update(match[1]).digest("base64");
+  assert.ok(csp.includes(`'sha256-${hash}'`), "production bootstrap is not authorized by CSP");
+}
 const relativeFiles = files.map((file) => relative(output, file).replaceAll("\\", "/"));
 for (const file of requiredFiles) await access(resolve(output, file));
 for (const file of relativeFiles) {
@@ -68,6 +78,11 @@ for (const file of files) {
   const extension = extname(file).toLowerCase();
   if (![".html", ".css", ".js", ".json", ".webmanifest"].includes(extension)) continue;
   const source = await readFile(file, "utf8");
+  for (const { url } of codeReferences(source, file)) {
+    const target = codeReferenceTarget(output, file, url);
+    const digest = assetDigest(await readFile(target, "utf8"));
+    assert.equal(url.split("?")[1], `v=${digest}`, `stale production asset URL: ${url}`);
+  }
   if (extension === ".html") {
     references.push(...collectMarkupReferences(source).map((value) => ({ file, value })));
   } else if (extension === ".css") {

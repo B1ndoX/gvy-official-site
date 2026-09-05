@@ -1,6 +1,7 @@
 import { cp, copyFile, mkdir, readFile, rm } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { fingerprintAssets } from "./fingerprint-assets.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -52,3 +53,5 @@ await copyFile(
   resolve(root, "node_modules/gsap/dist/ScrollTrigger.min.js"),
   resolve(output, "assets/vendor/ScrollTrigger.min.js"),
 );
+
+await fingerprintAssets(output);

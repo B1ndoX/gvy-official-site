@@ -172,6 +172,9 @@ const weaponDeck = [
 const weaponsByKind = Object.fromEntries(weapons.map((weapon) => [weapon.kind, weapon]));
 const memberLoadouts = [];
 let physicsCleanup = null;
+let syncPhysicsVisibility = null;
+const hostDialog = window.frameElement?.closest("dialog");
+const arenaVisible = () => !document.hidden && (!hostDialog || hostDialog.open);
 let resizeTimer = null;
 let resizeListenerBound = false;
 let activePhysicsDrag = null;
@@ -242,12 +245,13 @@ function renderMemberWall() {
       if (battleStarted) scheduleMemberPhysics(180);
       else applyChipSizing(calculateChipSizing(memberField.getBoundingClientRect().width, members.length));
     });
-    document.addEventListener("visibilitychange", () => {
-      if (document.hidden) {
-        if (physicsCleanup) physicsCleanup();
-        brawlActive = false;
-      }
-      else if (shouldRunBrawl && battleStarted) scheduleMemberPhysics(180);
+    const syncVisibility = () => {
+      if (syncPhysicsVisibility) syncPhysicsVisibility();
+      else if (arenaVisible() && shouldRunBrawl && battleStarted) scheduleMemberPhysics(180);
+    };
+    document.addEventListener("visibilitychange", syncVisibility);
+    if (hostDialog) new MutationObserver(syncVisibility).observe(hostDialog, {
+      attributes: true, attributeFilter: ["open"],
     });
   }
   applyChipSizing(calculateChipSizing(memberField.getBoundingClientRect().width, members.length));
@@ -272,7 +276,7 @@ function preloadWeaponImages() {
 function scheduleMemberPhysics(delay = 120) {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    if (!shouldRunBrawl || prefersReducedMotion) return;
+    if (!shouldRunBrawl || prefersReducedMotion || !arenaVisible()) return;
 
     const run = () => {
       requestAnimationFrame(() => requestAnimationFrame(initMemberPhysics));
@@ -304,7 +308,7 @@ function applyChipSizing(size) {
 }
 
 function initMemberPhysics() {
-  if (!memberField || !window.Matter) return;
+  if (!memberField || !window.Matter || !arenaVisible()) return;
   if (physicsCleanup) physicsCleanup();
 
   const { Engine, Events, Runner, Bodies, Body, Composite } = window.Matter;
@@ -470,9 +474,24 @@ function initMemberPhysics() {
     frame = requestAnimationFrame(syncDom);
   }
 
-  Runner.run(runner, engine);
-  syncDom();
-  startCombatLoop(engine);
+  let running = false;
+  syncPhysicsVisibility = () => {
+    const visible = arenaVisible() && shouldRunBrawl;
+    if (running === visible) return;
+    running = visible;
+    brawlActive = visible;
+    if (visible) {
+      Runner.run(runner, engine);
+      syncDom();
+      startCombatLoop(engine);
+    } else {
+      Runner.stop(runner);
+      cancelAnimationFrame(frame);
+      clearInterval(combatTimer);
+      combatTimer = null;
+    }
+  };
+  syncPhysicsVisibility();
 
   physicsCleanup = () => {
     cancelAnimationFrame(frame);
@@ -484,6 +503,7 @@ function initMemberPhysics() {
     memberField.querySelectorAll(".is-dragging").forEach((chip) => chip.classList.remove("is-dragging"));
     activeArenaBounds = null;
     physicsCleanup = null;
+    syncPhysicsVisibility = null;
   };
 }
 
@@ -1120,7 +1140,9 @@ function endPhysicsDrag() {
       return;
     }
 
-    if (battleStarted && !brawlActive && !prefersReducedMotion) {
+    if (syncPhysicsVisibility) {
+      syncPhysicsVisibility();
+    } else if (battleStarted && !brawlActive && !prefersReducedMotion) {
       brawlActive = true;
       scheduleMemberPhysics(80);
     }
@@ -1128,8 +1150,7 @@ function endPhysicsDrag() {
 
   function pauseBrawl() {
     shouldRunBrawl = false;
-    if (!brawlActive) return;
-    if (physicsCleanup) physicsCleanup();
+    syncPhysicsVisibility?.();
     brawlActive = false;
   }
 

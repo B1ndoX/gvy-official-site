@@ -68,7 +68,7 @@ export function initMemberBrawlDialog({
     restoreFocus = event?.currentTarget || root.activeElement || null;
     previousBodyOverflow = body?.style?.overflow || "";
     if (!frame.getAttribute("src")) {
-      frame.setAttribute("src", "./member-brawl.html?v=20260729-production-trim-v62");
+      frame.setAttribute("src", "./member-brawl.html");
     }
     if (body?.style) body.style.overflow = "hidden";
     if (!dialog.open) dialog.showModal();

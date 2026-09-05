@@ -50,6 +50,20 @@ export function initOperationMotion({
   Mutation = view?.MutationObserver,
   rootMargin = "55% 0px",
 } = {}) {
+  const breakpoint = view?.matchMedia?.(`(max-width: ${MOBILE_BREAKPOINT}px)`);
+  let cleanup = bindOperationMotion({ root, view, Observer, Mutation, rootMargin });
+  const onBreakpointChange = () => {
+    cleanup();
+    cleanup = bindOperationMotion({ root, view, Observer, Mutation, rootMargin });
+  };
+  breakpoint?.addEventListener?.("change", onBreakpointChange);
+  return () => {
+    breakpoint?.removeEventListener?.("change", onBreakpointChange);
+    cleanup();
+  };
+}
+
+function bindOperationMotion({ root, view, Observer, Mutation, rootMargin }) {
   const section = root?.querySelector?.("[data-operations-section]");
   const videos = [...(section?.querySelectorAll?.("[data-operation-video]") || [])];
   if (!section || !videos.length || !canPlayOperationMotion(view)) return () => {};

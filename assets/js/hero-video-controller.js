@@ -215,7 +215,8 @@ export function initHeroVideo({
     ["canplay", tryPlay],
     ["playing", showVideo],
     ["error", showPoster],
-    ["stalled", showPoster],
+    // A stalled download can still have playable buffered frames. Keep the
+    // current video/last frame; only an actual media error warrants a poster.
   ];
   listeners.forEach(([name, handler]) => video.addEventListener?.(name, handler));
 

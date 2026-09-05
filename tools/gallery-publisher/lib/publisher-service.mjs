@@ -12,6 +12,7 @@ import {
 } from "./gallery-html.mjs";
 import { createVisualFingerprint, isVisualDuplicate, processGalleryPhoto } from "./process.mjs";
 import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
+import { assertPreviewUnchanged, contentHash, fileHash } from "./preview-state.mjs";
 
 const STEP_LABELS = [
   "保留原图",
@@ -291,6 +292,51 @@ export class PublisherService {
     await writeFile(this.statePath, `${JSON.stringify(this.session, null, 2)}\n`, "utf8");
   }
 
+  async beginPreviewState(originalHtml) {
+    const state = {
+      head: await gitOutput(this.root, ["rev-parse", "HEAD"]),
+      files: { [this.indexPath]: contentHash(originalHtml) },
+    };
+    await this.checkPreviewState(state);
+    return state;
+  }
+
+  async checkPreviewState(state) {
+    await assertPreviewUnchanged(state, await gitOutput(this.root, ["rev-parse", "HEAD"]));
+  }
+
+  async recoverPreview({ previewState, backupPath, createdPaths = [], assetBackups = [] }) {
+    await this.checkPreviewState(previewState);
+    const html = await readFile(backupPath, "utf8");
+    // Read all backups before touching the working tree; a missing backup is not
+    // permission to partially restore a session.
+    const assets = await Promise.all(assetBackups.map(async (entry) => ({
+      ...entry, content: await readFile(entry.backupPath),
+    })));
+    await writeFile(this.indexPath, html, "utf8");
+    for (const entry of assets) {
+      await mkdir(dirname(entry.path), { recursive: true });
+      await writeFile(entry.path, entry.content);
+    }
+    await Promise.all(createdPaths.map((path) => rm(path, { force: true })));
+  }
+
+  async failPreview(error, recovery, sessionDir, steps, type) {
+    let message = error.message;
+    try {
+      if (recovery.previewState) await this.recoverPreview(recovery);
+      await rm(sessionDir, { recursive: true, force: true });
+      if (this.session?.backupPath === recovery.backupPath) {
+        this.session = null;
+        await this.persistSession();
+      }
+    } catch (conflict) {
+      message += `；自动恢复已停止：${conflict.message}。备份位于 ${sessionDir}`;
+    }
+    this.setOperation({ type, status: "error", message, steps: steps.map((step) => step === "running" ? "error" : step) });
+    throw new Error(message, { cause: error });
+  }
+
   async validateUploadDuplicates(gallery, uploads, { allowDuplicates = false } = {}) {
     const existingFiles = [];
     for (const item of gallery.items) {
@@ -415,10 +461,12 @@ export class PublisherService {
     await mkdir(sessionDir, { recursive: true });
     await writeFile(backupPath, originalHtml, "utf8");
     const createdPaths = [];
+    let previewState;
     const steps = STEP_LABELS.map(() => "pending");
     this.setOperation({ type: "preview", status: "running", message: `开始处理本批 ${uploads.length} 张照片`, steps });
 
     try {
+      previewState = await this.beginPreviewState(originalHtml);
       steps[0] = "running";
       steps[1] = "running";
       steps[2] = "running";
@@ -429,6 +477,7 @@ export class PublisherService {
         const item = await processGalleryPhoto({ upload: uploads[index], number: assetIds[index], root: this.root });
         items.push(item);
         createdPaths.push(...item.createdPaths);
+        for (const path of item.createdPaths) previewState.files[path] = await fileHash(path);
         this.setOperation({ message: `已处理 ${index + 1} / ${uploads.length}` });
       }
       steps.fill("done", 0, 4);
@@ -436,11 +485,14 @@ export class PublisherService {
       this.setOperation({ steps: [...steps], message: "按本批顺序将照片追加到相册末尾" });
       const nextHtml = appendGalleryBatch(originalHtml, items);
       assertOnlyManagedGalleryChanged(originalHtml, nextHtml);
+      await this.checkPreviewState(previewState);
       await writeFile(this.indexPath, nextHtml, "utf8");
+      previewState.files[this.indexPath] = contentHash(nextHtml);
       steps[4] = "done";
       steps[5] = "running";
       this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
       await run("npm", ["run", "verify"], { cwd: this.root });
+      await this.checkPreviewState(previewState);
       steps[5] = "done";
 
       const changedFiles = ["index.html", ...relativePaths(this.root, createdPaths)].sort();
@@ -449,6 +501,7 @@ export class PublisherService {
       const sessionDraft = {
         id,
         type: "add",
+        previewState,
         createdAt: new Date().toISOString(),
         backupPath,
         baseCount: gallery.count,
@@ -467,11 +520,7 @@ export class PublisherService {
       this.setOperation({ type: "preview", status: "done", message: `本地预览已通过，本批 ${uploads.length} 张已追加到相册末尾`, steps: [...steps] });
       return this.getStatus();
     } catch (error) {
-      await writeFile(this.indexPath, originalHtml, "utf8");
-      await Promise.all(createdPaths.map((path) => rm(path, { force: true })));
-      await rm(sessionDir, { recursive: true, force: true });
-      this.setOperation({ type: "preview", status: "error", message: error.message, steps: steps.map((step) => step === "running" ? "error" : step) });
-      throw error;
+      return this.failPreview(error, { previewState, backupPath, createdPaths }, sessionDir, steps, "preview");
     }
   }
 
@@ -495,13 +544,6 @@ export class PublisherService {
       }
     }
     return [...new Set(existing)];
-  }
-
-  async restoreDeletedAssets(assetBackups) {
-    for (const entry of assetBackups || []) {
-      await mkdir(dirname(entry.path), { recursive: true });
-      await copyFile(entry.backupPath, entry.path);
-    }
   }
 
   async createDeletePreview(numbers) {
@@ -528,10 +570,12 @@ export class PublisherService {
     await mkdir(sessionDir, { recursive: true });
     await writeFile(backupPath, originalHtml, "utf8");
     const assetBackups = [];
+    let previewState;
     const steps = STEP_LABELS.map(() => "pending");
     this.setOperation({ type: "delete-preview", status: "running", message: `准备删除 ${selectedItems.length} 张官网相册照片`, steps });
 
     try {
+      previewState = await this.beginPreviewState(originalHtml);
       steps.fill("done", 0, 4);
       steps[4] = "running";
       this.setOperation({ steps: [...steps], message: "移除所选相册条目，其他照片保持原有顺序；原图文件保留可回滚" });
@@ -543,14 +587,23 @@ export class PublisherService {
         const assetBackupPath = join(sessionDir, "removed-assets", itemRelativePath);
         await mkdir(dirname(assetBackupPath), { recursive: true });
         await copyFile(path, assetBackupPath);
-        assetBackups.push({ path, backupPath: assetBackupPath });
+        // Gallery membership and file ownership are different: preserve any
+        // resource still referenced by another section of the homepage.
+        if (!nextHtml.includes(itemRelativePath)) assetBackups.push({ path, backupPath: assetBackupPath });
+        previewState.files[path] = contentHash(await readFile(assetBackupPath));
       }
+      await this.checkPreviewState(previewState);
       await writeFile(this.indexPath, nextHtml, "utf8");
-      await Promise.all(assetBackups.map((entry) => rm(entry.path, { force: true })));
+      previewState.files[this.indexPath] = contentHash(nextHtml);
+      for (const entry of assetBackups) {
+        await rm(entry.path, { force: true });
+        previewState.files[entry.path] = null;
+      }
       steps[4] = "done";
       steps[5] = "running";
       this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
       await run("npm", ["run", "verify"], { cwd: this.root });
+      await this.checkPreviewState(previewState);
       steps[5] = "done";
 
       const nextGallery = parseGalleryState(nextHtml);
@@ -569,6 +622,7 @@ export class PublisherService {
       const sessionDraft = {
         id,
         type: "delete",
+        previewState,
         createdAt: new Date().toISOString(),
         backupPath,
         baseCount: gallery.count,
@@ -591,11 +645,7 @@ export class PublisherService {
       this.setOperation({ type: "delete-preview", status: "done", message: `删除预览已通过，官网相册将从 ${gallery.count} 张变为 ${nextGallery.count} 张`, steps: [...steps] });
       return this.getStatus();
     } catch (error) {
-      await writeFile(this.indexPath, originalHtml, "utf8");
-      await this.restoreDeletedAssets(assetBackups);
-      await rm(sessionDir, { recursive: true, force: true });
-      this.setOperation({ type: "delete-preview", status: "error", message: error.message, steps: steps.map((step) => step === "running" ? "error" : step) });
-      throw error;
+      return this.failPreview(error, { previewState, backupPath, assetBackups }, sessionDir, steps, "delete-preview");
     }
   }
 
@@ -613,10 +663,13 @@ export class PublisherService {
       return this.getStatus();
     }
     if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布正式网站重试推送");
-    const originalHtml = await readFile(this.session.backupPath, "utf8");
-    await writeFile(this.indexPath, originalHtml, "utf8");
-    if (this.session.type === "delete") await this.restoreDeletedAssets(this.session.assetBackups);
-    else await Promise.all(this.session.createdPaths.map((path) => rm(path, { force: true })));
+    this.setOperation({ status: "running", message: "核对预览快照并安全清空本批" });
+    try {
+      await this.recoverPreview(this.session);
+    } catch (error) {
+      this.setOperation({ status: "error", message: error.message });
+      throw error;
+    }
     await rm(join(this.runtimeDir, this.session.id), { recursive: true, force: true });
     this.session = null;
     await this.persistSession();

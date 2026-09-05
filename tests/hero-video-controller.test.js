@@ -199,6 +199,11 @@ test("browser controller assigns only the selected video after choosing", () => 
   assert.equal(harness.video.playCalls, 1);
   harness.video.dispatch("playing");
   assert.equal(harness.shell.dataset.heroState, "playing");
+  harness.video.dispatch("stalled");
+  harness.video.dispatch("waiting");
+  assert.equal(harness.shell.dataset.heroState, "playing");
+  assert.equal(harness.video.playCalls, 1);
+  assert.equal(harness.video.loadCalls, 1);
   harness.video.dispatch("error");
   assert.equal(harness.shell.dataset.heroState, "poster");
   controller.cleanup();

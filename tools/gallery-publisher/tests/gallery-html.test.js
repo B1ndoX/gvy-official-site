@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { galleryFixture } from "./fixtures.mjs";
 import test from "node:test";
 
 import {
@@ -11,8 +11,7 @@ import {
   removeGalleryItems,
 } from "../lib/gallery-html.mjs";
 
-const homepageUrl = new URL("../../../index.html", import.meta.url);
-const homepage = await readFile(homepageUrl, "utf8");
+const homepage = galleryFixture();
 
 function makeBatch(start, count) {
   return Array.from({ length: count }, (_, index) => {

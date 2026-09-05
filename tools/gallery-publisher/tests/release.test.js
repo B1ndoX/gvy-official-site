@@ -12,9 +12,27 @@ import {
   DEPLOYMENT_VERIFY_TIMEOUT_MINUTES,
   isExpectedGalleryAssetResponse,
   listGitChanges,
+  matchesExpectedGallery,
 } from "../lib/git-release.mjs";
+import { parseGalleryState, removeGalleryItems, appendGalleryBatch } from "../lib/gallery-html.mjs";
+import { galleryFixture } from "./fixtures.mjs";
 
 const runFile = promisify(execFile);
+
+test("deployment verification matches exact gallery content, not obsolete labels or outside references", async () => {
+  const original = galleryFixture();
+  const removed = removeGalleryItems(original, [14, 15]);
+  assert.ok(removed.includes("team-15-1280.webp"));
+  const expected = parseGalleryState(removed);
+  assert.equal(matchesExpectedGallery(removed, expected), true);
+  assert.equal(matchesExpectedGallery(original, expected), false);
+  assert.equal(matchesExpectedGallery("<html>gateway error</html>", expected), false);
+  const wrongPhoto = removeGalleryItems(original, [4, 5]);
+  assert.equal(matchesExpectedGallery(wrongPhoto, expected), false);
+  const added = appendGalleryBatch(original, [{ number: parseGalleryState(original).maxPhotoNumber + 1, fallbackName: "team-50.png", width: 2560, height: 1440 }]);
+  assert.equal(matchesExpectedGallery(added, parseGalleryState(added)), true);
+  assert.equal(matchesExpectedGallery(original, parseGalleryState(added)), false);
+});
 
 test("publisher waits long enough for the current EdgeOne deployment window", () => {
   assert.equal(DEPLOYMENT_VERIFY_TIMEOUT_MINUTES, 12);
