@@ -1616,7 +1616,7 @@ select:focus-visible,
   transition: opacity 360ms ease;
 }
 
-.brawl-start-button {
+.brawl-start-button:not([hidden]) {
   position: relative;
   display: grid;
   min-width: clamp(178px, 18vw, 260px);

@@ -306,11 +306,14 @@ test("arena start waits for deferred scripts before accepting the first click", 
   await page.goto("/member-brawl.html", { waitUntil: "commit" });
   const start = page.locator("[data-brawl-start]");
   try {
-    await expect(start).toBeVisible();
-    await expect(start).toBeDisabled();
+    await expect(start).toHaveCount(1);
+    await expect(start).toHaveAttribute("hidden", "");
+    await expect(start).toBeHidden();
   } finally {
     releaseScript();
   }
+  await expect(start).toBeVisible();
+  await expect(start).toBeEnabled();
   await start.click();
   await expect(page.locator(".member-fighter")).toHaveCount(31);
   await expect.poll(() => page.locator(".member-fighter").first().evaluate((v) =>
