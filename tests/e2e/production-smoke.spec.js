@@ -295,6 +295,32 @@ test("operation state follows both breakpoint directions without duplicate playe
   }
 });
 
+test("arena start waits for deferred scripts before accepting the first click", async ({ page }) => {
+  const runtimeFailures = collectRuntimeFailures(page);
+  let releaseScript;
+  const scriptGate = new Promise((resolve) => { releaseScript = resolve; });
+  await page.route(/\/assets\/vendor\/matter\.min\.js(?:\?|$)/, async (route) => {
+    await scriptGate;
+    await route.continue();
+  });
+  await page.goto("/member-brawl.html", { waitUntil: "commit" });
+  const start = page.locator("[data-brawl-start]");
+  try {
+    await expect(start).toHaveCount(1);
+    await expect(start).toHaveAttribute("hidden", "");
+    await expect(start).toBeHidden();
+  } finally {
+    releaseScript();
+  }
+  await expect(start).toBeVisible();
+  await expect(start).toBeEnabled();
+  await start.click();
+  await expect(page.locator(".member-fighter")).toHaveCount(31);
+  await expect.poll(() => page.locator(".member-fighter").first().evaluate((v) =>
+    v.style.getPropertyValue("--chip-x"))).not.toBe("");
+  expect(runtimeFailures).toEqual([]);
+});
+
 test("closed arena stops physics and reopens the same iframe", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());

@@ -1216,4 +1216,7 @@ function endPhysicsDrag() {
   } else {
     activateBrawl();
   }
+
+  // Reveal only after deferred scripts and the existing click handler are ready.
+  if (startButton) startButton.hidden = false;
 })();
