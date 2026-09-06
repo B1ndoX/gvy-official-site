@@ -182,6 +182,21 @@ let combatants = [];
 let combatTimer = null;
 let winnerDeclared = false;
 let activeArenaBounds = null;
+// All delayed battle effects share the simulation's pause state. Native
+// timeouts previously kept damaging fighters after the dialog was closed.
+const battleTasks = [];
+let battlePausedAt = null;
+let battlePausedDuration = 0;
+const battleNow = () => (battlePausedAt ?? performance.now()) - battlePausedDuration;
+function afterBattleDelay(callback, delay) {
+  const task = { callback, due: battleNow() + delay };
+  const index = battleTasks.findIndex((pending) => pending.due > task.due);
+  battleTasks.splice(index < 0 ? battleTasks.length : index, 0, task);
+}
+function flushBattleTasks() {
+  const now = battleNow();
+  while (battleTasks.length && battleTasks[0].due <= now) battleTasks.shift().callback();
+}
 
 function avatarSrc(src) {
   if (src.startsWith("/media/")) return `${rsiMediaBase}${src}`;
@@ -308,7 +323,7 @@ function applyChipSizing(size) {
 }
 
 function initMemberPhysics() {
-  if (!memberField || !window.Matter || !arenaVisible()) return;
+  if (!memberField || !window.Matter || !shouldRunBrawl || !arenaVisible()) return;
   if (physicsCleanup) physicsCleanup();
 
   const { Engine, Events, Runner, Bodies, Body, Composite } = window.Matter;
@@ -451,6 +466,11 @@ function initMemberPhysics() {
 
   let frame = 0;
   function syncDom() {
+    if (!arenaVisible() || !shouldRunBrawl) {
+      syncPhysicsVisibility();
+      return;
+    }
+    flushBattleTasks();
     combatants.forEach((item) => {
       const { body, chip, alive } = item;
       if (!alive) return;
@@ -481,10 +501,14 @@ function initMemberPhysics() {
     running = visible;
     brawlActive = visible;
     if (visible) {
+      if (battlePausedAt !== null) battlePausedDuration += performance.now() - battlePausedAt;
+      battlePausedAt = null;
       Runner.run(runner, engine);
       syncDom();
       startCombatLoop(engine);
     } else {
+      battlePausedAt = performance.now();
+      endPhysicsDrag();
       Runner.stop(runner);
       cancelAnimationFrame(frame);
       clearInterval(combatTimer);
@@ -494,6 +518,10 @@ function initMemberPhysics() {
   syncPhysicsVisibility();
 
   physicsCleanup = () => {
+    endPhysicsDrag();
+    battleTasks.length = 0;
+    battlePausedAt = null;
+    battlePausedDuration = 0;
     cancelAnimationFrame(frame);
     clearInterval(combatTimer);
     combatTimer = null;
@@ -523,7 +551,7 @@ function startCombatLoop(engine) {
   clearInterval(combatTimer);
   combatTimer = setInterval(() => {
     if (winnerDeclared) return;
-    const now = performance.now();
+    const now = battleNow();
     combatants.forEach((attacker) => {
       if (!attacker.alive || winnerDeclared) return;
       const target = getCombatTarget(attacker, now);
@@ -541,7 +569,7 @@ function startCombatLoop(engine) {
   }, 220);
 }
 
-function getCombatTarget(attacker, now = performance.now()) {
+function getCombatTarget(attacker, now = battleNow()) {
   if (attacker.target?.alive) {
     const dx = attacker.target.body.position.x - attacker.body.position.x;
     const dy = attacker.target.body.position.y - attacker.body.position.y;
@@ -631,10 +659,10 @@ function beginAttack(engine, attacker, target, now) {
   attacker.nextAttackAt = attacker.actionUntil + attacker.weapon.cooldown + randomRange(520, 1300);
   attacker.chip.classList.add("is-attacking");
   aimWeaponAt(attacker, target, true);
-  setTimeout(() => {
+  afterBattleDelay(() => {
     if (target.alive) attackTarget(engine, attacker, target);
   }, windup);
-  setTimeout(() => attacker.chip.classList.remove("is-attacking"), windup + recovery);
+  afterBattleDelay(() => attacker.chip.classList.remove("is-attacking"), windup + recovery);
 }
 
 function aimWeaponAt(attacker, target, immediate = false) {
@@ -653,7 +681,7 @@ function aimWeaponAt(attacker, target, immediate = false) {
 
 function syncWeaponAim(fighter) {
   if (fighter.desiredWeaponAngle === null || fighter.desiredWeaponAttackAngle === null) return;
-  if (performance.now() < fighter.actionUntil) return;
+  if (battleNow() < fighter.actionUntil) return;
 
   const currentWeaponAngle = fighter.weaponAimAngle ?? fighter.desiredWeaponAngle;
   const currentAttackAngle = fighter.weaponAttackAngle ?? fighter.desiredWeaponAttackAngle;
@@ -821,7 +849,7 @@ function nudgeCollisionBody(body, otherBody) {
   const item = body.fighterItem;
   if (!item?.alive || !otherBody?.fighterItem) return;
 
-  const now = performance.now();
+  const now = battleNow();
   if (now < item.nextCollisionBounceAt) return;
 
   const { Body } = window.Matter;
@@ -883,7 +911,7 @@ function fireProjectile(engine, attacker, target) {
   });
   lockArenaBoundary(attacker);
   drawProjectile(attacker.body.position, target.body.position, attacker.weapon, travelMs);
-  setTimeout(() => {
+  afterBattleDelay(() => {
     if (target.alive) {
       resolveAttackHit(engine, attacker, target);
     }
@@ -892,7 +920,7 @@ function fireProjectile(engine, attacker, target) {
 
 function resolveAttackHit(engine, attacker, target) {
   const { Body, Composite } = window.Matter;
-  const now = performance.now();
+  const now = battleNow();
   let damage = Math.round(attacker.weapon.damage * (0.82 + Math.random() * 0.36));
   const dx = target.body.position.x - attacker.body.position.x;
   const dy = target.body.position.y - attacker.body.position.y;
@@ -911,7 +939,7 @@ function resolveAttackHit(engine, attacker, target) {
       y: (-dy / distance) * 0.018 - 0.012,
     });
     lockArenaBoundary(attacker);
-    if (showHitFeedback) setTimeout(() => target.chip.classList.remove("is-blocking"), 260);
+    if (showHitFeedback) afterBattleDelay(() => target.chip.classList.remove("is-blocking"), 260);
   }
 
   Body.applyForce(target.body, target.body.position, {
@@ -925,14 +953,14 @@ function resolveAttackHit(engine, attacker, target) {
   if (showHitFeedback) {
     target.nextHitFeedbackAt = now + randomRange(560, 820);
     target.chip.classList.add("is-hit");
-    setTimeout(() => target.chip.classList.remove("is-hit"), 260);
+    afterBattleDelay(() => target.chip.classList.remove("is-hit"), 260);
   }
 
   if (target.hp <= 0) {
     target.alive = false;
     target.chip.classList.add("is-dead");
     checkBattleWinner();
-    setTimeout(() => {
+    afterBattleDelay(() => {
       Composite.remove(engine.world, target.body);
       target.chip.remove();
     }, 240);
@@ -991,7 +1019,7 @@ function celebrateWinner(winner) {
   }
 
   memberField.appendChild(celebration);
-  setTimeout(() => celebration.classList.add("is-fading"), 6200);
+  afterBattleDelay(() => celebration.classList.add("is-fading"), 6200);
 }
 
 function celebrateNoSurvivors() {
@@ -1026,7 +1054,7 @@ function celebrateNoSurvivors() {
   }
 
   memberField.appendChild(celebration);
-  setTimeout(() => celebration.classList.add("is-fading"), 6800);
+  afterBattleDelay(() => celebration.classList.add("is-fading"), 6800);
 }
 
 function drawProjectile(from, to, weapon, travelMs) {
@@ -1047,7 +1075,7 @@ function drawProjectile(from, to, weapon, travelMs) {
   img.alt = "";
   projectile.appendChild(img);
   memberField.appendChild(projectile);
-  setTimeout(() => projectile.remove(), travelMs + 80);
+  afterBattleDelay(() => projectile.remove(), travelMs + 80);
 }
 
 function startPhysicsDrag(event) {
@@ -1062,6 +1090,7 @@ function startPhysicsDrag(event) {
 
   activePhysicsDrag = {
     item,
+    pointerId: event.pointerId,
     fieldBox,
     offsetX: event.clientX - chipLeft,
     offsetY: event.clientY - chipTop,
@@ -1118,7 +1147,8 @@ function movePhysicsDrag(event) {
 function endPhysicsDrag() {
   if (!activePhysicsDrag || !window.Matter) return;
   const { Body } = window.Matter;
-  const { item, velocityX, velocityY } = activePhysicsDrag;
+  const { item, pointerId, velocityX, velocityY } = activePhysicsDrag;
+  if (item.chip.hasPointerCapture?.(pointerId)) item.chip.releasePointerCapture(pointerId);
 
   Body.setStatic(item.body, false);
   Body.setVelocity(item.body, {

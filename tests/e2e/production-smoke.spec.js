@@ -317,6 +317,32 @@ test("closed arena stops physics and reopens the same iframe", async ({ page }) 
   await expect(page.locator("[data-member-brawl-dialog]")).not.toHaveAttribute("open", "");
 });
 
+test("closing during an attack freezes pending damage, effects and cooldowns until reopen", async ({ page }) => {
+  await page.addInitScript(() => {
+    let seed = 20260907;
+    Math.random = () => ((seed = (1664525 * seed + 1013904223) >>> 0) / 4294967296);
+  });
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  const arena = page.frameLocator("[data-member-brawl-frame]");
+  await arena.locator("[data-brawl-start]").click();
+  const state = () => arena.locator(".member-fighter").evaluateAll((fighters) =>
+    fighters.map((v) => ({ id: v.dataset.index, style: v.style.cssText, classes: v.className })));
+  for (let cycle = 0; cycle < 3; cycle++) {
+    await expect.poll(() => arena.locator(".is-attacking").count()).toBeGreaterThan(0);
+    await page.locator("[data-member-brawl-close]").click();
+    const frozen = await state();
+    await page.waitForTimeout(1200);
+    expect(await state()).toEqual(frozen);
+    await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+    await expect.poll(state).not.toEqual(frozen);
+  }
+  await page.keyboard.press("Escape");
+  const frozen = await state();
+  await page.waitForTimeout(1200);
+  expect(await state()).toEqual(frozen);
+});
+
 test("a legally reduced two-photo gallery still supports nodes, cloning and the correct lightbox", async ({ page }) => {
   await page.route("http://127.0.0.1:8001/", async (route) => {
     const response = await route.fetch();
