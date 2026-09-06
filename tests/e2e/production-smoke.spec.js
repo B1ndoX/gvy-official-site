@@ -296,6 +296,7 @@ test("operation state follows both breakpoint directions without duplicate playe
 });
 
 test("arena start waits for deferred scripts before accepting the first click", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
   const runtimeFailures = collectRuntimeFailures(page);
   let releaseScript;
   const scriptGate = new Promise((resolve) => { releaseScript = resolve; });
@@ -314,6 +315,7 @@ test("arena start waits for deferred scripts before accepting the first click", 
   }
   await expect(start).toBeVisible();
   await expect(start).toBeEnabled();
+  await expect(start).toHaveCSS("padding", "16px 20px");
   await start.click();
   await expect(page.locator(".member-fighter")).toHaveCount(31);
   await expect.poll(() => page.locator(".member-fighter").first().evaluate((v) =>

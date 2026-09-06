@@ -599,8 +599,8 @@ test("member brawl popup preserves the published runtime without a nested frame 
     // Seeded close-during-attack E2E locks HP, classes and positions across reopen.
     // Native hidden startup is released by the existing initialization, not a timer.
     ["assets/fleet-command-brawl.js", "43bf315f179b473f141b4df654da72e5a1f8f9900ea1e15ba5c538828a2845ea"],
-    // Existing button grid styling must not override the native hidden attribute.
-    ["assets/fleet-command.css", "9fa9e5e826374244bc5b065202d7c6bb54ee58dce8730ef8cb2b7e6781a47a47"],
+    // Native hidden stays effective without increasing specificity over mobile styles.
+    ["assets/fleet-command.css", "8daccdd0cb7075bad50c50cbfe3c8ff9543971400bd1b17ba742950d653eea9d"],
     ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],
   ]);
 
