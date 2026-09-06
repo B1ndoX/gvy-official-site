@@ -189,13 +189,13 @@ a:focus-visible {
 .fleet-brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 .brand-sigil {
   display: grid;
-  width: 39px;
-  height: 39px;
+  width: 46px;
+  height: 46px;
   place-items: center;
 }
 
@@ -797,7 +797,7 @@ html[data-motion-ready] :is(
 .signal-logo {
   position: relative;
   z-index: 2;
-  width: clamp(235px, 19vw, 420px);
+  width: clamp(270px, 22vw, 480px);
   filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 34px rgba(89, 168, 210, 0.13));
 }
 
@@ -1637,13 +1637,13 @@ html[data-motion-ready] :is(
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   flex: 0 0 auto;
 }
 
 .footer-brand img {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   object-fit: contain;
 }
 
@@ -1990,9 +1990,9 @@ noscript {
   .fleet-brand {
     width: max-content;
     padding-inline: 17px;
-    gap: 10px;
+    gap: 7px;
   }
-  .brand-sigil { width: 31px; height: 31px; }
+  .brand-sigil { width: 36px; height: 36px; }
   .brand-copy strong { font-size: 0.76rem; }
   .brand-copy small { font-size: 0.46rem; }
   .nav-links {
@@ -2086,7 +2086,7 @@ noscript {
     margin-right: 0;
     justify-self: center;
   }
-  .signal-logo { width: clamp(150px, 47vw, 210px); }
+  .signal-logo { width: clamp(172px, 54vw, 240px); }
   .signal-backdrop { opacity: 0.46; }
   .signal-backdrop img { object-position: 69% center; }
   .signal-shade {

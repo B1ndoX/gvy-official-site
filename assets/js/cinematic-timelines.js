@@ -1,6 +1,33 @@
 const TIMELINE_PREFIX = "gvy-";
 const LARGE_16_9_DESKTOP_QUERY = "(min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10)";
 
+export function preserveBreakpointScroll(gsap, view) {
+  let mobile = Number(view?.innerWidth) <= 760;
+  let position = null;
+  const before = () => {
+    const nextMobile = Number(view?.innerWidth) <= 760;
+    if (nextMobile !== mobile) position = { left: view.scrollX, top: view.scrollY };
+    mobile = nextMobile;
+  };
+  const after = () => {
+    if (!position) return;
+    const saved = position;
+    position = null;
+    // Removing the last old trigger can clear GSAP's saved scroll position.
+    // Restore only this breakpoint transaction, never ordinary mobile resizes.
+    if (view.scrollY !== saved.top || view.scrollX !== saved.left) {
+      view.scrollTo({ ...saved, behavior: "instant" });
+    }
+  };
+  gsap.addEventListener?.("matchMediaInit", before);
+  gsap.addEventListener?.("matchMedia", after);
+  return () => {
+    gsap.removeEventListener?.("matchMediaInit", before);
+    gsap.removeEventListener?.("matchMedia", after);
+    position = null;
+  };
+}
+
 function fadeThroughViewport(
   gsap,
   ScrollTrigger,
@@ -593,6 +620,7 @@ export function initCinematicTimelines({
   // scrolls. Recalculating every trigger for those transient resizes can make
   // the document jump between two paint states, especially on iOS Safari.
   ScrollTrigger.config?.({ ignoreMobileResize: true });
+  const cleanupBreakpointScroll = preserveBreakpointScroll(gsap, root.defaultView);
   const media = gsap.matchMedia();
 
   media.add(
@@ -615,6 +643,7 @@ export function initCinematicTimelines({
       ScrollTrigger.refresh();
     },
     cleanup() {
+      cleanupBreakpointScroll();
       root.documentElement?.removeAttribute("data-hero-exit-complete");
       media.revert();
       ScrollTrigger.getAll()
