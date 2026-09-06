@@ -575,7 +575,7 @@ test("member brawl popup preserves the published runtime without a nested frame 
   assert.match(memberBrawlPage, /JOIN READY/);
   assert.match(memberBrawlPage, /RECRUIT ARENA/);
   assert.match(memberBrawlPage, /舰队成员大乱斗，快快加入我们！/);
-  assert.match(memberBrawlPage, /data-brawl-start/);
+  assert.match(memberBrawlPage, /<button[^>]*data-brawl-start[^>]*disabled/);
   assert.match(memberBrawlPage, /INITIATE MEMBER ARENA/);
   assert.match(memberBrawlPage, /fleet-command-brawl\.js/);
   assert.doesNotMatch(memberBrawlPage, /<script[^>]+fleet-command\.js/);
@@ -597,7 +597,8 @@ test("member brawl popup preserves the published runtime without a nested frame 
   const expectedHashes = new Map([
     // Reviewed pausable battle clock: delayed effects now stop with physics.
     // Seeded close-during-attack E2E locks HP, classes and positions across reopen.
-    ["assets/fleet-command-brawl.js", "69033d4ea01bf41f2dfb060106a354fe2152cb3825d2d5e4d796f467c8c38024"],
+    // Native disabled startup is released by the existing initialization, not a timer.
+    ["assets/fleet-command-brawl.js", "e9134ef670c372aff97627cc846f31bfc262ee4208d7b81dc081c523e6608ace"],
     ["assets/fleet-command.css", "96c55b6d0d8e5f196e44c310cbd0486c88f561bb6e854d0df2a18cffdcbd6a89"],
     ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],
   ]);

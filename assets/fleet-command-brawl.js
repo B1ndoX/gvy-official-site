@@ -1216,4 +1216,7 @@ function endPhysicsDrag() {
   } else {
     activateBrawl();
   }
+
+  // HTML stays disabled until deferred scripts and the click handler are ready.
+  if (startButton) startButton.disabled = false;
 })();
