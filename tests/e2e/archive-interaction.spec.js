@@ -198,6 +198,10 @@ test.describe("native mobile gestures", () => {
     const failures = runtimeFailures(page);
     await openGallery(page);
     const rail = page.locator(railSelector);
+    await rail.evaluate((element) => {
+      window.__archiveNativeScrollEnds = 0;
+      element.addEventListener("scrollend", () => { window.__archiveNativeScrollEnds += 1; });
+    });
     const bounds = await rail.boundingBox();
     const session = await page.context().newCDPSession(page);
     const touch = async (type, x, y) => session.send("Input.dispatchTouchEvent", { type,
@@ -212,11 +216,17 @@ test.describe("native mobile gestures", () => {
       await touch("touchMove", x - step * 20, y);
       await page.waitForTimeout(20);
     }
+    const releasePosition = await rail.evaluate((element) => element.scrollLeft);
     await touch("touchEnd");
     await expect.poll(() => rail.evaluate((element) => element.scrollLeft)).toBeGreaterThan(50);
     expect((await selection(page)).index).toBe(held.index);
     expect((await selection(page)).paused).toBe(true);
+    // Native inertia is intentional. Check that autoplay does not pull the rail
+    // back only after the browser says the user's native scroll has finished.
+    await expect.poll(() => page.evaluate(() => window.__archiveNativeScrollEnds)).toBeGreaterThan(0);
     const browsed = await rail.evaluate((element) => element.scrollLeft);
+    expect(browsed).toBeGreaterThanOrEqual(releasePosition - 1);
+    console.log(`Native node rail: release ${releasePosition}px, settled ${browsed}px`);
     await page.waitForTimeout(600);
     expect(Math.abs((await rail.evaluate((element) => element.scrollLeft)) - browsed)).toBeLessThan(2);
     expect(Math.abs((await selection(page)).position - held.position)).toBeLessThan(1);
