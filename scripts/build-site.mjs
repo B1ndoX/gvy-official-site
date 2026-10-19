@@ -17,7 +17,10 @@ for (const file of ["index.html", "404.html", "member-brawl.html", "site.webmani
 }
 
 const activeHeroAssets = new Set(productionMedia.heroAssets);
-const activeOperationAssets = new Set(productionMedia.operationAssets);
+const deployableOperationAssets = new Set([
+  ...productionMedia.operationAssets,
+  ...(productionMedia.compatibilityOperationAssets || []),
+]);
 
 const excludedProductionDirectories = [
   "assets/gallery/thumbs",
@@ -39,7 +42,7 @@ await cp(resolve(root, "assets"), resolve(output, "assets"), {
     if (inVersionedHeroDirectory && !activeHeroAssets.has(basename(source))) return false;
     if (source.includes("assets/operations-motion/v1")) return false;
     const inActiveOperationDirectory = dirname(source).endsWith("assets/operations-motion/v2");
-    return !inActiveOperationDirectory || activeOperationAssets.has(basename(source));
+    return !inActiveOperationDirectory || deployableOperationAssets.has(basename(source));
   },
 });
 

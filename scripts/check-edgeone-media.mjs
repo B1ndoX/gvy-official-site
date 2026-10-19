@@ -13,7 +13,7 @@ const mediaPaths = [
   ...productionMedia.heroAssets
     .filter((file) => file.endsWith(".mp4"))
     .map((file) => `/assets/hero-random/v2/${file}?v=${productionMedia.edgeCacheVersion}`),
-  ...productionMedia.operationAssets
+  ...[...productionMedia.operationAssets, ...(productionMedia.compatibilityOperationAssets || [])]
     .map((file) => `/assets/operations-motion/v2/${file}`),
 ];
 
@@ -51,6 +51,8 @@ async function verifyMedia(path) {
       /max-age=31536000/i,
       `${path} must keep its immutable one-year browser cache`,
     );
+    assert.match(response.headers.get("cache-control") || "", /\bimmutable\b/i,
+      `${path} must retain its immutable cache directive`);
   }, `${path} HEAD check failed`);
 
   await fetchChecked(url, { headers: { Range: "bytes=0-1023" } }, (response) => {

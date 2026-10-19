@@ -1365,11 +1365,6 @@ html[data-motion-ready] :is(
   width: max-content;
   gap: clamp(12px, 1.35vw, 22px);
   padding-inline: var(--page-gutter);
-  transition: opacity 190ms ease;
-}
-
-.archive-grid-viewport.is-returning-target .archive-grid {
-  opacity: 0.12;
 }
 
 .archive-grid :is(button, .archive-loop-clone) {
@@ -1388,11 +1383,25 @@ html[data-motion-ready] :is(
 }
 
 .archive-gallery-controls {
+  position: relative;
   display: flex;
   width: max-content;
   margin: 17px auto 0;
   align-items: center;
   gap: 12px;
+  padding-bottom: 24px;
+}
+
+.archive-carousel-position {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.14em;
+  text-align: center;
 }
 
 .archive-pagination,
@@ -1407,7 +1416,7 @@ html[data-motion-ready] :is(
 
 .archive-pagination {
   display: flex;
-  width: clamp(220px, 20vw, 260px);
+  width: 334px;
   max-width: calc(100vw - 100px);
   padding: 7px 12px;
   align-items: center;
@@ -1415,8 +1424,10 @@ html[data-motion-ready] :is(
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scrollbar-width: none;
-  scroll-behavior: smooth;
-  touch-action: pan-x;
+  scroll-behavior: auto;
+  touch-action: pan-x pan-y pinch-zoom;
+  user-select: none;
+  -webkit-user-select: none;
   cursor: grab;
 }
 
@@ -1431,21 +1442,16 @@ html[data-motion-ready] :is(
 
 .archive-pagination-node {
   display: grid;
-  width: 30px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   place-items: center;
   border: 0;
   border-radius: 999px;
   background: transparent;
-  flex: 0 0 30px;
+  flex: 0 0 44px;
   cursor: pointer;
-  transition: width 240ms cubic-bezier(0.22, 1, 0.36, 1), flex-basis 240ms cubic-bezier(0.22, 1, 0.36, 1), background 180ms ease;
-}
-
-.archive-pagination-node.is-active {
-  width: 54px;
-  flex-basis: 54px;
+  transition: background 180ms ease;
 }
 
 .archive-pagination-node-mark {
@@ -1458,7 +1464,7 @@ html[data-motion-ready] :is(
 }
 
 .archive-pagination-node.is-active .archive-pagination-node-mark {
-  width: 42px;
+  width: 32px;
   background: rgba(229, 237, 241, 0.92);
 }
 
@@ -2210,6 +2216,7 @@ noscript {
   .archive-gallery-controls {
     gap: 10px;
   }
+  .archive-pagination { width: 246px; }
   .archive-pagination,
   .archive-playback-toggle {
     -webkit-backdrop-filter: none;

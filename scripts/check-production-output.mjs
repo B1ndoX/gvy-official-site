@@ -61,6 +61,14 @@ const builtHome = await readFile(resolve(output, "index.html"), "utf8");
 const edgeConfig = JSON.parse(await readFile(resolve(root, "edgeone.json"), "utf8"));
 const csp = edgeConfig.headers.find((rule) => rule.source === "/*").headers
   .find((header) => header.key === "Content-Security-Policy").value;
+const media = JSON.parse(await readFile(resolve(root, "config/production-media.json"), "utf8"));
+for (const asset of media.compatibilityOperationAssets || []) {
+  const relativePath = `assets/operations-motion/v2/${asset}`;
+  assert.ok(!media.operationAssets.includes(asset), "compatibility must not duplicate an active selection");
+  assert.ok(!builtHome.includes(asset), "new pages must select active media, not compatibility assets");
+  assert.deepEqual(await readFile(resolve(output, relativePath)), await readFile(resolve(root, relativePath)),
+    `previous immutable URL changed or disappeared: ${relativePath}`);
+}
 for (const match of builtHome.matchAll(/<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)) {
   const hash = createHash("sha256").update(match[1]).digest("base64");
   assert.ok(csp.includes(`'sha256-${hash}'`), "production bootstrap is not authorized by CSP");
