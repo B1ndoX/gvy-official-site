@@ -17,8 +17,11 @@ function createHeroHarness() {
     dataset: {},
     src: "",
     poster: "",
+    paused: true,
+    currentTime: 0,
     loadCalls: 0,
     playCalls: 0,
+    pauseCalls: 0,
     addEventListener(name, handler) {
       const handlers = listeners.get(name) || new Set();
       handlers.add(handler);
@@ -28,12 +31,17 @@ function createHeroHarness() {
       listeners.get(name)?.delete(handler);
     },
     load() { this.loadCalls += 1; },
-    play() { this.playCalls += 1; return Promise.resolve(); },
+    play() { this.playCalls += 1; this.paused = false; return Promise.resolve(); },
+    pause() { this.pauseCalls += 1; this.paused = true; },
     dispatch(name) { listeners.get(name)?.forEach((handler) => handler()); },
   };
   const poster = { src: "" };
   const shell = { dataset: {} };
   const root = {
+    visibilityState: "visible",
+    addEventListener(name, handler) { listeners.set(`document:${name}`, new Set([handler])); },
+    removeEventListener(name, handler) { listeners.get(`document:${name}`)?.delete(handler); },
+    dispatch(name) { listeners.get(`document:${name}`)?.forEach((handler) => handler()); },
     querySelector(selector) {
       return {
         "[data-hero-video]": video,
@@ -44,6 +52,118 @@ function createHeroHarness() {
   };
   return { root, shell, poster, video };
 }
+
+function createVisibilityHarness({ bounds = { top: 0, bottom: 844 } } = {}) {
+  const harness = createHeroHarness();
+  harness.shell.getBoundingClientRect = () => bounds;
+  const observers = [];
+  class Observer {
+    constructor(callback, options) { this.callback = callback; this.options = options; observers.push(this); }
+    observe(target) { this.target = target; }
+    disconnect() { this.disconnected = true; }
+    intersect(isIntersecting) { this.callback([{ target: this.target, isIntersecting }]); }
+  }
+  const controller = initHeroVideo({
+    root: harness.root,
+    view: { innerHeight: 844 },
+    Observer,
+    random: () => 0,
+    reducedMotion: false,
+  });
+  return { ...harness, controller, observers };
+}
+
+test("hero starts before its first intersection callback and pauses offscreen without reloading", () => {
+  const { video, shell, controller, observers } = createVisibilityHarness();
+  video.dispatch("canplay");
+  video.dispatch("playing");
+  video.readyState = 4;
+  video.currentTime = 6.25;
+  const source = video.src;
+  assert.equal(video.playCalls, 1, "first-screen autoplay must not wait for an observer");
+  assert.equal(observers.length, 1);
+  assert.deepEqual(observers[0].options, { threshold: 0, rootMargin: "844px 0px" });
+  observers[0].intersect(false);
+  assert.equal(video.paused, true);
+  video.dispatch("canplay");
+  assert.equal(video.playCalls, 1, "a delayed readiness event must not restart an offscreen video");
+  assert.equal(video.currentTime, 6.25);
+  assert.equal(shell.dataset.heroState, "playing", "retain the current frame instead of flashing the poster");
+  observers[0].intersect(true);
+  assert.equal(video.paused, false);
+  assert.equal(video.playCalls, 2);
+  assert.equal(video.currentTime, 6.25);
+  assert.equal(video.src, source);
+  assert.equal(video.loadCalls, 1);
+  controller.cleanup();
+  assert.equal(observers[0].disconnected, true);
+  assert.equal(video.paused, true);
+  observers[0].intersect(true);
+  assert.equal(video.playCalls, 2, "disposed callbacks cannot restart playback");
+});
+
+test("hero starts while approaching the viewport so its first visible frame is already playing", () => {
+  const { video, controller } = createVisibilityHarness({ bounds: { top: -1244, bottom: -400 } });
+  video.dispatch("canplay");
+  assert.equal(video.paused, false, "resume while the entire hero is still above the screen");
+  assert.equal(video.playCalls, 1);
+  controller.cleanup();
+});
+
+test("hero stays paused beyond its offscreen runway even if media is ready", () => {
+  const { video, controller } = createVisibilityHarness({ bounds: { top: -1844, bottom: -1000 } });
+  video.readyState = 4;
+  video.dispatch("canplay");
+  assert.equal(video.paused, true);
+  assert.equal(video.playCalls, 0);
+  controller.cleanup();
+});
+
+test("document visibility resumes only a nearby hero and cleanup removes the listener", () => {
+  const { root, video, controller, observers } = createVisibilityHarness();
+  video.readyState = 4;
+  video.dispatch("canplay");
+  root.visibilityState = "hidden";
+  root.dispatch("visibilitychange");
+  assert.equal(video.paused, true);
+  observers[0].intersect(true);
+  assert.equal(video.playCalls, 1);
+  root.visibilityState = "visible";
+  root.dispatch("visibilitychange");
+  assert.equal(video.playCalls, 2);
+  observers[0].intersect(false);
+  root.visibilityState = "hidden";
+  root.dispatch("visibilitychange");
+  root.visibilityState = "visible";
+  root.dispatch("visibilitychange");
+  assert.equal(video.playCalls, 2, "returning to a background tab must not resume an offscreen hero");
+  controller.cleanup();
+  root.dispatch("visibilitychange");
+  assert.equal(video.playCalls, 2);
+});
+
+test("an interrupted old play request cannot replace a resumed video with its poster", async () => {
+  const { video, shell, controller, observers } = createVisibilityHarness();
+  let rejectOldPlay;
+  video.play = function () {
+    this.playCalls += 1;
+    this.paused = false;
+    return this.playCalls === 1
+      ? new Promise((_resolve, reject) => { rejectOldPlay = reject; })
+      : Promise.resolve();
+  };
+  video.readyState = 4;
+  video.dispatch("canplay");
+  observers[0].intersect(false);
+  observers[0].intersect(true);
+  video.dispatch("playing");
+  rejectOldPlay(Object.assign(new Error("paused"), { name: "AbortError" }));
+  await Promise.resolve();
+  assert.equal(shell.dataset.heroState, "playing");
+  assert.equal(video.playCalls, 2);
+  assert.equal(video.paused, false);
+  controller.cleanup();
+});
 
 test("keeps the same hero during a short refresh window", () => {
   const selection = resolveHeroSelection({

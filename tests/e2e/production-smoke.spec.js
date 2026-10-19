@@ -1,5 +1,13 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
 import { parseGalleryState, removeGalleryItems } from "../../tools/gallery-publisher/lib/gallery-html.mjs";
+
+const media = JSON.parse(readFileSync(new URL("../../config/production-media.json", import.meta.url), "utf8"));
+const operationSource = (name) => {
+  const asset = media.operationAssets.find((file) => file.startsWith(`${name}-2560-v`));
+  if (!asset) throw new Error(`Missing wide operation encode: ${name}`);
+  return `./assets/operations-motion/v2/${asset}`;
+};
 
 function collectRuntimeFailures(page) {
   const failures = [];
@@ -22,10 +30,10 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   const operationSection = page.locator("[data-operations-section]");
   const operationVideos = operationSection.locator("[data-operation-video]");
   const operationCases = [
-    ["切换到战斗与护航", "0", /combat-2560-v2\.mp4$/],
-    ["切换到工业与资源", "1", /industry-2560-v2\.mp4$/],
-    ["切换到运输与后勤", "2", /logistics-2560-v2\.mp4$/],
-    ["切换到探索与勘测", "3", /exploration-2560-v2\.mp4$/],
+    ["切换到战斗与护航", "0", operationSource("combat")],
+    ["切换到工业与资源", "1", operationSource("industry")],
+    ["切换到运输与后勤", "2", operationSource("logistics")],
+    ["切换到探索与勘测", "3", operationSource("exploration")],
   ];
   for (const [name, index, source] of operationCases) {
     await page.getByRole("button", { name, exact: true }).click();

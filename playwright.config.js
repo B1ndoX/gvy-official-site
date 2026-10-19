@@ -5,6 +5,9 @@ export default defineConfig({
   timeout: 45_000,
   expect: { timeout: 10_000 },
   fullyParallel: false,
+  // First-frame/rebuffer measurements must not compete with another test's
+  // browser, video decoder or local media downloads on the same machine.
+  workers: 1,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? "github" : "list",
@@ -16,7 +19,7 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: "python3 -m http.server 8001 --bind 127.0.0.1 --directory dist",
+    command: "node scripts/preview-server.mjs --port 8001",
     url: "http://127.0.0.1:8001/",
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

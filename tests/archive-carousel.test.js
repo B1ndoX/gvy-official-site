@@ -8,6 +8,8 @@ import {
   getCarouselNavigationRevealPosition,
   getCarouselNavigationTargetIndexes,
   getCarouselTouchIntent,
+  getCarouselSnapIndex,
+  getCarouselTargetDelta,
   isCarouselDrag,
   normalizeLoopPosition,
   resolveCarouselTargetIndex,
@@ -102,6 +104,25 @@ test("carousel converts a target card to the loop-relative scroll position", () 
   assert.equal(getCarouselCardPosition(cards, 0), 0);
   assert.equal(getCarouselCardPosition(cards, 2), 754);
   assert.equal(getCarouselCardPosition(cards, 5), 754);
+});
+
+test("selecting across the first and last photos takes the short continuous loop route", () => {
+  assert.equal(getCarouselTargetDelta(0, 900, 1000), -100);
+  assert.equal(getCarouselTargetDelta(900, 0, 1000), 100);
+  assert.equal(getCarouselTargetDelta(100, 350, 1000), 250);
+  assert.equal(getCarouselTargetDelta(350, 100, 1000), -250);
+});
+
+test("photo release settles to a real card and a deliberate flick can choose the next card", () => {
+  const base = { step: 400, length: 10 };
+  assert.equal(getCarouselSnapIndex({ ...base, position: 120 }), 0);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 230 }), 1);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 120, velocity: 1 }), 1);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 3800, velocity: 1 }), 0);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 20, velocity: -1.5 }), 0);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 20, velocity: -2 }), 9);
+  assert.equal(getCarouselSnapIndex({ ...base, position: 120, velocity: 100 }), 1,
+    "velocity is bounded rather than coasting past many photos");
 });
 
 test("continuous carousel wraps forward and backward without changing visual phase", () => {

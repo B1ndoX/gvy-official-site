@@ -1,58 +1,66 @@
 import assert from "node:assert/strict";
-import { existsSync, statSync } from "node:fs";
+import { closeSync, existsSync, openSync, readFileSync, readSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
 
 const root = resolve(new URL("..", import.meta.url).pathname);
 const skipMediaMetadata = process.env.GVY_SKIP_MEDIA_METADATA === "1";
+const productionMedia = JSON.parse(readFileSync(resolve(root, "config/production-media.json"), "utf8"));
+function activeAsset(assets, prefix) {
+  const matches = assets.filter((name) => name.startsWith(prefix) && name.endsWith(".mp4"));
+  assert.equal(matches.length, 1, `${prefix} must have exactly one active encode`);
+  return matches[0];
+}
+const heroPath = (id, tier) => `assets/hero-random/v2/${activeAsset(productionMedia.heroAssets, `fleet-hero-${id}-${tier}-v`)}`;
+const operationPath = (name, tier) => `assets/operations-motion/v2/${activeAsset(productionMedia.operationAssets, `${name}-${tier}-v`)}`;
 
 const outputs = [
   {
     id: "01-1080p",
-    video: "assets/hero-random/v2/fleet-hero-01-1080p-v4.mp4",
+    video: heroPath("01", "1080p"),
     duration: "00:00:37.30",
     resolution: "1920x1080",
     maxBytes: 25 * 1024 * 1024,
   },
   {
     id: "01-mobile-720p",
-    video: "assets/hero-random/v2/fleet-hero-01-mobile-720p-v1.mp4",
+    video: heroPath("01", "mobile-720p"),
     duration: "00:00:37.30",
     resolution: "1280x720",
     maxBytes: 10 * 1024 * 1024,
   },
   {
     id: "02-1080p",
-    video: "assets/hero-random/v2/fleet-hero-02-1080p-v4.mp4",
+    video: heroPath("02", "1080p"),
     duration: "00:00:28.33",
     resolution: "1920x1080",
     maxBytes: 25 * 1024 * 1024,
   },
   {
     id: "02-mobile-720p",
-    video: "assets/hero-random/v2/fleet-hero-02-mobile-720p-v1.mp4",
+    video: heroPath("02", "mobile-720p"),
     duration: "00:00:28.33",
     resolution: "1280x720",
     maxBytes: 10 * 1024 * 1024,
   },
   {
     id: "02-1440p",
-    video: "assets/hero-random/v2/fleet-hero-02-1440p-v4.mp4",
+    video: heroPath("02", "1440p"),
     duration: "00:00:28.33",
     resolution: "2560x1440",
     maxBytes: 25 * 1024 * 1024,
   },
   {
     id: "03-1080p",
-    video: "assets/hero-random/v2/fleet-hero-03-1080p-v1.mp4",
+    video: heroPath("03", "1080p"),
     duration: "00:00:31.00",
     resolution: "1920x1080",
     maxBytes: 32 * 1024 * 1024,
   },
   {
     id: "03-mobile-720p",
-    video: "assets/hero-random/v2/fleet-hero-03-mobile-720p-v1.mp4",
+    video: heroPath("03", "mobile-720p"),
     duration: "00:00:31.00",
     resolution: "1280x720",
     maxBytes: 14 * 1024 * 1024,
@@ -123,7 +131,7 @@ const operationClips = [
 
 for (const clip of operationClips) {
   test(`operation ${clip.name} mobile video is a sharp lazy-load encode`, () => {
-    const path = resolve(root, `assets/operations-motion/v2/${clip.name}-mobile-1280-v1.mp4`);
+    const path = resolve(root, operationPath(clip.name, "mobile-1280"));
     assert.equal(existsSync(path), true);
     assert.ok(statSync(path).size > 1 * 1024 * 1024, "mobile clip must not be a placeholder");
     assert.ok(statSync(path).size < 7 * 1024 * 1024, "mobile clip must remain within its per-scene budget");
@@ -144,9 +152,11 @@ for (const clip of operationClips) {
     { width: 2560, resolution: "2560x1098" },
   ]) {
     test(`operation ${clip.name} ${tier.width} video preserves the approved short clip at high quality`, () => {
-      const path = resolve(root, `assets/operations-motion/v2/${clip.name}-${tier.width}-v2.mp4`);
+      const path = resolve(root, operationPath(clip.name, tier.width));
       assert.equal(existsSync(path), true);
-      assert.ok(statSync(path).size > 3 * 1024 * 1024, "clip must not be the previous low-bitrate encode");
+      // Size is a delivery budget, not a visual-quality measurement. Re-encoding
+      // requires full-frame quality comparison and visual review before adoption.
+      assert.ok(statSync(path).size > 3 * 1024 * 1024, "clip must retain its existing delivery bounds");
       assert.ok(statSync(path).size < 21 * 1024 * 1024, "clip must remain within its lazy-load budget");
       if (skipMediaMetadata) return;
 
@@ -158,3 +168,29 @@ for (const clip of operationClips) {
     });
   }
 }
+
+test("every active MP4 places its playback metadata before video data for progressive startup", () => {
+  const paths = [...outputs.map(({ video }) => video),
+    ...productionMedia.operationAssets.map((name) => `assets/operations-motion/v2/${name}`)];
+  for (const relative of paths) {
+    const path = resolve(root, relative);
+    const size = statSync(path).size;
+    const fd = openSync(path, "r");
+    const positions = new Map();
+    try {
+      const header = Buffer.alloc(16);
+      for (let offset = 0; offset + 8 <= size;) {
+        assert.ok(readSync(fd, header, 0, 16, offset) >= 8);
+        const type = header.toString("ascii", 4, 8);
+        let length = header.readUInt32BE(0);
+        if (length === 1) length = Number(header.readBigUInt64BE(8));
+        if (length === 0) length = size - offset;
+        assert.ok(length >= 8 && offset + length <= size, `${relative}: invalid ${type} box`);
+        positions.set(type, offset);
+        offset += length;
+      }
+    } finally { closeSync(fd); }
+    assert.ok(positions.has("moov") && positions.has("mdat"), `${relative}: missing MP4 structure`);
+    assert.ok(positions.get("moov") < positions.get("mdat"), `${relative}: faststart metadata must come first`);
+  }
+});

@@ -85,7 +85,7 @@ test("production build includes all three active hero variants", () => {
 });
 
 test("homepage, controller, and production build share the exact active hero assets", () => {
-  const activePattern = /fleet-hero-(?:01|02|03)-(?:1080p-v4|mobile-720p-v1|poster-v2|1440p-v4|poster-1440p-v3|1080p-v1|poster-v1)\.(?:mp4|webp)/g;
+  const activePattern = /fleet-hero-(?:01|02|03)-(?:1080p|mobile-720p|poster|1440p|poster-1440p)-v\d+\.(?:mp4|webp)/g;
   const getActiveAssets = (source) => [...new Set(source.match(activePattern) || [])].sort();
   const expected = getActiveAssets(homepage);
 
@@ -116,10 +116,23 @@ test("production build excludes publisher-only gallery workspaces", () => {
 
 test("production build includes one dedicated mobile encode for every operation", () => {
   for (const name of ["combat", "industry", "logistics", "exploration"]) {
-    assert.ok(productionMedia.operationAssets.includes(`${name}-mobile-1280-v1.mp4`));
+    assert.equal(productionMedia.operationAssets.filter((asset) => asset.startsWith(`${name}-mobile-1280-v`) && asset.endsWith(".mp4")).length, 1);
   }
   assert.equal(productionMedia.operationAssets.length, 12);
   assert.match(buildScript, /productionMedia\.operationAssets/);
+});
+
+test("previous immutable media URLs remain available without becoming new-page selections", async () => {
+  const previous = productionMedia.compatibilityOperationAssets;
+  assert.ok(Array.isArray(previous) && previous.length > 0);
+  assert.equal(new Set(previous).size, previous.length);
+  assert.match(buildScript, /productionMedia\.compatibilityOperationAssets/);
+  for (const asset of previous) {
+    assert.match(asset, /^[a-z]+-(?:mobile-1280|1920|2560)-v\d+\.mp4$/);
+    assert.ok(!productionMedia.operationAssets.includes(asset));
+    assert.ok(!homepage.includes(asset), "compatibility files must not be selected or preloaded by new pages");
+    await access(new URL(`assets/operations-motion/v2/${asset}`, root));
+  }
 });
 
 test("homepage selects and starts one hero before the first paint", () => {
@@ -184,9 +197,9 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
   const operationVideos = homepage.match(/<video\b[^>]*data-operation-video[^>]*>/g) || [];
   assert.equal(operationVideos.length, 4);
   operationVideos.forEach((video) => {
-    assert.match(video, /data-src-mobile="\.\/assets\/operations-motion\/v2\/[a-z]+-mobile-1280-v1\.mp4"/);
-    assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v2\/[a-z]+-1920-v2\.mp4"/);
-    assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v2\/[a-z]+-2560-v2\.mp4"/);
+    assert.match(video, /data-src-mobile="\.\/assets\/operations-motion\/v2\/[a-z]+-mobile-1280-v\d+\.mp4"/);
+    assert.match(video, /data-src-compact="\.\/assets\/operations-motion\/v2\/[a-z]+-1920-v\d+\.mp4"/);
+    assert.match(video, /data-src-wide="\.\/assets\/operations-motion\/v2\/[a-z]+-2560-v\d+\.mp4"/);
     assert.match(video, /preload="none"/);
     assert.doesNotMatch(video, /\ssrc\s*=/);
   });
@@ -198,14 +211,7 @@ test("operation motion keeps still-image fallbacks and loads no clip from HTML",
   assert.match(cinematicTimelines, /dataset\.operationActive/);
 
   await Promise.all(
-    ["combat", "industry", "logistics", "exploration"].flatMap((name) =>
-      [
-        access(new URL(`assets/operations-motion/v2/${name}-mobile-1280-v1.mp4`, root)),
-        ...[1920, 2560].map((width) =>
-          access(new URL(`assets/operations-motion/v2/${name}-${width}-v2.mp4`, root)),
-        ),
-      ],
-    ),
+    productionMedia.operationAssets.map((name) => access(new URL(`assets/operations-motion/v2/${name}`, root))),
   );
 });
 
@@ -380,8 +386,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
     archiveCarousel.indexOf("function handlePaginationPointerMove"),
     archiveCarousel.indexOf("function finishPaginationPointer"),
   );
-  assert.doesNotMatch(paginationPointerDown, /setPointerCapture/);
-  assert.match(paginationPointerMove, /paginationDragging[\s\S]*setPointerCapture/);
+  assert.match(paginationPointerDown, /event\.pointerType !== "touch"[\s\S]*setPointerCapture/);
+  assert.match(paginationPointerMove, /event\.buttons === 0/);
   assert.match(archiveCarousel, /DRAG_THRESHOLD_PX\s*=\s*8/);
   assert.match(archiveCarousel, /HOLD_SUPPRESSION_MS\s*=\s*240/);
   assert.match(archiveCarousel, /查看团建照片 \$\{targetIndex \+ 1\}，共 \$\{cards\.length\} 张/);
@@ -404,7 +410,8 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(archiveCarousel, /getCarouselNavigationTargetIndexes/);
   assert.match(archiveCarousel, /getCarouselNavigationIndex/);
   assert.doesNotMatch(archiveCarousel, /getCarouselScrubberIndex|startScrubbing|is-scrubbing/);
-  assert.match(archiveCarousel, /is-returning-target/);
+  assert.doesNotMatch(archiveCarousel, /is-returning-target|navigationTransitionTimer|navigationSettleTimer/);
+  assert.doesNotMatch(cinematicCss, /is-returning-target/);
   assert.match(archiveCarousel, /data-archive-clone/);
   assert.match(archiveCarousel, /virtualPosition/);
   assert.match(archiveCarousel, /advanceCarouselPosition/);

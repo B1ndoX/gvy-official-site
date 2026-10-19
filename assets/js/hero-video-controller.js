@@ -127,6 +127,8 @@ function getDefaultStorage() {
 
 export function initHeroVideo({
   root = globalThis.document,
+  view = root?.defaultView || globalThis,
+  Observer = view?.IntersectionObserver,
   storage = getDefaultStorage(),
   cacheKey = HERO_CACHE_KEY,
   random = Math.random,
@@ -194,20 +196,46 @@ export function initHeroVideo({
     return { index: selection.index, media, cleanup() {} };
   }
 
-  let playRequested = false;
+  let playRequest = null;
+  let disposed = false;
+  // Keep one viewport of playback runway outside the screen. Resume before the
+  // sticky hero is visible, and pause only once it is safely out of sight.
+  const viewportHeight = Math.max(1, Number(view.innerHeight) || 800);
+  const playbackMargin = Math.ceil(viewportHeight);
+  // First-screen autoplay must never wait for the observer's first callback.
+  const bounds = shell.getBoundingClientRect?.();
+  let nearViewport = !bounds
+    || (bounds.bottom > -playbackMargin && bounds.top < viewportHeight + playbackMargin);
+  const shouldPlay = () => !disposed && nearViewport && root.visibilityState !== "hidden";
+  const pause = () => {
+    playRequest = null;
+    if (video.paused !== true) video.pause?.();
+  };
 
   const showPoster = () => {
     shell.dataset.heroState = "poster";
-    playRequested = false;
+    playRequest = null;
   };
   const showVideo = () => {
+    if (!shouldPlay()) { pause(); return; }
     shell.dataset.heroState = "playing";
   };
   const tryPlay = () => {
-    if (playRequested) return;
-    playRequested = true;
+    if (!shouldPlay()) { pause(); return; }
+    if (video.paused === false && video.readyState >= 2) { showVideo(); return; }
+    if (playRequest) return;
+    const request = {};
+    playRequest = request;
     const result = video.play?.();
-    result?.catch?.(showPoster);
+    result?.catch?.((error) => {
+      if (playRequest !== request) return;
+      playRequest = null;
+      if (shouldPlay() && error?.name !== "AbortError") showPoster();
+    });
+  };
+  const syncPlayback = () => {
+    if (!shouldPlay()) pause();
+    else if (video.readyState >= 2) tryPlay();
   };
 
   const listeners = [
@@ -219,20 +247,32 @@ export function initHeroVideo({
     // current video/last frame; only an actual media error warrants a poster.
   ];
   listeners.forEach(([name, handler]) => video.addEventListener?.(name, handler));
+  root.addEventListener?.("visibilitychange", syncPlayback);
+  const observer = typeof Observer === "function" ? new Observer((entries) => {
+    if (disposed) return;
+    const entry = entries.find(({ target }) => target === shell);
+    if (!entry) return;
+    nearViewport = entry.isIntersecting;
+    syncPlayback();
+  }, { threshold: 0, rootMargin: `${playbackMargin}px 0px` }) : null;
+  observer?.observe(shell);
 
   shell.dataset.heroState = "loading";
   if (!sourceAlreadyAssigned) {
     video.src = media.video;
     video.load?.();
   }
-  if (video.readyState >= 2 && video.paused === false) showVideo();
-  else if (video.readyState >= 2) tryPlay();
+  syncPlayback();
 
   return {
     index: selection.index,
     media,
     cleanup() {
+      disposed = true;
+      observer?.disconnect();
+      root.removeEventListener?.("visibilitychange", syncPlayback);
       listeners.forEach(([name, handler]) => video.removeEventListener?.(name, handler));
+      pause();
     },
   };
 }
