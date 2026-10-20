@@ -4,7 +4,7 @@ import { mkdtemp, readFile, writeFile, mkdir, readdir, rm } from "node:fs/promis
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { syncMembers, parseFirstPage, fetchMembers, hash, decodeRoster, ROSTER_PATH, validateRosterAssets } from "../scripts/lib/rsi-members.mjs";
-import { assertReadyToPromote, assertSyncHealth, assertPublished, REQUIRED_CHECKS } from "../scripts/lib/rsi-sync-release.mjs";
+import { assertReadyToPromote, verifiedStatusReports, assertSyncHealth, assertPublished, REQUIRED_CHECKS } from "../scripts/lib/rsi-sync-release.mjs";
 
 const png = Buffer.from("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000b49444154789c636000020000050001a5f645400000000049454e44ae426082", "hex");
 const record = (handle, name = handle) => ({ handle, name, rank: "星舰船员", avatar: `/media/${handle}/avatar/example.png` });
@@ -110,8 +110,9 @@ test("asset validation rejects corrupted local avatar bytes", () => temporary(as
 
 const candidate = "a".repeat(40), base = "b".repeat(40);
 const gate = () => ({ base, currentMain: base, candidate,
-  run: { head_sha: candidate, event: "workflow_dispatch", path: ".github/workflows/verify.yml", conclusion: "success" },
-  checks: REQUIRED_CHECKS.map((name) => ({ name, head_sha: candidate, app: { id: 15368 }, status: "completed", conclusion: "success" })),
+  run: { id: 123, check_suite_id: 42, head_sha: candidate, event: "workflow_dispatch", path: ".github/workflows/verify.yml", conclusion: "success" },
+  checks: REQUIRED_CHECKS.map((name, index) => ({ name, head_sha: candidate, app: { id: 15368 }, status: "completed", conclusion: "success",
+    check_suite: { id: 42 }, html_url: `https://github.com/B1ndoX/gvy-official-site/actions/runs/123/job/${index + 1}` })),
   paths: [ROSTER_PATH, "config/rsi-member-source.json"] });
 test("automated promotion refuses changed main, failed/missing/foreign checks and every non-roster source mutation", () => {
   assertReadyToPromote(gate());
@@ -122,6 +123,19 @@ test("automated promotion refuses changed main, failed/missing/foreign checks an
   for (const path of ["index.html", "assets/fleet-command-brawl.js", "../outside", ".github/workflows/verify.yml"]) {
     assert.throws(() => assertReadyToPromote({ ...gate(), paths: [path] }), /unexpected/);
   }
+});
+
+test("protected-branch result reports reference the actual exact-SHA successful CI jobs and refuse unverified results", () => {
+  const reports = verifiedStatusReports(gate());
+  assert.deepEqual(reports.map((report) => report.context), REQUIRED_CHECKS);
+  assert.ok(reports.every((report) => report.state === "success" && report.target_url.includes("/actions/runs/123/job/")));
+  for (const change of [
+    { currentMain: candidate }, { checks: [] }, { run: { ...gate().run, conclusion: "failure" } },
+    { paths: ["index.html"] },
+  ]) assert.throws(() => verifiedStatusReports({ ...gate(), ...change }));
+  const wrong = gate(); wrong.checks[0].head_sha = base; assert.throws(() => verifiedStatusReports(wrong));
+  const forgedLink = gate(); forgedLink.checks[0].html_url = "https://example.com/fake"; assert.throws(() => verifiedStatusReports(forgedLink));
+  const otherRun = gate(); otherRun.checks[0].check_suite.id = 999; assert.throws(() => verifiedStatusReports(otherRun));
 });
 
 test("weekly health flags failed, missing, future and stale records", () => {

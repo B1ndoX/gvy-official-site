@@ -5,7 +5,7 @@ import { mkdtemp, rm, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { resolve } from "node:path";
 import { syncMembers, validateRosterAssets, ROSTER_PATH, hash } from "./lib/rsi-members.mjs";
-import { assertReadyToPromote, assertPublished } from "./lib/rsi-sync-release.mjs";
+import { verifiedStatusReports, assertPublished } from "./lib/rsi-sync-release.mjs";
 
 // Only the trusted scheduled/manual main workflow may publish generated data.
 assert.equal(process.env.GITHUB_ACTIONS, "true");
@@ -62,7 +62,12 @@ try {
     assert.ok(run?.status === "completed", "original Verify timed out; production retained");
     const checks = (await api(`commits/${candidate}/check-runs?per_page=100`)).check_runs;
     const currentMain = (await git(["ls-remote", "origin", "refs/heads/main"])).split(/\s/)[0];
-    assertReadyToPromote({ base, currentMain, candidate, run, checks, paths });
+    const reports = verifiedStatusReports({ base, currentMain, candidate, run, checks, paths });
+    for (const report of reports) {
+      await command("gh", ["api", `repos/B1ndoX/gvy-official-site/statuses/${candidate}`,
+        "--method", "POST", "-f", `state=${report.state}`, "-f", `context=${report.context}`,
+        "-f", `target_url=${report.target_url}`, "-f", `description=${report.description}`]);
+    }
     // Normal fast-forward push. GitHub's existing required checks stay enforced.
     // A concurrent main update makes this fail rather than overwrite anyone.
     await git(["push", "origin", `${candidate}:refs/heads/main`]);
