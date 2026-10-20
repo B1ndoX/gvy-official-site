@@ -62,7 +62,7 @@
 
 - 每周一04:43（上海时间）一次，另可手动运行同一工作流；普通构建/访客访问不抓取RSI。公开成员页为权威，完整分页、总数与唯一handle必须一致。隐藏成员不猜测身份；空名单、截断、异常减少超过50%或头像失败均保留旧快照并报错。
 - 昵称、handle、头衔、主组织/附属关系及头像均取当前公开源。头像按URL去重并使用条件GET复核实际内容，即使URL未改也能采用新字节；内容SHA命名，本地托管，保留脱离现役的旧头像至少90天，随真实名单变更清理。无变化不写生产文件，也不提交/部署main。
-- 自动更新仅允许`assets/js/fleet-members.js`、`config/rsi-member-source.json`和受约束的`assets/member-avatars/<SHA>.<扩展>`。候选分支显式dispatch原Verify；准确候选SHA上的两项原检查成功且main仍为原基线，才普通快进推送受保护main。并发改动、CI失败、超时均停止，不修改保护、不使用PAT、不强推。
+- 自动更新仅允许`assets/js/fleet-members.js`、`config/rsi-member-source.json`和受约束的`assets/member-avatars/<SHA>.<扩展>`。候选分支显式dispatch原Verify；准确候选SHA上的两项原检查成功且main仍为原基线，再把真实结果/原job链接登记为同名commit status（GitHub不把workflow_dispatch job检查计入保护），由既有保护规则校验后普通快进推送main。并发改动、CI失败、超时均停止，不修改保护、不使用PAT、不强推。
 - 自动更新后核对双域普通首页、实际大乱斗文档、指纹快照和所有现役头像的完整SHA。初始接入快照的`bootstrap`标记在首次云端成功读取后删除，用于验收真实候选检查→发布链路；不会伪造成员或改动玩家对局。
 - 内部`automation/rsi-members-state`分支只记录一次周检状态，保持该分支源代码树不变；真实状态提交维持仓库活动，避免长期main无变化导致公开仓库60天停用schedule。该分支不发布生产。原Production Monitor只读检查状态，失败或超过10天未成功均走既有事故流程；不另建轮询/通知任务。
 - 页面用随部署指纹更新的本地快照，已打开的对局保持原名单，刷新官网后采用新版；不在战斗中重建。战斗时钟、物理、武器、暂停/恢复负责人不变。
