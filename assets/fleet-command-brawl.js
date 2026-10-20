@@ -10,43 +10,7 @@
   let battleStarted = false;
   let shouldRunBrawl = false;
 
-const rsiMediaBase = "https://robertsspaceindustries.com";
-const defaultAvatar =
-  "https://cdn.robertsspaceindustries.com/static/images/account/avatar_default_big.jpg";
-
-const members = [
-  ["qiufen", "星舰船员", defaultAvatar],
-  ["shadedaihan", "远航先锋", defaultAvatar],
-  ["Momonga", "深航舰长", "/media/1yyevnowv62s4r/avatar/6279ce07-C034-406f-88ad-6c1f4bcba2be.jpg"],
-  ["CC089", "远航先锋", "/media/gypz0wmyuimiur/avatar/Bb7735fa-Bcc2-4433-Bf56-C8b4abb981a2.jpg"],
-  ["ApriliaPeng", "深航舰长", defaultAvatar],
-  ["HcyKira", "星舰指挥官", "/media/mxrysmpavtd0kr/avatar/151099c3-545a-48b3-87de-A5959034b4f3.jpg"],
-  ["KongFeng", "远航先锋", "/media/n587v96nilww4r/avatar/_20220713013031.jpg"],
-  ["earlscuro", "深航舰长", "/media/fgoqd8xcyfw29r/avatar/8a1efdd1-97ce-48be-816c-7afcd5b9c3e8.jpg"],
-  ["06310", "远航先锋", defaultAvatar],
-  ["cssdwa", "远航先锋", defaultAvatar],
-  ["Mikey", "远航先锋", "/media/6xduwazwfzq2gr/avatar/E3cbb345-1ea6-413f-90e2-C2b838c1d147.jpg"],
-  ["A22-RCL", "深航舰长", "/media/f8eywvpk9wiz3r/avatar/88ac77c4-A4bc-4dcd-B64f-56b1b2309d33.jpg"],
-  ["chenfeng12344", "远航先锋", defaultAvatar],
-  ["LIANG11918", "星舰指挥官", "/media/lb8sr4mu04quir/avatar/0516e100-867a-4cb8-Abc8-F3e5348b2e37.png"],
-  ["Biuboom", "远航先锋", defaultAvatar],
-  ["OKNPLM159", "深航舰长", defaultAvatar],
-  ["missvalue", "星舰指挥官", defaultAvatar],
-  ["lb1742", "星舰指挥官", "/media/f32vi98tr38rwr/avatar/media.jpg"],
-  ["SupremeLeaderNA", "星舰指挥官", "/media/zdl0m04by4kujr/avatar/United_Empire_of_Earth.jpg"],
-  ["Cola_Wang", "深航舰长", "/media/m4af4y51ln223r/avatar/A466a11e-607a-438f-Ae09-66231e7b1f8e.jpg"],
-  ["pagelevel218", "远航先锋", defaultAvatar],
-  ["lAQIL", "统御司令", "/media/c3b86d64zayjsr/avatar/00239-852073150-1man-holding-Scythe-masterpiece-Best-Quality-scythe-Red_fog-dynamic-Angle-Masterpiece-Best-Quality-_lora_-super-Saiya.png"],
-  ["CN-ECHO", "星舰指挥官", "/media/6zyvwnoqhlh91r/avatar/F9930b39-40ec-4afa-B8d5-D1d525551b0c.jpg"],
-  ["125486393", "星舰指挥官", defaultAvatar],
-  ["RyouSuke", "深航舰长", defaultAvatar],
-  ["Kaman-Luo", "星舰指挥官", "/media/n0kl5ybfzr4x5r/avatar/Ba9f967bdab44aed6af2202ff61c8701a38bfbc2.jpg"],
-  ["humor0126", "星舰指挥官", "/media/irpx4n2q3sy7fr/avatar/CCA2190B343AAD2DF842DF29CEDE76B7.jpg"],
-  ["Zack1982", "星舰指挥官", "/media/f27lo04cgmie2r/avatar/Ce7df7d1-5616-45c9-A2ee-4e9ac6faa842.jpg"],
-  ["BookWorm", "深航舰长", defaultAvatar],
-  ["BindoX", "联邦元帅", "/media/uly7bcps1h3cnr/avatar/Death-Stranding-Cliff-Uhdpapercom-4K-61.jpg"],
-  ["9523", "统御司令", "/media/gae24l3hu5nvmr/avatar/E6aa8464-C7de-4834-B9f5-Cc720e797296.jpg"],
-];
+const members = window.__gvyFleetRoster.members.map(({ name, rank, avatar }) => [name, rank, avatar]);
 
 const chipColors = ["pink", "green", "yellow", "red", "yellow", "green"];
 const maxHp = 100;
@@ -198,9 +162,10 @@ function flushBattleTasks() {
   while (battleTasks.length && battleTasks[0].due <= now) battleTasks.shift().callback();
 }
 
-function avatarSrc(src) {
-  if (src.startsWith("/media/")) return `${rsiMediaBase}${src}`;
-  return src;
+function escapeMarkup(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[character]);
 }
 
 function clamp(value, min, max) {
@@ -237,10 +202,10 @@ function renderMemberWall() {
       const color = chipColors[index % chipColors.length];
       const weapon = selectWeapon(index);
       return `
-        <button class="member-fighter ${color} fighter-${weapon.kind}" type="button" aria-label="${name}" data-index="${index}">
-          <span class="fighter-name">${name}</span>
+        <button class="member-fighter ${color} fighter-${weapon.kind}" type="button" aria-label="${escapeMarkup(name)}" data-index="${index}">
+          <span class="fighter-name">${escapeMarkup(name)}</span>
           <span class="fighter-avatar-wrap">
-            <img src="${avatarSrc(avatar)}" alt="" loading="lazy" decoding="async" fetchpriority="low" />
+            <img src="${escapeMarkup(avatar)}" alt="" loading="lazy" decoding="async" fetchpriority="low" />
             <span class="weapon-aim weapon-${weapon.kind}">
               <span class="weapon-icon">
                 <img src="${weapon.icon}" alt="${weapon.name}" />

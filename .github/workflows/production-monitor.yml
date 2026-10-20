@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   issues: write
 
 concurrency:
@@ -32,6 +33,8 @@ jobs:
           node-version-file: .node-version
           package-manager-cache: false
       - name: Check official site and observe independent child services
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: node scripts/monitor-production.mjs
       - name: Check all active EdgeOne media
         if: ${{ always() }}

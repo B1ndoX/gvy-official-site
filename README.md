@@ -59,6 +59,7 @@ node scripts/preview-server.mjs --port 8001
 | `npm run test:e2e` | Chromium 桌面、手机导航、相册、灯箱、大乱斗及手机冷启动反向滚动 |
 | `npm run check:dist` | 确认成品无断链，也未泄漏源码、文档或 source map |
 | `npm run monitor:production` | 只读检查双域、真实 404、HTTPS、TLS、域名期限和两个独立子站 |
+| `npm run sync:members` | 读取RSI公开GVY名单和头像，生成本地候选；不提交、不部署 |
 | `npm run check:edgeone` | 只读检查 19 个正式视频的部署、Range 与 EdgeOne 缓存 |
 | `npm run gallery:publisher` | 构建并启动本机相册发布器 |
 
@@ -67,6 +68,8 @@ node scripts/preview-server.mjs --port 8001
 依赖更新必须独立提交并重新执行完整验证。`npm audit`、`npm outdated` 只提供证据，不应自动升级或在审计中顺手改版本。
 
 ## 发布与回滚
+
+大乱斗成员由原生GitHub工作流`RSI Member Sync`每周一北京时间04:43校准公开RSI成员。加入/退出、改名、头衔和头像内容变化经原有CI验证后自动发布，无变化不发布；抓取不完整或异常时保留旧名单。访客读取同站快照和SHA命名头像，不查询RSI或轮询；已经开始的对局在刷新页面后采用新名单。状态、故障处理与保留策略见`OPERATIONS.md`。
 
 普通官网发布只允许：经过审查的提交进入 `main` → GitHub Actions 通过 → EdgeOne 自动构建 `dist/`。发布前后步骤、监控和安全回滚见 [OPERATIONS.md](./OPERATIONS.md)。没有站长明确授权时，不得推送、部署、清缓存或修改云端配置。
 
