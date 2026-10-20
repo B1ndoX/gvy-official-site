@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import tls from "node:tls";
+import { assertSyncHealth } from "./lib/rsi-sync-release.mjs";
 
 import {
   CERTIFICATE_CRITICAL_DAYS,
@@ -161,6 +162,20 @@ const requiredChecks = [
   ...["www.gvyvoyagers.vip", "gvyvoyagers.vip"]
     .map((host) => [`${host} TLS`, () => checkCertificate(host)]),
   ["domain registration", checkDomainRegistration],
+  ["weekly RSI member sync", () => withRetry("RSI member sync health", async () => {
+    const response = await fetchResponse("https://api.github.com/repos/B1ndoX/gvy-official-site/contents/config/rsi-members-status.json?ref=automation%2Frsi-members-state", {
+      headers: { Accept: "application/vnd.github.raw+json",
+        ...(process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {}) },
+    });
+    assert.equal(response.status, 200, "RSI sync health record unavailable");
+    assertSyncHealth(await response.json());
+    const workflow = await fetchResponse("https://api.github.com/repos/B1ndoX/gvy-official-site/actions/workflows/rsi-members.yml", {
+      headers: { Accept: "application/vnd.github+json",
+        ...(process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {}) },
+    });
+    assert.equal(workflow.status, 200, "RSI workflow unavailable");
+    assert.equal((await workflow.json()).state, "active", "weekly RSI workflow is disabled");
+  })],
 ];
 
 // Child services are independently maintained and may be under maintenance while the

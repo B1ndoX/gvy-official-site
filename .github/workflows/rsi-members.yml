@@ -1,0 +1,39 @@
+name: RSI Member Sync
+
+on:
+  schedule:
+    # Monday 04:43 Asia/Shanghai. One weekly upstream check, no browser polling.
+    - cron: "43 20 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: rsi-member-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - name: Install build dependencies without scripts
+        run: npm ci --ignore-scripts --omit=dev
+      - name: Configure repository bot identity
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Fetch, validate, verify changed data and publish through protected main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/run-rsi-member-sync.mjs

@@ -4,6 +4,7 @@ import { access, readdir, readFile, stat } from "node:fs/promises";
 import { dirname, extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assetDigest, codeReferences, codeReferenceTarget } from "./fingerprint-assets.mjs";
+import { validateRosterAssets } from "./lib/rsi-members.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -57,6 +58,7 @@ function collectMarkupReferences(source) {
 }
 
 const files = await walk(output);
+await validateRosterAssets(output);
 const builtHome = await readFile(resolve(output, "index.html"), "utf8");
 const edgeConfig = JSON.parse(await readFile(resolve(root, "edgeone.json"), "utf8"));
 const csp = edgeConfig.headers.find((rule) => rule.source === "/*").headers

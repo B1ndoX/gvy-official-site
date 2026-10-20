@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
+import { decodeRoster } from "../../scripts/lib/rsi-members.mjs";
 import { parseGalleryState, removeGalleryItems } from "../../tools/gallery-publisher/lib/gallery-html.mjs";
 
+const fleetRoster = decodeRoster(readFileSync(new URL("../../assets/js/fleet-members.js", import.meta.url), "utf8"));
 const media = JSON.parse(readFileSync(new URL("../../config/production-media.json", import.meta.url), "utf8"));
 const operationSource = (name) => {
   const asset = media.operationAssets.find((file) => file.startsWith(`${name}-2560-v`));
@@ -78,7 +80,9 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   await expect(page.locator("[data-member-brawl-dialog]")).toHaveAttribute("open", "");
   const arena = page.frameLocator("[data-member-brawl-frame]");
   await arena.locator("[data-brawl-start]").click();
-  await expect(arena.locator(".member-fighter")).toHaveCount(31);
+  await expect(arena.locator(".member-fighter")).toHaveCount(fleetRoster.members.length);
+  await expect.poll(() => arena.locator(".fighter-avatar-wrap > img").evaluateAll((images) =>
+    images.filter((image) => !image.complete || image.naturalWidth === 0).length)).toBe(0);
   await page.locator("[data-member-brawl-close]").click();
 
   expect(runtimeFailures).toEqual([]);
@@ -325,10 +329,39 @@ test("arena start waits for deferred scripts before accepting the first click", 
   await expect(start).toBeEnabled();
   await expect(start).toHaveCSS("padding", "16px 20px");
   await start.click();
-  await expect(page.locator(".member-fighter")).toHaveCount(31);
+  await expect(page.locator(".member-fighter")).toHaveCount(fleetRoster.members.length);
   await expect.poll(() => page.locator(".member-fighter").first().evaluate((v) =>
     v.style.getPropertyValue("--chip-x"))).not.toBe("");
   expect(runtimeFailures).toEqual([]);
+});
+
+test("arena consumes the current local snapshot and safely displays changed member names without contacting RSI", async ({ page }) => {
+  const failures = collectRuntimeFailures(page);
+  const upstream = [];
+  const rosterRequests = [];
+  page.on("request", (request) => { if (/^https:\/\/(?:cdn\.)?robertsspaceindustries\.com\//.test(request.url())) upstream.push(request.url()); });
+  page.on("request", (request) => { if (/fleet-members\.js|fleet-command-brawl\.js|\/member-avatars\//.test(request.url())) rosterRequests.push(request.url()); });
+  const avatar = fleetRoster.members[0].avatar;
+  let names = ['<img src=x onerror="window.unexpectedRosterMarkup=1">', "成员甲 & 成员乙"];
+  await page.route(/\/assets\/js\/fleet-members\.js(?:\?|$)/, (route) => route.fulfill({
+    contentType: "text/javascript", body: `window.__gvyFleetRoster = ${JSON.stringify({ members: names.map((name) => ({ name, rank: "星舰船员", avatar })) })};`,
+  }));
+  await page.goto("/", { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(() => Boolean(window.__gvyCinematicHomepage));
+  expect(rosterRequests).toEqual([]);
+  await page.goto("/member-brawl.html");
+  await page.locator("[data-brawl-start]").click();
+  await expect(page.locator(".member-fighter")).toHaveCount(2);
+  expect(await page.locator(".fighter-name").allTextContents()).toEqual(names);
+  await expect(page.locator(".fighter-name img")).toHaveCount(0);
+  expect(await page.evaluate(() => window.unexpectedRosterMarkup)).toBeUndefined();
+  names = ["改名后的成员", "新加入的成员", "第三位成员"];
+  await page.reload();
+  await page.locator("[data-brawl-start]").click();
+  await expect(page.locator(".member-fighter")).toHaveCount(3);
+  expect(await page.locator(".fighter-name").allTextContents()).toEqual(names);
+  expect(upstream).toEqual([]);
+  expect(failures).toEqual([]);
 });
 
 test("closed arena stops physics and reopens the same iframe", async ({ page }) => {

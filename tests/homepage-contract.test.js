@@ -585,6 +585,7 @@ test("member brawl popup preserves the published runtime without a nested frame 
   assert.match(memberBrawlPage, /<button[^>]*data-brawl-start[^>]*hidden/);
   assert.match(memberBrawlPage, /INITIATE MEMBER ARENA/);
   assert.match(memberBrawlPage, /fleet-command-brawl\.js/);
+  assert.ok(memberBrawlPage.indexOf("fleet-members.js") < memberBrawlPage.indexOf("fleet-command-brawl.js"));
   assert.doesNotMatch(memberBrawlPage, /<script[^>]+fleet-command\.js/);
   assert.match(memberBrawlPage, /class="member-brawl-terminal reveal is-visible"/);
   assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
@@ -605,7 +606,8 @@ test("member brawl popup preserves the published runtime without a nested frame 
     // Reviewed pausable battle clock: delayed effects now stop with physics.
     // Seeded close-during-attack E2E locks HP, classes and positions across reopen.
     // Native hidden startup is released by the existing initialization, not a timer.
-    ["assets/fleet-command-brawl.js", "43bf315f179b473f141b4df654da72e5a1f8f9900ea1e15ba5c538828a2845ea"],
+    // Public roster is a separate fingerprinted data script; physics stays reviewed.
+    ["assets/fleet-command-brawl.js", "7f090d43cf3d652046b023dddd2ffa4e3dfee89bec3f5a400a224332236c78b8"],
     // Native hidden stays effective without increasing specificity over mobile styles.
     ["assets/fleet-command.css", "8daccdd0cb7075bad50c50cbfe3c8ff9543971400bd1b17ba742950d653eea9d"],
     ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],
