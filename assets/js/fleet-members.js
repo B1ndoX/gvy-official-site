@@ -294,6 +294,5 @@ window.__gvyFleetRoster = {
       "avatarSha256": "87b5de6452205a62c085de6e3b2cf425627cbd498ec7580be8c82bc0bf9fc4db"
     }
   ],
-  "updatedAt": "2026-10-20T12:24:03.961Z",
-  "bootstrap": true
+  "updatedAt": "2026-10-20T12:57:01.792Z"
 };
