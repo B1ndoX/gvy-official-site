@@ -1,4 +1,5 @@
 import {readFile,writeFile} from 'node:fs/promises';
+import {applyWeaponProfiles} from './apply-weapon-profiles.mjs';
 const config=JSON.parse(await readFile(new URL('../src/data/defense-balance.json',import.meta.url),'utf8'));
 const file=new URL('../src/data/ships.json',import.meta.url),ships=JSON.parse(await readFile(file,'utf8'));
 function roleFor(ship){
@@ -45,6 +46,7 @@ for(const ship of ships){
   const total=ship.mounts.reduce((sum,m)=>sum+weight(m),0),target=config.bossDps[ship.id]??gradual(ship.length,i=>config.weaponDps[config.tiers[i].id])*config.roleDps[role];
   for(const m of ship.mounts)m.damage=Number((target*weight(m)/total*m.cooldown).toFixed(2));
 }
+applyWeaponProfiles(ships);
 await writeFile(file,JSON.stringify(ships,null,2)+'\n');
 const assetFile=new URL('../public/assets/ships/manifest.json',import.meta.url),manifest=JSON.parse(await readFile(assetFile,'utf8'));
 for(const a of manifest.assets){const ship=ships.find(s=>s.id===a.shipId);a.combatVersion=config.version;a.mounts=ship.mounts;}

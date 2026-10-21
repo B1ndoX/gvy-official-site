@@ -38,7 +38,8 @@ export function validateAsset(value:unknown,ids:Set<string>):asserts value is Sh
   if(!Array.isArray(a.engines)||a.engines.length>32||!Array.isArray(a.mounts)||a.mounts.length<1||a.mounts.length>64)throw new Error('喷口最多 32 个，武器挂点需要 1–64 个');
   for(const p of [...a.engines,...a.mounts])if(!finite(p.x,-1,1)||!finite(p.y,-1,1))throw new Error('挂点坐标超出范围');
   const mountIds=new Set();
-  for(const m of a.mounts){if(m.role!==undefined&&!['main','point-defense','anti-capital'].includes(m.role))throw new Error('武器定位不合法');if(typeof m.id!=='string'||mountIds.has(m.id)||!['laser','turret','missile'].includes(m.kind)||!finite(m.facing,-180,180)||!finite(m.arc,1,360)||!finite(m.cooldown,.05,60)||!finite(m.damage,1,100000)||!finite(m.range,10,10000)||!finite(m.speed,10,10000)||!finite(m.turnRate,.01,30))throw new Error('武器挂点参数不合法');mountIds.add(m.id);}
+  for(const m of a.mounts){if(m.role!==undefined&&!['main','point-defense','anti-capital'].includes(m.role))throw new Error('武器定位不合法');if(typeof m.id!=='string'||mountIds.has(m.id)||!['laser','turret','missile','beam','railgun','torpedo','ballistic'].includes(m.kind)||!finite(m.facing,-180,180)||!finite(m.arc,1,360)||!finite(m.cooldown,.05,60)||!finite(m.damage,1,250000)||!finite(m.range,10,10000)||!finite(m.speed,10,10000)||!finite(m.turnRate,.01,30))throw new Error('武器挂点参数不合法');
+    if(m.beamWidth!==undefined&&!finite(m.beamWidth,1,1000)||m.kind==='beam'&&!finite(m.duration,.1,8)||m.charge!==undefined&&!finite(m.charge,0,5)||m.emitters!==undefined&&(!Array.isArray(m.emitters)||m.emitters.length<1||m.emitters.length>12||!m.emitters.every(x=>finite(x,-.5,.5)))||m.width!==undefined&&!finite(m.width,.5,8)||m.color!==undefined&&!finite(m.color,0,0xffffff)||m.burstCount!==undefined&&(!Number.isInteger(m.burstCount)||!finite(m.burstCount,1,16))||m.burstCooldown!==undefined&&!finite(m.burstCooldown,.05,15))throw new Error('武器周期参数不合法');mountIds.add(m.id);}
   if(typeof a.calibrated!=='boolean')throw new Error('缺少校准状态');
 }
 export function withAssets(specs:ShipSpec[],assets:ShipAsset[]):ShipSpec[]{
@@ -48,8 +49,10 @@ export function withAssets(specs:ShipSpec[],assets:ShipAsset[]):ShipSpec[]{
 export const assetURL=(a:ShipAsset)=>a.url.startsWith('data:')?a.url:import.meta.env.BASE_URL+a.url;
 export function upgradeCombat(local:ShipAsset,builtin:ShipAsset):ShipAsset{
   if((local.combatVersion??0)>=(builtin.combatVersion??0))return local;
-  const mounts=new Map(builtin.mounts.map(m=>[m.id,m]));
-  return {...local,combatVersion:builtin.combatVersion,mounts:[...local.mounts.map(m=>{const current=mounts.get(m.id);return current?{...m,damage:current.damage,cooldown:current.cooldown,turnRate:current.turnRate,role:current.role,range:current.range,speed:current.speed}:m;}),...builtin.mounts.filter(m=>m.id.startsWith('boss-turret-')&&!local.mounts.some(old=>old.id===m.id))]};
+  const localMounts=new Map(local.mounts.map(m=>[m.id,m]));
+  // Preserve calibrated coordinates for retained mounts; remove retired generic
+  // guns and add new primary weapons. Old IndexedDB entries must not mask upgrades.
+  return {...local,combatVersion:builtin.combatVersion,mounts:builtin.mounts.map(m=>{const old=localMounts.get(m.id);return old?{...m,x:old.x,y:old.y,facing:old.facing,arc:old.arc}:m;})};
 }
 export async function readLibrary(specs:ShipSpec[]):Promise<{assets:ShipAsset[];warning:string|null}>{
   const ids=new Set(specs.map(s=>s.id));

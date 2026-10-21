@@ -8,6 +8,7 @@ import type { Ship, BattleSnapshot } from '../sim/types';
 import { clamp, mountWorld } from '../sim/math';
 import { assetURL, type ShipAsset } from '../assets/library';
 import { CombatDirector, engagementFrame, shipFocusSpan, trackedCenter } from './CombatDirector';
+import { drawWeaponEffects } from './WeaponEffects';
 
 interface Visual { root:Container; annotation:Container; sprite:Sprite|null; marker:Graphics; label:Text; bars:Graphics; textureId:string }
 export class BattleRenderer {
@@ -174,8 +175,9 @@ export class BattleRenderer {
         e.circle(p.x,p.y,2.2*px).fill({color:0x92a8bb,alpha:.8});e.moveTo(p.x,p.y).lineTo(p.x+Math.cos(angle)*7*px,p.y+Math.sin(angle)*7*px).stroke({color:0xccd7df,width:px});
       }
     }
-    for(const p of this.engine.projectiles){const tail=p.kind==='missile'?70:30,dx=Math.cos(p.angle),dy=Math.sin(p.angle);e.moveTo(p.x-dx*tail,p.y-dy*tail).lineTo(p.x,p.y).stroke({color:p.kind==='missile'?0xeb9973:p.color,width:(p.kind==='missile'?2:1.3)*px,alpha:.22});e.moveTo(p.x-dx*tail*.4,p.y-dy*tail*.4).lineTo(p.x,p.y).stroke({color:p.kind==='missile'?0xffd29a:p.color,width:1.2*px,alpha:.95});}
+    drawWeaponEffects(this.engine,e,px);
     for(const ev of this.engine.events){const age=this.engine.time-ev.time;
+      if(ev.kind==='shot')continue;
       if(ev.kind==='destroy'){
         const f=age/2.8;
         if(age<1.2)e.circle(ev.x,ev.y,ev.radius*(.7+age*2)).stroke({color:0xf5be71,alpha:(1-age/1.2)*.7,width:2*px});
