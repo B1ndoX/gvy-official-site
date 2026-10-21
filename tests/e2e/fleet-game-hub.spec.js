@@ -24,3 +24,24 @@ test('one fleet window selects either game, supplies the current roster and unlo
  await expect(page.locator('[data-game-hub]')).toBeVisible();
  expect(errors).toEqual([]);
 });
+
+test('persistent ship resource cache permits offline redraws after closing and reopening the game',async({page,context})=>{
+ test.setTimeout(90000);
+ await page.goto('/',{waitUntil:'domcontentloaded'});
+ await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());
+ await expect(page.locator('[data-ship-cache]')).toBeVisible();
+ await expect.poll(()=>page.locator('[data-ship-cache-label]').textContent(),{timeout:60000}).toContain('已缓存');
+ const count=await page.evaluate(async()=>{const cache=await caches.open('gvy-ship-battle-resources-v1');return(await cache.keys()).length;});expect(count).toBeGreaterThan(250);
+ await page.locator('[data-game-select="ships"]').click();
+ const ship=page.frameLocator('[data-member-brawl-frame]');
+ await expect(ship.getByRole('button',{name:'开始战斗',exact:true})).toBeEnabled();
+ await page.locator('[data-member-brawl-close]').click();await page.locator('[data-member-brawl-end]').click();
+ await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());await page.locator('[data-game-select="ships"]').click();
+ await expect(ship.getByRole('button',{name:'开始战斗',exact:true})).toBeEnabled();
+ await context.setOffline(true);
+ for(let i=0;i<2;i++){
+  await ship.getByRole('button',{name:'重新抽签',exact:true}).click();
+  await expect(ship.getByRole('button',{name:'开始战斗',exact:true})).toBeEnabled();
+ }
+ await expect(ship.locator('.ship-loading-note')).toHaveCount(0);
+});

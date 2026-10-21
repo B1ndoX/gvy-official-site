@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readdir, readFile, stat } from "node:fs/promises";
 import { resolve, relative, sep } from "node:path";
+import {shipGameCacheWorker} from './ship-game-cache.mjs';
 
 export const acceptedCommit = "5700a86751c3552f1c25b933067fd2daf5e51bda";
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -49,7 +50,9 @@ export async function validatePublishedShipGame(root, output) {
   // The standalone embedding demos contain development-only parent scripts.
   delete publicFiles["embed-example.html"];
   delete publicFiles["popup-preview.html"];
-  assert.deepEqual(await digests(published), { ...publicFiles, ...manifest.runtime }, "Published ship game must be the complete verified runtime, without source or demos");
+  const expected={...publicFiles,...manifest.runtime};
+  expected['cache-worker.js']=sha256(await shipGameCacheWorker(expected));
+  assert.deepEqual(await digests(published), expected, "Published ship game must be the complete verified runtime, without source or demos");
   const library = JSON.parse(await readFile(resolve(published, "assets/ships/manifest.json"), "utf8"));
   assert.equal(library.assets.length, 224);
   for (const asset of library.assets) {

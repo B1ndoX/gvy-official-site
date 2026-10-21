@@ -1,0 +1,1 @@
+export{r as WebGLRenderer}from"./pixi-BGJzYaA3.js";

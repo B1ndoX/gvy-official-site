@@ -1,0 +1,1 @@
+import"./pixi-BGJzYaA3.js";

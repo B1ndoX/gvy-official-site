@@ -1,8 +1,9 @@
-import { cp, copyFile, mkdir, readFile, rm } from "node:fs/promises";
+import { cp, copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fingerprintAssets } from "./fingerprint-assets.mjs";
-import { validateShipRelease } from "./lib/ship-battle-release.mjs";
+import { validateShipRelease, digests } from "./lib/ship-battle-release.mjs";
+import {shipGameCacheWorker} from './lib/ship-game-cache.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -67,5 +68,6 @@ await cp(resolve(root, "games/ship-battle/public"), shipOutput, {
   filter: (source) => !["embed-example.html", "popup-preview.html"].includes(basename(source)),
 });
 await cp(resolve(root, "games/ship-battle/runtime"), shipOutput, { recursive: true });
+await writeFile(resolve(shipOutput,'cache-worker.js'),await shipGameCacheWorker(await digests(shipOutput)));
 
 await fingerprintAssets(output);
