@@ -1,0 +1,368 @@
+{
+  "version": 5,
+  "description": "Weapon identities follow cited CIG sources / user direction; damage, seconds and geometry are game balance, not live SC statistics. Odin uses one broad forward beam with a single damage budget. Idris-P uses the K beam kit; Retaliator base uses torpedo-module configuration. No separate Idris-T model is present.",
+  "ships": [
+    {
+      "id": "idris-p",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "spinal-beam",
+          "kind": "beam",
+          "role": "main",
+          "x": 0,
+          "y": -0.49,
+          "facing": 0,
+          "arc": 28,
+          "range": 2300,
+          "damage": 2628.709454796411,
+          "duration": 6.0,
+          "cooldown": 6.222222222222222,
+          "charge": 0.7999999999999999,
+          "speed": 10000,
+          "turnRate": 3,
+          "emitters": [
+            0
+          ],
+          "width": 3.2,
+          "color": 6936831
+        }
+      ],
+      "sources": [
+        "https://media.robertsspaceindustries.com/z7y4v16krcyk2/source.pdf"
+      ],
+      "supportDps": 1300,
+      "balance": {
+        "baselineBeamDps": 1211.1801242236024,
+        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
+      }
+    },
+    {
+      "id": "tiburon",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "spinal-beam",
+          "kind": "beam",
+          "role": "main",
+          "x": 0,
+          "y": -0.49,
+          "facing": 0,
+          "arc": 28,
+          "range": 2300,
+          "damage": 2095.8605664488014,
+          "duration": 5.2,
+          "cooldown": 4.888888888888888,
+          "charge": 0.6,
+          "speed": 10000,
+          "turnRate": 3,
+          "emitters": [
+            0
+          ],
+          "width": 2.8,
+          "color": 8117247
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/21131-Aegis-Tiburon"
+      ],
+      "supportDps": 750,
+      "balance": {
+        "baselineBeamDps": 1019.6078431372548,
+        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
+      }
+    },
+    {
+      "id": "mauler",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "spinal-beam",
+          "kind": "beam",
+          "role": "main",
+          "x": 0,
+          "y": -0.49,
+          "facing": 0,
+          "arc": 28,
+          "range": 2300,
+          "damage": 4357.166834508224,
+          "duration": 7.199999999999999,
+          "cooldown": 6.222222222222222,
+          "charge": 1.0,
+          "speed": 10000,
+          "turnRate": 3,
+          "emitters": [
+            -0.09,
+            0.09
+          ],
+          "width": 3.8,
+          "color": 15295045
+        }
+      ],
+      "sources": [
+        "Game-data weapon identity: Vanduul Mauler IGNITER Beam; user-requested forward beam portrayal"
+      ],
+      "supportDps": 3300,
+      "balance": {
+        "baselineBeamDps": 2175.226586102719,
+        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
+      }
+    },
+    {
+      "id": "odin",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "spinal-beam",
+          "kind": "beam",
+          "role": "main",
+          "x": 0,
+          "y": -0.45,
+          "facing": 0,
+          "arc": 28,
+          "range": 2800,
+          "damage": 7222.222222222221,
+          "duration": 8.0,
+          "cooldown": 8.0,
+          "charge": 1.3333333333333333,
+          "speed": 10000,
+          "turnRate": 3,
+          "emitters": [
+            0
+          ],
+          "width": 4.2,
+          "color": 16759395,
+          "beamWidth": 60
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/21133-Anvil-Odin"
+      ],
+      "supportDps": 3500,
+      "balance": {
+        "baselineBeamDps": 3333.333333333333,
+        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
+      }
+    },
+    {
+      "id": "idris-m",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "s10-railgun",
+          "kind": "railgun",
+          "role": "main",
+          "x": 0,
+          "y": -0.5,
+          "facing": 0,
+          "arc": 24,
+          "range": 3200,
+          "damage": 90000,
+          "cooldown": 26.666666666666668,
+          "charge": 1.5999999999999999,
+          "speed": 680,
+          "turnRate": 3,
+          "color": 10216959
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/ship-matrix"
+      ],
+      "supportDps": 700
+    },
+    {
+      "id": "eclipse",
+      "remove": [
+        "missile-1",
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "missile-1",
+          "kind": "torpedo",
+          "x": 0,
+          "y": -0.43,
+          "facing": 0,
+          "arc": 100,
+          "range": 3000,
+          "damage": 6000,
+          "cooldown": 17.333333333333332,
+          "speed": 320,
+          "turnRate": 0.65,
+          "role": "anti-capital",
+          "charge": 0.5333333333333333,
+          "color": 16758379
+        },
+        {
+          "id": "ballistic-1",
+          "kind": "ballistic",
+          "x": -0.22,
+          "y": -0.26,
+          "facing": 0,
+          "arc": 32,
+          "range": 1100,
+          "damage": 10,
+          "cooldown": 0.12,
+          "speed": 1600,
+          "turnRate": 3,
+          "role": "main",
+          "burstCount": 6,
+          "burstCooldown": 1.2,
+          "color": 16762745
+        },
+        {
+          "id": "ballistic-2",
+          "kind": "ballistic",
+          "x": 0.22,
+          "y": -0.26,
+          "facing": 0,
+          "arc": 32,
+          "range": 1100,
+          "damage": 10,
+          "cooldown": 0.12,
+          "speed": 1600,
+          "turnRate": 3,
+          "role": "main",
+          "burstCount": 6,
+          "burstCooldown": 1.2,
+          "color": 16762745
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
+        "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
+      ]
+    },
+    {
+      "id": "retaliator-bomber",
+      "remove": [
+        "missile-1"
+      ],
+      "mounts": [
+        {
+          "id": "missile-1",
+          "kind": "torpedo",
+          "x": 0,
+          "y": -0.43,
+          "facing": 0,
+          "arc": 100,
+          "range": 3000,
+          "damage": 8500,
+          "cooldown": 18.666666666666668,
+          "speed": 320,
+          "turnRate": 0.65,
+          "role": "anti-capital",
+          "charge": 0.5333333333333333,
+          "color": 16758379
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
+        "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
+      ]
+    },
+    {
+      "id": "retaliator-base",
+      "remove": [
+        "missile-1"
+      ],
+      "mounts": [
+        {
+          "id": "missile-1",
+          "kind": "torpedo",
+          "x": 0,
+          "y": -0.43,
+          "facing": 0,
+          "arc": 100,
+          "range": 3000,
+          "damage": 7000,
+          "cooldown": 20.0,
+          "speed": 320,
+          "turnRate": 0.65,
+          "role": "anti-capital",
+          "charge": 0.5333333333333333,
+          "color": 16758379
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
+        "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
+      ]
+    },
+    {
+      "id": "polaris",
+      "remove": [
+        "missile-rack"
+      ],
+      "mounts": [
+        {
+          "id": "missile-rack",
+          "kind": "torpedo",
+          "x": 0,
+          "y": -0.43,
+          "facing": 0,
+          "arc": 100,
+          "range": 3000,
+          "damage": 11500,
+          "cooldown": 21.333333333333332,
+          "speed": 290,
+          "turnRate": 0.65,
+          "role": "anti-capital",
+          "charge": 0.5333333333333333,
+          "color": 16758379,
+          "width": 1.7
+        }
+      ],
+      "sources": [
+        "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
+        "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
+      ]
+    },
+    {
+      "id": "ares-inferno",
+      "remove": [
+        "laser-1",
+        "laser-2"
+      ],
+      "mounts": [
+        {
+          "id": "sf7b-gatling",
+          "kind": "ballistic",
+          "role": "main",
+          "x": 0.3,
+          "y": -0.43,
+          "facing": 0,
+          "arc": 32,
+          "range": 1350,
+          "damage": 76,
+          "cooldown": 0.1,
+          "speed": 1700,
+          "turnRate": 3,
+          "burstCount": 10,
+          "burstCooldown": 1.1,
+          "color": 16762745
+        }
+      ],
+      "sources": [
+        "https://media.robertsspaceindustries.com/qswg0m9kx1ylc/source.pdf"
+      ],
+      "supportDps": 174
+    }
+  ]
+}

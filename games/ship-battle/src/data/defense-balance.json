@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "description": "Game defense values, not official Star Citizen statistics. Regenerate ships.json with npm run balance:generate.",
   "tiers": [
     {
@@ -127,7 +127,11 @@
   "hitEfficiency": {
     "laser": 0.85,
     "turret": 0.9,
-    "missile": 0.9
+    "missile": 0.9,
+    "beam": 0.75,
+    "railgun": 0.4,
+    "torpedo": 0.7,
+    "ballistic": 0.85
   },
   "shieldRecoveryDelay": 7,
   "shieldRecoveryPerSecond": 0.002,
