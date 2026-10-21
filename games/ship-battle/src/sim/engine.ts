@@ -4,7 +4,7 @@ import { rankMembers, BOSS_IDS } from './members';
 import { bossDefense } from './balance';
 import defenseRules from '../data/defense-balance.json';
 import {createAsteroids,avoidAsteroids,segmentRock,type Asteroid} from './asteroids';
-import {battleSeconds} from './pacing';
+import {battleSeconds,simulationSeconds} from './pacing';
 import {evasion,evasionVelocity,attackNavigation,type AttackRun,type Evasion} from './maneuver';
 import {fixedWeapon,guidedWeapon,projectileDamage} from './weapons';
 
@@ -41,7 +41,7 @@ export class BattleEngine {
     for(let index=0;index<selected.length;index++){
       const {spec,member,npc,team}=selected[index],{x,y,radius}=positions[index]!;
       const count=(counts.get(spec.id)??0)+1;counts.set(spec.id,count);
-      this.ships.push({id:this.ships.length+1,spec,member,npc,team,label:member?.name??(npc==='boss'?`BOSS · ${spec.id==='mauler'?'拳手':spec.name}`:npc==='escort'?`剜度僚机 · ${spec.name} ${String(count).padStart(2,'0')}`:`${spec.name} ${String(count).padStart(2,'0')}`),x,y,vx:0,vy:0,heading:Math.atan2(-y,-x),hull:spec.hull,shield:spec.shield,kills:0,alive:true,radius,targetId:null,lastHit:-10,lastDealt:0,searchAt:0,cooldowns:spec.mounts.map(m=>this.random()*m.cooldown),turretAngles:spec.mounts.map(m=>m.facing*Math.PI/180),turretTargets:spec.mounts.map(()=>null)});
+      this.ships.push({id:this.ships.length+1,spec,member,npc,team,label:member?.name??(npc==='boss'?`BOSS · ${spec.name}`:npc==='escort'?`剜度僚机 · ${spec.name} ${String(count).padStart(2,'0')}`:`${spec.name} ${String(count).padStart(2,'0')}`),x,y,vx:0,vy:0,heading:Math.atan2(-y,-x),hull:spec.hull,shield:spec.shield,kills:0,alive:true,radius,targetId:null,lastHit:-10,lastDealt:0,searchAt:0,cooldowns:spec.mounts.map(m=>this.random()*m.cooldown),turretAngles:spec.mounts.map(m=>m.facing*Math.PI/180),turretTargets:spec.mounts.map(()=>null)});
     }
     this.asteroids=createAsteroids(this.ships,this.arena,seed);
   }
@@ -182,8 +182,8 @@ export class BattleEngine {
       const owner=owners.get(b.owner);if(!owner?.alive)continue;
       const m=owner.spec.mounts[b.mount];if(m?.kind!=='beam')continue;
       const delta=Math.min(dt,b.remaining);b.remaining-=delta;b.elapsed+=delta;b.pending+=delta;
-      // Tick damage at 10 Hz; geometry stays at the 60 Hz simulation rate.
-      const tick=b.pending>=.1-1e-8||b.remaining<1e-8,seconds=tick?b.pending:0;
+      // Two damage ticks per 1× real second; geometry stays at 60 Hz.
+      const tick=b.pending>=simulationSeconds(.5)-1e-8||b.remaining<1e-8,seconds=tick?b.pending:0;
       if(tick)b.pending=0;
       const emitters=m.beamWidth?Array.from({length:9},(_,i)=>m.x+(i/8-.5)*m.beamWidth!/owner.spec.beam):m.emitters??[m.x],angle=owner.heading+m.facing*Math.PI/180,dx=Math.cos(angle),dy=Math.sin(angle);
       b.segments=[];const damage=new Map<number,{ship:Ship;amount:number;point:Vec}>();let broadDistance=1,broadVictim:Ship|null=null;
@@ -206,7 +206,7 @@ export class BattleEngine {
         if(broadVictim&&seconds)damage.set(broadVictim.id,{ship:broadVictim,amount:m.damage*seconds,point:to});
       }
       for(const hit of damage.values()){
-        this.damage(hit.ship,hit.amount,owner.id,hit.point,false,'beam');
+        this.damage(hit.ship,hit.amount,owner.id,hit.point,false,'beam',seconds);
         if(this.checkOutcome()){this.beams=[];return;}
       }
       if(b.remaining>1e-8)active.push(b);
@@ -236,14 +236,14 @@ export class BattleEngine {
       if(p.ttl>0&&p.travel<=p.range)survivors.push(p);
     }this.projectiles=survivors;
   }
-  private damage(s:Ship,amount:number,owner:number,point:Vec,environment=false,weapon?:WeaponKind){
+  private damage(s:Ship,amount:number,owner:number,point:Vec,environment=false,weapon?:WeaponKind,beamSeconds=0){
     const rule=s.npc==='boss'&&(this.mode==='bounty'||this.mode==='challenge')?defenseRules.burst[this.mode]:defenseRules.burst.member,total=s.spec.hull+s.spec.shield;
     const bucket=this.burst.get(s.id)??{time:this.time,available:total*rule.capacity};
     bucket.available=Math.min(total*rule.capacity,bucket.available+(this.time-bucket.time)*total*rule.perSecond);bucket.time=this.time;
-    // Only the S10 railgun bypasses ordinary member burst protection. Bosses
-    // retain their encounter cap; torpedoes cannot take more than 55% in one hit.
+    // Capital beams use a per-second ceiling (25% per half-second tick).
+    // Railgun bypasses ordinary protection; bosses retain their encounter cap.
     const protectedBoss=s.npc==='boss';
-    if(!environment&&!(weapon==='railgun'&&!protectedBoss))amount=weapon==='torpedo'&&!protectedBoss?Math.min(amount,total*.55):Math.min(amount,bucket.available);bucket.available=Math.max(0,bucket.available-amount);this.burst.set(s.id,bucket);
+    if(!environment&&!(weapon==='railgun'&&!protectedBoss))amount=weapon==='beam'&&!protectedBoss?Math.min(amount,total*.5*battleSeconds(beamSeconds)):weapon==='torpedo'&&!protectedBoss?Math.min(amount,total*.55):Math.min(amount,bucket.available);bucket.available=Math.max(0,bucket.available-amount);this.burst.set(s.id,bucket);
     const absorbed=Math.min(s.shield,amount);s.shield-=absorbed;s.hull=Math.max(0,s.hull-(amount-absorbed));s.lastHit=this.time;this.hits++;
     const attacker=this.ships.find(o=>o.id===owner);if(attacker)attacker.lastDealt=this.time;
     this.events.push({id:++this.sequence,kind:absorbed>0?'shield':'hit',...point,time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});
@@ -290,7 +290,7 @@ export class BattleEngine {
     }
     const heading=Math.atan2(center.y-y,center.x-x);
     const id=Math.max(0,...this.ships.map(s=>s.id))+1,number=this.ships.filter(s=>s.npc==='escort').length+1;
-    this.ships.push({id,spec,npc,team:'vanduul',enterUntil:this.time+(npc==='boss'?4:1.5),label:npc==='boss'?`BOSS · ${specId==='mauler'?'拳手':spec.name}`:`剜度 · ${String(number).padStart(2,'0')}`,x,y,vx:Math.cos(heading)*spec.speed,vy:Math.sin(heading)*spec.speed,heading,hull:spec.hull,shield:spec.shield,kills:0,alive:true,radius,targetId:null,lastHit:-10,lastDealt:this.time,searchAt:0,cooldowns:spec.mounts.map((m,i)=>.5+m.cooldown*i/spec.mounts.length),turretAngles:spec.mounts.map(m=>m.facing*Math.PI/180),turretTargets:spec.mounts.map(()=>null)});
+    this.ships.push({id,spec,npc,team:'vanduul',enterUntil:this.time+(npc==='boss'?4:1.5),label:npc==='boss'?`BOSS · ${spec.name}`:`剜度 · ${String(number).padStart(2,'0')}`,x,y,vx:Math.cos(heading)*spec.speed,vy:Math.sin(heading)*spec.speed,heading,hull:spec.hull,shield:spec.shield,kills:0,alive:true,radius,targetId:null,lastHit:-10,lastDealt:this.time,searchAt:0,cooldowns:spec.mounts.map((m,i)=>.5+m.cooldown*i/spec.mounts.length),turretAngles:spec.mounts.map(m=>m.facing*Math.PI/180),turretTargets:spec.mounts.map(()=>null)});
     this.arena=Math.max(this.arena,Math.hypot(x,y)+radius+600);
   }
   snapshot(selectedId:number|null=null):BattleSnapshot {

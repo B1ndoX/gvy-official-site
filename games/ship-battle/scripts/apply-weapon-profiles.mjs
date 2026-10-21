@@ -2,6 +2,7 @@ import { readFile,writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 const root=new URL('../',import.meta.url);
 const profiles=JSON.parse(await readFile(new URL('src/data/weapon-profiles.json',root),'utf8'));
+export function weaponProfileVersion(id,fallback){const p=profiles.ships.find(p=>p.id===id);return p?(p.combatVersion??profiles.version):fallback;}
 /** Idempotent: regeneration cannot silently restore the old generic weapons. */
 export function applyWeaponProfiles(ships){
   for(const p of profiles.ships){
@@ -17,7 +18,7 @@ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
   const file=new URL('src/data/ships.json',root),ships=applyWeaponProfiles(JSON.parse(await readFile(file,'utf8')));
   await writeFile(file,JSON.stringify(ships,null,2)+'\n');
   const manifestFile=new URL('public/assets/ships/manifest.json',root),manifest=JSON.parse(await readFile(manifestFile,'utf8'));
-  for(const a of manifest.assets){const s=ships.find(s=>s.id===a.shipId);a.mounts=s.mounts;if(profiles.ships.some(p=>p.id===s.id))a.combatVersion=profiles.version;}
+  for(const a of manifest.assets){const s=ships.find(s=>s.id===a.shipId);a.mounts=s.mounts;a.combatVersion=weaponProfileVersion(s.id,a.combatVersion);}
   await writeFile(manifestFile,JSON.stringify(manifest,null,2)+'\n');
   console.log(`Applied ${profiles.ships.length} signature weapon profiles; ship images unchanged.`);
 }

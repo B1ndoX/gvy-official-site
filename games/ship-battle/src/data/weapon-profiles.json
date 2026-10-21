@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 7,
   "description": "Weapon identities follow cited CIG sources / user direction; damage, seconds and geometry are game balance, not live SC statistics. Odin uses one broad forward beam with a single damage budget. Idris-P uses the K beam kit; Retaliator base uses torpedo-module configuration. No separate Idris-T model is present.",
   "ships": [
     {
@@ -18,7 +18,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 2628.709454796411,
+          "damage": 25000,
           "duration": 6.0,
           "cooldown": 6.222222222222222,
           "charge": 0.7999999999999999,
@@ -36,9 +36,9 @@
       ],
       "supportDps": 1300,
       "balance": {
-        "baselineBeamDps": 1211.1801242236024,
-        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
-      }
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+      },
+      "combatVersion": 7
     },
     {
       "id": "tiburon",
@@ -56,7 +56,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 2095.8605664488014,
+          "damage": 20000,
           "duration": 5.2,
           "cooldown": 4.888888888888888,
           "charge": 0.6,
@@ -74,9 +74,9 @@
       ],
       "supportDps": 750,
       "balance": {
-        "baselineBeamDps": 1019.6078431372548,
-        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
-      }
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+      },
+      "combatVersion": 7
     },
     {
       "id": "mauler",
@@ -94,7 +94,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 4357.166834508224,
+          "damage": 40000,
           "duration": 7.199999999999999,
           "cooldown": 6.222222222222222,
           "charge": 1.0,
@@ -113,9 +113,9 @@
       ],
       "supportDps": 3300,
       "balance": {
-        "baselineBeamDps": 2175.226586102719,
-        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
-      }
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+      },
+      "combatVersion": 7
     },
     {
       "id": "odin",
@@ -133,7 +133,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2800,
-          "damage": 7222.222222222221,
+          "damage": 175000,
           "duration": 8.0,
           "cooldown": 8.0,
           "charge": 1.3333333333333333,
@@ -152,9 +152,9 @@
       ],
       "supportDps": 3500,
       "balance": {
-        "baselineBeamDps": 3333.333333333333,
-        "note": "Preserve pre-extension mean beam output across charge + firing + cooldown, despite longer firing and shorter recovery."
-      }
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+      },
+      "combatVersion": 7
     },
     {
       "id": "idris-m",
@@ -173,7 +173,7 @@
           "arc": 24,
           "range": 3200,
           "damage": 90000,
-          "cooldown": 26.666666666666668,
+          "cooldown": 20.0,
           "charge": 1.5999999999999999,
           "speed": 680,
           "turnRate": 3,
@@ -183,7 +183,8 @@
       "sources": [
         "https://robertsspaceindustries.com/en/ship-matrix"
       ],
-      "supportDps": 700
+      "supportDps": 700,
+      "combatVersion": 6
     },
     {
       "id": "eclipse",
@@ -247,7 +248,8 @@
       "sources": [
         "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
         "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
-      ]
+      ],
+      "combatVersion": 5
     },
     {
       "id": "retaliator-bomber",
@@ -275,7 +277,8 @@
       "sources": [
         "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
         "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
-      ]
+      ],
+      "combatVersion": 5
     },
     {
       "id": "retaliator-base",
@@ -303,7 +306,8 @@
       "sources": [
         "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
         "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
-      ]
+      ],
+      "combatVersion": 5
     },
     {
       "id": "polaris",
@@ -332,7 +336,8 @@
       "sources": [
         "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
         "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
-      ]
+      ],
+      "combatVersion": 5
     },
     {
       "id": "ares-inferno",
@@ -362,7 +367,8 @@
       "sources": [
         "https://media.robertsspaceindustries.com/qswg0m9kx1ylc/source.pdf"
       ],
-      "supportDps": 174
+      "supportDps": 174,
+      "combatVersion": 5
     }
   ]
 }

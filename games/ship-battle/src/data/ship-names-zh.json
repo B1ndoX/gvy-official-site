@@ -1,0 +1,907 @@
+{
+  "source": {
+    "file": "NAS data/localization/chinese_(simplified)/global.ini",
+    "sha256": "19c6e78aeec18ed2f055a2555af9449ffd16fc0152e51f8cee04de169ac97bd7",
+    "readAt": "2026-10-22",
+    "fallback": "现有本地舰船名词典；未收录概念船与涂装/套装使用本地名称或基础船名派生，不宣称为 NAS 原文"
+  },
+  "names": {
+    "f8c-lightning": {
+      "name": "铁砧 F8C 闪电",
+      "key": "vehicle_NameANVL_Lightning_F8C"
+    },
+    "gladius": {
+      "name": "圣盾 短剑",
+      "key": "vehicle_NameAEGS_Gladius"
+    },
+    "arrow": {
+      "name": "铁砧 箭矢",
+      "key": "vehicle_NameANVL_Arrow"
+    },
+    "hornet-mk2": {
+      "name": "铁砧 F7A 大黄蜂 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7A_Mk2"
+    },
+    "sabre": {
+      "name": "圣盾 军刀",
+      "key": "vehicle_NameAEGS_Sabre"
+    },
+    "scorpius": {
+      "name": "RSI 天蝎座",
+      "key": "vehicle_NameRSI_Scorpius"
+    },
+    "vanguard-warden": {
+      "name": "圣盾 先锋 典狱长",
+      "key": "vehicle_NameAEGS_Vanguard"
+    },
+    "constellation-andromeda": {
+      "name": "星座 仙女座",
+      "sourceAlias": "Constellation Andromeda"
+    },
+    "perseus": {
+      "name": "RSI 英仙座",
+      "key": "vehicle_NameRSI_Perseus"
+    },
+    "polaris": {
+      "name": "RSI 北极星",
+      "key": "vehicle_NameRSI_Polaris"
+    },
+    "idris-p": {
+      "name": "圣盾 伊德里斯-P",
+      "key": "vehicle_NameAEGS_Idris_P"
+    },
+    "javelin": {
+      "name": "圣盾 标枪",
+      "key": "vehicle_NameAEGS_Javelin"
+    },
+    "aurora-es": {
+      "name": "RSI 极光 ES Mk I",
+      "key": "vehicle_NameRSI_Aurora_ES"
+    },
+    "aurora-lx": {
+      "name": "RSI 极光 LX Mk I",
+      "key": "vehicle_NameRSI_Aurora_LX"
+    },
+    "aurora-mr": {
+      "name": "RSI 极光 MR Mk I",
+      "key": "vehicle_NameRSI_Aurora_MR"
+    },
+    "aurora-cl": {
+      "name": "RSI 极光 CL Mk I",
+      "key": "vehicle_NameRSI_Aurora_CL"
+    },
+    "aurora-ln": {
+      "name": "RSI 极光 LN Mk I",
+      "key": "vehicle_NameRSI_Aurora_LN"
+    },
+    "300i": {
+      "name": "起源 300i",
+      "key": "vehicle_NameORIG_300i"
+    },
+    "315p": {
+      "name": "起源 315p",
+      "key": "vehicle_NameORIG_315p"
+    },
+    "325a": {
+      "name": "起源 325a",
+      "key": "vehicle_NameORIG_325a"
+    },
+    "350r": {
+      "name": "起源 350r",
+      "key": "vehicle_NameORIG_350r"
+    },
+    "f7c-hornet": {
+      "name": "铁砧 F7C 大黄蜂 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7C"
+    },
+    "f7c-s-hornet-ghost": {
+      "name": "铁砧 F7C-S 大黄蜂 幽灵 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7CS"
+    },
+    "f7c-r-hornet-tracker": {
+      "name": "铁砧 F7C-R 大黄蜂 追踪者 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7CR"
+    },
+    "f7c-m-super-hornet": {
+      "name": "铁砧 F7C-M 超级大黄蜂 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7CM"
+    },
+    "freelancer": {
+      "name": "武藏 自由枪骑兵",
+      "key": "vehicle_NameMISC_Freelancer"
+    },
+    "m50": {
+      "name": "起源 M50 截击机",
+      "key": "vehicle_NameORIG_m50"
+    },
+    "caterpillar": {
+      "name": "德雷克 毛虫",
+      "key": "vehicle_NameDRAK_Caterpillar"
+    },
+    "scythe": {
+      "name": "剜度 死镰",
+      "key": "vehicle_NameVNCL_Scythe"
+    },
+    "freelancer-dur": {
+      "name": "武藏 自由枪骑兵 DUR",
+      "key": "vehicle_NameMISC_Freelancer_DUR"
+    },
+    "freelancer-max": {
+      "name": "武藏 自由枪骑兵 MAX",
+      "key": "vehicle_NameMISC_Freelancer_MAX"
+    },
+    "freelancer-mis": {
+      "name": "武藏 自由枪骑兵 MIS",
+      "key": "vehicle_NameMISC_Freelancer_MIS"
+    },
+    "khartu-al": {
+      "name": "奥波亚 卡图",
+      "key": "vehicle_NameXIAN_Scout"
+    },
+    "merchantman": {
+      "name": "巴努 商船",
+      "key": "vehicle_NameBANU_Merchantman"
+    },
+    "hull-c": {
+      "name": "武藏 货轮 C",
+      "key": "vehicle_NameMISC_Hull_C"
+    },
+    "constellation-taurus": {
+      "name": "星座 金牛座",
+      "sourceAlias": "Constellation Taurus"
+    },
+    "constellation-aquila": {
+      "name": "星座 天鹰座",
+      "sourceAlias": "Constellation Aquila"
+    },
+    "constellation-phoenix": {
+      "name": "星座 凤凰座",
+      "sourceAlias": "Constellation Phoenix"
+    },
+    "reclaimer": {
+      "name": "圣盾 回收者",
+      "key": "vehicle_NameAEGS_Reclaimer"
+    },
+    "890-jump": {
+      "name": "起源 890 跃动",
+      "key": "vehicle_NameORIG_890Jump"
+    },
+    "cutlass-black": {
+      "name": "德雷克 黑弯刀",
+      "key": "vehicle_NameDRAK_Cutlass_Black"
+    },
+    "cutlass-red": {
+      "name": "德雷克 红弯刀",
+      "key": "vehicle_NameDRAK_Cutlass_Red"
+    },
+    "cutlass-blue": {
+      "name": "德雷克 蓝弯刀",
+      "key": "vehicle_NameDRAK_Cutlass_Blue"
+    },
+    "redeemer": {
+      "name": "圣盾 救赎者",
+      "key": "vehicle_NameAEGS_Redeemer"
+    },
+    "herald": {
+      "name": "德雷克 信使",
+      "key": "vehicle_NameDRAK_Herald"
+    },
+    "carrack": {
+      "name": "铁砧 克拉克",
+      "key": "vehicle_nameANVL_Carrack"
+    },
+    "gladiator": {
+      "name": "铁砧 角斗士",
+      "key": "vehicle_NameANVL_Gladiator"
+    },
+    "mustang-alpha": {
+      "name": "联合外域 野马-阿尔法",
+      "key": "vehicle_NameCNOU_Mustang_Alpha"
+    },
+    "mustang-beta": {
+      "name": "联合外域 野马-贝塔",
+      "key": "vehicle_NameCNOU_Mustang_Beta"
+    },
+    "mustang-gamma": {
+      "name": "联合外域 野马-伽马",
+      "key": "vehicle_NameCNOU_Mustang_Gamma"
+    },
+    "mustang-delta": {
+      "name": "联合外域 野马-德尔塔",
+      "key": "vehicle_NameCNOU_Mustang_Delta"
+    },
+    "mustang-omega": {
+      "name": "联合外域 野马-欧米伽",
+      "key": "vehicle_NameCNOU_Mustang_Omega"
+    },
+    "orion": {
+      "name": "猎户座",
+      "sourceAlias": "Orion"
+    },
+    "retaliator-bomber": {
+      "name": "圣盾 报复者 轰炸",
+      "key": "vehicle_NameAEGS_Retaliator_Bomber"
+    },
+    "hull-a": {
+      "name": "武藏 货轮 A",
+      "key": "vehicle_NameMISC_Hull_A"
+    },
+    "hull-b": {
+      "name": "武藏 货轮 B",
+      "key": "vehicle_NameMISC_Hull_B"
+    },
+    "hull-d": {
+      "name": "武藏 货轮 D",
+      "key": "vehicle_NameMISC_Hull_D"
+    },
+    "hull-e": {
+      "name": "武藏 货轮 E",
+      "key": "vehicle_NameMISC_Hull_E"
+    },
+    "starfarer": {
+      "name": "武藏 星际远航者",
+      "key": "vehicle_NameMISC_Starfarer"
+    },
+    "starfarer-gemini": {
+      "name": "武藏 星际远航者 双子座",
+      "key": "vehicle_NameMISC_Starfarer_Gemini"
+    },
+    "reliant-kore": {
+      "name": "武藏 信赖 基础",
+      "key": "vehicle_NameMISC_Reliant"
+    },
+    "genesis-starliner": {
+      "name": "十字军 创世纪 星际航线",
+      "key": "vehicle_NameCRUS_Starliner"
+    },
+    "p-52-merlin": {
+      "name": "克鲁格 P-52 梅林",
+      "key": "vehicle_NameKRIG_P52_Merlin"
+    },
+    "glaive": {
+      "name": "埃斯佩里亚 长刀",
+      "key": "vehicle_NameESPR_Glaive"
+    },
+    "vanguard-harbinger": {
+      "name": "圣盾 先锋 先驱",
+      "key": "vehicle_NameAEGS_Vanguard_Harbinger"
+    },
+    "vanguard-sentinel": {
+      "name": "圣盾 先锋 哨兵",
+      "key": "vehicle_NameAEGS_Vanguard_Sentinel"
+    },
+    "endeavor": {
+      "name": "武藏 奋进",
+      "key": "vehicle_NameMISC_Endeavor"
+    },
+    "retaliator-base": {
+      "name": "圣盾 报复者",
+      "key": "vehicle_NameAEGS_Retaliator"
+    },
+    "avenger-stalker": {
+      "name": "圣盾 复仇者 追猎",
+      "key": "vehicle_NameAEGS_Avenger_Stalker"
+    },
+    "avenger-warlock": {
+      "name": "圣盾 复仇者 术士",
+      "key": "vehicle_NameAEGS_Avenger_Warlock"
+    },
+    "avenger-titan": {
+      "name": "圣盾 复仇者 泰坦",
+      "key": "vehicle_NameAEGS_Avenger_Titan"
+    },
+    "crucible": {
+      "name": "铁砧 坩埚",
+      "key": "vehicle_NameANVL_Crucible"
+    },
+    "p72-archimedes": {
+      "name": "克鲁格 P-72 阿基米德",
+      "key": "vehicle_NameKRIG_P72_Archimedes"
+    },
+    "reliant-mako": {
+      "name": "武藏 信赖 新闻",
+      "key": "vehicle_NameMISC_Reliant_Mako"
+    },
+    "reliant-sen": {
+      "name": "武藏 信赖 科考",
+      "key": "vehicle_NameMISC_Reliant_Sen"
+    },
+    "reliant-tana": {
+      "name": "武藏 信赖 武装",
+      "key": "vehicle_NameMISC_Reliant_Tana"
+    },
+    "blade": {
+      "name": "埃斯佩里亚 刀锋",
+      "key": "vehicle_NameESPR_Blade"
+    },
+    "prospector": {
+      "name": "武藏 勘探者",
+      "key": "vehicle_NameMISC_Prospector"
+    },
+    "buccaneer": {
+      "name": "德雷克 掠夺者",
+      "key": "vehicle_NameDRAK_Buccaneer"
+    },
+    "mpuv-personnel": {
+      "name": "南船座 MPUV 载人",
+      "key": "vehicle_NameARGO_MPUV_Transport"
+    },
+    "mpuv-cargo": {
+      "name": "南船座 MPUV 货运",
+      "key": "vehicle_NameARGO_MPUV"
+    },
+    "terrapin": {
+      "name": "铁砧 水龟",
+      "key": "vehicle_NameANVL_Terrapin"
+    },
+    "prowler": {
+      "name": "埃斯佩里亚 徘徊者",
+      "key": "vehicle_NameESPR_Prowler"
+    },
+    "85x": {
+      "name": "起源 85X 限量版",
+      "key": "vehicle_NameORIG_85X"
+    },
+    "razor": {
+      "name": "未来 剃刀",
+      "key": "vehicle_NameMISC_Razor"
+    },
+    "vanguard-hoplite": {
+      "name": "圣盾 先锋 重装",
+      "key": "vehicle_NameAEGS_Vanguard_Hoplite"
+    },
+    "hurricane": {
+      "name": "铁砧 飓风",
+      "key": "vehicle_NameANVL_Hurricane"
+    },
+    "defender": {
+      "name": "巴努 防卫者",
+      "key": "vehicle_NameBanu_Defender"
+    },
+    "eclipse": {
+      "name": "圣盾 日蚀",
+      "key": "vehicle_NameAEGS_Eclipse"
+    },
+    "600i-touring": {
+      "name": "起源 600i 旅行版",
+      "key": "vehicle_NameORIG_600i_Touring"
+    },
+    "600i-explorer": {
+      "name": "600i 探索",
+      "sourceAlias": "600i Explorer"
+    },
+    "pioneer": {
+      "name": "联合外域 开拓者",
+      "key": "vehicle_NameCNOU_Pioneer"
+    },
+    "hawk": {
+      "name": "铁砧 猎鹰",
+      "key": "vehicle_NameANVL_Hawk"
+    },
+    "hammerhead": {
+      "name": "圣盾 锤头鲨",
+      "key": "vehicle_NameAEGS_Hammerhead"
+    },
+    "vulcan": {
+      "name": "圣盾 火神",
+      "key": "vehicle_NameAEGS_Vulcan"
+    },
+    "razor-ex": {
+      "name": "未来 剃刀 EX",
+      "key": "vehicle_NameMISC_Razor_EX"
+    },
+    "razor-lx": {
+      "name": "未来 剃刀 LX",
+      "key": "vehicle_NameMISC_Razor_LX"
+    },
+    "100i": {
+      "name": "起源 100i",
+      "key": "vehicle_NameORIG_100i"
+    },
+    "125a": {
+      "name": "起源 125a",
+      "key": "vehicle_NameORIG_125a"
+    },
+    "135c": {
+      "name": "起源 135c",
+      "key": "vehicle_NameORIG_135c"
+    },
+    "c2-hercules": {
+      "name": "十字军 大力神 C2 星际运输船",
+      "key": "vehicle_NameCRUS_Starlifter_C2"
+    },
+    "m2-hercules": {
+      "name": "十字军 大力神 M2 星际运输船",
+      "key": "vehicle_NameCRUS_Starlifter_M2"
+    },
+    "a2-hercules": {
+      "name": "十字军 大力神 A2 星际运输船",
+      "key": "vehicle_NameCRUS_Starlifter_A2"
+    },
+    "vulture": {
+      "name": "德雷克 秃鹫",
+      "key": "vehicle_NameDRAK_Vulture"
+    },
+    "apollo-triage": {
+      "name": "RSI 阿波罗 分诊",
+      "key": "vehicle_NameRSI_Apollo_Triage"
+    },
+    "apollo-medivac": {
+      "name": "RSI 阿波罗 医疗",
+      "key": "vehicle_NameRSI_Apollo_Medivac"
+    },
+    "mercury-star-runner": {
+      "name": "十字军 墨丘利 星际快运船",
+      "key": "vehicle_NameCRUS_Star_Runner"
+    },
+    "valkyrie": {
+      "name": "铁砧 女武神",
+      "key": "vehicle_NameANVL_Valkyrie"
+    },
+    "san-tok-yai": {
+      "name": "奥波亚 桑托起亚",
+      "key": "vehicle_NameXNAA_SantokYai"
+    },
+    "srv": {
+      "name": "南船座 SRV",
+      "key": "vehicle_NameARGO_SRV"
+    },
+    "corsair": {
+      "name": "德雷克 海盗船",
+      "key": "vehicle_NameDRAK_Corsair"
+    },
+    "nautilus": {
+      "name": "圣盾 鹦鹉螺",
+      "key": "vehicle_NameAEGS_Nautilus"
+    },
+    "mantis": {
+      "name": "RSI 螳螂",
+      "key": "vehicle_NameRSI_Mantis"
+    },
+    "c8x-pisces-expedition": {
+      "name": "铁砧 C8X 双鱼座 远征",
+      "key": "vehicle_NameANVL_C8X_Pisces_Expedition"
+    },
+    "ares-inferno": {
+      "name": "十字军 战神 星际战斗机 地狱火",
+      "key": "vehicle_NameCRUS_Starfighter_Inferno"
+    },
+    "ares-ion": {
+      "name": "十字军 战神 星际战斗机 离子光",
+      "key": "vehicle_NameCRUS_Starfighter_Ion"
+    },
+    "mole": {
+      "name": "南船座 鼹鼠",
+      "key": "vehicle_NameARGO_Mole"
+    },
+    "talon": {
+      "name": "埃斯佩里亚 利爪",
+      "key": "vehicle_NameESPR_Talon"
+    },
+    "talon-shrike": {
+      "name": "埃斯佩里亚 利爪 伯劳",
+      "key": "vehicle_NameESPR_Talon_Shrike"
+    },
+    "nomad": {
+      "name": "联合外域 游牧者",
+      "key": "vehicle_NameCNOU_Nomad"
+    },
+    "railen": {
+      "name": "盖塔克 锐伦",
+      "key": "vehicle_NameXIAN_Railen"
+    },
+    "400i": {
+      "name": "起源 400i",
+      "key": "vehicle_NameORIG_400i"
+    },
+    "liberator": {
+      "name": "铁砧 解放者",
+      "key": "vehicle_NameANVL_Liberator"
+    },
+    "raft": {
+      "name": "南船座 木筏",
+      "key": "vehicle_NameARGO_RAFT"
+    },
+    "odyssey": {
+      "name": "武藏 奥德赛",
+      "key": "vehicle_NameMISC_Odyssey"
+    },
+    "cutlass-steel": {
+      "name": "德雷克 钢弯刀",
+      "key": "vehicle_NameDRAK_Cutlass_Steel"
+    },
+    "expanse": {
+      "name": "武藏 无垠",
+      "key": "vehicle_NameMISC_Expanse"
+    },
+    "legionnaire": {
+      "name": "铁砧 军团兵",
+      "key": "vehicle_NameANVL_Legionnaire"
+    },
+    "c1-spirit": {
+      "name": "十字军 星灵 C1",
+      "key": "vehicle_NameCRUS_C1_Spirit"
+    },
+    "a1-spirit": {
+      "name": "十字军 星灵 A1",
+      "key": "vehicle_NameCRUS_A1_Spirit"
+    },
+    "e1-spirit": {
+      "name": "十字军 星灵 E1",
+      "key": "vehicle_NameCRUS_E1_Spirit"
+    },
+    "c8r": {
+      "name": "铁砧 C8R 双鱼座 救护",
+      "key": "vehicle_NameANVL_C8R_Pisces_Rescue"
+    },
+    "cutter": {
+      "name": "德雷克 小刀",
+      "key": "vehicle_NameDRAK_Cutter"
+    },
+    "scorpius-antares": {
+      "name": "RSI 天蝎座 蝎心",
+      "key": "vehicle_NameRSI_Scorpius_Antares"
+    },
+    "galaxy": {
+      "name": "RSI 银河",
+      "key": "vehicle_NameRSI_Galaxy"
+    },
+    "fury": {
+      "name": "未来 狂怒",
+      "key": "vehicle_NameMisc_Fury"
+    },
+    "fury-mx": {
+      "name": "未来 狂怒 MX",
+      "key": "vehicle_NameMisc_Fury_Miru"
+    },
+    "fury-lx": {
+      "name": "未来 狂怒 LX",
+      "key": "vehicle_NameMisc_Fury_LX"
+    },
+    "zeus-mkii-es": {
+      "name": "RSI 宙斯 MK II ES",
+      "key": "vehicle_NameRSI_Zeus_ES"
+    },
+    "zeus-mkii-mr": {
+      "name": "RSI 宙斯 MK II MR",
+      "key": "vehicle_NameRSI_Zeus_MR"
+    },
+    "zeus-mkii-cl": {
+      "name": "RSI 宙斯 MK II CL",
+      "key": "vehicle_NameRSI_Zeus_CL"
+    },
+    "cutter-scout": {
+      "name": "德雷克 小刀 侦察",
+      "key": "vehicle_NameDRAK_Cutter_Scout"
+    },
+    "arrastra": {
+      "name": "RSI 阿拉斯塔",
+      "key": "vehicle_NameRSI_Arrastra"
+    },
+    "syulen": {
+      "name": "盖塔克 速伦",
+      "key": "vehicle_NameGAMA_Syulen"
+    },
+    "cutter-rambler": {
+      "name": "德雷克 小刀 漫步者",
+      "key": "vehicle_NameDRAK_Cutter_Rambler"
+    },
+    "sabre-firebird": {
+      "name": "圣盾 军刀 火鸟",
+      "key": "vehicle_NameAEGS_Sabre_Firebird"
+    },
+    "mpuv-tractor": {
+      "name": "南船座 MPUV 牵引",
+      "key": "vehicle_NameARGO_MPUV_Tractor"
+    },
+    "ironclad": {
+      "name": "德雷克 铁甲",
+      "key": "vehicle_NameDRAK_Ironclad"
+    },
+    "ironclad-assault": {
+      "name": "德雷克 铁甲 突袭",
+      "key": "vehicle_NameDRAK_Ironclad_Assault"
+    },
+    "sabre-peregrine": {
+      "name": "圣盾 军刀 游隼",
+      "key": "vehicle_NameAEGS_Sabre_Peregrine"
+    },
+    "starlancer-max": {
+      "name": "武藏 星际枪骑兵 MAX",
+      "key": "vehicle_nameMISC_Starlancer_MAX"
+    },
+    "starlancer-tac": {
+      "name": "武藏 星际枪骑兵 TAC",
+      "key": "vehicle_NameMISC_Starlancer_TAC"
+    },
+    "intrepid": {
+      "name": "十字军 无畏",
+      "key": "vehicle_NameCRUS_Intrepid"
+    },
+    "paladin": {
+      "name": "铁砧 圣骑士",
+      "key": "vehicle_nameANVL_Paladin"
+    },
+    "terrapin-medic": {
+      "name": "铁砧 水龟 医疗",
+      "key": "vehicle_NameANVL_Terrapin_Medic"
+    },
+    "f7c-r-hornet-tracker-mk-ii": {
+      "name": "铁砧 F7C-R 大黄蜂 追踪者 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7CR_Mk2"
+    },
+    "f7c-s-hornet-ghost-mk-ii": {
+      "name": "铁砧 F7C-S 大黄蜂 幽灵 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7CS_Mk2"
+    },
+    "guardian": {
+      "name": "未来 守护者",
+      "key": "vehicle_NameMRAI_Guardian"
+    },
+    "guardian-qi": {
+      "name": "未来 守护者 QI",
+      "key": "vehicle_NameMRAI_Guardian_QI"
+    },
+    "fortune": {
+      "name": "武藏 财运",
+      "key": "vehicle_NameMISC_Fortune"
+    },
+    "sabre-comet": {
+      "name": "圣盾 军刀 彗星",
+      "key": "vehicle_NameAEGS_Sabre_Comet"
+    },
+    "gladius-valiant": {
+      "name": "圣盾 短剑 勇士",
+      "key": "vehicle_NameAEGS_Gladius_Valiant"
+    },
+    "f7c-hornet-wildfire": {
+      "name": "铁砧 F7C 大黄蜂 野火 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7C_Wildfire"
+    },
+    "avenger-titan-renegade": {
+      "name": "圣盾 复仇者 泰坦变节者",
+      "key": "vehicle_NameAEGS_Avenger_Titan_Renegade"
+    },
+    "caterpillar-pirate": {
+      "name": "德雷克 毛虫 海盗",
+      "key": "vehicle_NameDRAK_Caterpillar_Pirate"
+    },
+    "constellation-phoenix-emerald": {
+      "name": "星座 凤凰座 翡翠绿",
+      "sourceAlias": "Constellation Phoenix Emerald"
+    },
+    "valkyrie-liberator": {
+      "name": "铁砧 女武神 解放者",
+      "key": "vehicle_NameANVL_Valkyrie_CitizenCon"
+    },
+    "mustang-alpha-vindicator": {
+      "name": "野马 阿尔法 维护者",
+      "sourceAlias": "Mustang Alpha Vindicator"
+    },
+    "f7cm-hornet-heartseeker-mkii": {
+      "name": "铁砧 F7C-M 大黄蜂 寻心者 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7CM_Heartseeker_Mk2"
+    },
+    "f7c-m-super-hornet-heartseeker": {
+      "name": "铁砧 F7C-M 大黄蜂 寻心者 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7CM_Heartseeker"
+    },
+    "nautilus-solstice": {
+      "name": "鹦鹉螺 至日版",
+      "sourceAlias": "Nautilus Solstice Edition"
+    },
+    "pirate-gladius": {
+      "name": "圣盾 短剑 海盗版",
+      "derivedFrom": "gladius"
+    },
+    "cutlass-black-2949-best-in-show": {
+      "name": "德雷克 黑弯刀 2949 展会最佳版",
+      "derivedFrom": "cutlass-black"
+    },
+    "caterpillar-2949-best-in-show": {
+      "name": "德雷克 毛虫 2949 展会最佳版",
+      "derivedFrom": "caterpillar"
+    },
+    "hammerhead-2949-best-in-show": {
+      "name": "圣盾 锤头鲨 2949 展会最佳版",
+      "derivedFrom": "hammerhead"
+    },
+    "reclaimer-2949-best-in-show": {
+      "name": "圣盾 回收者 2949 展会最佳版",
+      "derivedFrom": "reclaimer"
+    },
+    "mole-carbon": {
+      "name": "南船座 鼹鼠 炭黑",
+      "key": "vehicle_NameARGO_Mole_Carbon"
+    },
+    "mole-talus": {
+      "name": "南船座 鼹鼠 岩白",
+      "key": "vehicle_NameARGO_Mole_Talus"
+    },
+    "carrack-c8x": {
+      "name": "克拉克 C8X",
+      "sourceAlias": "Carrack w/C8X"
+    },
+    "carrack-expedition-c8x": {
+      "name": "克拉克 远征 C8X",
+      "sourceAlias": "Carrack Expedition w/C8X"
+    },
+    "carrack-expedition": {
+      "name": "铁砧 克拉克 远征",
+      "key": "vehicle_nameANVL_Carrack_Expedition"
+    },
+    "p72-archimedes-emerald": {
+      "name": "克鲁格 P-72 阿基米德 翡翠绿",
+      "key": "vehicle_NameKRIG_P72_Archimedes_Emerald"
+    },
+    "f7c-m-super-hornet-mk-ii": {
+      "name": "铁砧 F7C-M 超级大黄蜂 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7CM_Mk2"
+    },
+    "golem": {
+      "name": "德雷克 魔像",
+      "key": "vehicle_NameDRAK_Golem"
+    },
+    "guardian-mx": {
+      "name": "未来 守护者 MX",
+      "key": "vehicle_NameMRAI_Guardian_MX"
+    },
+    "asgard": {
+      "name": "铁砧 阿斯加德",
+      "key": "vehicle_NameANVL_Asgard"
+    },
+    "prowler-utility": {
+      "name": "埃斯佩里亚 徘徊者 多功能",
+      "key": "vehicle_NameESPR_Prowler_Utility"
+    },
+    "meteor": {
+      "name": "RSI 流星",
+      "key": "vehicle_NameRSI_Meteor"
+    },
+    "l-21-wolf": {
+      "name": "克鲁格 L-21 狼式",
+      "key": "vehicle_NameKRIG_L21_Wolf"
+    },
+    "stinger": {
+      "name": "埃斯佩里亚 毒刺",
+      "key": "vehicle_NameESPR_Stinger"
+    },
+    "shiv": {
+      "name": "格雷 锈刃",
+      "key": "vehicle_NameGLSN_Shiv"
+    },
+    "l22-alphawolf": {
+      "name": "克鲁格 L-22 头狼",
+      "key": "vehicle_NameKRIG_L22_Alpha_Wolf"
+    },
+    "salvation": {
+      "name": "RSI 拯救",
+      "key": "vehicle_NameRSI_Salvation"
+    },
+    "clipper": {
+      "name": "德雷克 快帆",
+      "key": "vehicle_NameDRAK_Clipper"
+    },
+    "golem-ox": {
+      "name": "德雷克 魔像 OX",
+      "key": "vehicle_NameDRAK_Golem_OX"
+    },
+    "hermes": {
+      "name": "RSI 赫尔墨斯",
+      "key": "vehicle_NameRSI_Hermes"
+    },
+    "moth": {
+      "name": "南船座 飞蛾",
+      "key": "vehicle_NameARGO_MOTH"
+    },
+    "aurora-mk-ii": {
+      "name": "RSI 极光 Mk II",
+      "key": "vehicle_NameRSI_Aurora_Mk2"
+    },
+    "pegasus": {
+      "name": "飞马座",
+      "sourceAlias": "existing-local-game-terminology"
+    },
+    "retribution": {
+      "name": "复仇级",
+      "sourceAlias": "existing-local-game-terminology"
+    },
+    "sabre-raven": {
+      "name": "圣盾 军刀 渡鸦",
+      "key": "vehicle_NameAEGS_Sabre_Raven"
+    },
+    "kraken-privateer": {
+      "name": "德雷克 海妖 私掠",
+      "key": "vehicle_NameDRAK_Kraken_Privateer"
+    },
+    "kraken": {
+      "name": "德雷克 海妖",
+      "key": "vehicle_NameDRAK_Kraken"
+    },
+    "idris-m": {
+      "name": "圣盾 伊德里斯-M",
+      "key": "vehicle_NameAEGS_Idris_M"
+    },
+    "f8c-lightning-executive": {
+      "name": "铁砧 F8C 闪电 行政版",
+      "key": "vehicle_NameANVL_Lightning_F8C_Exec"
+    },
+    "f7a-hornet": {
+      "name": "铁砧 F7A 大黄蜂 Mk I",
+      "key": "vehicle_NameANVL_Hornet_F7A"
+    },
+    "c8-pisces": {
+      "name": "铁砧 C8 双鱼座",
+      "key": "vehicle_NameANVL_C8_Pisces"
+    },
+    "600i-executive": {
+      "name": "起源 600i 行政版",
+      "key": "vehicle_NameORIG_600i_Executive"
+    },
+    "bengal": {
+      "name": "RSI 孟加拉航母",
+      "key": "vehicle_NameRSI_Bengal"
+    },
+    "endeavor-master-set": {
+      "name": "武藏 奋进 大师套装",
+      "derivedFrom": "endeavor"
+    },
+    "zeus": {
+      "name": "宙斯",
+      "sourceAlias": "existing-local-game-terminology"
+    },
+    "f7a-mkii": {
+      "name": "铁砧 F7A 大黄蜂 Mk II",
+      "key": "vehicle_NameANVL_Hornet_F7A_Mk2"
+    },
+    "aurora-se": {
+      "name": "RSI 极光 Mk I SE",
+      "key": "vehicle_NameRSI_Aurora_SE"
+    },
+    "pitbull": {
+      "name": "德雷克 斗牛犬",
+      "key": "vehicle_NameDRAK_Pitbull"
+    },
+    "m80": {
+      "name": "起源 M80",
+      "key": "vehicle_NameORIG_M80"
+    },
+    "tiburon": {
+      "name": "圣盾 狂鲨",
+      "key": "vehicle_NameAEGS_Tiburon"
+    },
+    "mauler": {
+      "name": "剜度 重拳 驱逐舰",
+      "key": "vehicle_NameVNCL_Mauler"
+    },
+    "starlite": {
+      "name": "武藏 星光",
+      "key": "vehicle_NameMISC_Starlite"
+    },
+    "tyilui": {
+      "name": "盖塔克 缇律",
+      "key": "vehicle_NameGAMA_Tyilui"
+    },
+    "basher": {
+      "name": "格雷 重锤",
+      "key": "vehicle_NameGLSN_Basher"
+    },
+    "s-65-stingray": {
+      "name": "克鲁格 S-65 刺鳐",
+      "key": "vehicle_NameKRIG_S65_Stingray"
+    },
+    "odin": {
+      "name": "铁砧 奥丁",
+      "key": "vehicle_NameANVL_Odin"
+    },
+    "sabre-raven-ex": {
+      "name": "圣盾 军刀 渡鸦 EX",
+      "key": "vehicle_NameAEGS_Sabre_Raven_EX"
+    },
+    "constellation-mkv-centaurus": {
+      "name": "RSI 星座 Mk V 半人马座",
+      "key": "vehicle_NameRSI_Constellation_Mk5_Andromeda",
+      "note": "Centaurus 中文天文名称；源条目此词仍为英文"
+    }
+  }
+}
