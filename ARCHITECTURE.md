@@ -12,8 +12,10 @@
 | 导航活动项 | `section-navigation.js` | 导航 CSS | 第二个滚动监听绕过现有活动项计算 |
 | 相册位置与播放 | `archive-carousel.js` | 节点与播放按钮 | 第二套轮播、全局拖拽补丁或灯箱反向改位置 |
 | 相册灯箱 | `archive-lightbox.js` | 对话框 UI | 相册拖拽结束直接触发灯箱 |
-| 大乱斗弹窗 | `member-brawl-dialog.js` | iframe 页面 | 首页提前加载 iframe 游戏逻辑 |
-| 大乱斗成员与头像快照 | `scripts/lib/rsi-members.mjs`，由每周RSI Member Sync调用 | iframe的`fleet-members.js`数据脚本与原战斗渲染 | 浏览器查询RSI、另一套定时器热换正在进行的对局 |
+| 大乱斗窗口（展开/右下浮窗/结束） | `member-brawl-dialog.js` | 同一个iframe页面 | 首页预载游戏、缩小重开对局、滚动监听模拟fixed浮窗 |
+| 大乱斗模拟、对局与轮换 | `fleet-command-brawl.js` 的唯一固定步长RAF | 响应式DOM、HUD、本机战绩 | 独立Runner/interval/伤害定时器、点击/拖动角色、聊天或联网加入 |
+| 大乱斗纯规则和源配置 | `member-arena-rules.js`、`member-arena-profile.js` | 唯一模拟 | UI另写一套命中或结算；把Unity世界单位直接当CSS像素 |
+| 大乱斗成员与头像快照 | `scripts/lib/rsi-members.mjs`，由每周RSI Member Sync调用 | iframe的`fleet-members.js`数据脚本与战斗渲染 | 浏览器查询RSI、另一套定时器热换正在进行的对局 |
 
 桌面和手机可以采用不同的状态生产方式，但同一媒体条件中只能有一个生产者。消费者不得反向写入生产者状态。
 
@@ -24,7 +26,7 @@
 - `pagehide` 只由总入口处理：`persisted=true` 表示 BFCache 冻结，保留唯一实例；只有真正离开时清理。缓存返回不会重新执行模块，禁止无条件销毁后再加多套恢复补丁。
 - 行动视频仅在跨 760px 宽度断点时清理并重绑该控制器的观察器；不监听地址栏高度变化重建全站。
 - GSAP 跨 760px 的 matchMedia 事务保存并按需恢复原滚动位置，防旧触发器清理/刷新时丢失位置；不监听普通滚动或手机地址栏高度，清理时移除事务事件。不得强写阶段状态绕过断点问题。
-- 大乱斗的弹窗、文档可见性与可见区域共同输入原模拟的暂停/恢复函数；隐藏时停止 Runner、RAF、战斗 interval，同时冻结战斗逻辑时钟。攻击、命中、退场等延迟统一用 afterBattleDelay，由原 RAF 消费有序队列，不得新增独立 setTimeout；重建清空队列，暂停释放拖拽捕获，恢复继续同一局与剩余冷却。
+- 大乱斗仅在首次打开弹窗时加载iframe、Matter、名单和军械图片。窗口采用closed/expanded/docked三态：官网按钮打开居中普通弹窗；大窗口关闭/缩小/Escape/点遮罩均转为固定右下浮窗，解除页面滚动锁并继续原iframe对局；只有右下浮窗关闭才卸载src，触发游戏pagehide清理并保存本机增量。浮窗仅裁切/缩放原视口，不缩放物理角色或重建场地。文档隐藏或手动暂停时取消唯一RAF，同时冻结物理、攻击、投射物、掉落物、冷却、撒花和结算时钟；恢复继续原局。无角色pointer/touch控制，也不建立Runner、interval或伤害setTimeout。方向/尺寸变化仅由ResizeObserver缩放现有角色并重建静态碰撞轮廓，不重开对局、不重置血量或战绩。
 - 视口高度变化和宽度/方向变化必须区分。手机地址栏的高度变化不得触发全站重新布局或 ScrollTrigger 全量刷新。
 - 新增全局 `scroll`、`resize`、`pointer`、`touch` 监听前，必须证明现有负责人无法承载，并增加自动测试。
 
@@ -65,7 +67,20 @@
 - 自动更新仅允许`assets/js/fleet-members.js`、`config/rsi-member-source.json`和受约束的`assets/member-avatars/<SHA>.<扩展>`。候选分支显式dispatch原Verify；准确候选SHA上的两项原检查成功且main仍为原基线，再把真实结果/原job链接登记为同名commit status（GitHub不把workflow_dispatch job检查计入保护），由既有保护规则校验后普通快进推送main。并发改动、CI失败、超时均停止，不修改保护、不使用PAT、不强推。
 - 自动更新后核对双域普通首页、实际大乱斗文档、指纹快照和所有现役头像的完整SHA。初始接入快照的`bootstrap`标记在首次云端成功读取后删除，用于验收真实候选检查→发布链路；不会伪造成员或改动玩家对局。
 - 内部`automation/rsi-members-state`分支只记录一次周检状态，保持该分支源代码树不变；真实状态提交维持仓库活动，避免长期main无变化导致公开仓库60天停用schedule。该分支不发布生产。原Production Monitor只读检查状态，失败或超过10天未成功均走既有事故流程；不另建轮询/通知任务。
-- 页面用随部署指纹更新的本地快照，已打开的对局保持原名单，刷新官网后采用新版；不在战斗中重建。战斗时钟、物理、武器、暂停/恢复负责人不变。
+- 页面用随部署指纹更新的本地快照，已打开的对局保持原名单，刷新官网后采用新版；不在战斗中重建。本地游戏升级不修改每周同步或发布工作流。
+
+## 离线自动竞技场
+
+- 默认随机巡回，用洗牌袋轮换个人淘汰、团队淘汰、限时击杀赛；每组三种不重复。无尽混战单独置于最后，不进巡回。武器默认随机；切换模式保留当前配装选择。个人淘汰补完原3.2隐藏且未实现的Deathmatch设计，限时击杀赛和巡回为网站扩展。
+- 个人淘汰最后一人获胜；团队淘汰双方在场+预备队参与全灭判断，胜队所有成员计胜，双方同时全灭为平局；两者不设60秒截止。限时击杀赛45秒，阵亡者回候场队列，期满决胜；Classic无尽混战持续回收队列，不自动结束。结果为8秒可暂停倒数及同RAF撒花。fast/slow只影响战斗速度，不改变限时赛45秒墙钟时长和结果8秒。上限64角色、96投射物、100粒子、8掉落物；更大名单按下一轮轮换。撒花72片/手机40片，不新增独立循环或计时器。
+- 参考包通过REA确认Unity/IL2CPP制品；100HP、速度阈值碰撞伤害/上限下限/1%暴击、部分AI和限时规则、七场景参数来自独立Unity序列化与LLVM调用映射分析。Windows原作未运行，原生Ghidra两次600秒超时；不能表述为完整C#恢复或逐帧一致。Matter/CSS单位转换、Matter关节/渲染适配、自动巡回和64人限制为浏览器适配。技术证据与边界见OPERATIONS。
+- 界面使用原官网黑金、正式logo、白圈头像、11px无框彩色名字与原武器遮挡层级。命中通过实际接触/扫掠且要求物品Active、世界AABB伤害区合格、相对线速度达到武器阈值；只认Enter，不在持续接触时循环扣血。同一目标对同一具体物品300ms保护，不同武器独立；无全局260ms或出生无敌，无全武器×.46/30封顶。物理伤害按各武器原阈值/倍率/上下限/1%暴击。友伤30%，爆炸attacker/source为空、影响所有阵营，不给原投手计杀。击杀按本次致死attacker归因，无8秒回溯；回血按life kill/divider，每7杀重置。额外击退使用原径向力，不再固定向上踢或随机旋转。
+- 开战后桌面标题、战况和操作合并为56px工具栏，手机为54px标题加48px操作栏；战绩收为展开按钮，底栏退出文档流，把空间留给战场。设置页保留完整规则选择；不得为了缩短界面缩小44px按钮或用整体缩放降低可读性。
+- 名称按用户最终截图采用无底色、无边框的彩色文字，保留11px字号、轻描边和头像上方5px间距。用户明确要求保留武器对名称的自然遮挡，名称继续作为角色子节点，不提升层级或新增文字层。
+- 地图始终有全宽实心底边，地形保留Unity原XY及Y=0，不把每张图最低点重新归零。按原相机尺度和实际战场纵横比使用统一等比映射；所有头像、手、武器和地形共用sceneUnit；Classic/本地Royale按本轮初始人数N使用clamp(6+N/15,6,14)，Team为9。人数在开局固定，死亡不改变视野；窄窗裁切远端地形保持武器可辨，宽/矮窗受高度约束，不拉伸箱体或平台。生成场地按相机/6生成点数与幅度并恢复固定长度Bezier切线；固定01/02保留原折角。采样最多256点，绘制与凸条带碰撞共用同一轮廓，并裁剪到底线，避免负端点产生自交多边形和质心偏移。resize会保留贴地间距，避免嵌入新地形；可见暂停窗口也立即更新几何，不推进模拟时钟。
+- 战斗中打开战绩时，在场地左上角显示无底色、无边框、点击穿透的紧凑前五名；文字阴影保证可读，保留淘汰/阵亡列，不占布局高度。手机打开排行时暂隐藏同区域的击杀播报，避免叠字。原战绩按钮控制展开，准备界面保留本局完整前十及本浏览器累计战绩；复用既有HUD更新，不新增逻辑循环或远程请求。
+- 随机队战先平地；45%概率9/27箱阵、12–19秒后地形，事件保留原已核配置，上限36箱/8区域。Classic首地形90–144秒、显示33–62秒、回平地140–259秒再出现；个人淘汰/限时赛随机地形立即可见。绘制与碰撞共享等比轮廓，跨Matter区域/投放为单位适配，不宣称Unity逐帧一致。
+- 战绩仅保存在当前浏览器，按RSI handle归并更名、限制500条及有界去重记录。存储不可用时退化为内存，不阻塞战斗。没有聊天、Twitch、登录、WebSocket、XHR或浏览器抓取RSI。
 
 ## 变更门禁
 
@@ -77,3 +92,29 @@
 6. 用户明确要求部署后才推送；部署后运行 `npm run monitor:production` 与媒体检查。
 
 禁止以空提交、强推、清缓存、删除测试、放宽白名单或额外 CSS/JavaScript 覆盖层来“让结果看起来通过”。
+
+## 参考武器的浏览器重建
+
+- `member-arena-weapon-profile.js` 是唯一现役兵器几何/动作配置：21份原作无损WebP共81,322字节、原sprite比例、握点/碰撞器/质量/PID、各类投射物独立伤害和骷髅击杀标记。原14份科幻生成图和提示词已移到仓库外退役证据，不进入构建。
+- `member-arena-motion.js` 提供PID、路径、坐标和凸分解，`member-arena-actions.js` 按秒采样原CatmullRom/延迟/回位与弓蓄力；`member-arena-rig.js` 连接真实身体、旋转载体、滑动拳和实体武器。固定控制时钟50Hz；Matter每次分为两个10ms内部求解，render单独插值。Matter没有原Box2D滑动电机，软约束/扭矩阻尼/越界投影是显式跨引擎校准，不声称Unity逐帧一致。
+- 近战/拳出手首次等待1秒，人格一次U(1,2.9)乘[.175,.55]，近战C=P+W+动画getter，弓/Thrower C=.525+W+U(.75,1.5)，与动画同时计时。整件武器抛出仅P冷却、.55秒解绑，同body角速度×.45，Active恢复、owner为空；.2秒后可伤原投手，拾回同body时移交归属。弓保留.525秒真实蓄力和质量.75/冲量pull×30。法球/炸弹先固定手中，再解绑同body继承速度，爆炸独立按距离伤害和径向击退，不重复叠加通用击退。复杂箭附着/拔出未完整移植。
+- 普通已装备武器的原遮挡mask4352仅含身体12、箱8和炸弹/治疗弹8，保留自身/目标，每源collider计1；原始命中≥3则.3秒重试。地形0、边界13、武器6、实体拳0、箭/法球7不加入此query。拳和抛整件武器绕过检测。射程=1.2+itemReach+身体速度世界值×.25，并要求严格大于目标距离。
+- 红蓝两队各按初始队大小<12全入场、12–27取floor(n/3)、≥28取floor(n/4)，其余保留DOM但不创建物理手/武器。首次增援等22–37秒，落后方每批2–7人，分侧检查且同一有界时钟推进。为短局增加双方均空时匹配放出预备成员的兜底，避免空场；此项为网页适配。工具栏明确显示预备人数。
+- 血条旁显示本次出场和当前浏览器累计的骷髅击杀数；0隐藏，出场击杀死亡后归零，累计按原handle存储。脉冲同RAF可暂停，保留11px无框名称和自然武器遮挡；没有新的角色控制、网络请求或常驻计时器。
+
+- 限时击杀赛期满使用Rules.compareMatchScore/rankMatch/classicWinners：击杀多优先，同击杀阵亡少优先，两项相同并列，无淘汰为平局。排行与结算共用规则，不以HP/名单顺序暗选冠军；冻结赛果后增量记账，每个并列者记一次胜局，周期保存不重复增加场次。无尽Classic无冠军结算。
+
+### Arena feedback lifecycle
+
+`member-arena-feedback.js` is loaded only by the lazily opened arena document. It owns no RAF, timer, physics body, network request or combat random source. The existing render loop samples 75ms melee / 175ms projectile trails from measured source child anchors and the real active weapon pose; a single 2D canvas reuses at most 512 trail segments and 96 portrait fragments, capped at two million backing pixels. Damage feedback moves only the avatar visual, not the physical body, hand, weapon, label or HP. Health front/tail transforms use simulation time with native damage/heal durations; retargeting replaces the visible sequence. Pause/background freezes all feedback, resize discards old trail connections, restart/settings/unload remove the surface and portrait references. Reduced motion allocates no drawing surface and settles health immediately.
+
+- 控制链：动画路径和武器瞄准每固定更新使用同一实时目标，动画期间只冻结inverse；目标消失保留最近位置。旋转从Unity武器root对应的sprite origin计算，不能误用Matter compound COM。拳的滑动关节角度跟随arm，取消网页额外fistPID。两次10ms求解均保留50Hz控制力/力矩，避免第二半步被Matter清零。原PID增益和误差上限保留，Matter关节/惯量/转矩校准仍是已知适配，不把gain20、加速度限幅或自定义rail惯量描述为原作代码。
+- AI探敌U(1.35,2.35)秒，移动U(1.72,2.65)秒；持武器跳跃、拳92.5%跳跃/7.5%移动动画。跳跃.8秒施力、.975秒解锁，无grounded门；新生重建人格。Classic默认源配置可回收开关在网站选择true，候场按原加权批次和间隔入场，不用固定2.6秒个人复活。候场/预备不参与物理；body线阻尼0/角阻尼.05。
+
+- 飞行物保存发射时的life/team；成员回收复用DOM时递增life并重建碰撞组。旧生命的箭仍给成员累计击杀，但不为新生命回血/增加连杀，也不永久忽略新生命的碰撞。
+
+- 事件外观复用原节点/碰撞和战斗时钟：黑洞有界吸积盘与核心、货箱金属结构/短受击边光、医疗补给十字/治疗区域、跃升标识；最多36箱/8区域，不新建RAF、定时器或粒子系统。低动态固定旋转/脉冲。暴击只在原1%实际计算且通过伤害门禁时提示；回血只显示上限截断后的真实HP增量，16个canvas文字槽合并同一生命短间隔回血、到期回收。独立格挡未证实，不误报物理碰撞为成功格挡。文字提示与事件新外观是用户要求的网页增强，不冒充原包既有提示。
+
+- 角色位置和头像转动/受击/挤压直接写入各自transform，避免逐帧CSS变量继承到名称、手、武器和血条。击杀/事件播报最多4条，显示3.2秒后随模拟时钟淡出1.8秒，设置/重赛清空；没有独立计时器。准备页的简短下拉名称与规则说明独立于对局配置，选项顺序、默认随机配装和玩法不变；桌面原生base-select渐进增强，触屏沿用系统选择器。
+
+- 用户最终取消帧数限制，render恢复每次浏览器RAF绘制；无按卡顿、人数或硬件的pacer、固定30/60档位、rendering状态字段或新设置。50Hz模拟仍独立于浏览器绘制刷新率，原单RAF、暂停/后台冻结和效果预算不变。

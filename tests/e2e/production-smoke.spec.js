@@ -327,11 +327,13 @@ test("arena start waits for deferred scripts before accepting the first click", 
   }
   await expect(start).toBeVisible();
   await expect(start).toBeEnabled();
-  await expect(start).toHaveCSS("padding", "16px 20px");
+  expect(await start.evaluate((button) => button.getBoundingClientRect().height)).toBeGreaterThanOrEqual(44);
   await start.click();
   await expect(page.locator(".member-fighter")).toHaveCount(fleetRoster.members.length);
-  await expect.poll(() => page.locator(".member-fighter").first().evaluate((v) =>
-    v.style.getPropertyValue("--chip-x"))).not.toBe("");
+  const fighter = page.locator(".member-fighter:not([hidden])").first();
+  await expect.poll(() => fighter.evaluate((v) => getComputedStyle(v).transform)).not.toBe("none");
+  const firstPosition = await fighter.evaluate((v) => getComputedStyle(v).transform);
+  await expect.poll(() => fighter.evaluate((v) => getComputedStyle(v).transform)).not.toBe(firstPosition);
   expect(runtimeFailures).toEqual([]);
 });
 
@@ -364,29 +366,28 @@ test("arena consumes the current local snapshot and safely displays changed memb
   expect(failures).toEqual([]);
 });
 
-test("closed arena stops physics and reopens the same iframe", async ({ page }) => {
+test("docking keeps one live arena and only the dock close unloads its document", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
   const arena = page.frameLocator("[data-member-brawl-frame]");
+  await arena.locator("[data-arena-mode]").selectOption("classic");
   await arena.locator("[data-brawl-start]").click();
-  const positions = () => arena.locator(".member-fighter").evaluateAll((vs) => vs.map((v) => v.style.cssText));
-  await expect.poll(async () => (await positions()).some((s) => s.includes("--chip-x"))).toBe(true);
-  await page.waitForTimeout(500);
-  await page.locator("[data-member-brawl-close]").click();
-  await page.waitForTimeout(200);
-  const closed = await positions();
-  await page.waitForTimeout(500);
-  expect(await positions()).toEqual(closed);
   const frame = page.frames().find((f) => f.url().includes("member-brawl.html"));
   await frame.evaluate(() => { window.__arenaAuditIdentity = true; });
-  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  const before = await frame.evaluate(() => window.__gvyArena.snapshot().simTime);
+  await page.locator("[data-member-brawl-close]").click();
+  await expect(page.locator("[data-member-brawl-dialog]")).toHaveAttribute("data-window-state", "docked");
+  await expect.poll(() => frame.evaluate(() => window.__gvyArena.snapshot().simTime)).toBeGreaterThan(before + 250);
+  await page.locator("[data-member-brawl-restore]").first().click();
   expect(await frame.evaluate(() => window.__arenaAuditIdentity)).toBe(true);
-  await expect.poll(positions).not.toEqual(closed);
   await page.keyboard.press("Escape");
+  await expect(page.locator("[data-member-brawl-dialog]")).toHaveAttribute("data-window-state", "docked");
+  await page.locator("[data-member-brawl-end]").click();
   await expect(page.locator("[data-member-brawl-dialog]")).not.toHaveAttribute("open", "");
+  await expect(page.locator("[data-member-brawl-frame]")).not.toHaveAttribute("src", /.+/);
 });
 
-test("closing during an attack freezes pending damage, effects and cooldowns until reopen", async ({ page }) => {
+test("manual pause during an attack freezes damage, effects and cooldowns across docking until resumed", async ({ page }) => {
   await page.addInitScript(() => {
     let seed = 20260907;
     Math.random = () => ((seed = (1664525 * seed + 1013904223) >>> 0) / 4294967296);
@@ -394,22 +395,21 @@ test("closing during an attack freezes pending damage, effects and cooldowns unt
   await page.goto("/", { waitUntil: "domcontentloaded" });
   await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
   const arena = page.frameLocator("[data-member-brawl-frame]");
+  await arena.locator("[data-arena-mode]").selectOption("classic");
   await arena.locator("[data-brawl-start]").click();
   const state = () => arena.locator(".member-fighter").evaluateAll((fighters) =>
     fighters.map((v) => ({ id: v.dataset.index, style: v.style.cssText, classes: v.className })));
   for (let cycle = 0; cycle < 3; cycle++) {
     await expect.poll(() => arena.locator(".is-attacking").count()).toBeGreaterThan(0);
-    await page.locator("[data-member-brawl-close]").click();
+    await arena.locator("[data-arena-pause]").click();
     const frozen = await state();
-    await page.waitForTimeout(1200);
+    await page.locator("[data-member-brawl-minimize]").click();
+    await page.waitForTimeout(700);
     expect(await state()).toEqual(frozen);
-    await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+    await page.locator("[data-member-brawl-restore]").first().click();
+    await arena.locator("[data-arena-pause]").click();
     await expect.poll(state).not.toEqual(frozen);
   }
-  await page.keyboard.press("Escape");
-  const frozen = await state();
-  await page.waitForTimeout(1200);
-  expect(await state()).toEqual(frozen);
 });
 
 test("a legally reduced two-photo gallery still supports nodes, cloning and the correct lightbox", async ({ page }) => {

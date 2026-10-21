@@ -577,11 +577,10 @@ test("gallery keeps upload order with sequential lightbox indexes and no visible
   assert.match(homepage, /<figcaption><p>团建回忆<\/p><\/figcaption>/);
 });
 
-test("member brawl popup preserves the published runtime without a nested frame shell", async () => {
+test("member brawl keeps a lazy local roster in a responsive automatic arena", async () => {
   assert.match(memberBrawlPage, /GVY \/\/ MEMBER ARENA/);
-  assert.match(memberBrawlPage, /JOIN READY/);
-  assert.match(memberBrawlPage, /RECRUIT ARENA/);
-  assert.match(memberBrawlPage, /舰队成员大乱斗，快快加入我们！/);
+  assert.match(memberBrawlPage, /arena-logo/);
+  assert.match(memberBrawlPage, /舰队成员大乱斗/);
   assert.match(memberBrawlPage, /<button[^>]*data-brawl-start[^>]*hidden/);
   assert.match(memberBrawlPage, /INITIATE MEMBER ARENA/);
   assert.match(memberBrawlPage, /fleet-command-brawl\.js/);
@@ -589,25 +588,25 @@ test("member brawl popup preserves the published runtime without a nested frame 
   assert.doesNotMatch(memberBrawlPage, /<script[^>]+fleet-command\.js/);
   assert.match(memberBrawlPage, /class="member-brawl-terminal reveal is-visible"/);
   assert.match(memberBrawlDialog, /\.\/member-brawl\.html/);
-  assert.match(memberBrawlDialog, /BRAWL_DESIGN_WIDTH\s*=\s*1440/);
-  assert.match(memberBrawlDialog, /BRAWL_DESIGN_HEIGHT\s*=\s*900/);
+  assert.doesNotMatch(memberBrawlDialog, /BRAWL_DESIGN_WIDTH|getBrawlFit/);
+  assert.match(memberBrawlDialog, /frame\.style\.transform\s*=\s*"none"/);
   assert.doesNotMatch(homepage, /data-member-brawl-stage|member-brawl-dialog-shell/);
   assert.match(homepage, /期待你的<em>加入<\/em>/);
-  assert.match(cinematicCss, /\.member-brawl-dialog[\s\S]*?aspect-ratio:\s*8\s*\/\s*5/);
+  assert.match(cinematicCss, /\.member-brawl-dialog iframe[\s\S]*?width:\s*100%/);
   assert.match(cinematicCss, /\.hero-title h1 span[\s\S]*?font-weight:\s*900/);
   assert.match(cinematicTimelines, /ease:\s*"power2\.out"/);
   assert.match(homepage, /scrolling="no"/);
   assert.match(memberBrawlDialog, /member-brawl\.html/);
-  assert.match(memberBrawlPage, /\.brawl-section[\s\S]*?margin:\s*0;[\s\S]*?padding:\s*0;/);
-  assert.match(memberBrawlPage, /\.member-brawl-terminal[\s\S]*?width:\s*100%;[\s\S]*?height:\s*100%/);
+  assert.match(memberBrawlPage, /member-arena\.css/);
+  assert.match(memberBrawlPage, /member-arena-profile\.js/);
+  assert.match(memberBrawlPage, /value="auto"/);
+  assert.doesNotMatch(memberBrawlPage, /拖住头像|松手投掷/);
   assert.match(buildScript, /"member-brawl\.html"/);
 
   const expectedHashes = new Map([
-    // Reviewed pausable battle clock: delayed effects now stop with physics.
-    // Seeded close-during-attack E2E locks HP, classes and positions across reopen.
-    // Native hidden startup is released by the existing initialization, not a timer.
-    // Public roster is a separate fingerprinted data script; physics stays reviewed.
-    ["assets/fleet-command-brawl.js", "7f090d43cf3d652046b023dddd2ffa4e3dfee89bec3f5a400a224332236c78b8"],
+    // Reviewed automatic fixed-step arena and real contact/swept projectiles.
+    // E2E freezes the simulation across pause/close and verifies round changes.
+    ["assets/fleet-command-brawl.js", "975a63f16e99b098a61639304a25294072f7bc6bb0db65710a71229cde101b3e"],
     // Native hidden stays effective without increasing specificity over mobile styles.
     ["assets/fleet-command.css", "8daccdd0cb7075bad50c50cbfe3c8ff9543971400bd1b17ba742950d653eea9d"],
     ["assets/vendor/matter.min.js", "72d30be0f579eb02ce1e0b6f9d359a4f392e6837e5a26ba8be5dbee7f88e24ae"],

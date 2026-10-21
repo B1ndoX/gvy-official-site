@@ -3,78 +3,150 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
     <title>GVY 舰队成员大乱斗</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32.png?v=17f28ec0f59c" />
     <link rel="stylesheet" href="./assets/fleet-command.css" />
-    <style>
-      html,
-      body,
-      body > main,
-      .brawl-section,
-      .member-brawl-terminal {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-      }
-
-      html,
-      body,
-      .member-brawl-terminal {
-        overflow: hidden;
-      }
-
-      body::before {
-        display: none;
-      }
-
-      .brawl-section {
-        margin: 0;
-        padding: 0;
-      }
-
-      .member-brawl-terminal {
-        padding: clamp(14px, 1.55vw, 22px);
-      }
-
-      .command-brawl-field,
-      .brawl-start-panel {
-        inset: var(--brawl-field-top) 0 0;
-      }
-    </style>
+    <link rel="stylesheet" href="./assets/member-arena.css" />
   </head>
-  <body>
+  <body class="arena-page">
     <main>
       <section class="recruit-section brawl-section" id="recruit">
         <div class="member-brawl-terminal reveal is-visible" aria-label="舰队成员大乱斗">
-          <div class="terminal-topline">
-            <span>GVY // MEMBER ARENA</span>
-            <span>JOIN READY</span>
+          <header class="arena-header">
+            <div class="arena-brand">
+              <img class="arena-logo" src="./assets/gvy-logo-hq.png?v=f2df3e742db8" alt="星远舰队" width="80" height="80" decoding="async" />
+              <div class="arena-brand-copy">
+                <p class="arena-eyebrow">GVY // MEMBER ARENA</p>
+                <h1>舰队成员大乱斗<span class="arena-title-invite">，快快加入我们！</span></h1>
+              </div>
+            </div>
+            <a class="arena-org-link" href="https://robertsspaceindustries.com/en/orgs/GVY" target="_blank" rel="noopener noreferrer"><span>前往 RSI 组织页面 <span aria-hidden="true">↗</span></span><small>RSI ORG / GVY</small></a>
+          </header>
+
+          <div class="arena-toolbar" aria-label="战况与对局控制">
+            <div class="arena-match-state">
+              <span class="arena-state" data-arena-status role="status">准备就绪</span>
+              <span class="arena-stat arena-live-stat"><span>在场</span><span class="arena-live-value"><strong data-arena-live-count>—</strong><small data-arena-reserve-count hidden></small></span></span>
+              <span class="arena-stat"><span data-arena-clock-label>用时</span><strong data-arena-clock>00:00</strong><span class="arena-clock-divider" aria-hidden="true">/</span><span data-arena-round-limit>全灭决胜</span></span>
+              <span class="arena-stat arena-round"><span>回合</span><strong data-arena-round>1</strong></span>
+            </div>
+            <div class="arena-actions">
+              <button class="arena-action" type="button" data-arena-pause disabled aria-pressed="false">暂停</button>
+              <button class="arena-action" type="button" data-arena-restart disabled>重赛</button>
+              <button class="arena-action" type="button" data-arena-settings>设置</button>
+            </div>
           </div>
-          <div class="member-brawl-heading">
-            <p class="system-label">RECRUIT ARENA</p>
-            <h2>舰队成员大乱斗，快快加入我们！</h2>
-            <a
-              class="hud-button hud-button-inline"
-              href="https://robertsspaceindustries.com/en/orgs/GVY"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span>前往 RSI 组织页面</span>
-              <small>RSI ORG / GVY</small>
-            </a>
+
+          <div class="arena-stage">
+            <div class="command-brawl-field tag-field" data-member-brawl-field aria-label="舰队成员物理竞技场"></div>
+            <ol class="arena-feed" data-arena-feed aria-label="最近击杀播报" aria-live="off"></ol>
+
+            <div class="brawl-start-panel" data-brawl-start-panel>
+              <div class="arena-setup-card">
+                <h2>全员集结，即刻开战。</h2>
+                <div class="arena-options">
+                  <label>对局模式
+                    <select data-arena-mode aria-describedby="arena-mode-help">
+                      <option value="auto">随机巡回</option>
+                      <option value="royale">个人淘汰</option>
+                      <option value="teams">团队淘汰</option>
+                      <option value="score">限时击杀赛</option>
+                      <option value="classic">无尽混战</option>
+                    </select>
+                  </label>
+                  <label>武器分配
+                    <select data-arena-loadout>
+                      <option value="random">随机配装</option>
+                      <option value="mirrored">镜像配装</option>
+                      <option value="same">全员同款</option>
+                      <option value="unarmed">赤手空拳</option>
+                    </select>
+                  </label>
+                  <label>竞技场
+                    <select data-arena-terrain>
+                      <option value="random">随机场景</option>
+                      <option value="flat">平地竞技场</option>
+                      <option value="platforms">悬浮平台</option>
+                      <option value="default">起伏山地</option>
+                      <option value="smallhill">小山丘</option>
+                      <option value="pit">盆地</option>
+                      <option value="slope">斜坡</option>
+                      <option value="canyon">峡谷</option>
+                      <option value="terrain01">高台</option>
+                      <option value="terrain02">山脊</option>
+                    </select>
+                  </label>
+                  <label>特殊规则
+                    <select data-arena-modifier>
+                      <option value="none">标准规则</option>
+                      <option value="low-gravity">低重力</option>
+                      <option value="zero-gravity">零重力</option>
+                      <option value="gravity-well">引力场</option>
+                      <option value="explosive">爆炸冲击</option>
+                      <option value="inverted">反转伤害</option>
+                      <option value="drop-items">掉落武器</option>
+                      <option value="bouncy">弹跳</option>
+                      <option value="instakill">一击淘汰</option>
+                      <option value="fast">加速</option>
+                      <option value="slow">慢动作</option>
+                      <option value="giant">巨人</option>
+                    </select>
+                  </label>
+                </div>
+                <p class="arena-error" data-arena-error role="alert" hidden></p>
+                <button class="brawl-start-button" type="button" data-brawl-start hidden>
+                  <span>开始战斗</span>
+                  <small>INITIATE MEMBER ARENA</small>
+                </button>
+                <p class="arena-setup-note" id="arena-mode-help" data-arena-mode-help>随机轮换个人淘汰、团队淘汰和限时击杀赛；无尽混战单独选择。</p>
+              </div>
+            </div>
+
+            <section class="arena-result" data-arena-result aria-label="本局结果" role="status" hidden>
+              <div class="arena-result-card">
+                <p class="arena-eyebrow">ROUND COMPLETE</p>
+                <h2 data-arena-result-title>本局结束</h2>
+                <p data-arena-result-detail></p>
+                <p class="arena-result-hint"><strong data-arena-result-countdown>8</strong> 秒后自动开启下一局</p>
+                <div class="arena-result-progress" aria-hidden="true"><span data-arena-result-progress></span></div>
+                <p class="arena-result-note">也可点击「重赛」或「设置」更换规则</p>
+              </div>
+            </section>
           </div>
-          <div class="command-brawl-field tag-field" data-member-brawl-field aria-label="舰队成员大乱斗"></div>
-          <div class="brawl-start-panel" data-brawl-start-panel>
-            <button class="brawl-start-button" type="button" data-brawl-start hidden>
-              <span>开始战斗</span>
-              <small>INITIATE MEMBER ARENA</small>
-            </button>
-          </div>
+
+          <footer class="arena-footer">
+            <details class="arena-scores">
+              <summary aria-label="查看舰队战绩" title="战斗中查看本局前五名；准备时可查看累计战绩">战绩 <span aria-hidden="true">⌃</span></summary>
+              <div class="arena-scores-panel">
+                <section class="arena-score-group" aria-labelledby="arena-match-scores">
+                  <h3 id="arena-match-scores" title="击杀多优先；同击杀阵亡少优先；两项相同并列">本局排行 <small class="arena-score-limit">前五名</small></h3>
+                  <div class="arena-score-columns" aria-hidden="true"><span>名次</span><span>成员</span><span>淘汰</span><span>阵亡</span></div>
+                  <ol data-arena-leaderboard aria-label="本局成员战绩排行榜"></ol>
+                </section>
+                <section class="arena-score-group" aria-labelledby="arena-career-scores">
+                  <h3 id="arena-career-scores">累计战绩 <small>当前浏览器</small></h3>
+                  <div class="arena-score-columns" aria-hidden="true"><span>名次</span><span>成员</span><span>胜局</span><span>淘汰</span></div>
+                  <ol data-arena-career aria-label="当前浏览器累计成员战绩排行榜"></ol>
+                </section>
+              </div>
+            </details>
+            <span class="arena-footer-tip" data-arena-scenario>自动战斗 · 无需操作角色</span>
+          </footer>
         </div>
       </section>
     </main>
 
     <script src="./assets/vendor/matter.min.js" defer></script>
     <script src="./assets/js/fleet-members.js" defer></script>
+    <script src="./assets/js/member-arena-rules.js" defer></script>
+    <script src="./assets/js/member-arena-profile.js" defer></script>
+    <script src="./assets/js/member-arena-motion.js" defer></script>
+    <script src="./assets/js/member-arena-actions.js" defer></script>
+    <script src="./assets/js/member-arena-weapon-profile.js" defer></script>
+    <script src="./assets/js/member-arena-rig.js" defer></script>
+    <script src="./assets/js/member-arena-feedback.js" defer></script>
+    <script src="./assets/js/member-arena-combat.js" defer></script>
     <script src="./assets/fleet-command-brawl.js" defer></script>
   </body>
 </html>
