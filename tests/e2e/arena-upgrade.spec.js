@@ -475,6 +475,8 @@ test("a giant fighter releases its actual staged fireball and collision causes r
 
 for (const modifier of ["none", "fast", "slow"]) {
   test(`native teams have no time cap and ${modifier} preserves the eight-second result`, async ({ page }) => {
+    // Replay a full 65s match and settlement on slower shared CI CPUs.
+    test.slow();
     await page.clock.install();
     await standalone(page, { mode: "teams", modifier, loadout: "unarmed" }, fixtureMembers(2));
     await page.evaluate(() => {

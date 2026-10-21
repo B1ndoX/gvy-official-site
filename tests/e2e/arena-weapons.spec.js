@@ -128,6 +128,8 @@ test('large teams keep reserves outside physics and release a bounded batch only
 });
 
 test('manual infinite Classic keeps running past sixty seconds and never awards a timed winner',async({page})=>{
+  // Long fixed-step replays are correctness checks, not wall-time benchmarks.
+  test.slow();
   await setup(page,{count:1,mode:'classic',loadout:'unarmed'});
   await isolate(page);
   await page.clock.runFor(66000);
@@ -161,6 +163,8 @@ test('a released fireball detonates on an allied body and the ownerless blast da
 
 
 test('45-second kill race settles visible score ties consistently and records each win once',async({page})=>{
+  // Long fixed-step replays are correctness checks, not wall-time benchmarks.
+  test.slow();
   await setup(page,{count:4,mode:'score',loadout:'unarmed'});
   for(const tied of [false,true]){
     if(tied)await page.locator('[data-arena-restart]').click();
