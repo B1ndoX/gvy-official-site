@@ -97,9 +97,9 @@ test('crowd camera shrinks the whole actor and weapon together and does not zoom
       try{
         await setup(page,{count,mode:'classic',seed:.7,terrain:count===32?'terrain01':'flat'});await page.locator('[data-arena-pause]').click();
         const before=await state(page);diameters.push(before.map.actorDiameter);
-        const ratio=await page.locator('.member-fighter').first().evaluate(e=>({body:parseFloat(getComputedStyle(e).width),weapon:parseFloat(e.querySelector('.arena-weapon').style.height),font:getComputedStyle(e.querySelector('.fighter-name')).fontSize}));
+        const ratio=await page.locator('.member-fighter').first().evaluate(e=>({body:parseFloat(getComputedStyle(e).width),weapon:parseFloat(e.querySelector('.arena-weapon').style.height),font:parseFloat(getComputedStyle(e.querySelector('.fighter-name')).fontSize)/(parseFloat(getComputedStyle(document.body).fontSize)/14)}));
         expect(Math.abs(ratio.body-before.map.actorDiameter)).toBeLessThan(.02);
-        expect(ratio.weapon/before.map.actorDiameter).toBeCloseTo(2.844444/1.12,4);expect(ratio.font).toBe('11px');
+        expect(ratio.weapon/before.map.actorDiameter).toBeCloseTo(2.844444/1.12,4);expect(ratio.font).toBeCloseTo(11,4);
         expect(before.map.actorDiameter/before.map.height).toBeLessThan(.12);
         if(viewport.width===390)expect(before.map.actorDiameter).toBeGreaterThan(15);
         await page.evaluate(()=>{const f=document.querySelector('.member-fighter').physicsItem;f.alive=false;f.rig.dispose();f.rig=null;});
