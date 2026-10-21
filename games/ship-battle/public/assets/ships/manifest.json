@@ -1008,7 +1008,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 2628.709454796411,
+          "damage": 12500,
           "duration": 6,
           "cooldown": 6.222222222222222,
           "charge": 0.7999999999999999,
@@ -1148,7 +1148,7 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 6
     },
     {
       "shipId": "javelin",
@@ -18430,7 +18430,7 @@
           "arc": 24,
           "range": 3200,
           "damage": 90000,
-          "cooldown": 26.666666666666668,
+          "cooldown": 20,
           "charge": 1.5999999999999999,
           "speed": 680,
           "turnRate": 3,
@@ -18508,7 +18508,7 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 6
     },
     {
       "shipId": "f8c-lightning-executive",
@@ -19591,7 +19591,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 2095.8605664488014,
+          "damage": 10000,
           "duration": 5.2,
           "cooldown": 4.888888888888888,
           "charge": 0.6,
@@ -19667,7 +19667,7 @@
           "facing": 0,
           "arc": 100,
           "range": 1800,
-          "damage": 1456.46,
+          "damage": 1456.47,
           "cooldown": 11.543,
           "speed": 420,
           "turnRate": 0.65,
@@ -19675,7 +19675,7 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 6
     },
     {
       "shipId": "mauler",
@@ -19711,7 +19711,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 4357.166834508224,
+          "damage": 20000,
           "duration": 7.199999999999999,
           "cooldown": 6.222222222222222,
           "charge": 1,
@@ -19908,7 +19908,7 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 6
     },
     {
       "shipId": "starlite",
@@ -20256,7 +20256,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2800,
-          "damage": 7222.222222222221,
+          "damage": 35000,
           "duration": 8,
           "cooldown": 8,
           "charge": 1.3333333333333333,
@@ -20453,7 +20453,7 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 6
     },
     {
       "shipId": "sabre-raven-ex",

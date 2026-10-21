@@ -1,5 +1,5 @@
 import {readFile,writeFile} from 'node:fs/promises';
-import {applyWeaponProfiles} from './apply-weapon-profiles.mjs';
+import {applyWeaponProfiles,weaponProfileVersion} from './apply-weapon-profiles.mjs';
 const config=JSON.parse(await readFile(new URL('../src/data/defense-balance.json',import.meta.url),'utf8'));
 const file=new URL('../src/data/ships.json',import.meta.url),ships=JSON.parse(await readFile(file,'utf8'));
 function roleFor(ship){
@@ -49,6 +49,6 @@ for(const ship of ships){
 applyWeaponProfiles(ships);
 await writeFile(file,JSON.stringify(ships,null,2)+'\n');
 const assetFile=new URL('../public/assets/ships/manifest.json',import.meta.url),manifest=JSON.parse(await readFile(assetFile,'utf8'));
-for(const a of manifest.assets){const ship=ships.find(s=>s.id===a.shipId);a.combatVersion=config.version;a.mounts=ship.mounts;}
+for(const a of manifest.assets){const ship=ships.find(s=>s.id===a.shipId);a.combatVersion=weaponProfileVersion(a.shipId,config.version);a.mounts=ship.mounts;}
 await writeFile(assetFile,JSON.stringify(manifest,null,2)+'\n');
 console.log(`Updated ${ships.length} defense, weapon and mobility profiles; image geometry preserved.`);
