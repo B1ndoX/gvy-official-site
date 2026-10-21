@@ -9,7 +9,7 @@
     "src/data/localized-ships.ts": "d503154004a22e477a1f75df55d248f5c55581130446a130bdbea8c6ebb076d0",
     "src/data/members.json": "432b0c34e981a56739c6146915b6f6418ec416ca14a698b96e65750e5dce793f",
     "src/data/ship-names-zh.json": "a834de3663751a1f5f16c6b269980c1f799eabbb155c4e7b2531a7487bc18378",
-    "src/data/ships.json": "727926052f689433f5e570cb03e59f08d6f5c68c603ba39cb4c0a7ed8780f2b2",
+    "src/data/ships.json": "98d466a03509e741a26ecb1f732d3cf9ce23f03c82af0206d05bd81defb8c2b2",
     "src/data/weapon-profiles.json": "84c15939e8545d16facb6ac85ed847b0a0ff1b25b91a5eaa3fdb2815078cc10b",
     "src/main.tsx": "aba1c93e93fcf25e491fff694fc824a8631fed0226c735f2239815c3da3b2969",
     "src/render/BattleRenderer.ts": "2ebbe41860caf4e61e048a9b91245da49dfa026148301ee40957b77a49ebc986",
@@ -188,7 +188,7 @@
     "public/assets/ships/m2-hercules.png": "2ab97b66856358c96be417f47a4961c4ce33e0dc53ebf70e521335395deba500",
     "public/assets/ships/m50.png": "bca8b74c480c71c349e41c2e876b0a78089e73e214064d52b3b0e6f6da42e978",
     "public/assets/ships/m80.png": "bf87ca0f47f6dd3943bfbd906c5e79b057321d08080fed8d41507853c3d03abf",
-    "public/assets/ships/manifest.json": "c6ba1b28288007eb2b990be378d92ce6d19e01dd4f3f329a905b77d509ffa38e",
+    "public/assets/ships/manifest.json": "562da229eb659c54c529a9a5a2a0972849eadb31b5ae4e8c3cb2e3a6be2215df",
     "public/assets/ships/mantis.png": "fd1500ef7f1aebc9934b78ccae0252f6364895fcf0e97e5e6a3e2d958bd47f65",
     "public/assets/ships/mauler.png": "cac5e7ef559ca481e1b8e46d553d7cd3832ca87ae027570dd9c965ad8839b7ae",
     "public/assets/ships/merchantman.png": "b664be23e8066e14322106cb4311e420910c5ea6d28763ad222cfb5eedcc4d6c",
@@ -301,11 +301,11 @@
     "assets/WebGPURenderer-CQx7F_hI.js": "6fd1f5d253a0a0c869c28d565d6bf18cf3c4127d73e349381d98f406a158a149",
     "assets/browserAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
     "assets/index-CNQ_yhuf.css": "332f38f53c05d20f450a9465c8e12eeae501e409a86a8c57236ed0edaafcf285",
-    "assets/index-DKNTMxCV.js": "3dfd18d761fe9d937ddd4b284890ce89a80b4f50d8d3dc17e50f0e738b02dda7",
+    "assets/index-DtoZu-Jq.js": "58f0b6819c161609b6013c368765b697006fbabadbcb3595c942f68149dffd2f",
     "assets/jsx-runtime-C4P_E1jq.js": "fa6212a9a7b7e21ab69e4021af4a0b223661c04427b82822fbc79794f64671fb",
     "assets/pixi-BGJzYaA3.js": "91e03643e62c079e41832f63012745312ed74dda4b371661cca64780ab45fd39",
     "assets/rolldown-runtime-WkwZ5CU-.js": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
     "assets/webworkerAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
-    "index.html": "6d11e0e5ba747accc17f40554c99b384515e6244e3e1bd1622c7e58cc23a760c"
+    "index.html": "5b7b90dfff9269cd740022c867aba7c44564f26fbef6f0e2efcd9a631b6d2ad9"
   }
 }
