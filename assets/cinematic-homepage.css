@@ -1833,44 +1833,51 @@ html[data-motion-ready] :is(
   stroke-width: 1.4;
 }
 
-/* The production brawl runtime stays isolated while the iframe itself directly
-   occupies the floating dialog, without an extra shell or stage frame. */
+/* One game document moves between a centered fleet window and a docked preview. */
 .member-brawl-dialog {
-  width: min(1440px, calc(100vw - 48px), calc(160svh - 76.8px));
+  width: min(960px, calc(100vw - 96px));
   max-width: none;
-  height: auto;
+  height: min(600px, calc(100dvh - 96px));
   max-height: none;
-  aspect-ratio: 8 / 5;
   margin: auto;
   padding: 0;
   overflow: hidden;
-  border: 1px solid rgba(102, 188, 229, 0.3);
+  border: 1px solid rgba(137, 173, 193, 0.42);
+  border-radius: 10px;
   color: var(--text-primary);
-  background: #030508;
-  box-shadow: 0 32px 120px rgba(0, 0, 0, 0.78);
+  background: #020408;
+  box-shadow: 0 28px 100px rgba(0, 0, 0, 0.6);
 }
-
-.member-brawl-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.84);
-  backdrop-filter: blur(12px);
+.member-brawl-dialog::backdrop { background: rgba(0, 5, 10, 0.66); backdrop-filter: blur(8px); }
+@media (min-width: 1800px) {
+  .member-brawl-dialog {
+    width: min(1760px, 70vw, calc(148.2dvh - 64px));
+    height: min(1056px, 78dvh);
+  }
 }
-
+@media (max-height: 560px) {
+  .member-brawl-dialog {
+    width: min(1100px, calc(100vw - 32px));
+    height: calc(100dvh - 32px);
+  }
+}
+.member-brawl-viewport { position: absolute; inset: 0; overflow: hidden; }
 .member-brawl-dialog iframe {
   position: absolute;
-  inset: 0 auto auto 0;
+  inset: 0;
   display: block;
-  width: 1440px;
-  height: 900px;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   border: 0;
-  background: #030508;
-  transform: scale(var(--member-brawl-scale, 0.75));
+  background: #020408;
+  transform: none;
   transform-origin: top left;
 }
-
-.member-brawl-dialog-close {
+.member-brawl-dialog-close,
+.member-brawl-dialog-minimize {
   position: absolute;
-  z-index: 5;
+  z-index: 12;
   top: 14px;
   right: 14px;
   display: grid;
@@ -1878,20 +1885,44 @@ html[data-motion-ready] :is(
   height: 44px;
   padding: 0;
   place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  color: #f2f5f7;
-  background: rgba(3, 5, 8, 0.84);
+  border: 1px solid rgba(150, 190, 214, 0.22);
+  border-radius: 5px;
+  color: #e8edf1;
+  background: #080e16;
   cursor: pointer;
 }
-
-.member-brawl-dialog-close svg {
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-width: 1.5;
+.member-brawl-dialog-minimize { right: 62px; }
+.member-brawl-dialog-close:hover,
+.member-brawl-dialog-minimize:hover { border-color: var(--fleet-gold); color: var(--fleet-gold); }
+.member-brawl-dialog-close svg,
+.member-brawl-dialog-minimize svg,
+.member-brawl-dock-bar svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.member-brawl-dock-bar,
+.member-brawl-dock-preview { display: none; }
+.member-brawl-dialog[data-window-state="docked"] {
+  position: fixed;
+  z-index: 110;
+  top: auto;
+  right: max(18px, env(safe-area-inset-right));
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: auto;
+  width: min(340px, calc(100vw - 32px));
+  height: calc(var(--member-brawl-preview-height, 212px) + 46px);
+  margin: 0;
+  border-color: rgba(216, 182, 106, 0.45);
+  border-radius: 8px;
+  box-shadow: 0 12px 52px #000b;
 }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-dialog-close,
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-dialog-minimize { display: none; }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-dock-bar { display: flex; height: 44px; align-items: center; gap: 0; border-bottom: 1px solid var(--line-cool); padding-left: 13px; background: #08111b; }
+.member-brawl-dock-bar > span { flex: 1; min-width: 0; overflow: hidden; color: #ddd7c8; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.member-brawl-dock-bar button { display: grid; width: 44px; height: 44px; flex: 0 0 44px; place-items: center; border: 0; padding: 0; color: #b8c4ce; background: transparent; cursor: pointer; }
+.member-brawl-dock-bar button:hover { color: var(--fleet-gold); background: #ffffff08; }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-viewport { top: 44px; }
+.member-brawl-dialog[data-window-state="docked"] iframe { pointer-events: none; }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-dock-preview { position: absolute; z-index: 2; inset: 0; display: flex; align-items: flex-end; justify-content: center; border: 0; padding: 0 12px 10px; color: #f2e2bb; background: linear-gradient(transparent 60%, #020408b3); font-size: 12px; cursor: pointer; opacity: 0; transition: opacity 140ms ease; }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-dock-preview:is(:hover, :focus-visible) { opacity: 1; }
 
 noscript {
   position: fixed;
@@ -2253,10 +2284,12 @@ noscript {
   .archive-dialog-next { right: 20px; }
   .archive-dialog figcaption { padding: 0 58px; justify-content: flex-end; }
   .member-brawl-dialog {
-    width: min(1440px, calc(100vw - 24px), calc(160svh - 38.4px));
-    border: 1px solid rgba(102, 188, 229, 0.3);
+    width: calc(100vw - 24px);
+    height: min(660px, calc(100dvh - 64px));
+    border: 1px solid rgba(137, 173, 193, 0.42);
   }
-  .member-brawl-dialog-close { top: 8px; right: 8px; width: 36px; height: 36px; }
+  .member-brawl-dialog-close { top: 10px; right: 10px; }
+  .member-brawl-dialog-minimize { top: 10px; right: 58px; }
 }
 
 @media (max-width: 350px) {

@@ -511,11 +511,26 @@
       </div>
     </dialog>
 
-    <dialog class="member-brawl-dialog" data-member-brawl-dialog aria-label="舰队成员大乱斗">
-      <button class="member-brawl-dialog-close" type="button" data-member-brawl-close aria-label="关闭舰队成员大乱斗">
+    <dialog class="member-brawl-dialog" data-member-brawl-dialog data-window-state="closed" aria-label="舰队成员大乱斗">
+      <button class="member-brawl-dialog-minimize" type="button" data-member-brawl-minimize aria-label="缩小到右下角" title="缩小到右下角">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18h14" /></svg>
+      </button>
+      <button class="member-brawl-dialog-close" type="button" data-member-brawl-close aria-label="收起战斗窗口" title="收起到右下角，战斗继续">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
       </button>
-      <iframe data-member-brawl-frame title="舰队成员大乱斗正式发布版" loading="lazy" scrolling="no"></iframe>
+      <div class="member-brawl-dock-bar">
+        <span>舰队成员大乱斗</span>
+        <button type="button" data-member-brawl-restore aria-label="恢复战斗窗口" title="恢复窗口">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 20h5v-5M4 4l6 6m10 10-6-6" /></svg>
+        </button>
+        <button type="button" data-member-brawl-end aria-label="结束并关闭战斗" title="结束并关闭">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
+        </button>
+      </div>
+      <div class="member-brawl-viewport" data-member-brawl-viewport>
+        <iframe data-member-brawl-frame title="舰队成员大乱斗" loading="lazy" scrolling="no"></iframe>
+        <button class="member-brawl-dock-preview" type="button" data-member-brawl-restore aria-label="恢复战斗窗口">点击恢复窗口</button>
+      </div>
     </dialog>
 
     <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
