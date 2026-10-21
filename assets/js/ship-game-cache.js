@@ -2,21 +2,21 @@
 // media remain outside its fetch handling; opening the game hub starts work.
 export function createShipGameCache({view=globalThis.window,onProgress=()=>{}}={}){
   const serviceWorkers=view?.navigator?.serviceWorker;
-  let promise=null,activation=null,finish=null,worker=null,requestId='',serial=0,firstLoad=false;
+  let promise=null,activation=null,finish=null,worker=null,requestId='',serial=0,firstLoad=false,held=false,complete=false;
   const onMessage=event=>{
     const data=event.data;
     if(event.source!==worker||data?.source!=='gvy.ship-cache'||data.requestId!==requestId)return;
     onProgress({...data,firstLoad});
-    if(data.type==='complete')firstLoad=false;
+    if(data.type==='complete'){firstLoad=false;complete=true;}
     if(data.type==='complete'||data.type==='error'){finish?.(data.type==='complete');finish=null;}
   };
   serviceWorkers?.addEventListener('message',onMessage);
   const stop=()=>{
     worker?.postMessage({source:'gvy.ship-cache',type:'stop',requestId});
-    requestId='';finish?.(false);finish=null;promise=null;activation=null;
+    requestId='';finish?.(false);finish=null;promise=null;activation=null;held=false;complete=false;
   };
   const prepare=()=>{
-    if(promise)return promise;
+    if(promise){if(!complete)worker?.postMessage({source:'gvy.ship-cache',type:held?'hold':'prepare',requestId});return promise;}
     if(!serviceWorkers)return Promise.resolve(false);
     const token=`${Date.now()}-${++serial}`;requestId=token;
     onProgress({type:'progress',loaded:0,total:0});
@@ -48,5 +48,5 @@ export function createShipGameCache({view=globalThis.window,onProgress=()=>{}}={
     })();
     return promise;
   };
-  return {prepare,isFirstLoad(){return firstLoad;},ready(){prepare();return activation||Promise.resolve();},hold(){worker?.postMessage({source:'gvy.ship-cache',type:'hold',requestId});},resume(){worker?.postMessage({source:'gvy.ship-cache',type:'resume',requestId});},stop,cleanup(){stop();serviceWorkers?.removeEventListener('message',onMessage);}};
+  return {prepare,isFirstLoad(){return firstLoad;},ready(){prepare();return activation||Promise.resolve();},hold(){held=true;worker?.postMessage({source:'gvy.ship-cache',type:'hold',requestId});},resume(){held=false;if(!complete)worker?.postMessage({source:'gvy.ship-cache',type:'prepare',requestId});},stop,cleanup(){stop();serviceWorkers?.removeEventListener('message',onMessage);}};
 }
