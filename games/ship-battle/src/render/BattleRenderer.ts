@@ -43,10 +43,12 @@ export class BattleRenderer {
       this.draw();this.hud+=ticker.elapsedMS;if(this.hud>100){this.hud=0;this.onSnapshot(this.engine.snapshot(this.selected));}
     });this.fit();
   }
-  async setAssets(assets:ShipAsset[],ids:string[]){
+  get activeAssetURLs(){return [...this.loadedURLs];}
+  async setAssets(assets:ShipAsset[],ids:string[],onProgress?:(loaded:number,total:number)=>void){
     const request=++this.assetRequest,next=new Map<string,Texture>(),outlines=new Map<string,{x:number;y:number}[]>();
     const needed=new Set(ids),urls=new Set(assets.filter(a=>needed.has(a.shipId)).map(assetURL));
-    await Promise.all(assets.filter(a=>needed.has(a.shipId)).map(async a=>{const texture=await Assets.load<Texture>(assetURL(a));next.set(a.shipId,texture);outlines.set(a.shipId,this.outline(texture));}));
+    const selected=assets.filter(a=>needed.has(a.shipId));let loaded=0;onProgress?.(0,selected.length);
+    await Promise.all(selected.map(async a=>{const texture=await Assets.load<Texture>(assetURL(a));next.set(a.shipId,texture);outlines.set(a.shipId,this.outline(texture));if(request===this.assetRequest&&!this.disposed)onProgress?.(++loaded,selected.length);}));
     if(this.disposed||request!==this.assetRequest)return;
     const stale=[...this.loadedURLs].filter(url=>!urls.has(url));
     this.assetMap=new Map(assets.map(a=>[a.shipId,a]));this.textures=next;this.outlines=outlines;

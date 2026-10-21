@@ -2,14 +2,14 @@
   "version": 1,
   "acceptedCommit": "5700a86751c3552f1c25b933067fd2daf5e51bda",
   "sources": {
-    "src/App.tsx": "16db85e02e2c04562352055fe3a1f3ff43a7532b07ced7fa50a67c8c7bd70ee4",
+    "src/App.tsx": "577167bee53a5b0645db61e48b672360299b9adb16e19e5a898f61ba0cfb559a",
     "src/assets/library.ts": "363e5f5f18bc1aa7ab7a9c5dcc4f8734c693cbcd0db1cae45dd46ce95224ce4f",
-    "src/bridge.ts": "52ed3fb3fe44ba07916a086996c31d296ea41add667783dfc71803b7e872c97c",
+    "src/bridge.ts": "aca0ed27dbe32d4d36056f1d53506cfa0c160fc2ec9a352addb6153173e32f1e",
     "src/data/defense-balance.json": "f72dab4649d2b6af0caf9538c3915ecd85eb30c339f81d6321ad7329ecf58c7c",
     "src/data/members.json": "432b0c34e981a56739c6146915b6f6418ec416ca14a698b96e65750e5dce793f",
     "src/data/ships.json": "e7a81661c9bcc2ca9fb3d860bd1602abe79b75be670270a5174406c9f1ab69c3",
-    "src/main.tsx": "1411490ded30f203ea8d24183d9adf5c734984f1d6df8934f7fde5c56745eab5",
-    "src/render/BattleRenderer.ts": "436de3fae1e0f8308f950f7d1ed25263481c6fa0bffb41a155bcdfc7a9a73440",
+    "src/main.tsx": "aba1c93e93fcf25e491fff694fc824a8631fed0226c735f2239815c3da3b2969",
+    "src/render/BattleRenderer.ts": "0b968fc46b0bb89e03d101b8d2d9d4524d5552ed123919a7be1a096f8ec287f7",
     "src/render/CombatDirector.ts": "bfa91161b26fefc2375aed065407f0937fc86bf296cf20f6b5e35e78785a8ca0",
     "src/sim/asteroids.ts": "24e573120afc0d7829b55ecd021c1080a596dbda7c21b391ccbf7bfdd2ea583a",
     "src/sim/balance.ts": "d97796f771f2cbdfe11e84fb00d55f108a350dc3042d8e0f09992685cf4a0db5",
@@ -19,7 +19,7 @@
     "src/sim/members.ts": "278b4e57363246f8dc5d6efae57e0566525a6801af4bdb7c61c79f9df0ccc166",
     "src/sim/pacing.ts": "f1bff8c3b689c230ded1b4e86f4928b78ff0e41ed123a1a4f358952f40837f32",
     "src/sim/types.ts": "dda3306f0a9ab341b7af729bf1c8671d99519c9ee61614a218d03a429a70e8e3",
-    "src/style.css": "3a511c01c29e14c0d4e3c7985117690e396d923c332f1878aee598c0793c36f0",
+    "src/style.css": "7bac511df39a50a30a8de43a0e8b551ddf5ee44e76e7cf1b52236bec236aa253",
     "src/ui/AssetManager.tsx": "351ae32d126cc992c7661b7a4c60c13feb2221e2c2da7e9b36f6c09ef4423647",
     "src/ui/Inspector.tsx": "b4eafa9622c3fdbee16c89dccdc5955955b2fdca707a1fa04d970655058e130d",
     "src/ui/MemberLeaderboard.tsx": "cc0308749a98c0d31a0a53386c777213ee4ab0c453ccf1f53ef8cfd77245dfe1",
@@ -289,11 +289,18 @@
     "tsconfig.json": "829db882c5c1300d36c20a12a037b4c77da8bd06917a0e858cd00541a0c9d906"
   },
   "runtime": {
-    "assets/AssetManager-B6LVAOYH.js": "5772b823cbb9f9b7d25af12b44579e03643660607e6864aeebba1e77fd05238b",
-    "assets/index-CfLOQbD5.js": "b01b26b6fd6945b86e738ab7383a16983c87adecfa604c07bc380bb8dc3fe047",
-    "assets/index-DaMjRcGd.css": "f1239de272c2d96e011340653aaad93c3bcd114bd3b9fa0be92f217836d079a9",
-    "assets/pixi-DSNGEdpi.js": "f8ae8b51b5fb845d91e66228e2ac1dfc7bc70ada60004aa556798e5b16fde34e",
-    "assets/rolldown-runtime-XKyaHtl9.js": "548d1dbf321e7d2ae804fcc158b588706a7c52f8ca175de1490c6ccb4dbe55b7",
-    "index.html": "777d28251c855f5d2f6ad6c67cccec3e09a9abcdfed4b603e4bf5cca436a7d01"
+    "assets/AssetManager-B05kDGd8.js": "b3127f1ce57252472b6ccb29925601cb99f7724d1712805f2cd69066485e6637",
+    "assets/BitmapFont-BQKTltgs.js": "f412aaf2150a443e811a7cd3223eb0bbe9396cd5f22681c2b3c9d21fc276c0aa",
+    "assets/CanvasRenderer-CjdggjxA.js": "001ade4969d58d2b04728f8aab53816f871e5c694c4333d916389f478c6f9e05",
+    "assets/WebGLRenderer-C4rbqjrN.js": "f8305193c90aeab58b59b532f5ff7c14790fd193f8668722d9d5029ed34d63f2",
+    "assets/WebGPURenderer-CQx7F_hI.js": "6fd1f5d253a0a0c869c28d565d6bf18cf3c4127d73e349381d98f406a158a149",
+    "assets/browserAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
+    "assets/index-CNQ_yhuf.css": "332f38f53c05d20f450a9465c8e12eeae501e409a86a8c57236ed0edaafcf285",
+    "assets/index-Ch1-4POC.js": "067bcf6043f3d2243a8cdb435b54014e7cbfe8a3c7de833e4e508ff49d8eef01",
+    "assets/jsx-runtime-YEgUz2Kh.js": "7aae2c0fdf0de98e68d0a9ccdf324ac02cf1e5644ef7d3bf2f0b202c354db9b0",
+    "assets/pixi-BGJzYaA3.js": "91e03643e62c079e41832f63012745312ed74dda4b371661cca64780ab45fd39",
+    "assets/rolldown-runtime-WkwZ5CU-.js": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
+    "assets/webworkerAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
+    "index.html": "2cae5ed3454326ed1bf9d796f9dc87f4c8b5d3f6cd6d46c473bde1bf9af59d42"
   }
 }

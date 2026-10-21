@@ -1,3 +1,5 @@
+import {createShipGameCache} from './ship-game-cache.js';
+
 export function initMemberBrawlDialog({
   root = globalThis.document,
   view = root?.defaultView || globalThis,
@@ -20,6 +22,10 @@ export function initMemberBrawlDialog({
   const status = dialog?.querySelector?.("[data-game-status]");
   const choices = Array.from(dialog?.querySelectorAll?.("[data-game-select]") || []);
   const previews = Array.from(dialog?.querySelectorAll?.("[data-game-preview]") || []);
+  const cachePanel=dialog?.querySelector?.('[data-ship-cache]');
+  const cacheBar=dialog?.querySelector?.('[data-ship-cache-bar]');
+  const cacheLabel=dialog?.querySelector?.('[data-ship-cache-label]');
+  const cacheNote=dialog?.querySelector?.('[data-ship-cache-note]');
   if (!dialog || !frame || !viewport || !openers.length) return { cleanup() {} };
 
   const body = root.body;
@@ -27,6 +33,12 @@ export function initMemberBrawlDialog({
   let fitFrame = 0, expandedWidth = 960, expandedHeight = 600;
   let activeGame = "", generation = 0, membersSent = false, shipMembers = null;
   const names = { members: "舰队成员大乱斗", ships: "星际飞船大乱斗" };
+  const shipCache=createShipGameCache({view,onProgress(data){
+    if(cachePanel)cachePanel.hidden=false;
+    if(cacheBar){cacheBar.max=data.total||1;if(data.total)cacheBar.value=data.loaded;else cacheBar.removeAttribute('value');}
+    if(cacheLabel)cacheLabel.textContent=data.type==='complete'?'飞船资源已缓存，下次直接读取':data.type==='error'?data.message:data.total?`准备资源 ${Math.round(data.loaded/data.total*100)}% · ${data.loaded} / ${data.total}`:'正在检查本机游戏缓存…';
+    if(cacheNote){cacheNote.hidden=data.type==='complete';cacheNote.textContent=data.firstLoad?'首次加载可能较久，后续将优先读取本机缓存。':'正在补齐未缓存资源，已有资源直接读取。';}
+  }});
   const updateGame = (game) => {
     activeGame = game;
     dialog.dataset.activeGame = game;
@@ -107,6 +119,7 @@ export function initMemberBrawlDialog({
     restoreFocus?.focus?.({ preventScroll: true });
   };
   const close = () => {
+    shipCache.stop();
     setState("closed");
     if (dialog.open) dialog.close();
     unlockScroll();
@@ -123,6 +136,7 @@ export function initMemberBrawlDialog({
     for (const preview of previews) {
       if (!preview.getAttribute("src")) preview.setAttribute("src", preview.dataset.src);
     }
+    void shipCache.prepare();
     if (dialog.open) dialog.close();
     previousBodyOverflow = body?.style?.overflow || "";
     if (body?.style) body.style.overflow = "hidden";
@@ -141,10 +155,12 @@ export function initMemberBrawlDialog({
       if (game === "ships") {
         // Load the same versioned roster used by game 1, only on selection.
         // No network polling, external RSI fetch or homepage preload.
-        const members = await loadMembers();
+        if(status)status.textContent='正在连接舰队成员…';
+        const [members]=await Promise.all([loadMembers(),shipCache.ready()]);
         if (token !== generation || state === "closed") return;
         if (!Array.isArray(members) || members.length < 2 || members.length > 100) throw new Error("舰队成员名单暂不可用，请稍后重试。");
         shipMembers = members.map(({ handle, name, avatar }) => ({ handle, name, avatar: new URL(avatar, root.baseURI).href }));
+        shipCache.hold();
       }
       if (token !== generation) return;
       membersSent = false;
@@ -160,6 +176,7 @@ export function initMemberBrawlDialog({
   const backToHub = () => {
     const previous = activeGame;
     unloadGame();
+    shipCache.resume();
     if (status) status.textContent = "";
     applyFit(); requestFit();
     choices.find((choice) => choice.dataset.gameSelect === previous)?.focus?.({ preventScroll: true });
@@ -167,9 +184,12 @@ export function initMemberBrawlDialog({
   const onMessage = (event) => {
     if (activeGame !== "ships" || event.origin !== view.location.origin || event.source !== frame.contentWindow) return;
     const data = event.data;
-    if (data?.source !== "gvy.ship-battle" || data.version !== 1 || data.type !== "ready" || membersSent || !shipMembers) return;
+    if (data?.source !== "gvy.ship-battle" || data.version !== 1) return;
+    if(data.type==='loading'){if(data.payload?.active)shipCache.hold();else shipCache.resume();return;}
+    if(data.type==='ready')shipCache.resume();
+    if (!["members-request", "ready"].includes(data.type) || membersSent || !shipMembers) return;
     membersSent = true;
-    frame.contentWindow.postMessage({ source: "gvy.ship-battle", version: 1, type: "command", command: "set-members", members: shipMembers }, view.location.origin);
+    frame.contentWindow.postMessage({ source: "gvy.ship-battle", version: 1, type: "command", command: "set-members", members: shipMembers, firstLoad:shipCache.isFirstLoad() }, view.location.origin);
   };
   const onBackdropClick = (event) => { if (event.target === dialog && state === "expanded") minimize(); };
   const onCancel = (event) => { event.preventDefault(); minimize(); };
@@ -215,6 +235,7 @@ export function initMemberBrawlDialog({
       view?.removeEventListener?.("resize", requestFit);
       view?.removeEventListener?.("message", onMessage);
       close();
+      shipCache.cleanup();
     },
   };
 }

@@ -1906,6 +1906,11 @@ html[data-motion-ready] :is(
 .fleet-game-hint,.fleet-game-status { margin: calc(18 * var(--arena-window-unit)) 0 0; font-size: calc(11 * var(--arena-window-unit)); color: #7e8f9c; text-align: center; }
 .fleet-game-status:empty { display: none; }
 .fleet-game-status { color: #e4c687; }
+.fleet-game-cache { padding: calc(12 * var(--arena-window-unit)) calc(14 * var(--arena-window-unit)) 0; display: grid; gap: 6px; color: #aab9c5; font-size: calc(10 * var(--arena-window-unit)); }
+.fleet-game-cache progress { width: 100%; height: calc(4 * var(--arena-window-unit)); border: 0; border-radius: 8px; overflow: hidden; appearance: none; background: #24313d; accent-color: var(--fleet-gold); }
+.fleet-game-cache progress::-webkit-progress-bar { background: #24313d; }
+.fleet-game-cache progress::-webkit-progress-value { background: var(--fleet-gold); }
+.fleet-game-cache progress::-moz-progress-bar { background: var(--fleet-gold); }
 @media(max-width:600px) {
   .fleet-game-hub { padding: 68px 16px 20px; }
   .fleet-game-heading h2 { font-size: 23px; }

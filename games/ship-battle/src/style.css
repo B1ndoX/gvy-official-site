@@ -92,3 +92,13 @@ html,body,#root{width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
 
 /* In 292px host windows the second stats line must clear the parent's 58px button zone. */
 @media(max-width:360px){.embedded .arena-top{height:6rem;min-height:6rem}}
+
+.loading-state{flex-direction:column;gap:1rem;padding:1rem;text-align:center}
+.loading-status-line{display:flex;align-items:center;justify-content:center;gap:.9rem}
+.ship-loading-progress{width:min(22rem,82%);display:grid;gap:.6rem}
+.ship-loading-progress progress{display:block;width:100%;height:.4rem;border:0;border-radius:1rem;overflow:hidden;appearance:none;background:#24313d;accent-color:#d7b96e}
+.ship-loading-progress progress::-webkit-progress-bar{background:#24313d;border-radius:1rem}
+.ship-loading-progress progress::-webkit-progress-value{background:#d7b96e;border-radius:1rem;transition:width 120ms linear}
+.ship-loading-progress progress::-moz-progress-bar{background:#d7b96e;border-radius:1rem}
+.ship-loading-progress small{font-size:.75rem;color:#9aaebb;font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:reduce){.ship-loading-progress progress::-webkit-progress-value{transition:none}}

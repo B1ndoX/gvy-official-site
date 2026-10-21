@@ -29,6 +29,12 @@
       ]
     },
     {
+      "source": "/games/ship-battle/cache-worker.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
+    },
+    {
       "source": "/games/ship-battle/assets/ships/manifest.json",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }

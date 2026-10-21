@@ -106,6 +106,8 @@ test('a real swept weapon strike breaks a crate without awarding a member elimin
 });
 
 test('jump zones launch on contact, freeze with pause and expire after their thirty-second batch',async({page})=>{
+  // This replays over 50s of physics; shared CI CPUs can exceed the default 45s wall-clock budget.
+  test.setTimeout(90000);
   await begin(page,{seed:.8});expect((await state(page)).map.boxes).toBe(0);
   await advanceTo(page,23000);expect((await state(page)).map.terrainVisible).toBe(false);
   const zone=(await state(page)).map.zones.find(z=>z.type==='jump');expect(zone).toBeTruthy();
