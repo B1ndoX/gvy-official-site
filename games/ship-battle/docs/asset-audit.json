@@ -1,0 +1,3384 @@
+{
+  "date": "2026-10-21",
+  "scope": "224 built-in PNG files; decoded alpha checks and all-image visual contact-sheet inspection",
+  "decodeFailures": [],
+  "missingTransparency": [],
+  "runtimeExclusions": [
+    {
+      "id": "endeavor-master-set",
+      "reason": "模块与核心船体的拆件展示图，不是单艘装配后的飞船。"
+    },
+    {
+      "id": "syulen",
+      "reason": "当前渲染为三翼立式展示姿态，尚未取得适合平面飞行的投影与舰首校准。"
+    }
+  ],
+  "pool": {
+    "stored": 224,
+    "boss": 5,
+    "excluded": 2,
+    "member": 217
+  },
+  "images": [
+    {
+      "id": "f8c-lightning",
+      "size": [
+        1000,
+        1047
+      ],
+      "bbox": [
+        4,
+        1,
+        995,
+        1046
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "gladius",
+      "size": [
+        1000,
+        816
+      ],
+      "bbox": [
+        1,
+        2,
+        999,
+        814
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "arrow",
+      "size": [
+        1000,
+        672
+      ],
+      "bbox": [
+        1,
+        0,
+        999,
+        672
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hornet-mk2",
+      "size": [
+        1000,
+        984
+      ],
+      "bbox": [
+        0,
+        0,
+        1000,
+        984
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre",
+      "size": [
+        1000,
+        1028
+      ],
+      "bbox": [
+        2,
+        3,
+        996,
+        1026
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "scorpius",
+      "size": [
+        1000,
+        1211
+      ],
+      "bbox": [
+        5,
+        0,
+        996,
+        1211
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vanguard-warden",
+      "size": [
+        1000,
+        954
+      ],
+      "bbox": [
+        1,
+        0,
+        1000,
+        954
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-andromeda",
+      "size": [
+        1000,
+        435
+      ],
+      "bbox": [
+        0,
+        0,
+        1000,
+        435
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "perseus",
+      "size": [
+        1000,
+        564
+      ],
+      "bbox": [
+        0,
+        0,
+        1000,
+        564
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "polaris",
+      "size": [
+        1000,
+        503
+      ],
+      "bbox": [
+        0,
+        0,
+        1000,
+        503
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "idris-p",
+      "size": [
+        1000,
+        528
+      ],
+      "bbox": [
+        0,
+        1,
+        1000,
+        528
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "javelin",
+      "size": [
+        1000,
+        465
+      ],
+      "bbox": [
+        0,
+        0,
+        1000,
+        465
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-es",
+      "size": [
+        500,
+        223
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        223
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-lx",
+      "size": [
+        500,
+        224
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        224
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-mr",
+      "size": [
+        500,
+        224
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        224
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-cl",
+      "size": [
+        500,
+        224
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        224
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-ln",
+      "size": [
+        500,
+        223
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        223
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "300i",
+      "size": [
+        500,
+        309
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        309
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "315p",
+      "size": [
+        500,
+        328
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        328
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "325a",
+      "size": [
+        500,
+        310
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        310
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "350r",
+      "size": [
+        500,
+        309
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        309
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-hornet",
+      "size": [
+        500,
+        469
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        469
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-s-hornet-ghost",
+      "size": [
+        500,
+        480
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        480
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-r-hornet-tracker",
+      "size": [
+        500,
+        456
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        456
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-m-super-hornet",
+      "size": [
+        500,
+        472
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        472
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "freelancer",
+      "size": [
+        500,
+        308
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        308
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "m50",
+      "size": [
+        500,
+        456
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        456
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "caterpillar",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        38,
+        500,
+        220
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "scythe",
+      "size": [
+        500,
+        349
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        349
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "freelancer-dur",
+      "size": [
+        500,
+        305
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        305
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "freelancer-max",
+      "size": [
+        500,
+        427
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        427
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "freelancer-mis",
+      "size": [
+        500,
+        305
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        305
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "khartu-al",
+      "size": [
+        500,
+        708
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        708
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "merchantman",
+      "size": [
+        500,
+        439
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        439
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hull-c",
+      "size": [
+        500,
+        197
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        197
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-taurus",
+      "size": [
+        500,
+        193
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        193
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-aquila",
+      "size": [
+        500,
+        220
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        220
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-phoenix",
+      "size": [
+        500,
+        214
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        214
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reclaimer",
+      "size": [
+        500,
+        321
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        321
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "890-jump",
+      "size": [
+        500,
+        176
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        176
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutlass-black",
+      "size": [
+        500,
+        365
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        365
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutlass-red",
+      "size": [
+        500,
+        361
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        361
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutlass-blue",
+      "size": [
+        500,
+        364
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        364
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "redeemer",
+      "size": [
+        500,
+        233
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        233
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "herald",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        10,
+        500,
+        270
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "carrack",
+      "size": [
+        500,
+        286
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        286
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "gladiator",
+      "size": [
+        500,
+        467
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        467
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-alpha",
+      "size": [
+        500,
+        397
+      ],
+      "bbox": [
+        2,
+        0,
+        500,
+        397
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-beta",
+      "size": [
+        500,
+        399
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        399
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-gamma",
+      "size": [
+        500,
+        418
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        418
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-delta",
+      "size": [
+        500,
+        395
+      ],
+      "bbox": [
+        1,
+        0,
+        498,
+        395
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-omega",
+      "size": [
+        500,
+        417
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        417
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "orion",
+      "size": [
+        500,
+        185
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        185
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "retaliator-bomber",
+      "size": [
+        500,
+        307
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        307
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hull-a",
+      "size": [
+        500,
+        202
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        202
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hull-b",
+      "size": [
+        500,
+        180
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        180
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hull-d",
+      "size": [
+        500,
+        174
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        174
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hull-e",
+      "size": [
+        500,
+        157
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        157
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "starfarer",
+      "size": [
+        500,
+        234
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        234
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "starfarer-gemini",
+      "size": [
+        500,
+        234
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        234
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reliant-kore",
+      "size": [
+        500,
+        945
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        945
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "genesis-starliner",
+      "size": [
+        500,
+        485
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        485
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "p-52-merlin",
+      "size": [
+        500,
+        322
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        322
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "glaive",
+      "size": [
+        500,
+        494
+      ],
+      "bbox": [
+        0,
+        1,
+        498,
+        493
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vanguard-harbinger",
+      "size": [
+        500,
+        463
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        463
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vanguard-sentinel",
+      "size": [
+        500,
+        461
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        461
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "endeavor",
+      "size": [
+        500,
+        122
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        122
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "retaliator-base",
+      "size": [
+        500,
+        307
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        307
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "avenger-stalker",
+      "size": [
+        500,
+        351
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        351
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "avenger-warlock",
+      "size": [
+        500,
+        351
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        351
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "avenger-titan",
+      "size": [
+        500,
+        351
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        351
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "crucible",
+      "size": [
+        500,
+        404
+      ],
+      "bbox": [
+        1,
+        0,
+        499,
+        404
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "p72-archimedes",
+      "size": [
+        500,
+        332
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        332
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reliant-mako",
+      "size": [
+        500,
+        947
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        919
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reliant-sen",
+      "size": [
+        500,
+        917
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        916
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reliant-tana",
+      "size": [
+        500,
+        942
+      ],
+      "bbox": [
+        3,
+        0,
+        500,
+        942
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "blade",
+      "size": [
+        500,
+        406
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        406
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "prospector",
+      "size": [
+        500,
+        293
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        293
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "buccaneer",
+      "size": [
+        500,
+        542
+      ],
+      "bbox": [
+        1,
+        0,
+        498,
+        542
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mpuv-personnel",
+      "size": [
+        500,
+        404
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        404
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mpuv-cargo",
+      "size": [
+        500,
+        422
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        422
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "terrapin",
+      "size": [
+        500,
+        387
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        387
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "prowler",
+      "size": [
+        500,
+        412
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        412
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "85x",
+      "size": [
+        500,
+        388
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        388
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "razor",
+      "size": [
+        500,
+        347
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        347
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vanguard-hoplite",
+      "size": [
+        500,
+        477
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        477
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hurricane",
+      "size": [
+        500,
+        427
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        427
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "defender",
+      "size": [
+        500,
+        289
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        289
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "eclipse",
+      "size": [
+        500,
+        895
+      ],
+      "bbox": [
+        2,
+        1,
+        500,
+        894
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "600i-touring",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        2,
+        0,
+        499,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "600i-explorer",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        2,
+        0,
+        499,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "pioneer",
+      "size": [
+        500,
+        277
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        277
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hawk",
+      "size": [
+        500,
+        667
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        667
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hammerhead",
+      "size": [
+        500,
+        296
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        296
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vulcan",
+      "size": [
+        500,
+        213
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        213
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "razor-ex",
+      "size": [
+        500,
+        347
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        347
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "razor-lx",
+      "size": [
+        500,
+        346
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        346
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "100i",
+      "size": [
+        500,
+        300
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        300
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "125a",
+      "size": [
+        500,
+        299
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        299
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "135c",
+      "size": [
+        500,
+        300
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        300
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "c2-hercules",
+      "size": [
+        500,
+        373
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        373
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "m2-hercules",
+      "size": [
+        500,
+        374
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        374
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "a2-hercules",
+      "size": [
+        500,
+        373
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        373
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "vulture",
+      "size": [
+        500,
+        243
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        243
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "apollo-triage",
+      "size": [
+        500,
+        423
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        423
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "apollo-medivac",
+      "size": [
+        500,
+        424
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        424
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mercury-star-runner",
+      "size": [
+        500,
+        456
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        456
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "valkyrie",
+      "size": [
+        500,
+        374
+      ],
+      "bbox": [
+        2,
+        0,
+        499,
+        374
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "san-tok-yai",
+      "size": [
+        500,
+        512
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        512
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "srv",
+      "size": [
+        500,
+        334
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        334
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "corsair",
+      "size": [
+        500,
+        582
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        582
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "nautilus",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        10,
+        0,
+        491,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mantis",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        0,
+        497,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "c8x-pisces-expedition",
+      "size": [
+        500,
+        396
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        396
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "ares-inferno",
+      "size": [
+        500,
+        558
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        558
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "ares-ion",
+      "size": [
+        500,
+        555
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        555
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mole",
+      "size": [
+        500,
+        301
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        301
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "talon",
+      "size": [
+        500,
+        473
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        473
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "talon-shrike",
+      "size": [
+        500,
+        471
+      ],
+      "bbox": [
+        0,
+        0,
+        497,
+        471
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "nomad",
+      "size": [
+        500,
+        361
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        361
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "railen",
+      "size": [
+        500,
+        500
+      ],
+      "bbox": [
+        1,
+        0,
+        499,
+        500
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "400i",
+      "size": [
+        500,
+        268
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        268
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "liberator",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "raft",
+      "size": [
+        500,
+        288
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        288
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "odyssey",
+      "size": [
+        500,
+        259
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        259
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutlass-steel",
+      "size": [
+        500,
+        357
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        357
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "expanse",
+      "size": [
+        500,
+        300
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        300
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "legionnaire",
+      "size": [
+        500,
+        375
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        375
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "c1-spirit",
+      "size": [
+        500,
+        481
+      ],
+      "bbox": [
+        2,
+        0,
+        499,
+        481
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "a1-spirit",
+      "size": [
+        500,
+        482
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        482
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "e1-spirit",
+      "size": [
+        500,
+        475
+      ],
+      "bbox": [
+        0,
+        1,
+        500,
+        475
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "c8r",
+      "size": [
+        500,
+        403
+      ],
+      "bbox": [
+        0,
+        1,
+        500,
+        402
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutter",
+      "size": [
+        500,
+        314
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        314
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "scorpius-antares",
+      "size": [
+        500,
+        660
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        660
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "galaxy",
+      "size": [
+        500,
+        264
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        264
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "fury",
+      "size": [
+        500,
+        394
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        394
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "fury-mx",
+      "size": [
+        500,
+        446
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        446
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "fury-lx",
+      "size": [
+        500,
+        401
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        401
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "zeus-mkii-es",
+      "size": [
+        500,
+        373
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        373
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "zeus-mkii-mr",
+      "size": [
+        500,
+        374
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        374
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "zeus-mkii-cl",
+      "size": [
+        500,
+        373
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        373
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutter-scout",
+      "size": [
+        500,
+        321
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        321
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "arrastra",
+      "size": [
+        500,
+        271
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        271
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "syulen",
+      "size": [
+        500,
+        913
+      ],
+      "bbox": [
+        3,
+        0,
+        499,
+        913
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutter-rambler",
+      "size": [
+        500,
+        316
+      ],
+      "bbox": [
+        0,
+        0,
+        498,
+        316
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre-firebird",
+      "size": [
+        500,
+        418
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        418
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mpuv-tractor",
+      "size": [
+        500,
+        418
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        418
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "ironclad",
+      "size": [
+        500,
+        206
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        206
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "ironclad-assault",
+      "size": [
+        500,
+        206
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        206
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre-peregrine",
+      "size": [
+        500,
+        420
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        420
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "starlancer-max",
+      "size": [
+        500,
+        308
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        308
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "starlancer-tac",
+      "size": [
+        500,
+        304
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        304
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "intrepid",
+      "size": [
+        500,
+        440
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        440
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "paladin",
+      "size": [
+        500,
+        348
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        348
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "terrapin-medic",
+      "size": [
+        500,
+        416
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        416
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-r-hornet-tracker-mk-ii",
+      "size": [
+        500,
+        487
+      ],
+      "bbox": [
+        2,
+        0,
+        500,
+        487
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-s-hornet-ghost-mk-ii",
+      "size": [
+        500,
+        497
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        497
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "guardian",
+      "size": [
+        500,
+        335
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        335
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "guardian-qi",
+      "size": [
+        500,
+        334
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        334
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "fortune",
+      "size": [
+        500,
+        300
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        300
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre-comet",
+      "size": [
+        500,
+        517
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        517
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "gladius-valiant",
+      "size": [
+        500,
+        407
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        407
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-hornet-wildfire",
+      "size": [
+        500,
+        478
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        478
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "avenger-titan-renegade",
+      "size": [
+        500,
+        351
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        351
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "caterpillar-pirate",
+      "size": [
+        500,
+        179
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        179
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-phoenix-emerald",
+      "size": [
+        500,
+        215
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        215
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "valkyrie-liberator",
+      "size": [
+        500,
+        376
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        376
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mustang-alpha-vindicator",
+      "size": [
+        500,
+        399
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        399
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7cm-hornet-heartseeker-mkii",
+      "size": [
+        500,
+        505
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        505
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-m-super-hornet-heartseeker",
+      "size": [
+        500,
+        476
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        476
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "nautilus-solstice",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        10,
+        0,
+        491,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "pirate-gladius",
+      "size": [
+        500,
+        408
+      ],
+      "bbox": [
+        1,
+        0,
+        500,
+        408
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "cutlass-black-2949-best-in-show",
+      "size": [
+        500,
+        365
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        365
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "caterpillar-2949-best-in-show",
+      "size": [
+        500,
+        179
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        179
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hammerhead-2949-best-in-show",
+      "size": [
+        500,
+        297
+      ],
+      "bbox": [
+        0,
+        1,
+        500,
+        297
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "reclaimer-2949-best-in-show",
+      "size": [
+        500,
+        321
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        321
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mole-carbon",
+      "size": [
+        500,
+        302
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        302
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mole-talus",
+      "size": [
+        500,
+        301
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        301
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "carrack-c8x",
+      "size": [
+        500,
+        286
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        286
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "carrack-expedition-c8x",
+      "size": [
+        500,
+        285
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        285
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "carrack-expedition",
+      "size": [
+        500,
+        285
+      ],
+      "bbox": [
+        0,
+        0,
+        499,
+        285
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "p72-archimedes-emerald",
+      "size": [
+        500,
+        331
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        331
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7c-m-super-hornet-mk-ii",
+      "size": [
+        500,
+        505
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        505
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "golem",
+      "size": [
+        500,
+        242
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        242
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "guardian-mx",
+      "size": [
+        500,
+        385
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        385
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "asgard",
+      "size": [
+        500,
+        346
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        346
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "prowler-utility",
+      "size": [
+        500,
+        403
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        403
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "meteor",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "l-21-wolf",
+      "size": [
+        500,
+        245
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        245
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "stinger",
+      "size": [
+        500,
+        450
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        450
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "shiv",
+      "size": [
+        500,
+        386
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        386
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "l22-alphawolf",
+      "size": [
+        500,
+        246
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        246
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "salvation",
+      "size": [
+        500,
+        320
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        320
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "clipper",
+      "size": [
+        500,
+        914
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        913
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "golem-ox",
+      "size": [
+        500,
+        324
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        324
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "hermes",
+      "size": [
+        500,
+        407
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        407
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "moth",
+      "size": [
+        500,
+        285
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        285
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-mk-ii",
+      "size": [
+        500,
+        198
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        198
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "pegasus",
+      "size": [
+        500,
+        133
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        133
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "retribution",
+      "size": [
+        500,
+        108
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        108
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre-raven",
+      "size": [
+        500,
+        414
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        414
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "kraken-privateer",
+      "size": [
+        500,
+        192
+      ],
+      "bbox": [
+        2,
+        0,
+        500,
+        192
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "kraken",
+      "size": [
+        500,
+        193
+      ],
+      "bbox": [
+        2,
+        0,
+        500,
+        193
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "idris-m",
+      "size": [
+        500,
+        264
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        264
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f8c-lightning-executive",
+      "size": [
+        500,
+        528
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        528
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7a-hornet",
+      "size": [
+        500,
+        493
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        493
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "c8-pisces",
+      "size": [
+        500,
+        398
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        398
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "600i-executive",
+      "size": [
+        500,
+        281
+      ],
+      "bbox": [
+        0,
+        0,
+        495,
+        281
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "bengal",
+      "size": [
+        1000,
+        588
+      ],
+      "bbox": [
+        1,
+        0,
+        999,
+        588
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "endeavor-master-set",
+      "size": [
+        500,
+        369
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        369
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "zeus",
+      "size": [
+        500,
+        346
+      ],
+      "bbox": [
+        1,
+        1,
+        500,
+        346
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "f7a-mkii",
+      "size": [
+        500,
+        491
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        491
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "aurora-se",
+      "size": [
+        500,
+        224
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        224
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "pitbull",
+      "size": [
+        500,
+        494
+      ],
+      "bbox": [
+        1,
+        0,
+        499,
+        494
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "m80",
+      "size": [
+        500,
+        276
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        276
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "tiburon",
+      "size": [
+        500,
+        282
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        282
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "mauler",
+      "size": [
+        500,
+        223
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        223
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "starlite",
+      "size": [
+        500,
+        312
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        312
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "tyilui",
+      "size": [
+        500,
+        426
+      ],
+      "bbox": [
+        1,
+        0,
+        499,
+        426
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "basher",
+      "size": [
+        500,
+        412
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        412
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "s-65-stingray",
+      "size": [
+        458,
+        500
+      ],
+      "bbox": [
+        0,
+        0,
+        458,
+        500
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "odin",
+      "size": [
+        500,
+        150
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        150
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "sabre-raven-ex",
+      "size": [
+        500,
+        414
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        414
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    },
+    {
+      "id": "constellation-mkv-centaurus",
+      "size": [
+        500,
+        283
+      ],
+      "bbox": [
+        0,
+        0,
+        500,
+        283
+      ],
+      "transparent": true,
+      "alphaMax": 255
+    }
+  ]
+}

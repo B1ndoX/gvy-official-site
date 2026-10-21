@@ -43,6 +43,10 @@ jobs:
           cache: npm
       - name: Install all dependencies
         run: npm ci --ignore-scripts
+      - name: Verify the embedded ship game and reproduce its runtime
+        run: |
+          npm --prefix games/ship-battle ci --ignore-scripts
+          node scripts/build-ship-battle.mjs --check
       - name: Ensure ffmpeg has WebP support
         run: |
           if ! command -v ffmpeg >/dev/null || ! ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libwebp; then

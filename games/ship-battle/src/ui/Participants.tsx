@@ -1,0 +1,9 @@
+import { useEffect, useRef, useState } from 'react';
+import { X, Search } from 'lucide-react';
+import type { Member } from '../sim/types';
+import { avatarURL } from './MemberLeaderboard';
+export function Participants({members,selected,onApply,onClose}:{members:Member[];selected:Member[];onApply:(members:Member[])=>void;onClose:()=>void}){
+  const dialog=useRef<HTMLDialogElement>(null),[handles,setHandles]=useState(()=>new Set(selected.map(m=>m.handle))),[query,setQuery]=useState('');
+  useEffect(()=>{const d=dialog.current!;d.showModal();return()=>d.close();},[]);
+  return <dialog className="participants-modal" ref={dialog} onCancel={onClose}><div className="modal-heading"><div><h2>参战成员</h2><p>从 {members.length} 位舰队成员中选择，每人随机获得一艘飞船</p></div><button className="icon-button" aria-label="关闭成员选择" onClick={onClose}><X size={18}/></button></div><div className="participant-tools"><label className="search"><Search size={15}/><input aria-label="查找参战成员" placeholder="搜索原名…" value={query} onChange={e=>setQuery(e.target.value)}/></label><div>{[10,30,members.length].filter((n,i,a)=>n<=members.length&&a.indexOf(n)===i).map(n=><button key={n} onClick={()=>setHandles(new Set(members.slice(0,n).map(m=>m.handle)))}>{n===members.length?'全选':`前 ${n} 人`}</button>)}<button onClick={()=>setHandles(new Set())}>清空</button></div></div><div className="participants-list">{members.filter(m=>m.name.toLowerCase().includes(query.toLowerCase())).map(m=><label key={m.handle}><input type="checkbox" checked={handles.has(m.handle)} onChange={e=>setHandles(prev=>{const next=new Set(prev);if(e.target.checked)next.add(m.handle);else next.delete(m.handle);return next;})}/><img src={avatarURL(m.avatar)} alt=""/><strong>{m.name}</strong></label>)}</div><div className="participants-footer"><span>已选 {handles.size} 人</span><button className="primary" disabled={handles.size<2} onClick={()=>onApply(members.filter(m=>handles.has(m.handle)))}>确认并随机分配</button></div></dialog>;
+}

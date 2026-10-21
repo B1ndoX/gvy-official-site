@@ -2,6 +2,7 @@ import { cp, copyFile, mkdir, readFile, rm } from "node:fs/promises";
 import { basename, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fingerprintAssets } from "./fingerprint-assets.mjs";
+import { validateShipRelease } from "./lib/ship-battle-release.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -56,5 +57,15 @@ await copyFile(
   resolve(root, "node_modules/gsap/dist/ScrollTrigger.min.js"),
   resolve(output, "assets/vendor/ScrollTrigger.min.js"),
 );
+
+// Vite's Node 24 build is reproducible in CI. EdgeOne Node 22.11 copies the
+// verified runtime and original public assets without installing a second app.
+await validateShipRelease(root);
+const shipOutput = resolve(output, "games/ship-battle");
+await cp(resolve(root, "games/ship-battle/public"), shipOutput, {
+  recursive: true,
+  filter: (source) => !["embed-example.html", "popup-preview.html"].includes(basename(source)),
+});
+await cp(resolve(root, "games/ship-battle/runtime"), shipOutput, { recursive: true });
 
 await fingerprintAssets(output);

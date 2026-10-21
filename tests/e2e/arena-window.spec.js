@@ -9,7 +9,7 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await page.goto('/',{waitUntil:'domcontentloaded'});
     const dialog=page.locator('[data-member-brawl-dialog]'), iframe=page.locator('[data-member-brawl-frame]');
     await expect(iframe).not.toHaveAttribute('src',/.+/);expect(documents).toHaveLength(0);
-    await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());
+    await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());await page.locator('[data-game-select="members"]').click();
     await expect(dialog).toHaveAttribute('data-window-state','expanded');
     expect(await dialog.evaluate(e=>e.matches(':modal'))).toBe(true);
     const expanded=await dialog.boundingBox();
@@ -80,7 +80,7 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await expect(dialog).not.toHaveAttribute('open','');
     await expect(iframe).not.toHaveAttribute('src',/.+/);
     await expect.poll(()=>iframe.evaluate(e=>e.contentWindow.location.href)).toBe('about:blank');
-    await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());
+    await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());await page.locator('[data-game-select="members"]').click();
     await expect(arena.locator('[data-brawl-start]')).toBeVisible();
     const next=page.frames().find(f=>f.url().includes('member-brawl.html'));
     expect(await next.evaluate(()=>window.__windowIdentity)).toBeUndefined();

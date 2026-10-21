@@ -108,7 +108,7 @@ test("phone homepage keeps the arena lazy and opens a readable viewport instead 
   await page.waitForFunction(() => Boolean(window.__gvyCinematicHomepage));
   await expect(page.locator("[data-member-brawl-frame]")).not.toHaveAttribute("src", /.+/);
   expect(requests).toEqual([]);
-  await page.locator("[data-member-brawl-open]").evaluate((e) => e.click());
+  await page.locator("[data-member-brawl-open]").evaluate((e) => e.click());await page.locator('[data-game-select="members"]').click();
   const arena = page.frameLocator("[data-member-brawl-frame]");
   await expect(arena.locator("[data-brawl-start]")).toBeVisible();
   const frame = page.frames().find((f) => /\/member-brawl\.html(?:\?|$)/.test(f.url()));
@@ -142,7 +142,7 @@ test("manual pause freezes a real projectile while minimizing retains the same r
   await fixtureRoster(page);
   const errors = runtimeFailures(page);
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.locator("[data-member-brawl-open]").evaluate((e) => e.click());
+  await page.locator("[data-member-brawl-open]").evaluate((e) => e.click());await page.locator('[data-game-select="members"]').click();
   await page.frameLocator("[data-member-brawl-frame]").locator("[data-brawl-start]").waitFor({ state: "visible" });
   const frame = page.frames().find((f) => /\/member-brawl\.html(?:\?|$)/.test(f.url()));
   await startRound(frame, { mode: "teams", loadout: "same", terrain: "flat" });
@@ -507,7 +507,7 @@ for (const modifier of ["none", "fast", "slow"]) {
 test("manual pause freezes result celebration and reduced motion keeps a static victory marker", async ({ page }) => {
   await fixtureRoster(page, fixtureMembers(2));
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.locator("[data-member-brawl-open]").evaluate((node) => node.click());
+  await page.locator("[data-member-brawl-open]").evaluate((node) => node.click());await page.locator('[data-game-select="members"]').click();
   await page.frameLocator("[data-member-brawl-frame]").locator("[data-brawl-start]").waitFor({ state: "visible" });
   const frame = page.frames().find((candidate) => /\/member-brawl\.html(?:\?|$)/.test(candidate.url()));
   await startRound(frame, { mode: "teams", loadout: "unarmed", terrain: "flat" });

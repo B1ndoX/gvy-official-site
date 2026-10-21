@@ -4,6 +4,8 @@
   "type": "module",
   "scripts": {
     "build": "node scripts/build-site.mjs",
+    "game:ship:build": "node scripts/build-ship-battle.mjs",
+    "game:ship:check": "npm --prefix games/ship-battle test && node scripts/build-ship-battle.mjs --check",
     "test": "node --test",
     "test:site": "node --test tests/*.test.js",
     "check:js": "node scripts/check-js.mjs",

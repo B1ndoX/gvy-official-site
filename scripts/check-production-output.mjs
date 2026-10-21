@@ -5,6 +5,7 @@ import { dirname, extname, relative, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assetDigest, codeReferences, codeReferenceTarget } from "./fingerprint-assets.mjs";
 import { validateRosterAssets } from "./lib/rsi-members.mjs";
+import { validatePublishedShipGame } from "./lib/ship-battle-release.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const output = resolve(root, "dist");
@@ -59,6 +60,7 @@ function collectMarkupReferences(source) {
 
 const files = await walk(output);
 await validateRosterAssets(output);
+await validatePublishedShipGame(root, output);
 const builtHome = await readFile(resolve(output, "index.html"), "utf8");
 const edgeConfig = JSON.parse(await readFile(resolve(root, "edgeone.json"), "utf8"));
 const csp = edgeConfig.headers.find((rule) => rule.source === "/*").headers
@@ -88,7 +90,10 @@ for (const file of files) {
   const extension = extname(file).toLowerCase();
   if (![".html", ".css", ".js", ".json", ".webmanifest"].includes(extension)) continue;
   const source = await readFile(file, "utf8");
-  for (const { url } of codeReferences(source, file)) {
+  // The embedded game's entire output is checked byte-for-byte above. Its
+  // Vite content-hashed module graph must not receive a second URL rewriter.
+  const viteOwned = relative(output, file).replaceAll("\\", "/").startsWith("games/ship-battle/");
+  for (const { url } of viteOwned ? [] : codeReferences(source, file)) {
     const target = codeReferenceTarget(output, file, url);
     const digest = assetDigest(await readFile(target, "utf8"));
     assert.equal(url.split("?")[1], `v=${digest}`, `stale production asset URL: ${url}`);
@@ -98,7 +103,11 @@ for (const file of files) {
   } else if (extension === ".css") {
     for (const match of source.matchAll(/url\(["']?([^"')]+)["']?\)/gi)) references.push({ file, value: match[1] });
   } else if (extension === ".js") {
-    for (const match of source.matchAll(/(?:from\s+|import\s*)["']([^"']+)["']/g)) references.push({ file, value: match[1] });
+    for (const match of source.matchAll(/(?:from\s+|import\s*)["']([^"']+)["']/g)) {
+      // Bundled Pixi diagnostics contain example bare import strings. Only
+      // emitted relative/absolute imports belong to this verified Vite graph.
+      if (!viteOwned || /^(?:\.{1,2}\/|\/)/.test(match[1])) references.push({ file, value: match[1] });
+    }
     for (const match of source.matchAll(/["'](\.\/?assets\/[^"']+)["']/g)) {
       references.push({ file, value: match[1], documentRelative: true });
     }

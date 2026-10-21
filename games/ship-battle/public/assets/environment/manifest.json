@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "asteroid",
+      "file": "asteroid.png",
+      "width": 500,
+      "height": 406,
+      "transparent": true,
+      "sha256": "bf56e718a5ed45a5b29e85e5f5c0d8dcf0eabb303dc3c8bde75204544eeed201",
+      "source": "https://cdn1.fleetviewer.link/asteroid__top_xs_d281b4ac112c9e3dbe8c3f45dc35481f.png",
+      "evidence": "ev_1bbb30517df6002135598ddda9a2c293b923cc3e09be1c12f0dee3a1e7023455",
+      "usage": "User-authorized noncommercial local package; third-party redistribution grant not independently confirmed.",
+      "geometry": "Repeated single rock, varied rotation and diameter; circular collision proxy, not a composite asteroid field."
+    }
+  ]
+}
