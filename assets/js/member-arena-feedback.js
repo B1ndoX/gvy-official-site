@@ -86,7 +86,10 @@
         ratio = Math.min(dpr, 1.5, Math.sqrt(2_000_000 / Math.max(1, w * h)));
         canvas.width = Math.max(1, Math.floor(w * ratio)); canvas.height = Math.max(1, Math.floor(h * ratio));
         ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-        ctx.textAlign = "center"; ctx.font = '600 12px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif';
+        // Match the interface's readable scale using the actual field size.
+        // This runs only on resize; the canvas/slot budgets stay unchanged.
+        const textScale = Math.max(1, Math.min(3, w / 944, h / 528));
+        ctx.textAlign = "center"; ctx.font = '600 ' + (12 * textScale).toFixed(2) + 'px -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif';
         for (const p of pieces) if (p.active) {
           p.x *= sx; p.y *= sy; p.vx *= scale; p.vy *= scale; p.gravity *= scale; p.size *= scale;
         }

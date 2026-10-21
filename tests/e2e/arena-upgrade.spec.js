@@ -295,11 +295,11 @@ test("fighters are display-only: mouse and touch dragging cannot capture or mani
   const labels = await page.locator(".fighter-name").evaluateAll((nodes) => nodes.map((node) => {
     const style = getComputedStyle(node);
     return { actorChild: node.parentElement.matches(".member-fighter"),
-      fontSize: style.fontSize, borderWidth: style.borderWidth, background: style.backgroundColor,
+      fontSize: parseFloat(style.fontSize) / (parseFloat(getComputedStyle(document.body).fontSize) / 14), borderWidth: style.borderWidth, background: style.backgroundColor,
       pointerEvents: style.pointerEvents, z: style.zIndex };
   }));
   expect(labels).toHaveLength(4);
-  expect(labels.every((label) => label.actorChild && label.fontSize === "11px" &&
+  expect(labels.every((label) => label.actorChild && Math.abs(label.fontSize - 11) < .01 &&
     label.borderWidth === "0px" && label.background === "rgba(0, 0, 0, 0)" &&
     label.pointerEvents === "none" && label.z === "auto")).toBe(true);
   await expect(page.locator("button.member-fighter")).toHaveCount(0);

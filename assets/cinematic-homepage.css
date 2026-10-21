@@ -1835,9 +1835,12 @@ html[data-motion-ready] :is(
 
 /* One game document moves between a centered fleet window and a docked preview. */
 .member-brawl-dialog {
-  width: min(960px, calc(100vw - 96px));
+  --arena-window-width: min(960px, calc(100vw - 96px));
+  --arena-window-height: min(600px, calc(100dvh - 96px));
+  --arena-window-unit: clamp(1px,min(calc(var(--arena-window-width) / 960),calc(var(--arena-window-height) / 600)),3px);
+  width: var(--arena-window-width);
   max-width: none;
-  height: min(600px, calc(100dvh - 96px));
+  height: var(--arena-window-height);
   max-height: none;
   margin: auto;
   padding: 0;
@@ -1851,14 +1854,14 @@ html[data-motion-ready] :is(
 .member-brawl-dialog::backdrop { background: rgba(0, 5, 10, 0.66); backdrop-filter: blur(8px); }
 @media (min-width: 1800px) {
   .member-brawl-dialog {
-    width: min(1760px, 70vw, calc(148.2dvh - 64px));
-    height: min(1056px, 78dvh);
+    --arena-window-width: min(2640px, 70vw, calc(148.2dvh - 64px));
+    --arena-window-height: min(1584px, 78dvh);
   }
 }
 @media (max-height: 560px) {
   .member-brawl-dialog {
-    width: min(1100px, calc(100vw - 32px));
-    height: calc(100dvh - 32px);
+    --arena-window-width: min(1100px, calc(100vw - 32px));
+    --arena-window-height: calc(100dvh - 32px);
   }
 }
 .member-brawl-viewport { position: absolute; inset: 0; overflow: hidden; }
@@ -1878,11 +1881,11 @@ html[data-motion-ready] :is(
 .member-brawl-dialog-minimize {
   position: absolute;
   z-index: 12;
-  top: 14px;
-  right: 14px;
+  top: calc(14 * var(--arena-window-unit));
+  right: calc(14 * var(--arena-window-unit));
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: calc(44 * var(--arena-window-unit));
+  height: calc(44 * var(--arena-window-unit));
   padding: 0;
   place-items: center;
   border: 1px solid rgba(150, 190, 214, 0.22);
@@ -1891,15 +1894,16 @@ html[data-motion-ready] :is(
   background: #080e16;
   cursor: pointer;
 }
-.member-brawl-dialog-minimize { right: 62px; }
+.member-brawl-dialog-minimize { right: calc(62 * var(--arena-window-unit)); }
 .member-brawl-dialog-close:hover,
 .member-brawl-dialog-minimize:hover { border-color: var(--fleet-gold); color: var(--fleet-gold); }
 .member-brawl-dialog-close svg,
 .member-brawl-dialog-minimize svg,
-.member-brawl-dock-bar svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
+.member-brawl-dock-bar svg { width: calc(19 * var(--arena-window-unit,1px)); height: calc(19 * var(--arena-window-unit,1px)); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; }
 .member-brawl-dock-bar,
 .member-brawl-dock-preview { display: none; }
 .member-brawl-dialog[data-window-state="docked"] {
+  --arena-window-unit: 1px;
   position: fixed;
   z-index: 110;
   top: auto;

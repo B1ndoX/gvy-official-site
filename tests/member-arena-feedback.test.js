@@ -39,7 +39,7 @@ function drawingFixture(){
   const ctx={setTransform(){},clearRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){strokes++},drawImage(){images++},strokeText(){},fillText(text){texts.push(text)}};
   const canvas={setAttribute(){},getContext(){return ctx},remove(){removed++}};
   const field={ownerDocument:{createElement(){return canvas}},append(){appended++}};
-  return{field,canvas,get counts(){return{appended,removed,strokes,images,texts}}};
+  return{field,canvas,ctx,get counts(){return{appended,removed,strokes,images,texts}}};
 }
 test('one bounded drawing surface reuses slots, expires effects and cannot connect across inactive attacks',()=>{
   const f=drawingFixture(),fx=F.createCanvas({field:f.field});fx.resize(8000,4000,1,1,1,3);
@@ -68,4 +68,14 @@ test('critical and actual-healing cues merge and expire in a bounded simulation-
  for(let i=0;i<100;i++)fx.notify('critical',{},100+i,100,35,100);
  fx.render(100);assert.equal(fx.snapshot().cues,16);assert.equal(fx.snapshot().cueLimit,16);assert.ok(f.counts.texts.includes('暴击 35'));
  fx.render(1500);assert.equal(fx.snapshot().cues,0);fx.dispose();
+});
+
+test('feedback text follows larger fields while retaining phone readability and the backing budget',()=>{
+ const f=drawingFixture(),fx=F.createCanvas({field:f.field});
+ const size=()=>parseFloat(f.ctx.font.split(' ')[1]);
+ fx.resize(944,528);near(size(),12);
+ fx.resize(1888,1056);near(size(),24);
+ fx.resize(8000,4000,1,1,1,3);near(size(),36);assert.ok(f.canvas.width*f.canvas.height<2_010_000);
+ fx.resize(320,400);near(size(),12);
+ assert.equal(f.counts.appended,1);fx.dispose();assert.equal(f.counts.removed,1);
 });
