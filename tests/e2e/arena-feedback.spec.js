@@ -11,8 +11,8 @@ async function open(page,reduced=false,loadout='unarmed'){
   await page.locator('[data-brawl-start]').click();
   await expect.poll(()=>page.evaluate(()=>window.__gvyArena.snapshot().simTime),poll).toBeGreaterThan(0);
 }
-async function contact(page){
-  await page.evaluate(()=>{
+async function contact(page,hp=100){
+  await page.evaluate(hp=>{
     const fs=[...document.querySelectorAll('.member-fighter')].map(e=>e.physicsItem),unit=window.__gvyArena.snapshot().map.unit;
     const now=window.__gvyArena.snapshot().simTime;
     for(const [i,f] of fs.entries()){
@@ -21,11 +21,11 @@ async function contact(page){
       f.rig.reset({...f.body.position,aim:0});f.damageSources.clear();
     }
     const a=fs[0],b=fs[2];Matter.Body.setPosition(a.body,{x:100,y:150});Matter.Body.setPosition(b.body,{x:100+unit,y:150});
-    a.rig.reset({x:100,y:150,aim:0});b.rig.reset({...b.body.position,aim:0});b.hp=100;
+    a.rig.reset({x:100,y:150,aim:0});b.rig.reset({...b.body.position,aim:0});b.hp=hp;
     const animation=a.weapon.animations[0],timeline=GVYArenaActions.compile(animation,GVYArenaMotion);
     a.attack={start:now-400,aim:0,inverse:false,hit:new Set(),fired:false,animation,timeline,duration:timeline.duration,target:{...b.body.position}};
     Matter.Body.setVelocity(a.rig.fistBody,{x:unit*20/60,y:0});
-  });
+  },hp);
 }
 test('real contact starts avatar-only feedback and a pausable two-layer health sequence',async({page})=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));await open(page);await contact(page);
@@ -88,8 +88,8 @@ test('real critical hits and kill healing produce truthful bounded cues which fr
 });
 
 test('a real elimination announcement fades with match time, freezes while paused and clears on settings',async({page})=>{
- await open(page);await page.clock.install();await contact(page);
- await page.evaluate(()=>{document.querySelectorAll('.member-fighter')[2].physicsItem.hp=1;});
+ // Arm the fatal hit and target HP atomically: a RAF can run between evaluations.
+ await open(page);await page.clock.install();await contact(page,1);
  const entry=page.locator('[data-arena-feed] li').filter({hasText:'淘汰'}).first();
  await expect(entry).toBeVisible();await page.locator('[data-arena-pause]').click();
  const text=await entry.textContent(),read=()=>page.locator('[data-arena-feed] li').filter({hasText:text}).evaluate(e=>Number(getComputedStyle(e).opacity));
