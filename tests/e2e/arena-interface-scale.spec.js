@@ -2,7 +2,7 @@ import {expect,test} from '@playwright/test';
 const game=page=>page.frames().find(f=>f.url().includes('member-brawl.html'));
 async function open(page,viewport){
  await page.setViewportSize(viewport);await page.goto('/',{waitUntil:'domcontentloaded'});
- await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());const arena=page.frameLocator('[data-member-brawl-frame]');
+ await page.locator('[data-member-brawl-open]').evaluate(e=>e.click());await page.locator('[data-game-select="members"]').click();const arena=page.frameLocator('[data-member-brawl-frame]');
  await arena.locator('[data-arena-mode]').selectOption('score');await arena.locator('[data-arena-terrain]').selectOption('flat');
  await arena.locator('[data-brawl-start]').click();await game(page).waitForFunction(()=>window.__gvyArena.snapshot().simTime>200);await arena.locator('[data-arena-pause]').click();return arena;
 }

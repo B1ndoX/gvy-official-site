@@ -1835,6 +1835,7 @@ html[data-motion-ready] :is(
 
 /* One game document moves between a centered fleet window and a docked preview. */
 .member-brawl-dialog {
+  --game-window-toolbar-height: calc(52 * var(--arena-window-unit));
   --arena-window-width: min(960px, calc(100vw - 96px));
   --arena-window-height: min(600px, calc(100dvh - 96px));
   --arena-window-unit: clamp(1px,min(calc(var(--arena-window-width) / 960),calc(var(--arena-window-height) / 600)),3px);
@@ -1876,6 +1877,45 @@ html[data-motion-ready] :is(
   background: #020408;
   transform: none;
   transform-origin: top left;
+}
+.member-brawl-dialog [hidden] { display: none !important; }
+.member-brawl-dialog[data-active-game]:not([data-active-game=""]) iframe { top: var(--game-window-toolbar-height); }
+.member-brawl-game-toolbar { position: absolute; z-index: 10; inset: 0 0 auto; height: var(--game-window-toolbar-height); display: flex; align-items: center; gap: calc(18 * var(--arena-window-unit)); padding: 0 calc(116 * var(--arena-window-unit)) 0 calc(12 * var(--arena-window-unit)); background: #05090e; border-bottom: 1px solid #d8b66a26; }
+.member-brawl-game-toolbar button { min-height: calc(44 * var(--arena-window-unit)); display: flex; align-items: center; gap: 5px; flex: 0 0 auto; border: 0; background: transparent; color: var(--fleet-gold); font: inherit; font-size: calc(12 * var(--arena-window-unit)); cursor: pointer; }
+.member-brawl-game-toolbar button svg { width: calc(16 * var(--arena-window-unit)); height: calc(16 * var(--arena-window-unit)); fill: none; stroke: currentColor; stroke-width: 1.5; }
+.member-brawl-game-toolbar > span { font-size: calc(12 * var(--arena-window-unit)); color: #a9b6c0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.member-brawl-dialog[data-active-game]:not([data-active-game=""]) > :is(.member-brawl-dialog-minimize,.member-brawl-dialog-close) { top: calc(4 * var(--arena-window-unit)); }
+.fleet-game-hub { height: 100%; overflow: auto; padding: calc(64 * var(--arena-window-unit)) calc(32 * var(--arena-window-unit)) calc(20 * var(--arena-window-unit)); background: radial-gradient(ellipse at 85% 0%,#17232e 0%,transparent 65%),#03070c; }
+.fleet-game-heading { margin-bottom: calc(24 * var(--arena-window-unit)); }
+.fleet-game-heading .system-label { margin: 0 0 calc(8 * var(--arena-window-unit)); font-size: calc(10 * var(--arena-window-unit)); color: var(--fleet-gold); }
+.fleet-game-heading h2 { margin: 0; font-size: calc(28 * var(--arena-window-unit)); font-weight: 600; letter-spacing: .08em; }
+.fleet-game-heading > p:last-child { margin: calc(8 * var(--arena-window-unit)) 0 0; font-size: calc(12 * var(--arena-window-unit)); color: #99a8b5; }
+.fleet-game-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: calc(20 * var(--arena-window-unit)); }
+.fleet-game-card { min-width: 0; overflow: hidden; border: 1px solid #9bb8cb30; background: #03070b; border-radius: 5px; }
+.fleet-game-card > button { display: flex; align-items: center; gap: calc(12 * var(--arena-window-unit)); width: 100%; min-height: calc(60 * var(--arena-window-unit)); padding: calc(14 * var(--arena-window-unit)); border: 0; color: #e8edf1; background: #101820; cursor: pointer; text-align: left; transition: background 160ms,color 160ms; }
+.fleet-game-card > button:is(:hover,:focus-visible) { color: #f0d99d; background: #29251c; }
+.fleet-game-card > button:focus-visible { outline: 2px solid var(--fleet-gold); outline-offset: -3px; }
+.fleet-game-number { color: #b79b60; font: calc(11 * var(--arena-window-unit))/1 var(--font-mono,monospace); }
+.fleet-game-card strong { flex: 1; font-size: calc(17 * var(--arena-window-unit)); font-weight: 600; }
+.fleet-game-card button svg { flex: 0 0 auto; width: calc(18 * var(--arena-window-unit)); height: calc(18 * var(--arena-window-unit)); fill: none; stroke: currentColor; stroke-width: 1.5; }
+.fleet-game-card > img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; background: #03070b; }
+.fleet-game-card > p { margin: 0; padding: calc(14 * var(--arena-window-unit)); font-size: calc(11 * var(--arena-window-unit)); line-height: 1.75; color: #96a5b1; }
+.fleet-game-hint,.fleet-game-status { margin: calc(18 * var(--arena-window-unit)) 0 0; font-size: calc(11 * var(--arena-window-unit)); color: #7e8f9c; text-align: center; }
+.fleet-game-status:empty { display: none; }
+.fleet-game-status { color: #e4c687; }
+@media(max-width:600px) {
+  .fleet-game-hub { padding: 68px 16px 20px; }
+  .fleet-game-heading h2 { font-size: 23px; }
+  .fleet-game-grid { grid-template-columns: 1fr; gap: 16px; }
+  .fleet-game-card > button { min-height: 52px; }
+  .fleet-game-card strong { font-size: 16px; }
+  .member-brawl-game-toolbar > span { display: none; }
+}
+@media(max-height:560px) and (min-width:601px) {
+  .fleet-game-hub { padding-top: 24px; }
+  .fleet-game-heading { margin-bottom: 16px; padding-right: 120px; }
+  .fleet-game-heading h2 { font-size: 22px; }
+  .fleet-game-card > button { min-height: 44px; padding: 10px 14px; }
 }
 .member-brawl-dialog-close,
 .member-brawl-dialog-minimize {
@@ -1925,6 +1965,17 @@ html[data-motion-ready] :is(
 .member-brawl-dock-bar button:hover { color: var(--fleet-gold); background: #ffffff08; }
 .member-brawl-dialog[data-window-state="docked"] .member-brawl-viewport { top: 44px; }
 .member-brawl-dialog[data-window-state="docked"] iframe { pointer-events: none; }
+.member-brawl-dialog[data-window-state="docked"][data-active-game]:not([data-active-game=""]) iframe { top: 0; }
+.member-brawl-dialog[data-window-state="docked"] .member-brawl-game-toolbar { display: none; }
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-hub { padding: 18px 12px; overflow: hidden; }
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-heading,
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-card > p,
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-hint,
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-number,
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-card svg { display: none; }
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-card button { padding: 9px 7px; min-height: 44px; }
+.member-brawl-dialog[data-window-state="docked"] .fleet-game-card strong { font-size: 12px; }
 .member-brawl-dialog[data-window-state="docked"] .member-brawl-dock-preview { position: absolute; z-index: 2; inset: 0; display: flex; align-items: flex-end; justify-content: center; border: 0; padding: 0 12px 10px; color: #f2e2bb; background: linear-gradient(transparent 60%, #020408b3); font-size: 12px; cursor: pointer; opacity: 0; transition: opacity 140ms ease; }
 .member-brawl-dialog[data-window-state="docked"] .member-brawl-dock-preview:is(:hover, :focus-visible) { opacity: 1; }
 

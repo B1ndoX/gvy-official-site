@@ -470,7 +470,7 @@
           <p>不论资历，不问舰船。带上好奇心，也带上与人并肩的诚意。下一段航程，我们等你同行。</p>
           <div class="recruit-actions">
             <a href="https://robertsspaceindustries.com/en/orgs/GVY" target="_blank" rel="noopener noreferrer">访问 RSI 舰队主页</a>
-            <button class="recruit-brawl-button" type="button" data-member-brawl-open>舰队成员大乱斗</button>
+            <button class="recruit-brawl-button" type="button" data-member-brawl-open>舰队大乱斗</button>
             <span>QQ 交流群 <strong>691311516</strong></span>
           </div>
         </div>
@@ -511,7 +511,13 @@
       </div>
     </dialog>
 
-    <dialog class="member-brawl-dialog" data-member-brawl-dialog data-window-state="closed" aria-label="舰队成员大乱斗">
+    <dialog class="member-brawl-dialog" data-member-brawl-dialog data-window-state="closed" data-active-game="" aria-label="舰队大乱斗 · 选择游戏">
+      <div class="member-brawl-game-toolbar" data-game-toolbar hidden>
+        <button type="button" data-game-back title="结束当前对局，返回游戏选择">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5-7 7 7 7" /></svg>选择游戏
+        </button>
+        <span data-game-title>舰队大乱斗</span>
+      </div>
       <button class="member-brawl-dialog-minimize" type="button" data-member-brawl-minimize aria-label="缩小到右下角" title="缩小到右下角">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18h14" /></svg>
       </button>
@@ -519,7 +525,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
       </button>
       <div class="member-brawl-dock-bar">
-        <span>舰队成员大乱斗</span>
+        <span data-game-dock-title>舰队大乱斗</span>
         <button type="button" data-member-brawl-restore aria-label="恢复战斗窗口" title="恢复窗口">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 20h5v-5M4 4l6 6m10 10-6-6" /></svg>
         </button>
@@ -528,7 +534,34 @@
         </button>
       </div>
       <div class="member-brawl-viewport" data-member-brawl-viewport>
-        <iframe data-member-brawl-frame title="舰队成员大乱斗" loading="lazy" scrolling="no"></iframe>
+        <section class="fleet-game-hub" data-game-hub aria-labelledby="fleet-game-heading">
+          <header class="fleet-game-heading">
+            <p class="system-label">GVY / FLEET ARCADE</p>
+            <h2 id="fleet-game-heading">选择你的战场</h2>
+            <p>熟悉的舰队成员，两种不同的交锋。</p>
+          </header>
+          <div class="fleet-game-grid">
+            <article class="fleet-game-card">
+              <button type="button" data-game-select="members" aria-describedby="member-game-description">
+                <span class="fleet-game-number">01</span><strong>舰队成员大乱斗</strong>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </button>
+              <img data-game-preview="members" data-src="./assets/game-previews/member-brawl.webp" width="1200" height="675" alt="舰队成员携带武器，在竞技场中自动交战的游戏实景" decoding="async" />
+              <p id="member-game-description">随机武器，成员交锋。个人淘汰、团队对抗与限时击杀。</p>
+            </article>
+            <article class="fleet-game-card">
+              <button type="button" data-game-select="ships" aria-describedby="ship-game-description">
+                <span class="fleet-game-number">02</span><strong>星际飞船大乱斗</strong>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+              </button>
+              <img data-game-preview="ships" data-src="./assets/game-previews/ship-battle.webp" width="1200" height="675" alt="舰队成员驾驶不同飞船，在星空中交火的游戏实景" decoding="async" />
+              <p id="ship-game-description">随机抽舰，自动交火。成员混战、红蓝对抗与协作迎敌。</p>
+            </article>
+          </div>
+          <p class="fleet-game-hint">选择游戏后开始 · 收起窗口可继续观战</p>
+          <p class="fleet-game-status" data-game-status role="status" aria-live="polite"></p>
+        </section>
+        <iframe data-member-brawl-frame title="舰队游戏" loading="lazy" scrolling="no" allow="fullscreen" hidden></iframe>
         <button class="member-brawl-dock-preview" type="button" data-member-brawl-restore aria-label="恢复战斗窗口">点击恢复窗口</button>
       </div>
     </dialog>

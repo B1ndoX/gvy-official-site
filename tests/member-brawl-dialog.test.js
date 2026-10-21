@@ -12,7 +12,7 @@ function fixture() {
     removeAttribute(name) { this.attributes.delete(name); },
     focus() { this.focused = true; },
   });
-  const dialog = target(), frame = target(), viewport = target(), closeButton = target(), minimizeButton=target(), endButton=target(), restoreButton=target(), opener = target(), view = target();
+  const dialog = target(), frame = target(), viewport = target(), closeButton = target(), minimizeButton=target(), endButton=target(), restoreButton=target(), memberChoice=target(), opener = target(), view = target();
   const callbacks = new Map();let serial=0;
   Object.assign(view, {requestAnimationFrame(callback) { callbacks.set(++serial,callback);return serial; },cancelAnimationFrame(id) { callbacks.delete(id); }});
   viewport.clientWidth=960;viewport.clientHeight=600;
@@ -20,18 +20,19 @@ function fixture() {
   dialog.show = () => { dialog.open = true;dialog.modal=false; };
   dialog.close = () => { dialog.open = false;dialog.modal=false; };
   dialog.querySelector = (selector) => ({"[data-member-brawl-frame]":frame,"[data-member-brawl-viewport]":viewport,"[data-member-brawl-close]":closeButton,"[data-member-brawl-minimize]":minimizeButton,"[data-member-brawl-end]":endButton})[selector];
-  dialog.querySelectorAll=()=>[restoreButton];
+  memberChoice.dataset.gameSelect='members';
+  dialog.querySelectorAll=selector=>selector==='[data-member-brawl-restore]'?[restoreButton]:selector==='[data-game-select]'?[memberChoice]:[];
   let observer;
   class Observer { constructor(callback) {observer=this;this.callback=callback;}observe(node) {this.observed=node;}disconnect() {this.disconnected=true;} }
   const root={body:{style:{overflow:"auto"}},querySelector:()=>dialog,querySelectorAll:()=>[opener]};
   const controller=initMemberBrawlDialog({root,view,ResizeObserverClass:Observer});
   const flush=()=>{for(const[id,callback]of callbacks){callbacks.delete(id);callback();}};
-  return {root,dialog,frame,viewport,closeButton,minimizeButton,endButton,restoreButton,opener,view,controller,flush,observer};
+  return {root,dialog,frame,viewport,closeButton,minimizeButton,endButton,restoreButton,opener,memberChoice,view,controller,flush,observer};
 }
 
 test("opening is lazy; minimizing and restoring retain the same game viewport and release page scrolling", () => {
   const f=fixture();assert.equal(f.frame.getAttribute("src"),null);
-  f.controller.open({currentTarget:f.opener});f.flush();
+  f.controller.open({currentTarget:f.opener});f.memberChoice.listeners.get("click")({currentTarget:f.memberChoice});f.flush();
   assert.equal(f.frame.getAttribute("src"),"./member-brawl.html");assert.equal(f.dialog.modal,true);
   assert.equal(f.root.body.style.overflow,"hidden");assert.equal(f.frame.style.transform,"none");
   f.frame.attributes.set("retained-match","one");
@@ -46,20 +47,33 @@ test("opening is lazy; minimizing and restoring retain the same game viewport an
 });
 
 test("large close and Escape minimize, while ending the docked window unloads it and permits a new lazy session", () => {
-  const f=fixture();f.controller.open({currentTarget:f.opener});f.flush();
+  const f=fixture();f.controller.open({currentTarget:f.opener});f.memberChoice.listeners.get("click")({currentTarget:f.memberChoice});f.flush();
   f.closeButton.listeners.get("click")();assert.equal(f.dialog.dataset.windowState,"docked");
   f.restoreButton.listeners.get("click")();f.flush();let prevented=false;
   f.dialog.listeners.get("cancel")({preventDefault(){prevented=true;}});
   assert.equal(prevented,true);assert.equal(f.dialog.dataset.windowState,"docked");
   f.endButton.listeners.get("click")();assert.equal(f.dialog.open,false);assert.equal(f.dialog.dataset.windowState,"closed");
   assert.equal(f.frame.getAttribute("src"),null);assert.equal(f.root.body.style.overflow,"auto");
-  f.controller.open({currentTarget:f.opener});f.flush();assert.equal(f.dialog.modal,true);assert.equal(f.frame.getAttribute("src"),"./member-brawl.html");
+  f.controller.open({currentTarget:f.opener});f.memberChoice.listeners.get("click")({currentTarget:f.memberChoice});f.flush();assert.equal(f.dialog.modal,true);assert.equal(f.frame.getAttribute("src"),"./member-brawl.html");
   f.controller.open({currentTarget:f.opener});f.controller.close();assert.equal(f.root.body.style.overflow,"auto");
 });
 
 test("cleanup unloads a docked game and removes all owned listeners, observer and pending fit work", () => {
-  const f=fixture();f.controller.open({currentTarget:f.opener});f.flush();f.controller.minimize();f.controller.requestFit();
+  const f=fixture();f.controller.open({currentTarget:f.opener});f.memberChoice.listeners.get("click")({currentTarget:f.memberChoice});f.flush();f.controller.minimize();f.controller.requestFit();
   f.controller.cleanup();f.flush();
   assert.equal(f.dialog.open,false);assert.equal(f.frame.getAttribute("src"),null);assert.equal(f.root.body.style.overflow,"auto");assert.equal(f.observer.disconnected,true);
-  for(const t of [f.dialog,f.frame,f.opener,f.closeButton,f.minimizeButton,f.endButton,f.restoreButton,f.view]) assert.equal(t.listeners.size,0);
+  for(const t of [f.dialog,f.frame,f.opener,f.closeButton,f.minimizeButton,f.endButton,f.restoreButton,f.memberChoice,f.view]) assert.equal(t.listeners.size,0);
+});
+
+test("the game hub loads no game until selected and cannot keep a hidden battle alive", () => {
+  const f=fixture();f.controller.open({currentTarget:f.opener});f.flush();
+  assert.equal(f.frame.getAttribute('src'),null);
+  assert.equal(f.dialog.dataset.activeGame,'');
+  f.memberChoice.listeners.get('click')({currentTarget:f.memberChoice});f.flush();
+  assert.equal(f.frame.getAttribute('src'),'./member-brawl.html');
+  assert.equal(f.dialog.dataset.activeGame,'members');
+  f.controller.close();
+  f.controller.open({currentTarget:f.opener});f.flush();
+  assert.equal(f.dialog.dataset.activeGame,'');
+  assert.equal(f.frame.getAttribute('src'),null);
 });

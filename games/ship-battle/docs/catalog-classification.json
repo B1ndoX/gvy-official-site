@@ -1,0 +1,604 @@
+{
+  "included": [
+    "aurora-es",
+    "aurora-lx",
+    "aurora-mr",
+    "aurora-cl",
+    "aurora-ln",
+    "300i",
+    "315p",
+    "325a",
+    "350r",
+    "f7c-hornet",
+    "f7c-s-hornet-ghost",
+    "f7c-r-hornet-tracker",
+    "f7c-m-super-hornet",
+    "freelancer",
+    "m50",
+    "caterpillar",
+    "scythe",
+    "idris-p",
+    "freelancer-dur",
+    "freelancer-max",
+    "freelancer-mis",
+    "khartu-al",
+    "merchantman",
+    "hull-c",
+    "constellation-andromeda",
+    "constellation-taurus",
+    "constellation-aquila",
+    "constellation-phoenix",
+    "reclaimer",
+    "890-jump",
+    "cutlass-black",
+    "cutlass-red",
+    "cutlass-blue",
+    "redeemer",
+    "gladius",
+    "herald",
+    "carrack",
+    "gladiator",
+    "mustang-alpha",
+    "mustang-beta",
+    "mustang-gamma",
+    "mustang-delta",
+    "mustang-omega",
+    "orion",
+    "retaliator-bomber",
+    "vanguard-warden",
+    "hull-a",
+    "hull-b",
+    "hull-d",
+    "hull-e",
+    "starfarer",
+    "starfarer-gemini",
+    "reliant-kore",
+    "genesis-starliner",
+    "p-52-merlin",
+    "glaive",
+    "vanguard-harbinger",
+    "vanguard-sentinel",
+    "endeavor",
+    "sabre",
+    "retaliator-base",
+    "avenger-stalker",
+    "avenger-warlock",
+    "avenger-titan",
+    "crucible",
+    "p72-archimedes",
+    "reliant-mako",
+    "reliant-sen",
+    "reliant-tana",
+    "blade",
+    "prospector",
+    "buccaneer",
+    "mpuv-personnel",
+    "mpuv-cargo",
+    "terrapin",
+    "polaris",
+    "prowler",
+    "sabre-comet",
+    "gladius-valiant",
+    "f7c-hornet-wildfire",
+    "85x",
+    "avenger-titan-renegade",
+    "caterpillar-pirate",
+    "razor",
+    "vanguard-hoplite",
+    "hurricane",
+    "defender",
+    "eclipse",
+    "600i-touring",
+    "600i-explorer",
+    "pioneer",
+    "hawk",
+    "hammerhead",
+    "vulcan",
+    "constellation-phoenix-emerald",
+    "razor-ex",
+    "razor-lx",
+    "100i",
+    "125a",
+    "135c",
+    "c2-hercules",
+    "m2-hercules",
+    "a2-hercules",
+    "vulture",
+    "apollo-triage",
+    "apollo-medivac",
+    "mercury-star-runner",
+    "valkyrie",
+    "valkyrie-liberator",
+    "mustang-alpha-vindicator",
+    "arrow",
+    "san-tok-yai",
+    "srv",
+    "f7cm-hornet-heartseeker-mkii",
+    "f7c-m-super-hornet-heartseeker",
+    "corsair",
+    "nautilus",
+    "nautilus-solstice",
+    "pirate-gladius",
+    "mantis",
+    "c8x-pisces-expedition",
+    "cutlass-black-2949-best-in-show",
+    "caterpillar-2949-best-in-show",
+    "hammerhead-2949-best-in-show",
+    "reclaimer-2949-best-in-show",
+    "ares-inferno",
+    "ares-ion",
+    "mole",
+    "mole-carbon",
+    "mole-talus",
+    "carrack-c8x",
+    "carrack-expedition-c8x",
+    "carrack-expedition",
+    "p72-archimedes-emerald",
+    "talon",
+    "talon-shrike",
+    "nomad",
+    "perseus",
+    "scorpius",
+    "railen",
+    "400i",
+    "liberator",
+    "raft",
+    "odyssey",
+    "cutlass-steel",
+    "expanse",
+    "legionnaire",
+    "c1-spirit",
+    "a1-spirit",
+    "e1-spirit",
+    "c8r",
+    "cutter",
+    "scorpius-antares",
+    "galaxy",
+    "fury",
+    "fury-mx",
+    "fury-lx",
+    "zeus-mkii-es",
+    "zeus-mkii-mr",
+    "zeus-mkii-cl",
+    "cutter-scout",
+    "arrastra",
+    "syulen",
+    "cutter-rambler",
+    "sabre-firebird",
+    "mpuv-tractor",
+    "f7c-mkii",
+    "ironclad",
+    "ironclad-assault",
+    "sabre-peregrine",
+    "starlancer-max",
+    "starlancer-tac",
+    "intrepid",
+    "paladin",
+    "terrapin-medic",
+    "f7c-r-hornet-tracker-mk-ii",
+    "f7c-s-hornet-ghost-mk-ii",
+    "guardian",
+    "guardian-qi",
+    "fortune",
+    "f7c-m-super-hornet-mk-ii",
+    "golem",
+    "guardian-mx",
+    "asgard",
+    "prowler-utility",
+    "meteor",
+    "l-21-wolf",
+    "stinger",
+    "shiv",
+    "l22-alphawolf",
+    "salvation",
+    "clipper",
+    "golem-ox",
+    "hermes",
+    "moth",
+    "aurora-mk-ii",
+    "pegasus",
+    "retribution",
+    "sabre-raven",
+    "javelin",
+    "kraken-privateer",
+    "kraken",
+    "idris-m",
+    "f8c-lightning",
+    "f8c-lightning-executive",
+    "f7a-hornet",
+    "c8-pisces",
+    "600i-executive",
+    "bengal",
+    "endeavor-master-set",
+    "zeus",
+    "f7a-mkii",
+    "aurora-se",
+    "pitbull",
+    "m80",
+    "tiburon",
+    "mauler",
+    "starlite",
+    "tyilui",
+    "basher",
+    "s-65-stingray",
+    "odin",
+    "sabre-raven-ex",
+    "constellation-mkv-centaurus"
+  ],
+  "excluded": [
+    {
+      "slug": "dragonfly-yellowjacket",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "dragonfly-black",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "nox",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "nox-kue",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone-tr",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone-rc",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone-rn",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone-aa",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ursa-rover",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "x1-base",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "x1-velocity",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "x1-force",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "nova",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ursa-rover-fortuna",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ranger-rc",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ranger-tr",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ranger-cv",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ballista",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ballista-snowblind",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ballista-dunestalker",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "g12",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "roc",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cyclone-mt",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "roc-ds",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "spartan",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "hoverquad",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "mule",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "centurion",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "stv",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "lynx",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "storm",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "pulse",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "pulse-lx",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ursa-medivac",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "atls",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "csv-sm",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "atls-geo",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "mtc",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "mdc",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "atls-geo-itki",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "atls-itki",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "404i",
+      "reason": "nonstandard-or-display-duplicate"
+    },
+    {
+      "slug": "titan-suit",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "cutlass-purple",
+      "reason": "non-ship-April Fools"
+    },
+    {
+      "slug": "super-liberator",
+      "reason": "non-ship-Fan Concept"
+    },
+    {
+      "slug": "stormwal",
+      "reason": "non-ship-Fauna"
+    },
+    {
+      "slug": "homing-mine",
+      "reason": "non-ship-Munition"
+    },
+    {
+      "slug": "repair-drone",
+      "reason": "non-ship-Drone"
+    },
+    {
+      "slug": "gladius-dunlevy",
+      "reason": "nonstandard-or-display-duplicate"
+    },
+    {
+      "slug": "dragonfly-starkitten",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "ptv",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "landing-pad-xs",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "landing-pad-s",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "landing-pad-m",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "landing-pad-l",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "landing-pad-c",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "jump-gate",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "character-male",
+      "reason": "non-ship-Character"
+    },
+    {
+      "slug": "endeavor-telescope-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-biodome-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-fuel-pod-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-general-research-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-general-science-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-hospital-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-particle-accelerator-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "endeavor-service-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "tractorbeam",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "laser-yellow",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "laser-red",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "laser-blue",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "engine-flame-medium",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "explosion",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "engine-flame-small",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "engine-flame-large",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "debris-wreckage",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "asteroid",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "asteroid-field",
+      "reason": "non-ship-Prop"
+    },
+    {
+      "slug": "s10-bomb",
+      "reason": "non-ship-Munition"
+    },
+    {
+      "slug": "cargo-box-32",
+      "reason": "non-ship-Storage"
+    },
+    {
+      "slug": "corsair-landed",
+      "reason": "nonstandard-or-display-duplicate"
+    },
+    {
+      "slug": "port-olisar",
+      "reason": "non-ship-Station"
+    },
+    {
+      "slug": "starjump-station",
+      "reason": "non-ship-Station"
+    },
+    {
+      "slug": "character-female",
+      "reason": "non-ship-Character"
+    },
+    {
+      "slug": "endeavor-landing-bay-module",
+      "reason": "non-ship-Module"
+    },
+    {
+      "slug": "utv",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "odin-armed",
+      "reason": "odin-display-variant-use-canonical-odin"
+    },
+    {
+      "slug": "odin-unarmed",
+      "reason": "odin-display-variant-use-canonical-odin"
+    },
+    {
+      "slug": "g12a",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "g12r",
+      "reason": "ground-vehicle"
+    },
+    {
+      "slug": "stormaa",
+      "reason": "ground-vehicle"
+    }
+  ],
+  "runtimeExcluded": [
+    {
+      "id": "endeavor-master-set",
+      "reason": "模块与核心船体的拆件展示图，不是单艘装配后的飞船。"
+    },
+    {
+      "id": "syulen",
+      "reason": "当前渲染为三翼立式展示姿态，尚未取得适合平面飞行的投影与舰首校准。"
+    }
+  ]
+}

@@ -77,6 +77,7 @@ test("desktop homepage, gallery and member arena remain operational", async ({ p
   await brawlOpener.evaluate((element) => element.scrollIntoView({ block: "center" }));
   await expect(brawlOpener).toBeVisible();
   await brawlOpener.click();
+  await page.locator('[data-game-select="members"]').click();
   await expect(page.locator("[data-member-brawl-dialog]")).toHaveAttribute("open", "");
   const arena = page.frameLocator("[data-member-brawl-frame]");
   await arena.locator("[data-brawl-start]").click();
@@ -368,7 +369,7 @@ test("arena consumes the current local snapshot and safely displays changed memb
 
 test("docking keeps one live arena and only the dock close unloads its document", async ({ page }) => {
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());await page.locator('[data-game-select="members"]').click();
   const arena = page.frameLocator("[data-member-brawl-frame]");
   await arena.locator("[data-arena-mode]").selectOption("classic");
   await arena.locator("[data-brawl-start]").click();
@@ -393,7 +394,7 @@ test("manual pause during an attack freezes damage, effects and cooldowns across
     Math.random = () => ((seed = (1664525 * seed + 1013904223) >>> 0) / 4294967296);
   });
   await page.goto("/", { waitUntil: "domcontentloaded" });
-  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());
+  await page.locator("[data-member-brawl-open]").evaluate((v) => v.click());await page.locator('[data-game-select="members"]').click();
   const arena = page.frameLocator("[data-member-brawl-frame]");
   await arena.locator("[data-arena-mode]").selectOption("classic");
   await arena.locator("[data-brawl-start]").click();
