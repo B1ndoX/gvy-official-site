@@ -15,7 +15,7 @@ test('one fleet window selects either game, supplies the current roster and unlo
  await page.evaluate(()=>{window.__shipMessages=[];addEventListener('message',e=>{if(e.origin===location.origin&&e.data?.source==='gvy.ship-battle')window.__shipMessages.push(e.data);});});
  await page.locator('[data-game-select="ships"]').click();
  const ship=page.frameLocator('[data-member-brawl-frame]');
- await expect.poll(()=>page.evaluate(()=>window.__shipMessages.find(m=>m.type==='members-accepted')?.payload.count===window.__gvyFleetRoster?.members.length)).toBe(true);
+ await expect.poll(()=>page.evaluate(()=>{const count=window.__shipMessages.find(m=>m.type==='members-accepted')?.payload.count;return count>=2&&count===window.__gvyFleetRoster?.members.length;})).toBe(true);
  await expect(ship.getByRole('button',{name:'开始战斗',exact:true})).toBeEnabled();
  await ship.getByRole('button',{name:'开始战斗',exact:true}).click();
  await expect(ship.getByTestId('phase')).toHaveText('交战中');
