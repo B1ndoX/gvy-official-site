@@ -49,12 +49,12 @@ test('upgrading a pre-feature IndexedDB Idris drops generic guns and adds the sp
  expect(next.mounts).toHaveLength(builtin.mounts.length);
 });
 
-test('previously cached version 5 weapons receive the new beam damage and 15-second rail cooldown',()=>{
+test('previously cached weapons receive the new beam damage and 15-second rail cooldown',()=>{
  for(const id of ['idris-p','tiburon','mauler','odin','idris-m']){
   const builtin=manifest.assets.find(a=>a.shipId===id) as ShipAsset;
-  const old={...builtin,combatVersion:5,mounts:builtin.mounts.map(m=>({...m,damage:1,cooldown:30}))};
+  const old={...builtin,combatVersion:id==='idris-m'?5:6,mounts:builtin.mounts.map(m=>({...m,damage:1,cooldown:30}))};
   const upgraded=upgradeCombat(old,builtin);
-  expect(upgraded.combatVersion).toBe(6);expect(upgraded.mounts).toEqual(builtin.mounts);
+  expect(upgraded.combatVersion).toBe(builtin.combatVersion);expect(upgraded.mounts).toEqual(builtin.mounts);
  }
 });
 
@@ -69,7 +69,7 @@ test('broad beam can hit a hull overlapping its edge, while still using one tota
  expect(e.beams[0].segments[0].hit).toBe(true);expect(e.hits).toBeGreaterThan(0);
 });
 
-test.each([['idris-p',75000,4.5,14/3],['tiburon',52000,3.9,11/3],['mauler',144000,5.4,14/3],['odin',280000,6,6]] as const)('%s stronger beam retains its duration, cooldown and single volley budget', (id,total,seconds,cooldown)=>{
+test.each([['idris-p',150000,4.5,14/3],['tiburon',104000,3.9,11/3],['mauler',288000,5.4,14/3],['odin',1400000,6,6]] as const)('%s stronger beam retains its duration, cooldown and single volley budget', (id,total,seconds,cooldown)=>{
  const e=duel(id,'beam'),t=e.ships[1],m=e.ships[0].spec.mounts[0];t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  expect(m.duration!*.75).toBeCloseTo(seconds);expect(m.cooldown*.75).toBeCloseTo(cooldown);
  step(e,Math.ceil(m.duration!*60)+2);expect(e.shots).toBe(1);expect(1e8-t.hull).toBeCloseTo(total,3);

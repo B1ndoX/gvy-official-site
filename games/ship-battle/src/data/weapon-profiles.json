@@ -1,5 +1,5 @@
 {
-  "version": 6,
+  "version": 7,
   "description": "Weapon identities follow cited CIG sources / user direction; damage, seconds and geometry are game balance, not live SC statistics. Odin uses one broad forward beam with a single damage budget. Idris-P uses the K beam kit; Retaliator base uses torpedo-module configuration. No separate Idris-T model is present.",
   "ships": [
     {
@@ -18,7 +18,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 12500,
+          "damage": 25000,
           "duration": 6.0,
           "cooldown": 6.222222222222222,
           "charge": 0.7999999999999999,
@@ -36,9 +36,9 @@
       ],
       "supportDps": 1300,
       "balance": {
-        "note": "Capital primary beam output raised after playtest; fixed current firing cadence, bounded per-second health loss, 2 damage ticks per real second."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
       },
-      "combatVersion": 6
+      "combatVersion": 7
     },
     {
       "id": "tiburon",
@@ -56,7 +56,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 10000,
+          "damage": 20000,
           "duration": 5.2,
           "cooldown": 4.888888888888888,
           "charge": 0.6,
@@ -74,9 +74,9 @@
       ],
       "supportDps": 750,
       "balance": {
-        "note": "Capital primary beam output raised after playtest; fixed current firing cadence, bounded per-second health loss, 2 damage ticks per real second."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
       },
-      "combatVersion": 6
+      "combatVersion": 7
     },
     {
       "id": "mauler",
@@ -94,7 +94,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 20000,
+          "damage": 40000,
           "duration": 7.199999999999999,
           "cooldown": 6.222222222222222,
           "charge": 1.0,
@@ -113,9 +113,9 @@
       ],
       "supportDps": 3300,
       "balance": {
-        "note": "Capital primary beam output raised after playtest; fixed current firing cadence, bounded per-second health loss, 2 damage ticks per real second."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
       },
-      "combatVersion": 6
+      "combatVersion": 7
     },
     {
       "id": "odin",
@@ -133,7 +133,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2800,
-          "damage": 35000,
+          "damage": 175000,
           "duration": 8.0,
           "cooldown": 8.0,
           "charge": 1.3333333333333333,
@@ -152,9 +152,9 @@
       ],
       "supportDps": 3500,
       "balance": {
-        "note": "Capital primary beam output raised after playtest; fixed current firing cadence, bounded per-second health loss, 2 damage ticks per real second."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
       },
-      "combatVersion": 6
+      "combatVersion": 7
     },
     {
       "id": "idris-m",
