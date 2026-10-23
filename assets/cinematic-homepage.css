@@ -721,7 +721,7 @@ html[data-motion-ready] :is(
   z-index: 1;
   top: 50%;
   left: 50%;
-  border: 1px solid rgba(102, 188, 229, 0.34);
+  border: 1px solid rgba(102, 188, 229, 0.2);
   border-radius: 50%;
   pointer-events: none;
   translate: -50% -50%;
@@ -735,13 +735,13 @@ html[data-motion-ready] :is(
 .signal-orbit-two {
   width: 88%;
   aspect-ratio: 1;
-  border-color: rgba(102, 188, 229, 0.22);
+  border-color: rgba(102, 188, 229, 0.14);
 }
 
 .signal-orbit-three {
   width: 66%;
   aspect-ratio: 1;
-  border-color: rgba(102, 188, 229, 0.15);
+  border-color: rgba(102, 188, 229, 0.1);
 }
 
 .signal-lockup {
@@ -799,7 +799,7 @@ html[data-motion-ready] :is(
   position: relative;
   z-index: 2;
   width: clamp(270px, 22vw, 480px);
-  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 34px rgba(89, 168, 210, 0.13));
+  filter: drop-shadow(0 12px 30px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 34px rgba(89, 168, 210, 0.09));
 }
 
 .signal-logo img {
@@ -1006,7 +1006,7 @@ html[data-motion-ready] :is(
   inset: 0;
   margin: 0;
   opacity: 0;
-  transform: scale(1.06);
+  transform: scale(1.025);
 }
 
 .operation-visual picture,
@@ -1592,6 +1592,7 @@ html[data-motion-ready] :is(
   margin-top: 45px;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 26px;
 }
 
@@ -1604,19 +1605,147 @@ html[data-motion-ready] :is(
   font-size: 0.75rem;
   letter-spacing: 0.1em;
   cursor: pointer;
-  transition: color 180ms ease, background 180ms ease;
+  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
 }
 
-.recruit-actions a:hover,
-.recruit-brawl-button:hover {
+.recruit-actions a:is(:hover, :focus-visible),
+.recruit-brawl-button:is(:hover, :focus-visible) {
   color: var(--space-black);
   background: var(--fleet-gold);
+  box-shadow: 0 0 24px rgba(216, 182, 106, 0.16);
 }
 
-.recruit-actions span {
-  color: var(--text-secondary);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
+/* GVY-UI-A01: Aceternity Tailwind Connect capsule, with local copy feedback. */
+.recruit-contact {
+  position: relative;
+  max-width: 100%;
+}
+
+.recruit-copy-button {
+  position: relative;
+  display: inline-flex;
+  max-width: 100%;
+  padding: 1px;
+  border: 0;
+  border-radius: 999px;
+  color: #d8eaf2;
+  background: #1b2936;
+  box-shadow: 0 4px 20px #0005;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.recruit-copy-button::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(75% 100% at 50% 0%, #38bdf899 0%, #38bdf800 75%);
+  content: "";
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.recruit-copy-button::after {
+  position: absolute;
+  right: 18px;
+  bottom: 0;
+  left: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #83c9d7c9, transparent);
+  content: "";
+  transition: opacity 500ms ease;
+}
+
+.recruit-copy-button:is(:hover, :focus-visible)::before {
+  opacity: 1;
+}
+
+.recruit-copy-button:is(:hover, :focus-visible)::after {
+  opacity: 0.4;
+}
+
+.recruit-copy-button:focus-visible {
+  outline: 2px solid #8ac7df;
+  outline-offset: 4px;
+}
+
+.recruit-copy-surface {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  min-height: 44px;
+  padding: 8px 18px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: inherit;
+  background: #080d14;
+  box-shadow: inset 0 0 0 1px #ffffff14;
+  line-height: 1.5;
+}
+
+.recruit-copy-button [data-copy-label] {
+  width: 3.2em;
+  color: inherit;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.recruit-copy-button [data-recruit-number] {
+  margin: 0;
+  color: #edf5f8;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+.recruit-copy-divider {
+  width: 1px;
+  height: 14px;
+  background: #a0bed033;
+}
+
+.recruit-copy-icon {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.recruit-copy-icon .copy-check,
+.recruit-copy-button[data-copy-state="copied"] .copy-outline {
+  display: none;
+}
+
+.recruit-copy-button[data-copy-state="copied"] .copy-check {
+  display: inline;
+}
+
+.recruit-copy-button:disabled {
+  cursor: progress;
+  opacity: 0.75;
+}
+
+.recruit-copy-status {
+  position: absolute;
+  top: calc(100% + 5px);
+  right: 0;
+  left: 0;
+  color: #a2b3bf;
+  font-size: clamp(10px, 0.65vw, 12px);
+  line-height: 1.5;
+  white-space: nowrap;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .recruit-copy-button::before,
+  .recruit-copy-button::after { transition: none; }
 }
 
 .recruit-actions strong {
@@ -2575,6 +2704,8 @@ noscript {
 .fleet-game-card-stage{display:flex;min-width:0;perspective:1000px}
 .fleet-game-card{position:relative;display:flex;width:100%;min-width:0;overflow:visible;padding:clamp(16px,1.5vw,32px);background:linear-gradient(145deg,#12212c,#081018);border:1px solid #7193a944;border-radius:13px;transform-style:preserve-3d;transform:rotateY(var(--card-ry,0deg)) rotateX(var(--card-rx,0deg));transition:transform 200ms linear,border-color 220ms,box-shadow 220ms}
 .fleet-game-card:is(:hover,:focus-within){border-color:#9eb9c388;box-shadow:0 16px 45px #0006}
+.fleet-game-card::before{position:absolute;inset:-1px;z-index:1;padding:1.5px;border-radius:inherit;background:conic-gradient(from var(--card-glow-angle,45deg),transparent 0deg,#79bdd9aa 60deg,#dfc487aa 105deg,transparent 155deg);content:"";pointer-events:none;opacity:0;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask-composite:exclude;transition:opacity 180ms ease}
+.fleet-game-card:is(:hover,:focus-within)::before{opacity:1}
 .fleet-game-card:has(.fleet-game-launch:focus-visible){outline:2px solid #87b5c9;outline-offset:3px}
 .fleet-game-card>.fleet-game-launch{display:flex;flex-direction:column;align-items:stretch;gap:clamp(10px,1vw,20px);width:100%;padding:0;min-height:0;border:0;background:none;color:#e9eef1;text-align:left;transform-style:preserve-3d}
 .fleet-game-card>.fleet-game-launch:is(:hover,:focus-visible){background:none;color:#e9eef1;outline:none}
@@ -2597,7 +2728,7 @@ noscript {
 .fleet-game-cache{gap:4px;flex:none;width:min(420px,80%);margin:0 auto;padding:0;font-size:clamp(10px,.72vw,18px);text-align:center}
 .fleet-game-cache[hidden]{display:none}.fleet-game-cache small{font-size:inherit;line-height:1.4}.fleet-game-cache progress{height:3px}.fleet-game-cache[data-state="complete"] progress{display:none}
 .fleet-game-hint{flex:none;margin:0;font-size:clamp(11px,.7vw,18px);line-height:1.5;color:#8798a7}.fleet-game-status{margin:0}
-@media(hover:none),(pointer:coarse){.fleet-game-pointer-hint{display:none}.fleet-game-card,.fleet-game-launch{transform:none!important;transform-style:flat!important}.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}}
+@media(hover:none),(pointer:coarse){.fleet-game-pointer-hint{display:none}.fleet-game-card,.fleet-game-launch{transform:none!important;transform-style:flat!important}.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}.fleet-game-card::before{background:linear-gradient(135deg,#79bdd966,transparent 55%,#dfc48766)}}
 @media(max-width:600px),(max-height:440px){
   .member-brawl-dialog[data-window-state="expanded"]{--arena-window-width:calc(100vw - 12px);--arena-window-height:calc(100dvh - 16px);--game-window-toolbar-height:48px;width:var(--arena-window-width);height:var(--arena-window-height);max-width:none;max-height:none;border-radius:7px}
 }
@@ -2608,7 +2739,7 @@ noscript {
 }
 @media(max-width:600px) and (max-height:720px){.fleet-game-media{aspect-ratio:2.8/1}.fleet-game-hint{display:none}.fleet-game-card{padding:11px}.fleet-game-description{font-size:10px}.fleet-game-enter{min-height:34px}}
 @media(max-height:560px) and (min-width:601px){.fleet-game-hub{padding:16px 18px 12px;gap:8px}.fleet-game-heading{min-height:34px;margin:0}.fleet-game-heading h2{font-size:22px}.fleet-game-card{padding:12px}.fleet-game-card>.fleet-game-launch{gap:6px}.fleet-game-media{aspect-ratio:2.7/1}.fleet-game-description{min-height:0;font-size:11px}.fleet-game-enter{min-height:34px}.fleet-game-hint{font-size:10px}.fleet-game-cache{font-size:10px}}
-@media(prefers-reduced-motion:reduce){.fleet-game-card,.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}.fleet-game-card,.fleet-game-media img,.fleet-game-media video{transition:none}}
+@media(prefers-reduced-motion:reduce){.fleet-game-card,.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}.fleet-game-card,.fleet-game-card::before,.fleet-game-media img,.fleet-game-media video{transition:none}}
 
 /* Desktop pointer controls need one compact host bar, not a second title band. */
 @media(min-width:601px) and (min-height:441px){

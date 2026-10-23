@@ -315,7 +315,7 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
     assert.match(cinematicTimelines, new RegExp(`gvy-${id}`));
   }
   assert.match(cinematicTimelines, /fadeTextSequenceThroughViewport/);
-  assert.match(cinematicTimelines, /stagger:\s*enterStagger/);
+  assert.match(cinematicTimelines, /stagger:\s*pacing\.enterStagger/);
   assert.match(cinematicTimelines, /enterDuration\s*=\s*1\.9/);
   assert.match(cinematicTimelines, /holdDuration\s*=\s*4\.6/);
   assert.match(cinematicTimelines, /scrub:/);
@@ -333,17 +333,19 @@ test("cinematic timelines register GSAP and cover every narrative stage", () => 
   assert.match(cinematicTimelines, /data-hero-exit-complete/);
   assert.match(cinematicTimelines, /gsap\.set\(heroText,\s*\{[\s\S]*?autoAlpha:\s*0/);
   assert.match(cinematicTimelines, /const heroExitText = \[\.\.\.heroText\]\.reverse\(\)/);
+  assert.match(cinematicTimelines, /readingPacing\(heroText\.length/);
+  assert.match(cinematicTimelines, /readingPacing\(items\.length/);
   assert.match(cinematicTimelines, /enterDuration = 3\.8/);
   assert.match(cinematicTimelines, /enterStagger = 0\.76/);
   assert.match(cinematicTimelines, /holdDuration = 7\.8/);
   assert.match(cinematicTimelines, /exitDuration = 5\.8/);
   assert.match(cinematicTimelines, /exitStagger = 0\.18/);
-  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ holdDuration/);
+  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ pacing\.holdDuration/);
   assert.match(cinematicTimelines, /\.addLabel\("hero-exit", exitStart\)[\s\S]*?\.to\(\s*heroExitText/);
   const heroExitBlock = cinematicTimelines.match(
     /\.to\(\s*heroExitText,[\s\S]*?"hero-exit",\s*\)/,
   )?.[0] || "";
-  assert.match(heroExitBlock, /stagger:\s*exitStagger/);
+  assert.match(heroExitBlock, /stagger:\s*pacing\.exitStagger/);
   assert.doesNotMatch(heroExitBlock, /filter|blur/);
   const mobileTimelineBlock = cinematicTimelines.match(
     /function createMobileTimelines[\s\S]*?\n\}/,
@@ -506,7 +508,7 @@ test("desktop operation scenes follow continuous scroll progress without forced 
   assert.doesNotMatch(cinematicTimelines, /snapToSettledOperation|snap:\s*\{/);
 });
 
-test("large 16:9 hero only accelerates entry while keeping the restored breathing exit", () => {
+test("hero variants preserve their original budgets while reallocating transitions to reading", () => {
   assert.match(cinematicTimelines, /const LARGE_16_9_DESKTOP_QUERY = "\(min-width: 1920px\)[^"]+\(min-aspect-ratio: 17 \/ 10\)"/);
   assert.match(cinematicTimelines, /enterDuration:\s*large16x9Desktop \? 3\.5 : 3\.8/);
   assert.match(cinematicTimelines, /enterStagger:\s*large16x9Desktop \? 0\.7 : 0\.76/);
@@ -524,8 +526,8 @@ test("hero exit remains visible before fleet positioning begins at every viewpor
   assert.match(cinematicCss, /\.hero-title\s*\{[\s\S]*?z-index:\s*5;/);
   assert.match(cinematicCss, /\.hero-motto\s*\{[\s\S]*?z-index:\s*5;/);
   assert.match(cinematicCss, /\.signal-section\s*\{[\s\S]*?margin-top:\s*0;/);
-  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ holdDuration/);
-  assert.match(cinematicTimelines, /const exitSpan = exitDuration \+ \(heroExitText\.length - 1\) \* exitStagger/);
+  assert.match(cinematicTimelines, /const exitStart = enterEnd \+ pacing\.holdDuration/);
+  assert.match(cinematicTimelines, /const exitSpan = pacing\.exitDuration \+ \(heroExitText\.length - 1\) \* pacing\.exitStagger/);
   assert.match(cinematicTimelines, /"--hero-transition-opacity":\s*1[\s\S]*?duration:\s*exitSpan[\s\S]*?"hero-exit"/);
   assert.match(cinematicTimelines, /exitDuration = 5\.8/);
   assert.match(cinematicTimelines, /exitStagger = 0\.18/);

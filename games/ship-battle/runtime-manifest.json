@@ -2,7 +2,7 @@
   "version": 1,
   "acceptedCommit": "5700a86751c3552f1c25b933067fd2daf5e51bda",
   "sources": {
-    "src/App.tsx": "61c3f09cdd453b6e81a33ed8ef73a9dbe716e541727ee0a33ef87446148ca812",
+    "src/App.tsx": "5883d17bb6c01da35c9b61e4e675fbf1791e4215b524a37015bbb41f0ea59b0a",
     "src/assets/library.ts": "604a2a773e3f013672abe98c6ebe689673b871fcbdfa5cee5a850adbc7152453",
     "src/bridge.ts": "aca0ed27dbe32d4d36056f1d53506cfa0c160fc2ec9a352addb6153173e32f1e",
     "src/data/defense-balance.json": "fe89c6d21a196db0a0249ae95ac52e104068cd0aed6d978a3953c03f220a1258",
@@ -16,7 +16,7 @@
     "src/render/BattleRenderer.ts": "6c29f97f73f2dbb8ef6bb1bdf8ae38105060818dd7d9a0d13fd327751d0caa6a",
     "src/render/CombatDirector.ts": "bfa91161b26fefc2375aed065407f0937fc86bf296cf20f6b5e35e78785a8ca0",
     "src/render/WeaponEffects.ts": "6278f142eec3855c05fcf38af0c727b1987e41699dd50d6a266e141fa65bf762",
-    "src/sim/asteroids.ts": "aa2f1d9a4a13c0f5362c51648bc98e445f738b69980391f0b2f92fae71a1ac57",
+    "src/sim/asteroids.ts": "c662d1f63f8627651bc9a436350b33afe0154c81059ae9388b1b753d205cace8",
     "src/sim/balance.ts": "f9b468decda10a4a6a7e77226206da51b623e165c3bb79aaed0fc6b5f1b39e0d",
     "src/sim/collisions.ts": "e2af12e0c105df623bf664de37c2fc10ac6e8f3d7d3ccf4f2e853fc8638550de",
     "src/sim/engine.ts": "7579cd4577998919730489ff531a5e9c38f681cf03a77e38fddb4b2b8e958ad9",
@@ -26,7 +26,7 @@
     "src/sim/pacing.ts": "f1bff8c3b689c230ded1b4e86f4928b78ff0e41ed123a1a4f358952f40837f32",
     "src/sim/types.ts": "071be15efff83351d6caa832eef6fa78430f45f31640e71d71bd91c173ea6dc3",
     "src/sim/weapons.ts": "b1534fc6c22803de93f295a8a0165274d7794246eccf248eb664cb3d0e665199",
-    "src/style.css": "cc54bcedfb36a06f4732af9228e13987c07afc9af7b46f9d8488a658afe09aef",
+    "src/style.css": "80cfd2c4c7228c1b763d837b0bb860c326eb6f7adb9fe3593d2993ec5fecd6eb",
     "src/ui/AssetManager.tsx": "16bc4912c772af858257166df75c269b8ce97d724a885c433526fa303144e4d7",
     "src/ui/BattleLog.tsx": "d6aabf729188d09b32c762a112eff09a08220017ecfb2e9c6e7e996bd953d3c3",
     "src/ui/Inspector.tsx": "b4eafa9622c3fdbee16c89dccdc5955955b2fdca707a1fa04d970655058e130d",
@@ -305,12 +305,12 @@
     "assets/WebGLRenderer-C4rbqjrN.js": "f8305193c90aeab58b59b532f5ff7c14790fd193f8668722d9d5029ed34d63f2",
     "assets/WebGPURenderer-CQx7F_hI.js": "6fd1f5d253a0a0c869c28d565d6bf18cf3c4127d73e349381d98f406a158a149",
     "assets/browserAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
-    "assets/index-Bmz58Jkw.js": "6ebd39b84a0604c5eb8626c6623bcdaec3ef1997ff3d93003e927ebbff15740d",
-    "assets/index-Ck8A41Km.css": "597be189e1e6beb3d899a16b09affa322c323d04c10a373a7ebe74310311299d",
+    "assets/index-BqBFnh5y.css": "1997fb6853bc72a672ef1154d20dd292f6b204a607ea6dc54600f0609253ec54",
+    "assets/index-C86zm4Nl.js": "40026fef3ffebb626b9ab13e0b63db289a2e63bea345a1d2c5ea64866710bb5f",
     "assets/jsx-runtime-DOeFM6qU.js": "e1e09fe2337dfdeef8f534757dde2b690d1f2eb3a74948442b2550c8760d16d4",
     "assets/pixi-BGJzYaA3.js": "91e03643e62c079e41832f63012745312ed74dda4b371661cca64780ab45fd39",
     "assets/rolldown-runtime-WkwZ5CU-.js": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
     "assets/webworkerAll-Dr3ZctfA.js": "6a4223180e36b49fd3abc7e7da65ffe158bd6c432dba4e253f02abfe4cb8b708",
-    "index.html": "ef750d5c242b10aa1a42d8315bb869030d38ed1776bb4c82701b058676eda2e7"
+    "index.html": "d4917fb425350d688ba2c603015a5d4e40d6624e11659324014977b7e926c8ce"
   }
 }

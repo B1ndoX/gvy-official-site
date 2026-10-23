@@ -23,7 +23,7 @@ const newSeed=()=>crypto.getRandomValues(new Uint32Array(1))[0];
 const randomMode=(except?:BattleMode):BattleMode=>{const choices=(['bounty','brawl','challenge','teams'] as BattleMode[]).filter(m=>m!==except);return choices[newSeed()%choices.length];};
 export default function App({initialMembers=membersJSON.members as Member[],firstLoad=false}: {initialMembers?:Member[];firstLoad?:boolean}={}){
   const MEMBERS=initialMembers;
-  const arenaHeader=useRef<HTMLDivElement>(null),commandDeck=useRef<HTMLDivElement>(null),headerSearch=useRef<HTMLDivElement>(null),zoomControls=useRef<HTMLDivElement>(null);
+  const arenaHeader=useRef<HTMLDivElement>(null),commandDeck=useRef<HTMLDivElement>(null),headerSearch=useRef<HTMLDivElement>(null),zoomControls=useRef<HTMLDivElement>(null),cameraCaption=useRef<HTMLDivElement>(null);
   const [searchOpen,setSearchOpen]=useState(false),[zoomOpen,setZoomOpen]=useState(false);
   const [compact,setCompact]=useState(compactViewport);
   const embedded=new URLSearchParams(location.search).has('embed');
@@ -102,6 +102,18 @@ export default function App({initialMembers=membersJSON.members as Member[],firs
     const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();setSearchOpen(false);setZoomOpen(false);}};
     document.addEventListener('pointerdown',outside);document.addEventListener('keydown',escape,true);return()=>{document.removeEventListener('pointerdown',outside);document.removeEventListener('keydown',escape,true);};
   },[searchOpen,zoomOpen]);
+  const hasCameraCaption=(camera.mode==='combat'||camera.mode==='follow')&&Boolean(camera.subject);
+  useEffect(()=>{
+    const caption=cameraCaption.current,field=caption?.parentElement;if(!caption||!field)return;
+    // Fill the space above the caption, retaining a small breathing gap.
+    const measure=()=>{
+      const style=getComputedStyle(caption),gap=Math.min(10,Math.max(6,parseFloat(getComputedStyle(document.documentElement).fontSize)*.35));
+      const clearance=caption.offsetHeight+(parseFloat(style.bottom)||0)+gap;
+      field.style.setProperty('--camera-caption-clearance',`${clearance}px`);
+    };
+    measure();const observer=new ResizeObserver(measure);observer.observe(caption);observer.observe(field);
+    return()=>{observer.disconnect();field.style.removeProperty('--camera-caption-clearance');};
+  },[hasCameraCaption]);
   const rosterTools=<><div ref={headerSearch} className={`header-search-slot ${searchOpen?'is-open':''}`}><button className="header-search-toggle" aria-label="展开搜索成员" aria-expanded={searchOpen} title="搜索成员 / 舰船" onClick={()=>setSearchOpen(v=>!v)}><Search size={16}/></button><label className="roster-search"><Search size={14}/><input aria-label="搜索成员" placeholder="成员 / 舰船" title="搜索成员或舰船" value={memberQuery} onChange={e=>{setMemberQuery(e.target.value);setLibraryOpen(true);}}/></label></div><button aria-label="参战成员" title="参战成员" disabled={running||paused||!ready} onClick={()=>setMembersOpen(true)}><Users size={14}/><span>参战成员</span></button></>;
   return <div className={`app ${libraryOpen?'library-open':''} ${embedded?'embedded':''}`} data-phase={snapshot.phase}>
 
@@ -110,7 +122,7 @@ export default function App({initialMembers=membersJSON.members as Member[],firs
     <div className={`battlefield arena-stage ${camera.mode==='combat'||camera.mode==='follow'?'combat-view':''} ${snapshot.boss?'has-boss':''}`} data-testid="battlefield" style={{backgroundImage:`url(${import.meta.env.BASE_URL}assets/nebula.png)`}}><div ref={stage} className="pixi-stage"/>
       <MemberLeaderboard rows={snapshot.standings.filter(s=>!s.npc)} query={memberQuery} onClose={()=>setLibraryOpen(false)} hidden={!libraryOpen} selected={snapshot.selected?.id??null} onSelect={id=>{renderer.current?.focusShip(id);if(compactViewport())setLibraryOpen(false);}}/>
       {snapshot.phase==='ready'?<div className="ready-message compact"><h2>舰队成员已就位</h2><p>{mode==='brawl'?'成员互相战斗，决出最后幸存者':mode==='bounty'?'成员协作，敌方开战后从随机方向进场':mode==='teams'?'红蓝从两侧出生，消灭敌方舰队获胜':'协作依次挑战 5 艘 BOSS，无僚机'}</p><small>{snapshot.total} 名成员 · {POOL.length} 种抽签舰船 · 全自动战斗</small></div>:null}
-      {(camera.mode==='combat'||camera.mode==='follow')&&camera.subject?<div className="camera-caption" data-testid="camera-caption" data-camera-mode={camera.mode}><small>{camera.mode==='follow'?'手动跟随':camera.active?'交火现场':'寻找交火'}</small><strong>{camera.subject}</strong>{camera.target?<span>交战 · {camera.target}</span>:null}</div>:null}
+      {hasCameraCaption?<div ref={cameraCaption} className="camera-caption" data-testid="camera-caption" data-camera-mode={camera.mode}><small>{camera.mode==='follow'?'手动跟随':camera.active?'交火现场':'寻找交火'}</small><strong>{camera.subject}</strong>{camera.target?<span>交战 · {camera.target}</span>:null}</div>:null}
       {paused?<div className="pause-watermark"><Pause size={20}/> 战斗已暂停</div>:null}
       {snapshot.selected?<Inspector ship={snapshot.selected} onFocus={()=>renderer.current?.focusShip(snapshot.selected!.id,true)} onClose={()=>{if(renderer.current)renderer.current.selected=null;notify(engine.snapshot());}}/>:null}
       {snapshot.boss?<section className={`boss-hud ${snapshot.boss.alive?'':'defeated'}`} aria-label="BOSS 状态"><div><b>{snapshot.boss.label}</b><span>{snapshot.boss.alive?'来袭敌方舰队':'已被击毁'}</span><small>{mode==='challenge'?`挑战 ${snapshot.wave} / ${snapshot.waves}`:`僚机 ${snapshot.escortsAlive} / 20`}</small></div><label>护盾 <i><em style={{width:`${snapshot.boss.shield/snapshot.boss.spec.shield*100}%`}}/></i></label><label>舰体 <i><em style={{width:`${snapshot.boss.hull/snapshot.boss.spec.hull*100}%`}}/></i></label></section>:null}

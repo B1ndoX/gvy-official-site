@@ -1,6 +1,22 @@
 const TIMELINE_PREFIX = "gvy-";
 const LARGE_16_9_DESKTOP_QUERY = "(min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10)";
 
+// Reallocate the existing scroll budget to reading, without extending a scene.
+function readingPacing(count, baseline) {
+  const gaps = Math.max(0, count - 1);
+  const budget = baseline.enterDuration + gaps * baseline.enterStagger
+    + baseline.holdDuration + baseline.exitDuration + gaps * baseline.exitStagger;
+  const pacing = {
+    enterDuration: baseline.enterDuration * 0.64,
+    enterStagger: baseline.enterStagger * 0.55,
+    exitDuration: baseline.exitDuration * 0.68,
+    exitStagger: baseline.exitStagger * 0.66,
+  };
+  pacing.holdDuration = budget - pacing.enterDuration - gaps * pacing.enterStagger
+    - pacing.exitDuration - gaps * pacing.exitStagger;
+  return pacing;
+}
+
 export function preserveBreakpointScroll(gsap, view) {
   let mobile = Number(view?.innerWidth) <= 760;
   let position = null;
@@ -55,11 +71,11 @@ function fadeThroughViewport(
       .fromTo(
         target,
         { autoAlpha: 0, y: enterY },
-        { autoAlpha: 1, y: 0, duration: 0.32, ease: "none" },
+        { autoAlpha: 1, y: 0, duration: 0.2, ease: "none" },
         0,
       )
-      .to(target, { autoAlpha: 1, y: 0, duration: 0.56, ease: "none" }, 0.32)
-      .to(target, { autoAlpha: 0, y: exitY, duration: 0.22, ease: "none" }, 0.88);
+      .to(target, { autoAlpha: 1, y: 0, duration: 0.76, ease: "none" }, 0.2)
+      .to(target, { autoAlpha: 0, y: exitY, duration: 0.14, ease: "none" }, 0.96);
   });
 }
 
@@ -71,9 +87,9 @@ function fadeTextSequenceThroughViewport(
     itemSelector = ":scope > *",
     start = "top 96%",
     end = "bottom -28%",
-    enterY = 38,
-    exitY = -22,
-    scrub = 1.2,
+    enterY = 26,
+    exitY = -16,
+    scrub = 0.65,
   } = {},
 ) {
   gsap.utils.toArray(containers).forEach((container, index) => {
@@ -82,11 +98,12 @@ function fadeTextSequenceThroughViewport(
 
     const enterDuration = 1.9;
     const enterStagger = 0.56;
-    const lastEnterEnd = enterDuration + (items.length - 1) * enterStagger;
     const holdDuration = 4.6;
     const exitDuration = 1.9;
     const exitStagger = 0.16;
-    const exitStart = lastEnterEnd + holdDuration;
+    const pacing = readingPacing(items.length, { enterDuration, enterStagger, holdDuration, exitDuration, exitStagger });
+    const lastEnterEnd = pacing.enterDuration + (items.length - 1) * pacing.enterStagger;
+    const exitStart = lastEnterEnd + pacing.holdDuration;
 
     gsap
       .timeline({
@@ -104,20 +121,20 @@ function fadeTextSequenceThroughViewport(
         {
           autoAlpha: 1,
           y: 0,
-          duration: enterDuration,
-          stagger: enterStagger,
+          duration: pacing.enterDuration,
+          stagger: pacing.enterStagger,
           ease: "none",
         },
         0,
       )
-      .to(items, { autoAlpha: 1, y: 0, duration: holdDuration, ease: "none" }, lastEnterEnd)
+      .to(items, { autoAlpha: 1, y: 0, duration: pacing.holdDuration, ease: "none" }, lastEnterEnd)
       .to(
         items,
         {
           autoAlpha: 0,
           y: exitY,
-          duration: exitDuration,
-          stagger: exitStagger,
+          duration: pacing.exitDuration,
+          stagger: pacing.exitStagger,
           ease: "none",
         },
         exitStart,
@@ -152,16 +169,17 @@ function createHeroTimeline(
     ...gsap.utils.toArray(":scope > *", heroMotto),
   ];
   const heroExitText = [...heroText].reverse();
+  const pacing = readingPacing(heroText.length, { enterDuration, enterStagger, holdDuration, exitDuration, exitStagger });
   const enterStart = 1;
-  const enterEnd = enterStart + enterDuration + (heroText.length - 1) * enterStagger;
-  const exitStart = enterEnd + holdDuration;
-  const exitSpan = exitDuration + (heroExitText.length - 1) * exitStagger;
+  const enterEnd = enterStart + pacing.enterDuration + (heroText.length - 1) * pacing.enterStagger;
+  const exitStart = enterEnd + pacing.holdDuration;
+  const exitSpan = pacing.exitDuration + (heroExitText.length - 1) * pacing.exitStagger;
   const exitEnd = exitStart + exitSpan;
   const rootElement = root.documentElement;
   gsap.set(heroText, {
     autoAlpha: 0,
-    y: 34,
-    filter: animateBlur ? "blur(10px)" : "none",
+    y: 24,
+    filter: animateBlur ? "blur(6px)" : "none",
   });
 
   const syncLockedExit = () => {
@@ -184,7 +202,7 @@ function createHeroTimeline(
       trigger: hero,
       start: "top top",
       end: "bottom 40%",
-      scrub: 1.4,
+      scrub: 0.75,
       invalidateOnRefresh: true,
       onUpdate: syncLockedExit,
       onRefresh: syncLockedExit,
@@ -205,8 +223,8 @@ function createHeroTimeline(
         autoAlpha: 1,
         y: 0,
         filter: "none",
-        duration: enterDuration,
-        stagger: enterStagger,
+        duration: pacing.enterDuration,
+        stagger: pacing.enterStagger,
         ease: "power2.out",
       },
       "hero-enter",
@@ -229,8 +247,8 @@ function createHeroTimeline(
       {
         autoAlpha: 0,
         y: -18,
-        duration: exitDuration,
-        stagger: exitStagger,
+        duration: pacing.exitDuration,
+        stagger: pacing.exitStagger,
         ease: "power2.inOut",
       },
       "hero-exit",
@@ -283,7 +301,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     signalTimeline
       .fromTo(".signal-backdrop img", { scale: 1.045, xPercent: 0.8 }, { scale: 1.012, xPercent: -0.4, duration: 1, ease: "none" }, 0)
       .fromTo("[data-signal-emblem]", { autoAlpha: 0.06, scale: 0.84, y: 44 }, { autoAlpha: 1, scale: 1, y: 0, duration: 0.94, ease: "power2.out" }, 0.08)
-      .fromTo(signalTextItems, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.52, stagger: 0.12, ease: "power2.out" }, 0.12)
+      .fromTo(signalTextItems, { autoAlpha: 0, y: 22 }, { autoAlpha: 1, y: 0, duration: 0.38, stagger: 0.08, ease: "power2.out" }, 0.08)
       .fromTo(".signal-rule", { scaleX: 0, transformOrigin: "left" }, { scaleX: 1, duration: 0.26, ease: "power1.out" }, 0.76);
 
     gsap
@@ -297,7 +315,9 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
           invalidateOnRefresh: true,
         },
       })
-      .fromTo(".signal-main", { yPercent: 12 }, { yPercent: -11, duration: 1, ease: "none" }, 0);
+      .fromTo(".signal-main", { yPercent: 6 }, { yPercent: 0, duration: 0.22, ease: "none" }, 0)
+      .to(".signal-main", { yPercent: 0, duration: 0.6, ease: "none" }, 0.22)
+      .to(".signal-main", { yPercent: -4, duration: 0.18, ease: "none" }, 0.82);
 
     gsap
       .timeline({
@@ -310,9 +330,9 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
           invalidateOnRefresh: true,
         },
       })
-      .fromTo(".signal-orbit-one", { autoAlpha: 0.24, scale: 0.72, rotate: -9 }, { autoAlpha: 0.92, scale: 1.18, rotate: 8, duration: 1, ease: "none" }, 0)
-      .fromTo(".signal-orbit-two", { autoAlpha: 0.42, scale: 1.15, rotate: 7 }, { autoAlpha: 0.82, scale: 0.84, rotate: -8, duration: 1, ease: "none" }, 0)
-      .fromTo(".signal-orbit-three", { autoAlpha: 0.2, scale: 0.68, rotate: -4 }, { autoAlpha: 0.76, scale: 1.22, rotate: 10, duration: 1, ease: "none" }, 0);
+      .fromTo(".signal-orbit-one", { autoAlpha: 0.24, scale: 0.94, rotate: -3 }, { autoAlpha: 0.46, scale: 1.04, rotate: 3, duration: 1, ease: "none" }, 0)
+      .fromTo(".signal-orbit-two", { autoAlpha: 0.2, scale: 1.04, rotate: 2 }, { autoAlpha: 0.35, scale: 0.96, rotate: -3, duration: 1, ease: "none" }, 0)
+      .fromTo(".signal-orbit-three", { autoAlpha: 0.16, scale: 0.96, rotate: -2 }, { autoAlpha: 0.28, scale: 1.05, rotate: 3, duration: 1, ease: "none" }, 0);
   }
   const identityRail = root.querySelector("[data-identity-rail]");
   const identityCells = gsap.utils.toArray(":scope > div", identityRail);
@@ -346,7 +366,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   fadeTextSequenceThroughViewport(gsap, root.querySelectorAll(".section-heading"), "heading", {
     start: "top 90%",
     end: "bottom -18%",
-    enterY: 42,
+    enterY: 28,
   });
 
   const operations = root.querySelector("[data-operations-section]");
@@ -358,10 +378,10 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
   if (operations && visuals.length && copies.length) {
     const operationCount = Math.min(visuals.length, copies.length);
     const lastIndex = operationCount - 1;
-    gsap.set(visuals, { autoAlpha: 0, scale: 1.055 });
-    gsap.set(copies, { autoAlpha: 0, y: 34 });
-    copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 18 }));
-    gsap.set(visuals[0], { autoAlpha: 1 });
+    gsap.set(visuals, { autoAlpha: 0, scale: 1.025 });
+    gsap.set(copies, { autoAlpha: 0, y: 22 });
+    copies.forEach((copy) => gsap.set(copy.children, { autoAlpha: 0, y: 12 }));
+    gsap.set(visuals[0], { autoAlpha: 1, scale: 1 });
     gsap.set([operationsStage, operationProgress], { autoAlpha: 1 });
     gsap.set(operationsStage, {
       "--operations-entry-shade": 1,
@@ -418,41 +438,46 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     operationsTimeline
       .fromTo(
         copies[0],
-        { autoAlpha: 0, y: 34 },
-        { autoAlpha: 1, y: 0, duration: 0.62, ease: "none" },
-        0.18,
+        { autoAlpha: 0, y: 22 },
+        { autoAlpha: 1, y: 0, duration: 0.38, ease: "none" },
+        0.12,
       )
       .fromTo(
         copies[0].children,
-        { autoAlpha: 0, y: 18 },
-        { autoAlpha: 1, y: 0, duration: 0.46, stagger: 0.09, ease: "none" },
-        0.3,
+        { autoAlpha: 0, y: 12 },
+        { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.055, ease: "none" },
+        0.2,
       );
 
     for (let index = 1; index < operationCount; index += 1) {
       const position = index * stageSpan;
       operationsTimeline
         .to(
-          [visuals[index - 1], copies[index - 1]],
-          { autoAlpha: 0, duration: 0.56, ease: "none" },
-          position - 0.5,
+          visuals[index - 1],
+          { autoAlpha: 0, duration: 0.36, ease: "none" },
+          position - 0.22,
+        )
+        .to(
+          copies[index - 1],
+          { autoAlpha: 0, duration: 0.18, ease: "none" },
+          position - 0.22,
         )
         .fromTo(
           visuals[index],
-          { autoAlpha: 0, scale: 1.055 },
-          { autoAlpha: 1, scale: 1, duration: 0.76, ease: "none" },
+          { autoAlpha: 0, scale: 1.025 },
+          { autoAlpha: 1, scale: 1, duration: 0.46, ease: "none" },
           position - 0.22,
         )
         .fromTo(
           copies[index],
-          { autoAlpha: 0, y: 34 },
-          { autoAlpha: 1, y: 0, duration: 0.68, ease: "none" },
-          position - 0.1,
+          { autoAlpha: 0, y: 22 },
+          { autoAlpha: 1, y: 0, duration: 0.38, ease: "none" },
+          position - 0.04,
         )
         .fromTo(
           copies[index].children,
-          { autoAlpha: 0, y: 18 },
-          { autoAlpha: 1, y: 0, duration: 0.46, stagger: 0.09, ease: "none" },
+          { autoAlpha: 0, y: 12 },
+          { autoAlpha: 1, y: 0, duration: 0.28, stagger: 0.055, ease: "none" },
           position + 0.04,
         );
     }
@@ -503,14 +528,14 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     start: "top 90%",
     end: "bottom -12%",
     enterY: 42,
-    exitY: -26,
+    exitY: -18,
     scrub: 0.75,
   });
   fadeTextSequenceThroughViewport(
     gsap,
     root.querySelectorAll(".archive-feature > div"),
     "archive",
-    { start: "top 92%", end: "bottom -18%", enterY: 32, exitY: -20 },
+    { start: "top 92%", end: "bottom -18%", enterY: 24, exitY: -14 },
   );
 
   const recruit = root.querySelector("[data-recruit-section]");
@@ -525,13 +550,13 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
           scrub: 0.75,
         },
       })
-      .fromTo(".recruit-image img", { scale: 1.08 }, { scale: 1, ease: "none" }, 0);
+      .fromTo(".recruit-image img", { scale: 1.035 }, { scale: 1, ease: "none" }, 0);
   }
   fadeTextSequenceThroughViewport(gsap, root.querySelectorAll("[data-recruit-copy]"), "recruit", {
     start: "top 88%",
     end: "bottom -16%",
-    enterY: 56,
-    exitY: -30,
+    enterY: 28,
+    exitY: -18,
   });
 
   return () => cleanups.splice(0).reverse().forEach((cleanup) => cleanup());
@@ -560,19 +585,19 @@ function createMobileTimelines(gsap, ScrollTrigger, root) {
           scrub: 0.65,
         },
       })
-      .fromTo(".signal-orbit-one", { scale: 0.88, rotate: -5 }, { scale: 1.04, rotate: 5, ease: "none" }, 0)
-      .fromTo(".signal-orbit-two", { scale: 0.9, rotateZ: -4 }, { scale: 1.05, rotateZ: 7, ease: "none" }, 0)
-      .fromTo(".signal-orbit-three", { scale: 0.92, rotateZ: 4 }, { scale: 1.08, rotateZ: -6, ease: "none" }, 0);
+      .fromTo(".signal-orbit-one", { scale: 0.98, rotate: -2 }, { scale: 1.02, rotate: 2, ease: "none" }, 0)
+      .fromTo(".signal-orbit-two", { scale: 0.98, rotateZ: -2 }, { scale: 1.02, rotateZ: 2, ease: "none" }, 0)
+      .fromTo(".signal-orbit-three", { scale: 0.99, rotateZ: 2 }, { scale: 1.03, rotateZ: -2, ease: "none" }, 0);
   }
 
   const createImageBreath = (selector, trigger, id) => {
     if (!trigger) return;
     gsap.fromTo(
       selector,
-      { scale: 1.045, yPercent: -1.5 },
+      { scale: 1.025, yPercent: -0.7 },
       {
         scale: 1,
-        yPercent: 1.5,
+        yPercent: 0.7,
         ease: "none",
         scrollTrigger: {
           id,
