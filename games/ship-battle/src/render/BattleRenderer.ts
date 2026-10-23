@@ -17,6 +17,7 @@ export class BattleRenderer {
   selected:number|null=null; speed=1; zoom=1; scale=.3; center={x:0,y:0}; fps=60; onSnapshot:(s:BattleSnapshot)=>void=()=>{};
   private mounted=false;private disposed=false;private accumulator=0;private hud=0;private pointer:{x:number;y:number;startX:number;startY:number;centerX:number;centerY:number}|null=null;
   private resizeObserver:ResizeObserver|null=null;
+  private pointers=new Map<number,{x:number;y:number}>();private pinching=false;private pinch:{distance:number;zoom:number;world:{x:number;y:number}}|null=null;
   private assetMap=new Map<string,ShipAsset>();private fittedSpan=3000;private referenceSpan=3000;private cameraMode:'overview'|'combat'|'follow'|'free'='combat';private followed:number|null=null;private tracking:{id:number;x:number;y:number}|null=null;private director=new CombatDirector();private engagement:{subject:Ship;target:Ship|null;active:boolean}|null=null;private combatStarted=false;private frameSeconds=1/60;private loadedURLs=new Set<string>();private assetRequest=0;
   constructor(public element:HTMLDivElement,public engine:BattleEngine){}
   async init(){
@@ -26,10 +27,10 @@ export class BattleRenderer {
     await this.app.init({width:Math.max(1,this.element.clientWidth),height:Math.max(1,this.element.clientHeight),backgroundAlpha:0,antialias:true,resolution:Math.min(devicePixelRatio,2),autoDensity:true,preference:'webgl',powerPreference:'high-performance'});
     this.mounted=true;
     if(this.disposed){this.app.destroy(true,{children:true,texture:false});return;}
-    this.element.appendChild(this.app.canvas);this.app.canvas.setAttribute('aria-label','星际飞船自动战斗画面，滚轮缩放，拖动平移，点击舰船查看状态');
+    this.element.appendChild(this.app.canvas);this.app.canvas.setAttribute('aria-label','星际飞船自动战斗画面，双指或滚轮缩放，单指拖动，点击舰船查看状态');this.app.canvas.style.touchAction='none';
     this.app.stage.addChild(this.world);this.world.addChild(this.grid);this.world.addChild(this.terrain);this.world.addChild(this.terrainSprites);this.world.addChild(this.effects);this.world.addChild(this.labels);
     this.app.canvas.addEventListener('wheel',this.wheel,{passive:false});
-    this.app.canvas.addEventListener('pointerdown',this.down);this.app.canvas.addEventListener('pointermove',this.move);this.app.canvas.addEventListener('pointerup',this.up);this.app.canvas.addEventListener('pointercancel',this.cancel);
+    this.app.canvas.addEventListener('pointerdown',this.down);this.app.canvas.addEventListener('pointermove',this.move);this.app.canvas.addEventListener('pointerup',this.up);this.app.canvas.addEventListener('pointercancel',this.cancel);this.app.canvas.addEventListener('lostpointercapture',this.cancel);
     this.resizeObserver=new ResizeObserver(()=>{const width=this.element.clientWidth,height=this.element.clientHeight;if(width<2||height<2||this.disposed)return;this.app.renderer.resize(width,height);this.scale=Math.min(width,height)/this.fittedSpan;this.camera();});this.resizeObserver.observe(this.element);
     try{const texture=await Assets.load<Texture>(new URL('assets/environment/asteroid.png',document.baseURI).href);if(!this.disposed)this.rockTexture=texture;}catch{/* Keep the geometry fallback if environment artwork is unavailable. */}
     this.app.ticker.add(ticker=>{
@@ -77,8 +78,9 @@ export class BattleRenderer {
     const width=this.element.clientWidth,height=this.element.clientHeight,ui=parseFloat(getComputedStyle(this.element).fontSize)/14;
     const hud=this.element.parentElement?.querySelector<HTMLElement>('.member-hud');
     const reserve=hud&&!hud.hidden?Math.min(width*.45,hud.clientWidth+24*ui):0;
-    const top=this.element.parentElement?.classList.contains('has-boss')?Math.min(height*.2,95*ui):0;
-    const bottom=Math.min(height*.15,55*ui);
+    const boss=this.element.parentElement?.querySelector<HTMLElement>('.boss-hud');
+    const top=boss?Math.min(height*.25,boss.offsetTop+boss.offsetHeight+8*ui):0;
+    const bottom=Math.min(height*.15,(width<=700?32:55)*ui);
     return {width:Math.max(1,width-reserve),height:Math.max(1,height-top-bottom),x:(width-reserve)/2,y:top+(height-top-bottom)/2,ui};
   }
   private cameraFrame(ship:Ship,target:Ship|null,combat:boolean){
@@ -89,13 +91,46 @@ export class BattleRenderer {
   }
   focusShip(id:number,frame=true){const ship=this.engine.ships.find(s=>s.id===id);if(!ship)return;this.selected=id;this.cameraMode='follow';this.followed=id;this.tracking={id:ship.id,x:ship.x,y:ship.y};this.engagement=null;const box=this.cameraFrame(ship,null,false);this.center={x:box.x,y:box.y};if(frame){this.fittedSpan=box.span;this.scale=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))/this.fittedSpan;this.zoom=1;}this.camera();this.onSnapshot(this.engine.snapshot(id));}
   camera(){if(!this.mounted)return;this.world.scale.set(this.scale*this.zoom);this.world.position.set(this.element.clientWidth/2-this.center.x*this.scale*this.zoom,this.element.clientHeight/2-this.center.y*this.scale*this.zoom);}
-  zoomBy(factor:number){this.freeCamera();const ui=parseFloat(getComputedStyle(this.element).fontSize)/14,side=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight)),minimum=side/(Math.max(this.bounds().span,this.engine.arena*2)*4),maximum=32*ui;this.zoom=clamp(this.scale*this.zoom*factor,minimum,maximum)/this.scale;this.camera();this.onSnapshot(this.engine.snapshot(this.selected));}
+  private boundedZoom(value:number){const ui=parseFloat(getComputedStyle(this.element).fontSize)/14,side=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight)),minimum=side/(Math.max(this.bounds().span,this.engine.arena*2)*4);return clamp(this.scale*value,minimum,32*ui)/this.scale;}
+  zoomBy(factor:number){this.freeCamera();this.zoom=this.boundedZoom(this.zoom*factor);this.camera();this.onSnapshot(this.engine.snapshot(this.selected));}
   private screenToWorld(x:number,y:number){return {x:(x-this.element.clientWidth/2)/(this.scale*this.zoom)+this.center.x,y:(y-this.element.clientHeight/2)/(this.scale*this.zoom)+this.center.y};}
   private wheel=(event:WheelEvent)=>{event.preventDefault();const r=this.app.canvas.getBoundingClientRect(),x=event.clientX-r.left,y=event.clientY-r.top,before=this.screenToWorld(x,y);this.zoomBy(Math.exp(-event.deltaY*.0015));const after=this.screenToWorld(x,y);this.center.x+=before.x-after.x;this.center.y+=before.y-after.y;this.camera();};
-  private down=(event:PointerEvent)=>{if(event.button!==0)return;this.app.canvas.setPointerCapture(event.pointerId);this.pointer={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,centerX:this.center.x,centerY:this.center.y};};
-  private move=(event:PointerEvent)=>{if(!this.pointer||Math.hypot(event.clientX-this.pointer.startX,event.clientY-this.pointer.startY)<=6)return;this.freeCamera();this.center.x=this.pointer.centerX-(event.clientX-this.pointer.x)/(this.scale*this.zoom);this.center.y=this.pointer.centerY-(event.clientY-this.pointer.y)/(this.scale*this.zoom);this.camera();};
-  private up=(event:PointerEvent)=>{if(!this.pointer)return;const p=this.pointer;this.pointer=null;if(this.app.canvas.hasPointerCapture(event.pointerId))this.app.canvas.releasePointerCapture(event.pointerId);if(Math.hypot(event.clientX-p.startX,event.clientY-p.startY)>6){this.onSnapshot(this.engine.snapshot(this.selected));return;}const r=this.app.canvas.getBoundingClientRect(),w=this.screenToWorld(event.clientX-r.left,event.clientY-r.top);let closest:Ship|null=null,distance=Infinity;for(const s of this.engine.living){const d=Math.hypot(s.x-w.x,s.y-w.y);if(d<Math.max(s.radius,22/(this.scale*this.zoom))&&d<distance){closest=s;distance=d;}}if(closest)this.focusShip(closest.id);else{this.freeCamera();this.selected=null;this.onSnapshot(this.engine.snapshot(null));}};
-  private cancel=()=>{this.pointer=null;};
+  private beginPinch(){const [a,b]=[...this.pointers.values()];if(!a||!b)return;const r=this.app.canvas.getBoundingClientRect();this.freeCamera();this.pointer=null;this.pinching=true;this.pinch={distance:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y)),zoom:this.zoom,world:this.screenToWorld((a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top)};}
+  private down=(event:PointerEvent)=>{
+    if(event.button!==0)return;if(event.pointerType==='touch')event.preventDefault();
+    this.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});this.app.canvas.setPointerCapture(event.pointerId);
+    if(this.pointers.size>=2){this.beginPinch();return;}
+    this.pointer={x:event.clientX,y:event.clientY,startX:event.clientX,startY:event.clientY,centerX:this.center.x,centerY:this.center.y};
+  };
+  private move=(event:PointerEvent)=>{
+    if(!this.pointers.has(event.pointerId))return;this.pointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+    if(this.pinch&&this.pointers.size>=2){
+      const [a,b]=[...this.pointers.values()],r=this.app.canvas.getBoundingClientRect(),g=this.pinch;
+      this.zoom=this.boundedZoom(g.zoom*Math.hypot(a.x-b.x,a.y-b.y)/g.distance);
+      this.center={x:g.world.x-((a.x+b.x)/2-r.left-this.element.clientWidth/2)/(this.scale*this.zoom),y:g.world.y-((a.y+b.y)/2-r.top-this.element.clientHeight/2)/(this.scale*this.zoom)};
+      this.camera();return;
+    }
+    if(!this.pointer||Math.hypot(event.clientX-this.pointer.startX,event.clientY-this.pointer.startY)<=6)return;
+    this.freeCamera();this.center.x=this.pointer.centerX-(event.clientX-this.pointer.x)/(this.scale*this.zoom);this.center.y=this.pointer.centerY-(event.clientY-this.pointer.y)/(this.scale*this.zoom);this.camera();
+  };
+  private endPointer(event:PointerEvent,cancelled=false){
+    if(!this.pointers.has(event.pointerId))return;const p=this.pointer;this.pointers.delete(event.pointerId);
+    if(this.app.canvas.hasPointerCapture(event.pointerId))this.app.canvas.releasePointerCapture(event.pointerId);
+    if(this.pinching||cancelled){
+      this.pinch=null;this.pointer=null;
+      if(this.pointers.size>=2)this.beginPinch();
+      else if(this.pointers.size===1){const a=[...this.pointers.values()][0];this.pointer={x:a.x,y:a.y,startX:a.x,startY:a.y,centerX:this.center.x,centerY:this.center.y};}
+      else this.pinching=false;
+      this.onSnapshot(this.engine.snapshot(this.selected));return;
+    }
+    this.pointer=null;if(!p)return;
+    if(Math.hypot(event.clientX-p.startX,event.clientY-p.startY)>6){this.onSnapshot(this.engine.snapshot(this.selected));return;}
+    const r=this.app.canvas.getBoundingClientRect(),w=this.screenToWorld(event.clientX-r.left,event.clientY-r.top);let closest:Ship|null=null,distance=Infinity;
+    for(const ship of this.engine.living){const d=Math.hypot(ship.x-w.x,ship.y-w.y);if(d<Math.max(ship.radius,22/(this.scale*this.zoom))&&d<distance){closest=ship;distance=d;}}
+    if(closest)this.focusShip(closest.id);else{this.freeCamera();this.selected=null;this.onSnapshot(this.engine.snapshot(null));}
+  }
+  private up=(event:PointerEvent)=>this.endPointer(event);
+  private cancel=(event:PointerEvent)=>this.endPointer(event,true);
   private makeVisual(s:Ship):Visual {
     const root=new Container(),annotation=new Container(),marker=new Graphics(),bars=new Graphics(),texture=this.textures.get(s.spec.id);
     const sprite=texture?new Sprite(texture):null;if(sprite)root.addChild(sprite);root.addChild(marker);
@@ -105,7 +140,7 @@ export class BattleRenderer {
   draw(){
     // Dialogs may preload an iframe at 0×0. Do not create infinite screen-size geometry.
     if(this.disposed||!this.mounted||this.element.clientWidth<2||this.element.clientHeight<2||this.scale<=0||!Number.isFinite(this.scale*this.zoom))return;
-    if(!this.pointer){
+    if(!this.pointers.size){
       let box:{x:number;y:number;span:number}|null=null,subject:Ship|null=null;
       if(this.cameraMode==='overview'&&this.engine.phase==='running')box=this.bounds();
       if(this.cameraMode==='combat'&&this.engine.phase!=='ready'){
@@ -186,5 +221,5 @@ export class BattleRenderer {
     }
     // Effects sit below name labels but above the background.
   }
-  destroy(){this.disposed=true;this.resizeObserver?.disconnect();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.destroy(true,{children:true,texture:false});}
+  destroy(){this.disposed=true;this.resizeObserver?.disconnect();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.canvas.removeEventListener('lostpointercapture',this.cancel);this.pointers.clear();this.pointer=null;this.pinch=null;this.app.destroy(true,{children:true,texture:false});}
 }

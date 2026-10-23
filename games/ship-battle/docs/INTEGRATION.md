@@ -85,7 +85,7 @@ phase 为 `ready` / `running` / `paused` / `finished`。时间、速度、生命
 
 `public/assets/ships/manifest.json` 是公开图库，`src/data/ships.json` 是舰船及战斗参数。所有图片加载使用 Vite BASE_URL，对同源子路径有效。用户导入的图片和校准值仅存在当前浏览器 IndexedDB，**不会自动进入部署包**；需要在素材管理器导出 JSON 素材包，或将审核后的图和配置写入公开清单后重新构建。
 
-请保留游戏中的 CIG / STARJUMP 来源说明以及 `docs/starjump-sources.json`。非商业使用要求和第三方授权现状见 `STARJUMP.md`；精确挂点核对仍是待办，不应在官网宣称已做到实机级数据复原。
+来源记录保留在 README、`docs/STARJUMP.md` 与 `docs/starjump-sources.json`。2026-10-23 按用户要求移除游戏底部的来源文字和素材说明入口，不要自行恢复到游戏画面。非商业使用要求和第三方授权现状见 `STARJUMP.md`；精确挂点核对仍是待办，不应在官网宣称已做到实机级数据复原。
 
 ## 官网成员名单接口
 
@@ -137,3 +137,10 @@ frame.contentWindow.postMessage({
 接入前请先读完整外部 AI 交接文档、TESTING.md 与 ASSET-AUDIT.md。更新时一并替换 index.html、哈希 JS/CSS、素材清单与图片目录；避免旧缓存使图片挂点和脚本版本混用。建议 HTML/manifest 不长缓存，带哈希 JS/CSS 可长期缓存。不要清除官网其他游戏的存储。
 
 默认快照的 result/standings 中头像可能是相对于游戏目录的路径；父页若展示头像，请用 `new URL(row.member.avatar, frame.src).href`。父页传入名单时推荐绝对同源 URL，避免默认相对路径被官网根目录误解。空头像地址会拒绝接收。
+
+
+## 2026-10-23 BOSS 人数难度与工具栏
+
+赏金猎人和挑战模式以开局阵容锁定难度。32 人保留原基准，护盾、舰体与护盾恢复按人数 / 32 缩放，武器伤害按 sqrt(人数 / 32) 缓慢增长。挑战模式保留各关预算与阵容火力估算，但全程使用开局阵容，不再根据存活人数降低后续关难度。人数不含 BOSS/僚机；重置后重新锁定。普通成员、僚机数值和原受击保护保持原规则。
+
+顶部搜索、参战成员和排行保持右上位置，根据完整文字的实际宽度依次收起排行文字、成员文字、搜索框；搜索占位文字不截断。统计确实无法并排时才换行，并保留 6px 恢复余量。
