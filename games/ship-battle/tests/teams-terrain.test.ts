@@ -30,12 +30,12 @@ test('rock intersections stop a crossing projectile while open space still permi
  e.asteroids=[];e.projectiles=[{...shot,x:280}];e.step();expect(b.shield).toBeLessThan(before);expect(e.hits).toBeGreaterThan(0);
 });
 
-test('18 rocks span inner, middle and outer areas with separated seeded sectors instead of a central cluster',()=>{
+test('20 rocks retain the same footprint with modest spacing across inner, middle and outer areas',()=>{
  for(const count of[2,10,32,100])for(const seed of[1,21,42,77]){
-  const e=new BattleEngine();e.reset([{specId:'gladius',count}],specs,seed);const rocks=e.asteroids;expect(rocks.length,`${count} ships / seed ${seed}`).toBe(18);
+  const e=new BattleEngine();e.reset([{specId:'gladius',count}],specs,seed);const rocks=e.asteroids;expect(rocks.length,`${count} ships / seed ${seed}`).toBe(20);
   const bands=[0,0,0],quadrants=new Set<number>();
   for(const r of rocks){const radius=Math.hypot(r.x,r.y)/e.arena;bands[radius<.45?0:radius<.66?1:2]++;quadrants.add((r.x<0?1:0)+(r.y<0?2:0));expect(radius).toBeLessThan(.87);for(const s of e.ships)expect(Math.hypot(r.x-s.x,r.y-s.y)).toBeGreaterThan(s.radius+r.radius+149);}
-  expect(bands).toEqual([6,6,6]);expect(quadrants.size).toBe(4);
-  for(let i=0;i<rocks.length;i++)for(let j=i+1;j<rocks.length;j++)expect(Math.hypot(rocks[i].x-rocks[j].x,rocks[i].y-rocks[j].y)).toBeGreaterThan(rocks[i].radius+rocks[j].radius+119);
+  expect(bands).toEqual([6,7,7]);expect(quadrants.size).toBe(4);
+  for(let i=0;i<rocks.length;i++)for(let j=i+1;j<rocks.length;j++)expect(Math.hypot(rocks[i].x-rocks[j].x,rocks[i].y-rocks[j].y)).toBeGreaterThan(rocks[i].radius+rocks[j].radius+134);
  }
 });

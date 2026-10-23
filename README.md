@@ -17,6 +17,10 @@
 
 ## 首次接手
 
+**用户硬规则（2026-10-23）：** 新 AI 接手、上下文压缩前，以及压缩后继续操作前，必须先读取本仓库现有的 `README.md`、`ARCHITECTURE.md`、`OPERATIONS.md`，以及外部 `/Users/bindox/Documents/项目交接文档/舰队官网相关.md` 的最新状态区。这里指项目现有说明和上下文交接资料，不是要求创建名为“项目.md”或“上下文.md”的新文件；不能只依赖聊天摘要。
+
+修改与测试都必须收紧到当前任务及有明确联动的部分。新增/修改不得顺手触碰其他模块；只改第二款游戏时，不默认重跑视频、相册、第一款游戏或全站长测。需要扩大范围时先说明具体关联。每次阶段交接或任务完成，同步更新现有项目文档和外部交接，写清已部署/未部署、最终参数、验证范围和下一步。
+
 要求：Git、Node `24.19.0`、npm、Python 3；完整媒体验证还需要 `ffmpeg`，相册发布器在 macOS 上还使用系统 `sips`。
 
 先读 `ARCHITECTURE.md` 的状态归属与防叠加规则，再按 `OPERATIONS.md` 执行验证、发布和回滚。
@@ -25,9 +29,11 @@
 git clone https://github.com/B1ndoX/gvy-official-site.git
 cd gvy-official-site
 npm ci --ignore-scripts
-npm run verify
-npm run test:e2e
+npm run build
+npm run check:dist
 ```
+
+随后按本次修改范围选择测试，见 `OPERATIONS.md`；不要把全站长测当成每次接手或局部修改的默认动作。
 
 本地预览：
 
@@ -55,8 +61,8 @@ node scripts/preview-server.mjs --port 8001
 
 | 命令 | 作用 |
 | --- | --- |
-| `npm run verify` | 完整官网、媒体、发布器测试与两套构建；日常修改的最低门禁 |
-| `npm run test:e2e` | Chromium 桌面、手机导航、相册、灯箱、大乱斗及手机冷启动反向滚动 |
+| `npm run verify` | 完整官网、媒体、发布器测试与两套构建；仅在相关改动或现有必需 CI 要求时使用 |
+| `npm run test:e2e` | Chromium 全站回归；局部改动仅选择相关 spec，不默认执行整套 |
 | `npm run check:dist` | 确认成品无断链，也未泄漏源码、文档或 source map |
 | `npm run monitor:production` | 只读检查双域、真实 404、HTTPS、TLS、域名期限和两个独立子站 |
 | `npm run sync:members` | 读取RSI公开GVY名单和头像，生成本地候选；不提交、不部署 |
@@ -89,6 +95,8 @@ node scripts/preview-server.mjs --port 8001
 - 当前 Git 历史包含大量媒体，`.git` 体积较大。未来如迁移 Git LFS 或重写历史，必须作为独立、可回滚项目处理，不能夹带在普通官网修改中。
 
 ## 文档权威顺序
+
+行为边界以用户最新明确要求为准；下列顺序用于核对运行事实。旧文档中的“每次完整验证”不得覆盖上面的范围约束。当前部署、待办与没有上下文时的恢复步骤见 `OPERATIONS.md` 的第 0 节。
 
 1. 当前代码、测试、Git 与线上只读检查结果。
 2. 本文件、`ARCHITECTURE.md` 和 `OPERATIONS.md`。

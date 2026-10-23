@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-ui-revision="GVY-UI-A01">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -471,7 +471,16 @@
           <div class="recruit-actions">
             <a href="https://robertsspaceindustries.com/en/orgs/GVY" target="_blank" rel="noopener noreferrer">访问 RSI 舰队主页</a>
             <button class="recruit-brawl-button" type="button" data-member-brawl-open>舰队大乱斗</button>
-            <span>QQ 交流群 <strong>691311516</strong></span>
+            <div class="recruit-contact">
+              <button class="recruit-copy-button" type="button" data-copy-recruit="691311516" aria-label="复制 QQ 群号 691311516" aria-describedby="recruit-copy-status">
+                <span class="recruit-copy-surface">
+                  <strong data-recruit-number>691311516</strong><span class="recruit-copy-divider" aria-hidden="true"></span>
+                  <svg class="recruit-copy-icon" viewBox="0 0 24 24" aria-hidden="true"><path class="copy-outline" d="M9 5V3h12v12h-2M3 9h12v12H3Z" /><path class="copy-check" d="m5 12 4 4L19 6" /></svg>
+                  <span data-copy-label>复制</span>
+                </span>
+              </button>
+              <span class="recruit-copy-status" id="recruit-copy-status" data-copy-status role="status" aria-live="polite">QQ 交流群 · 点击复制</span>
+            </div>
           </div>
         </div>
       </section>
