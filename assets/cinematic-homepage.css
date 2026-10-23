@@ -2712,8 +2712,7 @@ noscript {
 .fleet-game-card-copy{display:flex;align-items:center;gap:12px;width:100%;padding:0;transform:translateZ(0);transition:transform 200ms linear}
 .fleet-game-card-copy strong{font-size:clamp(18px,1.35vw,44px);letter-spacing:.01em;line-height:1.3}
 .fleet-game-description{display:block;min-height:2.8em;font-size:clamp(12px,.85vw,24px);line-height:1.5;color:#a1b2c0;transform:translateZ(0);transition:transform 200ms linear}
-.fleet-game-media{position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:8px;background:#02060a;box-shadow:0 0 0 1px #91c5d638,0 0 16px #76bdd51f,0 8px 22px #0007;transform:translateZ(0);transition:transform 200ms linear}
-.fleet-game-media::after{position:absolute;inset:0;z-index:2;border:1px solid #a1d4e529;border-radius:inherit;box-shadow:inset 0 0 12px #78bbd10d;content:"";pointer-events:none}
+.fleet-game-media{position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:8px;background:#02060a;transform:translateZ(0);transition:transform 200ms linear}
 .fleet-game-media img,.fleet-game-media video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;transition:opacity 220ms,transform 400ms}
 .fleet-game-media video{opacity:0;pointer-events:none}.fleet-game-card.is-previewing video{opacity:1}
 .fleet-game-live{position:absolute;bottom:10px;left:12px;padding:4px 7px;border-radius:3px;background:#030911c9;color:#def0ef;font-size:10px;letter-spacing:.05em;opacity:0;transition:opacity 180ms}
