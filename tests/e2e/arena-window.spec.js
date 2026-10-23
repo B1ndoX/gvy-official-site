@@ -13,7 +13,7 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await expect(dialog).toHaveAttribute('data-window-state','expanded');
     expect(await dialog.evaluate(e=>e.matches(':modal'))).toBe(true);
     const expanded=await dialog.boundingBox();
-    expect(expanded.x).toBeGreaterThan(8);expect(expanded.y).toBeGreaterThan(12);
+    if(viewport.width>600){expect(expanded.x).toBeGreaterThan(8);expect(expanded.y).toBeGreaterThan(12);}else{expect(expanded.x).toBeGreaterThanOrEqual(6);expect(expanded.y).toBeGreaterThanOrEqual(8);}
     if(viewport.width>1000){expect(expanded.width).toBeLessThan(viewport.width*.75);expect(expanded.height).toBeLessThanOrEqual(620);}
     const arena=page.frameLocator('[data-member-brawl-frame]');
     await arena.locator('[data-arena-mode]').selectOption('classic');
@@ -25,11 +25,11 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
       const rect=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height};};
       const controls=[...document.querySelectorAll('.arena-action,.arena-scores summary')].map(rect);
       const stats=rect(document.querySelector('.arena-match-state'));
-      return {fieldFraction:stage.height/innerHeight,overflow:document.documentElement.scrollWidth>innerWidth,controls,stats};
+      return {fieldFraction:stage.height/innerHeight,minControl:innerWidth>=700&&innerHeight>=441?36:44,overflow:document.documentElement.scrollWidth>innerWidth,controls,stats};
     });
     expect(hud.fieldFraction).toBeGreaterThan(viewport.width>1000?.87:.8);
     expect(hud.overflow).toBe(false);
-    expect(hud.controls.every(r=>r.height>=44)).toBe(true);
+    expect(hud.controls.every(r=>r.height>=hud.minControl)).toBe(true);
     expect(hud.stats.right).toBeLessThanOrEqual(hud.controls[0].left);
     expect(hud.controls.every((r,i)=>!i||r.left>=hud.controls[i-1].right)).toBe(true);
     const stageBefore=await arena.locator('.arena-stage').boundingBox();

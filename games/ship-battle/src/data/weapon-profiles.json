@@ -1,5 +1,5 @@
 {
-  "version": 7,
+  "version": 8,
   "description": "Weapon identities follow cited CIG sources / user direction; damage, seconds and geometry are game balance, not live SC statistics. Odin uses one broad forward beam with a single damage budget. Idris-P uses the K beam kit; Retaliator base uses torpedo-module configuration. No separate Idris-T model is present.",
   "ships": [
     {
@@ -18,8 +18,8 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 25000,
-          "duration": 6.0,
+          "damage": 18750,
+          "duration": 6,
           "cooldown": 6.222222222222222,
           "charge": 0.7999999999999999,
           "speed": 10000,
@@ -36,9 +36,9 @@
       ],
       "supportDps": 1300,
       "balance": {
-        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+        "note": "2026-10-23: member Idris-P/K beam ×1.5 from version 6 (18750 per simulation second), previously ×2. Boss-only beams unchanged; timings and protection retained; five damage ticks per real second with the same total volley damage."
       },
-      "combatVersion": 7
+      "combatVersion": 8
     },
     {
       "id": "tiburon",
@@ -56,7 +56,7 @@
           "facing": 0,
           "arc": 28,
           "range": 2300,
-          "damage": 20000,
+          "damage": 12000,
           "duration": 5.2,
           "cooldown": 4.888888888888888,
           "charge": 0.6,
@@ -74,9 +74,9 @@
       ],
       "supportDps": 750,
       "balance": {
-        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+        "note": "2026-10-23: member Tiburon beam ×1.5 from version 6, then an extra 20% reduction for its mobility (12000 per simulation second). Boss-only beams unchanged; timings and protection retained; five damage ticks per real second with the same total volley damage."
       },
-      "combatVersion": 7
+      "combatVersion": 8
     },
     {
       "id": "mauler",
@@ -97,7 +97,7 @@
           "damage": 40000,
           "duration": 7.199999999999999,
           "cooldown": 6.222222222222222,
-          "charge": 1.0,
+          "charge": 1,
           "speed": 10000,
           "turnRate": 3,
           "emitters": [
@@ -113,7 +113,7 @@
       ],
       "supportDps": 3300,
       "balance": {
-        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Five damage ticks per real second, unchanged total volley damage; existing burst protection retained."
       },
       "combatVersion": 7
     },
@@ -134,8 +134,8 @@
           "arc": 28,
           "range": 2800,
           "damage": 175000,
-          "duration": 8.0,
-          "cooldown": 8.0,
+          "duration": 8,
+          "cooldown": 8,
           "charge": 1.3333333333333333,
           "speed": 10000,
           "turnRate": 3,
@@ -144,7 +144,7 @@
           ],
           "width": 4.2,
           "color": 16759395,
-          "beamWidth": 60
+          "beamWidth": 45
         }
       ],
       "sources": [
@@ -152,9 +152,9 @@
       ],
       "supportDps": 3500,
       "balance": {
-        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Two damage ticks per real second; existing burst protection retained."
+        "note": "User-requested damage multiplier: Odin ×5, other capital primary beams ×2 from version 6. Five damage ticks per real second, unchanged total volley damage; existing burst protection retained."
       },
-      "combatVersion": 7
+      "combatVersion": 8
     },
     {
       "id": "idris-m",
@@ -173,7 +173,7 @@
           "arc": 24,
           "range": 3200,
           "damage": 90000,
-          "cooldown": 20.0,
+          "cooldown": 20,
           "charge": 1.5999999999999999,
           "speed": 680,
           "turnRate": 3,
@@ -295,7 +295,7 @@
           "arc": 100,
           "range": 3000,
           "damage": 7000,
-          "cooldown": 20.0,
+          "cooldown": 20,
           "speed": 320,
           "turnRate": 0.65,
           "role": "anti-capital",

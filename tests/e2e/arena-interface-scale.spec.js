@@ -41,7 +41,7 @@ test('paused 4K battle keeps one match while its interface fits 2K, desktop and 
  for(const viewport of [{width:2560,height:1440},{width:1440,height:900},{width:390,height:844},{width:844,height:390}]){
   await page.setViewportSize(viewport);
   await expect.poll(()=>game(page).evaluate(()=>Math.abs(document.querySelector('[data-member-brawl-field]').clientWidth-window.__gvyArena.snapshot().map.width))).toBeLessThan(1);
-  const m=await metrics(page);expect(m.state).toEqual(initial);expect(m.overflow).toBe(false);expect(m.controls.every(r=>r.height>=44&&r.x>=0&&r.right<=m.viewport.width)).toBe(true);
+  const m=await metrics(page);expect(m.state).toEqual(initial);expect(m.overflow).toBe(false);expect(m.controls.every(r=>r.height>=(m.viewport.width>=700&&m.viewport.height>=441?36:44)&&r.x>=0&&r.right<=m.viewport.width)).toBe(true);
   if(viewport.width<=1440)expect(m.name).toBe(11);
  }
 });

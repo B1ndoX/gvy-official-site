@@ -521,6 +521,9 @@
       <button class="member-brawl-dialog-minimize" type="button" data-member-brawl-minimize aria-label="缩小到右下角" title="缩小到右下角">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 18h14" /></svg>
       </button>
+      <button class="member-brawl-dialog-fullscreen" type="button" data-member-brawl-fullscreen aria-label="全屏战斗窗口" title="全屏" aria-pressed="false" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v14H5Z" /></svg>
+      </button>
       <button class="member-brawl-dialog-close" type="button" data-member-brawl-close aria-label="收起战斗窗口" title="收起到右下角，战斗继续">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" /></svg>
       </button>
@@ -535,31 +538,30 @@
       </div>
       <div class="member-brawl-viewport" data-member-brawl-viewport>
         <section class="fleet-game-hub" data-game-hub aria-labelledby="fleet-game-heading">
-          <header class="fleet-game-heading">
-            <p class="system-label">GVY / FLEET ARCADE</p>
-            <h2 id="fleet-game-heading">选择你的战场</h2>
-            <p>熟悉的舰队成员，两种不同的交锋。</p>
-          </header>
+          <header class="fleet-game-heading"><h2 id="fleet-game-heading">选择你的战场</h2><p>熟悉的成员，两种不同的交锋。</p></header>
           <div class="fleet-game-grid">
-            <article class="fleet-game-card">
-              <button type="button" data-game-select="members" aria-describedby="member-game-description">
-                <span class="fleet-game-number">01</span><strong>舰队成员大乱斗</strong>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            <div class="fleet-game-card-stage">
+            <article class="fleet-game-card" data-game-card="members">
+              <button class="fleet-game-launch" type="button" data-game-select="members" aria-describedby="members-game-description">
+                <span class="fleet-game-card-copy"><span class="fleet-game-number">01</span><strong>舰队成员大乱斗</strong></span>
+                <span class="fleet-game-description" id="members-game-description">随机武器，个人淘汰、团队对抗与限时击杀。</span>
+                <span class="fleet-game-media"><img data-game-preview="members" data-src="./assets/game-previews/member-brawl.webp" width="1200" height="675" alt="舰队成员大乱斗游戏实景" decoding="async" /><video data-game-teaser="members" data-src="./assets/game-previews/member-brawl-teaser.webm" muted loop playsinline preload="none" aria-hidden="true"></video><span class="fleet-game-live">实战预览</span></span>
+                <span class="fleet-game-enter">进入游戏 <span aria-hidden="true">↗</span></span>
               </button>
-              <img data-game-preview="members" data-src="./assets/game-previews/member-brawl.webp" width="1200" height="675" alt="舰队成员携带武器，在竞技场中自动交战的游戏实景" decoding="async" />
-              <p id="member-game-description">随机武器，成员交锋。个人淘汰、团队对抗与限时击杀。</p>
             </article>
-            <article class="fleet-game-card">
-              <button type="button" data-game-select="ships" aria-describedby="ship-game-description">
-                <span class="fleet-game-number">02</span><strong>星际飞船大乱斗</strong>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>
+            </div>
+            <div class="fleet-game-card-stage">
+            <article class="fleet-game-card" data-game-card="ships">
+              <button class="fleet-game-launch" type="button" data-game-select="ships" aria-describedby="ships-game-description">
+                <span class="fleet-game-card-copy"><span class="fleet-game-number">02</span><strong>星际飞船大乱斗</strong></span>
+                <span class="fleet-game-description" id="ships-game-description">随机抽舰，成员混战、红蓝对抗与协作迎敌。</span>
+                <span class="fleet-game-media"><img data-game-preview="ships" data-src="./assets/game-previews/ship-battle.webp" width="1200" height="675" alt="星际飞船大乱斗游戏实景" decoding="async" /><video data-game-teaser="ships" data-src="./assets/game-previews/ship-battle-teaser.webm" muted loop playsinline preload="none" aria-hidden="true"></video><span class="fleet-game-live">实战预览</span></span>
+                <span class="fleet-game-card-footer"><span class="fleet-game-enter">进入游戏 <span aria-hidden="true">↗</span></span><span class="fleet-game-cache" data-ship-cache hidden><progress data-ship-cache-bar aria-label="飞船资源缓存进度" max="1"></progress><span data-ship-cache-label>正在准备飞船资源…</span><small data-ship-cache-note>首次加载可能较久，后续将优先读取本机缓存。</small></span></span>
               </button>
-              <img data-game-preview="ships" data-src="./assets/game-previews/ship-battle.webp" width="1200" height="675" alt="舰队成员驾驶不同飞船，在星空中交火的游戏实景" decoding="async" />
-              <div class="fleet-game-cache" data-ship-cache hidden><progress data-ship-cache-bar aria-label="飞船资源缓存进度" max="1"></progress><span data-ship-cache-label>正在准备飞船资源…</span><small data-ship-cache-note>首次加载可能较久，后续将优先读取本机缓存。</small></div>
-              <p id="ship-game-description">随机抽舰，自动交火。成员混战、红蓝对抗与协作迎敌。</p>
             </article>
+            </div>
           </div>
-          <p class="fleet-game-hint">选择游戏后开始 · 收起窗口可继续观战</p>
+          <p class="fleet-game-hint"><span class="fleet-game-pointer-hint">悬停预览战斗 · </span>点击卡片进入 · 收起窗口继续观战</p>
           <p class="fleet-game-status" data-game-status role="status" aria-live="polite"></p>
         </section>
         <iframe data-member-brawl-frame title="舰队游戏" loading="lazy" scrolling="no" allow="fullscreen" hidden></iframe>

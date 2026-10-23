@@ -1,3 +1,4 @@
+import {initGameCardPreviews} from './game-card-previews.js';
 import {createShipGameCache} from './ship-game-cache.js';
 
 export function initMemberBrawlDialog({
@@ -10,6 +11,7 @@ export function initMemberBrawlDialog({
   const frame = dialog?.querySelector?.("[data-member-brawl-frame]");
   const viewport = dialog?.querySelector?.("[data-member-brawl-viewport]");
   const closeButton = dialog?.querySelector?.("[data-member-brawl-close]");
+  const fullscreenButton = dialog?.querySelector?.("[data-member-brawl-fullscreen]");
   const minimizeButton = dialog?.querySelector?.("[data-member-brawl-minimize]");
   const endButton = dialog?.querySelector?.("[data-member-brawl-end]");
   const restorers = Array.from(dialog?.querySelectorAll?.("[data-member-brawl-restore]") || []);
@@ -28,19 +30,23 @@ export function initMemberBrawlDialog({
   const cacheNote=dialog?.querySelector?.('[data-ship-cache-note]');
   if (!dialog || !frame || !viewport || !openers.length) return { cleanup() {} };
 
+  const cardPreviews=initGameCardPreviews({root:dialog,view});
   const body = root.body;
   let state = "closed", restoreFocus = null, previousBodyOverflow = "", scrollLocked = false;
   let fitFrame = 0, expandedWidth = 960, expandedHeight = 600;
   let activeGame = "", generation = 0, membersSent = false, shipMembers = null;
   const names = { members: "舰队成员大乱斗", ships: "星际飞船大乱斗" };
   const shipCache=createShipGameCache({view,onProgress(data){
-    if(cachePanel)cachePanel.hidden=false;
+    if(cachePanel){cachePanel.hidden=false;cachePanel.dataset.state=data.type;}
     if(cacheBar){cacheBar.max=data.total||1;if(data.total)cacheBar.value=data.loaded;else cacheBar.removeAttribute('value');}
-    if(cacheLabel)cacheLabel.textContent=data.type==='complete'?'飞船资源已缓存，下次直接读取':data.type==='error'?data.message:data.total?`准备资源 ${Math.round(data.loaded/data.total*100)}% · ${data.loaded} / ${data.total}`:'正在检查本机游戏缓存…';
-    if(cacheNote){cacheNote.hidden=data.type==='complete';cacheNote.textContent=data.firstLoad?'首次加载可能较久，后续将优先读取本机缓存。':'正在补齐未缓存资源，已有资源直接读取。';}
+    if(cacheLabel)cacheLabel.textContent=data.type==='complete'?'飞船资源已缓存':data.type==='error'?data.message:data.total?`准备资源 ${Math.round(data.loaded/data.total*100)}% · ${data.loaded} / ${data.total}`:'正在检查本机游戏缓存…';
+    if(cacheNote){cacheNote.hidden=data.type==='complete';cacheNote.textContent=data.firstLoad?'首次准备较久，之后优先读取本机缓存。':'正在补齐未缓存资源，已有资源直接读取。';}
   }});
+  let windowMaximized=false, ownsFullscreen=false;
   const updateGame = (game) => {
+    cardPreviews.stop(true);
     activeGame = game;
+    if(fullscreenButton)fullscreenButton.hidden=!game;
     dialog.dataset.activeGame = game;
     if (hub) hub.hidden = Boolean(game);
     if (toolbar) toolbar.hidden = !game;
@@ -60,6 +66,7 @@ export function initMemberBrawlDialog({
     updateGame("");
   };
   const setState = (next) => {
+    if(next!=="expanded")cardPreviews.stop(true);
     state = next;
     dialog.dataset.windowState = next;
     frame.inert = next === "docked";
@@ -107,8 +114,39 @@ export function initMemberBrawlDialog({
     fitFrame = view?.requestAnimationFrame?.(applyFit) || 0;
     if (!fitFrame) applyFit();
   };
+  const setMaximized = (value) => {
+    windowMaximized=value;
+    dialog.dataset.windowMaximized=String(value);
+    fullscreenButton?.setAttribute("aria-pressed",String(value));
+    fullscreenButton?.querySelector("svg path")?.setAttribute("d",value?"M8 8h12v12H8ZM4 16V4h12v4":"M5 5h14v14H5Z");
+    fullscreenButton?.setAttribute("aria-label",value?"还原战斗窗口":"全屏战斗窗口");
+    fullscreenButton?.setAttribute("title",value?"还原窗口":"全屏");
+    requestFit();
+  };
+  const leaveFullscreen = () => {
+    if(!windowMaximized && !ownsFullscreen)return;
+    setMaximized(false);
+    if(ownsFullscreen && root.fullscreenElement)void root.exitFullscreen?.().catch(()=>{});
+    ownsFullscreen=false;
+  };
+  const toggleFullscreen = async () => {
+    if(state!=="expanded" || !activeGame)return;
+    if(windowMaximized){leaveFullscreen();return;}
+    setMaximized(true);
+    // A dialog cannot itself request Fullscreen; keep it in the top layer
+    // above the fullscreen document. CSS expansion also works on mobile Safari.
+    if(root.documentElement?.requestFullscreen && !root.fullscreenElement){
+      try{await root.documentElement.requestFullscreen();ownsFullscreen=true;if(state!=="expanded")leaveFullscreen();}
+      catch{/* Element fullscreen is unavailable: retain the expanded window. */}
+    }
+  };
+  const onFullscreenChange = () => {
+    if(ownsFullscreen && !root.fullscreenElement){ownsFullscreen=false;setMaximized(false);}
+    requestFit();
+  };
   const minimize = () => {
     if (state !== "expanded") return;
+    leaveFullscreen();
     expandedWidth = frame.clientWidth || viewport.clientWidth || expandedWidth;
     expandedHeight = frame.clientHeight || viewport.clientHeight || expandedHeight;
     setState("docked");
@@ -119,6 +157,7 @@ export function initMemberBrawlDialog({
     restoreFocus?.focus?.({ preventScroll: true });
   };
   const close = () => {
+    leaveFullscreen();
     shipCache.stop();
     setState("closed");
     if (dialog.open) dialog.close();
@@ -174,6 +213,7 @@ export function initMemberBrawlDialog({
     }
   };
   const backToHub = () => {
+    leaveFullscreen();
     const previous = activeGame;
     unloadGame();
     shipCache.resume();
@@ -206,6 +246,8 @@ export function initMemberBrawlDialog({
   backButton?.addEventListener("click", backToHub);
   closeButton?.addEventListener("click", minimize);
   minimizeButton?.addEventListener("click", minimize);
+  fullscreenButton?.addEventListener("click", toggleFullscreen);
+  root.addEventListener?.("fullscreenchange",onFullscreenChange);
   endButton?.addEventListener("click", close);
   frame.addEventListener("load", requestFit);
   dialog.addEventListener("click", onBackdropClick);
@@ -227,6 +269,8 @@ export function initMemberBrawlDialog({
       backButton?.removeEventListener("click", backToHub);
       closeButton?.removeEventListener("click", minimize);
       minimizeButton?.removeEventListener("click", minimize);
+      fullscreenButton?.removeEventListener("click", toggleFullscreen);
+      root.removeEventListener?.("fullscreenchange",onFullscreenChange);
       endButton?.removeEventListener("click", close);
       frame.removeEventListener("load", requestFit);
       dialog.removeEventListener("click", onBackdropClick);
@@ -236,6 +280,7 @@ export function initMemberBrawlDialog({
       view?.removeEventListener?.("message", onMessage);
       close();
       shipCache.cleanup();
+      cardPreviews.cleanup();
     },
   };
 }

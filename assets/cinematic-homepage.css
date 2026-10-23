@@ -2564,3 +2564,91 @@ noscript {
   border: 1px solid rgba(102, 188, 229, 0.55);
   color: var(--text-primary);
 }
+
+/* One tactile surface contains each game's title, description, media and entrance. */
+.fleet-game-hub{display:flex;flex-direction:column;gap:clamp(12px,1.4vw,24px);padding:clamp(20px,2vw,38px);background:radial-gradient(ellipse at 90% 0%,#18304388,transparent 60%),#04090f}
+.fleet-game-hub[hidden]{display:none!important}
+.fleet-game-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:44px;margin:0;padding-right:calc(108 * var(--game-toolbar-unit))}
+.fleet-game-heading h2{font-size:clamp(23px,2.1vw,64px);letter-spacing:.015em;white-space:nowrap}
+.fleet-game-heading>p:last-child{margin:0;max-width:18em;font-size:clamp(12px,.9vw,24px);line-height:1.5}
+.fleet-game-grid{flex:1;min-height:0;align-content:center;align-items:stretch;gap:clamp(14px,1.6vw,28px)}
+.fleet-game-card-stage{display:flex;min-width:0;perspective:1000px}
+.fleet-game-card{position:relative;display:flex;width:100%;min-width:0;overflow:visible;padding:clamp(16px,1.5vw,32px);background:linear-gradient(145deg,#12212c,#081018);border:1px solid #7193a944;border-radius:13px;transform-style:preserve-3d;transform:rotateY(var(--card-ry,0deg)) rotateX(var(--card-rx,0deg));transition:transform 200ms linear,border-color 220ms,box-shadow 220ms}
+.fleet-game-card:is(:hover,:focus-within){border-color:#9eb9c388;box-shadow:0 16px 45px #0006}
+.fleet-game-card:has(.fleet-game-launch:focus-visible){outline:2px solid #87b5c9;outline-offset:3px}
+.fleet-game-card>.fleet-game-launch{display:flex;flex-direction:column;align-items:stretch;gap:clamp(10px,1vw,20px);width:100%;padding:0;min-height:0;border:0;background:none;color:#e9eef1;text-align:left;transform-style:preserve-3d}
+.fleet-game-card>.fleet-game-launch:is(:hover,:focus-visible){background:none;color:#e9eef1;outline:none}
+.fleet-game-card-copy{display:flex;align-items:center;gap:12px;width:100%;padding:0;transform:translateZ(0);transition:transform 200ms linear}
+.fleet-game-card-copy strong{font-size:clamp(18px,1.35vw,44px);letter-spacing:.01em;line-height:1.3}
+.fleet-game-description{display:block;min-height:2.8em;font-size:clamp(12px,.85vw,24px);line-height:1.5;color:#a1b2c0;transform:translateZ(0);transition:transform 200ms linear}
+.fleet-game-media{position:relative;display:block;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:8px;background:#02060a;transform:translateZ(0);transition:transform 200ms linear}
+.fleet-game-media img,.fleet-game-media video{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;transition:opacity 220ms,transform 400ms}
+.fleet-game-media video{opacity:0;pointer-events:none}.fleet-game-card.is-previewing video{opacity:1}
+.fleet-game-live{position:absolute;bottom:10px;left:12px;padding:4px 7px;border-radius:3px;background:#030911c9;color:#def0ef;font-size:10px;letter-spacing:.05em;opacity:0;transition:opacity 180ms}
+.fleet-game-card.is-previewing .fleet-game-live{opacity:1}
+.fleet-game-enter{display:flex;align-items:center;gap:10px;min-height:44px;color:#e6cc8d;font-size:clamp(12px,.9vw,24px);transform:translateZ(0);transition:transform 200ms linear}
+.fleet-game-enter>span{transition:transform 200ms}.fleet-game-launch:hover .fleet-game-enter>span{transform:translate(2px,-2px)}
+
+.fleet-game-card:hover .fleet-game-card-copy{transform:translateZ(50px)}
+.fleet-game-card:hover .fleet-game-description{transform:translateZ(60px)}
+.fleet-game-card:hover .fleet-game-media{transform:translateZ(100px)}
+.fleet-game-card:hover .fleet-game-enter{transform:translateZ(20px)}
+
+.fleet-game-cache{gap:4px;flex:none;width:min(420px,80%);margin:0 auto;padding:0;font-size:clamp(10px,.72vw,18px);text-align:center}
+.fleet-game-cache[hidden]{display:none}.fleet-game-cache small{font-size:inherit;line-height:1.4}.fleet-game-cache progress{height:3px}.fleet-game-cache[data-state="complete"] progress{display:none}
+.fleet-game-hint{flex:none;margin:0;font-size:clamp(11px,.7vw,18px);line-height:1.5;color:#8798a7}.fleet-game-status{margin:0}
+@media(hover:none),(pointer:coarse){.fleet-game-pointer-hint{display:none}.fleet-game-card,.fleet-game-launch{transform:none!important;transform-style:flat!important}.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}}
+@media(max-width:600px),(max-height:440px){
+  .member-brawl-dialog[data-window-state="expanded"]{--arena-window-width:calc(100vw - 12px);--arena-window-height:calc(100dvh - 16px);--game-window-toolbar-height:48px;width:var(--arena-window-width);height:var(--arena-window-height);max-width:none;max-height:none;border-radius:7px}
+}
+@media(max-width:600px){
+  .fleet-game-hub{padding:14px 12px 12px;gap:12px}.fleet-game-heading{padding-right:88px;min-height:48px;gap:8px}.fleet-game-heading h2{font-size:20px}.fleet-game-heading>p{display:none}
+  .fleet-game-grid{grid-template-columns:1fr;gap:12px;align-content:start;flex:none}.fleet-game-card{padding:13px;border-radius:10px}.fleet-game-card>.fleet-game-launch{gap:8px}.fleet-game-card-copy{gap:8px}.fleet-game-card-copy strong{font-size:16px}
+  .fleet-game-description{font-size:11px;min-height:0}.fleet-game-media{aspect-ratio:2.2/1}.fleet-game-enter{font-size:12px;min-height:38px}.fleet-game-cache{font-size:10px}.fleet-game-hint{font-size:10px}
+}
+@media(max-width:600px) and (max-height:720px){.fleet-game-media{aspect-ratio:2.8/1}.fleet-game-hint{display:none}.fleet-game-card{padding:11px}.fleet-game-description{font-size:10px}.fleet-game-enter{min-height:34px}}
+@media(max-height:560px) and (min-width:601px){.fleet-game-hub{padding:16px 18px 12px;gap:8px}.fleet-game-heading{min-height:34px;margin:0}.fleet-game-heading h2{font-size:22px}.fleet-game-card{padding:12px}.fleet-game-card>.fleet-game-launch{gap:6px}.fleet-game-media{aspect-ratio:2.7/1}.fleet-game-description{min-height:0;font-size:11px}.fleet-game-enter{min-height:34px}.fleet-game-hint{font-size:10px}.fleet-game-cache{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.fleet-game-card,.fleet-game-card-copy,.fleet-game-description,.fleet-game-media,.fleet-game-enter{transform:none!important}.fleet-game-card,.fleet-game-media img,.fleet-game-media video{transition:none}}
+
+/* Desktop pointer controls need one compact host bar, not a second title band. */
+@media(min-width:601px) and (min-height:441px){
+  .member-brawl-dialog{--game-window-toolbar-height:calc(40 * var(--game-toolbar-unit))}
+  .member-brawl-game-toolbar{padding-right:calc(92 * var(--game-toolbar-unit));gap:calc(12 * var(--game-toolbar-unit))}
+  .member-brawl-game-toolbar button{min-height:calc(32 * var(--game-toolbar-unit))}
+  .member-brawl-dialog[data-active-game]:not([data-active-game=""]) > :is(.member-brawl-dialog-minimize,.member-brawl-dialog-close){top:calc(4 * var(--game-toolbar-unit));right:calc(10 * var(--game-toolbar-unit));width:calc(32 * var(--game-toolbar-unit));height:calc(32 * var(--game-toolbar-unit))}
+  .member-brawl-dialog[data-active-game]:not([data-active-game=""]) > .member-brawl-dialog-minimize{right:calc(46 * var(--game-toolbar-unit))}
+}
+
+/* Cache status belongs to the ship game, within its own entrance card. */
+.fleet-game-card-footer{display:flex;align-items:center;gap:12px;min-width:0}
+.fleet-game-card-footer .fleet-game-cache{flex:1;width:auto;margin:0;gap:2px;font-size:clamp(9px,.65vw,16px);line-height:1.35;text-align:right;color:#91a7b6}
+.fleet-game-card-footer .fleet-game-cache progress{margin-left:auto;width:min(100%,170px)}
+.fleet-game-card-footer .fleet-game-cache small{font-size:inherit}
+.fleet-game-card-footer .fleet-game-enter{flex:none}
+.fleet-game-launch:hover .fleet-game-enter>span:not([aria-hidden]){transform:none}
+
+/* The selector hugs its two cards; selecting a game restores the full arena size. */
+.member-brawl-dialog[data-window-state="expanded"][data-active-game=""]{height:auto;max-height:calc(100dvh - 24px)}
+.member-brawl-dialog[data-window-state="expanded"][data-active-game=""] .member-brawl-viewport{position:relative;height:auto;max-height:calc(100dvh - 26px);overflow:auto}
+.member-brawl-dialog[data-window-state="expanded"][data-active-game=""] .fleet-game-hub{height:auto;overflow:visible}
+.member-brawl-dialog[data-window-state="expanded"][data-active-game=""] .fleet-game-grid{flex:none}
+.member-brawl-dialog[data-window-state="expanded"][data-active-game=""]{inset-block:auto;top:50%;height:max-content;margin-block:0;transform:translateY(-50%)}
+
+/* One fullscreen control belongs to the shared two-game window. */
+.member-brawl-dialog-fullscreen{position:absolute;z-index:12;display:grid;place-items:center;padding:0;border:1px solid #96bed636;border-radius:5px;color:#e8edf1;background:#080e16;cursor:pointer}
+.member-brawl-dialog-fullscreen:hover{border-color:var(--fleet-gold);color:var(--fleet-gold)}
+.member-brawl-dialog-fullscreen svg{width:calc(19 * var(--game-toolbar-unit));height:calc(19 * var(--game-toolbar-unit));fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.member-brawl-dialog[data-active-game]:not([data-active-game=""])>.member-brawl-dialog-fullscreen{top:calc(4 * var(--game-toolbar-unit));right:calc(62 * var(--game-toolbar-unit));width:calc(44 * var(--game-toolbar-unit));height:calc(44 * var(--game-toolbar-unit))}
+.member-brawl-dialog[data-active-game]:not([data-active-game=""])>.member-brawl-dialog-minimize{right:calc(110 * var(--game-toolbar-unit))}
+.member-brawl-game-toolbar{padding-right:calc(164 * var(--game-toolbar-unit))}
+.member-brawl-dialog[data-window-state="docked"]>.member-brawl-dialog-fullscreen{display:none}
+.member-brawl-dialog[data-window-state="expanded"][data-window-maximized="true"]{inset:0;margin:0;transform:none;width:100vw;height:100dvh;max-width:none;max-height:none;border:0;border-radius:0}
+.member-brawl-dialog[data-window-state="expanded"][data-window-maximized="true"] .member-brawl-viewport{position:absolute;height:100%;max-height:none}
+@media(min-width:601px) and (min-height:441px){
+  .member-brawl-dialog[data-active-game]:not([data-active-game=""])>.member-brawl-dialog-fullscreen{right:calc(46 * var(--game-toolbar-unit));width:calc(32 * var(--game-toolbar-unit));height:calc(32 * var(--game-toolbar-unit))}
+  .member-brawl-dialog[data-active-game]:not([data-active-game=""])>.member-brawl-dialog-minimize{right:calc(82 * var(--game-toolbar-unit))}
+  .member-brawl-game-toolbar{padding-right:calc(128 * var(--game-toolbar-unit))}
+}
+
+.member-brawl-game-toolbar [data-game-back],.member-brawl-game-toolbar [data-game-back]:focus-visible{border:0;outline:none;box-shadow:none;background:none}
+.member-brawl-game-toolbar [data-game-back]:focus-visible{text-decoration:underline;text-underline-offset:4px}
