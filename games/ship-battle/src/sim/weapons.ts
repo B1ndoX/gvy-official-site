@@ -14,3 +14,9 @@ export function projectileDamage(kind:string,base:number,travel:number){
   const falloff=Math.max(0,Math.min(1,(travel-400)/1800));
   return base*(1-.55*falloff);
 }
+
+/** More firing positions do not increase the NPC boss's total theoretical output budget. */
+export function bossCoverageScale(mounts:Mount[]){
+  const total=mounts.reduce((sum,m)=>sum+weaponDps(m),0),original=mounts.filter(m=>!m.id.startsWith('coverage-turret-')).reduce((sum,m)=>sum+weaponDps(m),0);
+  return total>0?original/total:1;
+}

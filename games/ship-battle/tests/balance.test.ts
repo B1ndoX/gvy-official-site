@@ -1,3 +1,4 @@
+import {bossCoverageScale} from '../src/sim/weapons';
 import fs from 'node:fs';
 import rules from '../src/data/defense-balance.json';
 import {test,expect} from 'vitest';
@@ -20,7 +21,7 @@ test('challenge budget grows across waves, fixes defense at spawn and applies it
   expect(first.hull).toBeGreaterThan(boss.hull*2);expect(last.hull).toBeGreaterThan(first.hull);
   const small=bossDefense(boss,'bounty',e.ships.slice(0,10),10,1);expect(small.hull).toBeLessThan(bounty.hull);
   e.reset(battleRoster(assignMemberShips(members.members,specs,42),'challenge',42),specs,42,'challenge');e.start();const incoming=e.snapshot().boss!;
-  incoming.spec.mounts.forEach((m,i)=>expect(m.damage).toBeCloseTo(boss.mounts[i].damage*rules.challengeDamageMultiplier*rules.bossDamageMultiplier,6));const fixed=incoming.spec.hull;e.ships[0].alive=false;for(let i=0;i<60;i++)e.step();expect(incoming.spec.hull).toBe(fixed);
+  incoming.spec.mounts.forEach((m,i)=>expect(m.damage).toBeCloseTo(boss.mounts[i].damage*bossCoverageScale(boss.mounts)*rules.challengeDamageMultiplier*rules.bossDamageMultiplier,6));const fixed=incoming.spec.hull;e.ships[0].alive=false;for(let i=0;i<60;i++)e.step();expect(incoming.spec.hull).toBe(fixed);
 });
 test('challenge samples complete and first boss is not a three-second encounter',()=>{
   const specs=data as ShipSpec[],results=[];

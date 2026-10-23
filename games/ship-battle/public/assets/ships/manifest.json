@@ -765,8 +765,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": 0,
-          "y": -0.13,
+          "x": 0.183837,
+          "y": -0.17968,
           "facing": 0,
           "arc": 300,
           "range": 750,
@@ -779,8 +779,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0,
-          "y": 0.18,
+          "x": 0.277975,
+          "y": 0.194695,
           "facing": 0,
           "arc": 300,
           "range": 1400,
@@ -793,8 +793,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": 0.27,
-          "y": 0.08,
+          "x": -0.277975,
+          "y": 0.194695,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -807,8 +807,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": -0.27,
-          "y": 0.08,
+          "x": -0.000888,
+          "y": 0.244745,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -834,7 +834,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "polaris",
@@ -889,8 +890,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": 0.11,
-          "y": -0.17,
+          "x": 0.109562,
+          "y": -0.166667,
           "facing": 0,
           "arc": 300,
           "range": 750,
@@ -903,8 +904,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": -0.11,
-          "y": -0.17,
+          "x": -0.109562,
+          "y": -0.166667,
           "facing": 0,
           "arc": 300,
           "range": 1400,
@@ -917,8 +918,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": 0.18,
-          "y": 0.09,
+          "x": 0.290837,
+          "y": 0.18969,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -931,8 +932,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": -0.18,
-          "y": 0.09,
+          "x": -0.290837,
+          "y": 0.18969,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -945,8 +946,8 @@
         {
           "id": "turret-5",
           "kind": "turret",
-          "x": 0.22,
-          "y": 0.29,
+          "x": 0,
+          "y": 0.412913,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -959,8 +960,8 @@
         {
           "id": "turret-6",
           "kind": "turret",
-          "x": -0.22,
-          "y": 0.29,
+          "x": 0,
+          "y": -0.30981,
           "facing": 90,
           "arc": 300,
           "range": 750,
@@ -972,7 +973,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 5,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "idris-p",
@@ -1023,8 +1025,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": 0.26,
-          "y": -0.14,
+          "x": -0.000949,
+          "y": -0.343844,
           "facing": 0,
           "arc": 300,
           "range": 750,
@@ -1037,8 +1039,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": -0.26,
-          "y": -0.14,
+          "x": 0.183112,
+          "y": -0.004505,
           "facing": 0,
           "arc": 300,
           "range": 1400,
@@ -1051,8 +1053,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": 0.35,
-          "y": 0.13,
+          "x": 0.317837,
+          "y": 0.077578,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1065,8 +1067,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": -0.35,
-          "y": 0.13,
+          "x": -0.317837,
+          "y": 0.077578,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1079,8 +1081,8 @@
         {
           "id": "turret-5",
           "kind": "turret",
-          "x": 0.14,
-          "y": 0.22,
+          "x": 0.310247,
+          "y": 0.21972,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1093,8 +1095,8 @@
         {
           "id": "turret-6",
           "kind": "turret",
-          "x": -0.14,
-          "y": 0.22,
+          "x": -0.310247,
+          "y": 0.21972,
           "facing": 90,
           "arc": 300,
           "range": 750,
@@ -1107,8 +1109,8 @@
         {
           "id": "turret-7",
           "kind": "turret",
-          "x": 0.15,
-          "y": 0.04,
+          "x": 0.109108,
+          "y": 0.077578,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1121,8 +1123,8 @@
         {
           "id": "turret-8",
           "kind": "turret",
-          "x": -0.15,
-          "y": 0.04,
+          "x": -0.109108,
+          "y": 0.077578,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1148,7 +1150,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 8
+      "combatVersion": 8,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "javelin",
@@ -1178,8 +1181,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": 0.2,
-          "y": -0.18,
+          "x": 0.146552,
+          "y": -0.193694,
           "facing": 0,
           "arc": 300,
           "range": 750,
@@ -1192,8 +1195,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": -0.2,
-          "y": -0.18,
+          "x": -0.144397,
+          "y": -0.193694,
           "facing": 0,
           "arc": 300,
           "range": 1400,
@@ -1206,8 +1209,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": 0.34,
-          "y": -0.09,
+          "x": 0.193966,
+          "y": -0.107608,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1220,8 +1223,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": -0.34,
-          "y": -0.09,
+          "x": -0.193966,
+          "y": -0.107608,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1234,8 +1237,8 @@
         {
           "id": "turret-5",
           "kind": "turret",
-          "x": 0.37,
-          "y": 0.16,
+          "x": 0.198276,
+          "y": -0.035536,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1248,8 +1251,8 @@
         {
           "id": "turret-6",
           "kind": "turret",
-          "x": -0.37,
-          "y": 0.16,
+          "x": -0.198276,
+          "y": -0.035536,
           "facing": 90,
           "arc": 300,
           "range": 750,
@@ -1262,8 +1265,8 @@
         {
           "id": "turret-7",
           "kind": "turret",
-          "x": 0.22,
-          "y": 0.29,
+          "x": 0.193966,
+          "y": 0.035536,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1276,8 +1279,8 @@
         {
           "id": "turret-8",
           "kind": "turret",
-          "x": -0.22,
-          "y": 0.29,
+          "x": -0.193966,
+          "y": 0.035536,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1290,8 +1293,8 @@
         {
           "id": "turret-9",
           "kind": "turret",
-          "x": 0.18,
-          "y": 0.08,
+          "x": 0.053879,
+          "y": 0.243744,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -1304,8 +1307,8 @@
         {
           "id": "turret-10",
           "kind": "turret",
-          "x": -0.18,
-          "y": 0.08,
+          "x": -0.053879,
+          "y": 0.243744,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1318,8 +1321,8 @@
         {
           "id": "turret-11",
           "kind": "turret",
-          "x": 0.09,
-          "y": 0.22,
+          "x": 0.198276,
+          "y": 0.161662,
           "facing": -90,
           "arc": 300,
           "range": 750,
@@ -1332,8 +1335,8 @@
         {
           "id": "turret-12",
           "kind": "turret",
-          "x": -0.09,
-          "y": 0.22,
+          "x": -0.198276,
+          "y": 0.161662,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -1356,10 +1359,67 @@
           "speed": 420,
           "turnRate": 0.65,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": 0.168103,
+          "y": -0.25976,
+          "facing": -90,
+          "arc": 220,
+          "range": 750,
+          "damage": 67.73,
+          "cooldown": 1.09,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": -0.168103,
+          "y": -0.25976,
+          "facing": 90,
+          "arc": 220,
+          "range": 750,
+          "damage": 67.73,
+          "cooldown": 1.09,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": 0.24569,
+          "y": 0.186687,
+          "facing": -90,
+          "arc": 220,
+          "range": 750,
+          "damage": 67.73,
+          "cooldown": 1.09,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": -0.24569,
+          "y": 0.186687,
+          "facing": 90,
+          "arc": 220,
+          "range": 750,
+          "damage": 67.73,
+          "cooldown": 1.09,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "aurora-es",
@@ -2510,8 +2570,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.085714,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -2524,8 +2584,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.085714,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -2539,7 +2599,7 @@
           "id": "turret-3",
           "kind": "turret",
           "x": -0.2,
-          "y": 0.25,
+          "y": 0.265531,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -2553,7 +2613,7 @@
           "id": "turret-4",
           "kind": "turret",
           "x": 0.2,
-          "y": 0.25,
+          "y": 0.265531,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -2579,7 +2639,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "scythe",
@@ -3076,8 +3137,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.075342,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -3090,8 +3151,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.079909,
+          "y": -0.079158,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -3145,7 +3206,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "hull-c",
@@ -3627,8 +3689,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.184375,
+          "y": 0.263527,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -3641,8 +3703,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.184375,
+          "y": 0.263527,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -3668,7 +3730,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "890-jump",
@@ -4873,8 +4936,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.141304,
+          "y": -0.09519,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -4887,8 +4950,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.163043,
+          "y": -0.091182,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -4901,8 +4964,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.206522,
+          "y": 0.253507,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -4915,8 +4978,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.195652,
+          "y": 0.253507,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -4942,7 +5005,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "retaliator-bomber",
@@ -5016,8 +5080,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.133987,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -5030,8 +5094,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.133987,
+          "y": -0.103206,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -5043,7 +5107,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 5,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "hull-a",
@@ -5299,8 +5364,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.15896,
+          "y": 0.265531,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -5313,8 +5378,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.153179,
+          "y": 0.261523,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -5340,7 +5405,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "hull-e",
@@ -5426,8 +5492,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.115385,
+          "y": 0.273547,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -5440,8 +5506,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.128205,
+          "y": 0.273547,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -5467,7 +5533,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "starfarer",
@@ -5850,8 +5917,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.082645,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -5864,8 +5931,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.082645,
+          "y": -0.09519,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -5891,7 +5958,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "p-52-merlin",
@@ -6289,8 +6357,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.095041,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -6303,8 +6371,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.103306,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -6358,7 +6426,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "retaliator-base",
@@ -6432,8 +6501,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.133987,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -6446,8 +6515,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.133987,
+          "y": -0.103206,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -6459,7 +6528,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 5
+      "combatVersion": 5,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "avenger-stalker",
@@ -7894,8 +7964,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.326389,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -7908,8 +7978,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.319444,
+          "y": -0.123246,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -7935,7 +8005,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "eclipse",
@@ -8468,12 +8539,12 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
-          "facing": -70,
+          "x": 0.35473,
+          "y": -0.384,
+          "facing": 90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -8482,12 +8553,12 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
-          "facing": 70,
+          "x": -0.351351,
+          "y": -0.384,
+          "facing": -90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -8496,12 +8567,12 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
-          "facing": -130,
+          "x": 0.412162,
+          "y": -0.022,
+          "facing": 90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -8510,12 +8581,12 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
-          "facing": 130,
+          "x": -0.415541,
+          "y": -0.022,
+          "facing": -90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -8534,10 +8605,39 @@
           "speed": 420,
           "turnRate": 0.65,
           "role": "main"
+        },
+        {
+          "id": "turret-5",
+          "kind": "turret",
+          "x": -0.006757,
+          "y": 0.026,
+          "facing": 0,
+          "arc": 360,
+          "range": 750,
+          "damage": 171,
+          "cooldown": 0.919,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "turret-6",
+          "kind": "turret",
+          "x": -0.006757,
+          "y": 0.342,
+          "facing": 180,
+          "arc": 300,
+          "range": 750,
+          "damage": 171,
+          "cooldown": 0.919,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 2
     },
     {
       "shipId": "vulcan",
@@ -9969,8 +10069,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.049053,
+          "y": -0.039078,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -9996,7 +10096,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "nautilus",
@@ -10865,8 +10966,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.136704,
+          "y": -0.09519,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -10879,8 +10980,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.140449,
+          "y": -0.091182,
           "facing": 70,
           "arc": 260,
           "range": 1100,
@@ -10906,7 +11007,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "liberator",
@@ -11756,8 +11858,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.162447,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1100,
@@ -11797,7 +11899,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "c8r",
@@ -14548,8 +14651,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.061798,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -14576,8 +14679,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.207865,
+          "y": 0.265531,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -14603,7 +14706,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "constellation-phoenix-emerald",
@@ -15383,8 +15487,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.061798,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -15411,8 +15515,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.207865,
+          "y": 0.265531,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -15438,7 +15542,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "hammerhead-2949-best-in-show",
@@ -15496,12 +15601,12 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
-          "facing": -70,
+          "x": 0.355219,
+          "y": -0.384,
+          "facing": 90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -15510,12 +15615,12 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
-          "facing": 70,
+          "x": -0.351852,
+          "y": -0.384,
+          "facing": -90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -15524,12 +15629,12 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
-          "facing": -130,
+          "x": 0.412458,
+          "y": -0.022,
+          "facing": 90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -15538,12 +15643,12 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
-          "facing": 130,
+          "x": -0.415825,
+          "y": -0.022,
+          "facing": -90,
           "arc": 260,
           "range": 750,
-          "damage": 256.5,
+          "damage": 171,
           "cooldown": 0.919,
           "speed": 1400,
           "turnRate": 2.3,
@@ -15562,10 +15667,39 @@
           "speed": 420,
           "turnRate": 0.65,
           "role": "main"
+        },
+        {
+          "id": "turret-5",
+          "kind": "turret",
+          "x": -0.005051,
+          "y": 0.026,
+          "facing": 0,
+          "arc": 360,
+          "range": 750,
+          "damage": 171,
+          "cooldown": 0.919,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "turret-6",
+          "kind": "turret",
+          "x": -0.005051,
+          "y": 0.342,
+          "facing": 180,
+          "arc": 300,
+          "range": 750,
+          "damage": 171,
+          "cooldown": 0.919,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 2
     },
     {
       "shipId": "reclaimer-2949-best-in-show",
@@ -15651,8 +15785,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.184375,
+          "y": 0.263527,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -15665,8 +15799,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.184375,
+          "y": 0.263527,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -15692,7 +15826,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "mole-carbon",
@@ -17648,8 +17783,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.075758,
+          "y": -0.09519,
           "facing": -70,
           "arc": 260,
           "range": 1073.05,
@@ -17662,8 +17797,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.151515,
+          "y": -0.09519,
           "facing": 70,
           "arc": 260,
           "range": 3500,
@@ -17676,8 +17811,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.166667,
+          "y": 0.253507,
           "facing": -130,
           "arc": 260,
           "range": 3500,
@@ -17690,8 +17825,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.166667,
+          "y": 0.253507,
           "facing": 130,
           "arc": 260,
           "range": 1073.05,
@@ -17718,8 +17853,8 @@
         {
           "id": "boss-turret-1",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.32,
+          "x": 0.007576,
+          "y": -0.319639,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -17732,8 +17867,8 @@
         {
           "id": "boss-turret-2",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.32,
+          "x": 0.25,
+          "y": -0.319639,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -17746,8 +17881,8 @@
         {
           "id": "boss-turret-3",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.11000000000000001,
+          "x": -0.037879,
+          "y": -0.199399,
           "facing": -90,
           "arc": 300,
           "range": 1073.05,
@@ -17760,8 +17895,8 @@
         {
           "id": "boss-turret-4",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.11000000000000001,
+          "x": 0.25,
+          "y": -0.199399,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -17774,8 +17909,8 @@
         {
           "id": "boss-turret-5",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.09999999999999998,
+          "x": -0.128788,
+          "y": 0.099198,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -17788,8 +17923,8 @@
         {
           "id": "boss-turret-6",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.09999999999999998,
+          "x": 0.242424,
+          "y": 0.099198,
           "facing": 90,
           "arc": 300,
           "range": 1073.05,
@@ -17802,8 +17937,8 @@
         {
           "id": "boss-turret-7",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.31,
+          "x": -0.19697,
+          "y": 0.305611,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -17816,8 +17951,8 @@
         {
           "id": "boss-turret-8",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.31,
+          "x": 0.242424,
+          "y": 0.309619,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -17826,10 +17961,95 @@
           "speed": 590,
           "turnRate": 0.16,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": 0.037879,
+          "y": -0.37976,
+          "facing": -90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": 0.159091,
+          "y": -0.37976,
+          "facing": 90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": -0.083333,
+          "y": 0.001002,
+          "facing": -90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": 0.212121,
+          "y": 0.001002,
+          "facing": 90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-5",
+          "kind": "turret",
+          "x": -0.166667,
+          "y": 0.369739,
+          "facing": -90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-6",
+          "kind": "turret",
+          "x": 0.227273,
+          "y": 0.369739,
+          "facing": 90,
+          "arc": 220,
+          "range": 1073.05,
+          "damage": 251.67,
+          "cooldown": 1.168,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "retribution",
@@ -17887,8 +18107,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.182243,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1726.15,
@@ -17901,8 +18121,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.182243,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 3500,
@@ -17915,8 +18135,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.154206,
+          "y": 0.249499,
           "facing": -130,
           "arc": 260,
           "range": 3500,
@@ -17929,8 +18149,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.154206,
+          "y": 0.249499,
           "facing": 130,
           "arc": 260,
           "range": 1726.15,
@@ -17957,8 +18177,8 @@
         {
           "id": "boss-turret-1",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.32,
+          "x": -0.200935,
+          "y": -0.319639,
           "facing": -90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -17971,8 +18191,8 @@
         {
           "id": "boss-turret-2",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.32,
+          "x": 0.200935,
+          "y": -0.319639,
           "facing": 90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -17985,8 +18205,8 @@
         {
           "id": "boss-turret-3",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.11000000000000001,
+          "x": -0.21028,
+          "y": -0.179359,
           "facing": -90,
           "arc": 300,
           "range": 1726.15,
@@ -17999,8 +18219,8 @@
         {
           "id": "boss-turret-4",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.11000000000000001,
+          "x": 0.21028,
+          "y": -0.179359,
           "facing": 90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -18013,8 +18233,8 @@
         {
           "id": "boss-turret-5",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.09999999999999998,
+          "x": -0.172897,
+          "y": 0.099198,
           "facing": -90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -18027,8 +18247,8 @@
         {
           "id": "boss-turret-6",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.09999999999999998,
+          "x": 0.172897,
+          "y": 0.099198,
           "facing": 90,
           "arc": 300,
           "range": 1726.15,
@@ -18041,8 +18261,8 @@
         {
           "id": "boss-turret-7",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.31,
+          "x": -0.154206,
+          "y": 0.299599,
           "facing": -90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -18055,8 +18275,8 @@
         {
           "id": "boss-turret-8",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.31,
+          "x": 0.154206,
+          "y": 0.299599,
           "facing": 90,
           "arc": 300,
           "range": 3346.7999999999997,
@@ -18065,10 +18285,151 @@
           "speed": 561,
           "turnRate": 0.16,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": -0.154206,
+          "y": -0.37976,
+          "facing": -90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": 0.182243,
+          "y": -0.37976,
+          "facing": 90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": -0.228972,
+          "y": -0.249499,
+          "facing": -90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": 0.228972,
+          "y": -0.249499,
+          "facing": 90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-5",
+          "kind": "turret",
+          "x": -0.191589,
+          "y": -0.029058,
+          "facing": -90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-6",
+          "kind": "turret",
+          "x": 0.191589,
+          "y": -0.029058,
+          "facing": 90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-7",
+          "kind": "turret",
+          "x": -0.21028,
+          "y": 0.169339,
+          "facing": -90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-8",
+          "kind": "turret",
+          "x": 0.21028,
+          "y": 0.169339,
+          "facing": 90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-9",
+          "kind": "turret",
+          "x": -0.126168,
+          "y": 0.339679,
+          "facing": -90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-10",
+          "kind": "turret",
+          "x": 0.126168,
+          "y": 0.339679,
+          "facing": 90,
+          "arc": 220,
+          "range": 1726.15,
+          "damage": 366.3,
+          "cooldown": 1.3,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "sabre-raven",
@@ -18439,8 +18800,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.001901,
+          "y": -0.343687,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -18453,8 +18814,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.184411,
+          "y": -0.00501,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -18467,8 +18828,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": 0.31749,
+          "y": 0.077154,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -18481,8 +18842,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": -0.31749,
+          "y": 0.077154,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -18508,7 +18869,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 6
+      "combatVersion": 6,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "f8c-lightning-executive",
@@ -18878,8 +19240,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.130324,
+          "y": -0.043544,
           "facing": -70,
           "arc": 260,
           "range": 1096.5,
@@ -18892,8 +19254,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.12862,
+          "y": -0.043544,
           "facing": 70,
           "arc": 260,
           "range": 3500,
@@ -18906,8 +19268,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.212095,
+          "y": 0.253754,
           "facing": -130,
           "arc": 260,
           "range": 3500,
@@ -18920,8 +19282,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.212095,
+          "y": 0.253754,
           "facing": 130,
           "arc": 260,
           "range": 1096.5,
@@ -18948,8 +19310,8 @@
         {
           "id": "boss-turret-1",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.32,
+          "x": -0.120102,
+          "y": -0.403904,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -18962,8 +19324,8 @@
         {
           "id": "boss-turret-2",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.32,
+          "x": 0.120102,
+          "y": -0.403904,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -18976,8 +19338,8 @@
         {
           "id": "boss-turret-3",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.11000000000000001,
+          "x": -0.079216,
+          "y": -0.263764,
           "facing": -90,
           "arc": 300,
           "range": 1096.5,
@@ -18990,8 +19352,8 @@
         {
           "id": "boss-turret-4",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.11000000000000001,
+          "x": 0.079216,
+          "y": -0.263764,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -19004,8 +19366,8 @@
         {
           "id": "boss-turret-5",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.09999999999999998,
+          "x": -0.130324,
+          "y": 0.0996,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -19018,8 +19380,8 @@
         {
           "id": "boss-turret-6",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.09999999999999998,
+          "x": 0.130324,
+          "y": 0.0996,
           "facing": 90,
           "arc": 300,
           "range": 1096.5,
@@ -19032,8 +19394,8 @@
         {
           "id": "boss-turret-7",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.31,
+          "x": -0.270017,
+          "y": 0.314815,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -19046,8 +19408,8 @@
         {
           "id": "boss-turret-8",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.31,
+          "x": 0.270017,
+          "y": 0.314815,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -19056,10 +19418,95 @@
           "speed": 587,
           "turnRate": 0.16,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": -0.094549,
+          "y": -0.34985,
+          "facing": -90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": 0.094549,
+          "y": -0.34985,
+          "facing": 90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": -0.114991,
+          "y": 0.014515,
+          "facing": -90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": 0.114991,
+          "y": 0.014515,
+          "facing": 90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-5",
+          "kind": "turret",
+          "x": -0.065588,
+          "y": 0.37988,
+          "facing": -90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-6",
+          "kind": "turret",
+          "x": 0.065588,
+          "y": 0.37988,
+          "facing": 90,
+          "arc": 220,
+          "range": 1096.5,
+          "damage": 292.38,
+          "cooldown": 1.176,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "endeavor-master-set",
@@ -19117,8 +19564,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.095109,
+          "y": -0.073146,
           "facing": -70,
           "arc": 260,
           "range": 750,
@@ -19131,8 +19578,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.171196,
+          "y": -0.093186,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -19145,8 +19592,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.203804,
+          "y": 0.251503,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -19159,8 +19606,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.225543,
+          "y": 0.239479,
           "facing": 130,
           "arc": 260,
           "range": 1400,
@@ -19186,7 +19633,8 @@
         }
       ],
       "calibrated": false,
-      "combatVersion": 4
+      "combatVersion": 4,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "zeus",
@@ -19727,8 +20175,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.18018,
+          "y": -0.109218,
           "facing": -70,
           "arc": 260,
           "range": 920.45,
@@ -19741,8 +20189,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.18018,
+          "y": -0.109218,
           "facing": 70,
           "arc": 260,
           "range": 1400,
@@ -19755,8 +20203,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.184685,
+          "y": 0.241483,
           "facing": -130,
           "arc": 260,
           "range": 1400,
@@ -19769,8 +20217,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.184685,
+          "y": 0.245491,
           "facing": 130,
           "arc": 260,
           "range": 920.45,
@@ -19797,8 +20245,8 @@
         {
           "id": "boss-turret-1",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.32,
+          "x": -0.22973,
+          "y": -0.319639,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -19811,8 +20259,8 @@
         {
           "id": "boss-turret-2",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.32,
+          "x": 0.22973,
+          "y": -0.319639,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -19825,8 +20273,8 @@
         {
           "id": "boss-turret-3",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.11000000000000001,
+          "x": -0.261261,
+          "y": -0.179359,
           "facing": -90,
           "arc": 300,
           "range": 920.45,
@@ -19839,8 +20287,8 @@
         {
           "id": "boss-turret-4",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.11000000000000001,
+          "x": 0.261261,
+          "y": -0.179359,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -19853,8 +20301,8 @@
         {
           "id": "boss-turret-5",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.09999999999999998,
+          "x": -0.198198,
+          "y": 0.009018,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -19867,8 +20315,8 @@
         {
           "id": "boss-turret-6",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.09999999999999998,
+          "x": 0.198198,
+          "y": 0.009018,
           "facing": 90,
           "arc": 300,
           "range": 920.45,
@@ -19881,8 +20329,8 @@
         {
           "id": "boss-turret-7",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.31,
+          "x": -0.162162,
+          "y": 0.319639,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -19895,8 +20343,8 @@
         {
           "id": "boss-turret-8",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.31,
+          "x": 0.162162,
+          "y": 0.319639,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -19905,10 +20353,67 @@
           "speed": 632,
           "turnRate": 0.1784,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": -0.238739,
+          "y": -0.259519,
+          "facing": -90,
+          "arc": 220,
+          "range": 920.45,
+          "damage": 134.18,
+          "cooldown": 1.091,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": 0.22973,
+          "y": -0.255511,
+          "facing": 90,
+          "arc": 220,
+          "range": 920.45,
+          "damage": 134.18,
+          "cooldown": 1.091,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": -0.256757,
+          "y": 0.205411,
+          "facing": -90,
+          "arc": 220,
+          "range": 920.45,
+          "damage": 134.18,
+          "cooldown": 1.091,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": 0.256757,
+          "y": 0.205411,
+          "facing": 90,
+          "arc": 220,
+          "range": 920.45,
+          "damage": 134.18,
+          "cooldown": 1.091,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 7
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "starlite",
@@ -20272,8 +20777,8 @@
         {
           "id": "turret-1",
           "kind": "turret",
-          "x": -0.16,
-          "y": -0.1,
+          "x": -0.171141,
+          "y": -0.099198,
           "facing": -70,
           "arc": 260,
           "range": 1012.5,
@@ -20286,8 +20791,8 @@
         {
           "id": "turret-2",
           "kind": "turret",
-          "x": 0.16,
-          "y": -0.1,
+          "x": 0.171141,
+          "y": -0.099198,
           "facing": 70,
           "arc": 260,
           "range": 3500,
@@ -20300,8 +20805,8 @@
         {
           "id": "turret-3",
           "kind": "turret",
-          "x": -0.2,
-          "y": 0.25,
+          "x": -0.171141,
+          "y": 0.249499,
           "facing": -130,
           "arc": 260,
           "range": 3500,
@@ -20314,8 +20819,8 @@
         {
           "id": "turret-4",
           "kind": "turret",
-          "x": 0.2,
-          "y": 0.25,
+          "x": 0.171141,
+          "y": 0.249499,
           "facing": 130,
           "arc": 260,
           "range": 1012.5,
@@ -20342,8 +20847,8 @@
         {
           "id": "boss-turret-1",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.32,
+          "x": -0.057047,
+          "y": -0.319639,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -20356,8 +20861,8 @@
         {
           "id": "boss-turret-2",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.32,
+          "x": 0.057047,
+          "y": -0.319639,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -20370,8 +20875,8 @@
         {
           "id": "boss-turret-3",
           "kind": "turret",
-          "x": -0.24,
-          "y": -0.11000000000000001,
+          "x": -0.130872,
+          "y": -0.169339,
           "facing": -90,
           "arc": 300,
           "range": 1012.5,
@@ -20384,8 +20889,8 @@
         {
           "id": "boss-turret-4",
           "kind": "turret",
-          "x": 0.24,
-          "y": -0.11000000000000001,
+          "x": 0.130872,
+          "y": -0.169339,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -20398,8 +20903,8 @@
         {
           "id": "boss-turret-5",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.09999999999999998,
+          "x": -0.151007,
+          "y": 0.099198,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -20412,8 +20917,8 @@
         {
           "id": "boss-turret-6",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.09999999999999998,
+          "x": 0.151007,
+          "y": 0.099198,
           "facing": 90,
           "arc": 300,
           "range": 1012.5,
@@ -20426,8 +20931,8 @@
         {
           "id": "boss-turret-7",
           "kind": "turret",
-          "x": -0.24,
-          "y": 0.31,
+          "x": -0.11745,
+          "y": 0.309619,
           "facing": -90,
           "arc": 300,
           "range": 1400,
@@ -20440,8 +20945,8 @@
         {
           "id": "boss-turret-8",
           "kind": "turret",
-          "x": 0.24,
-          "y": 0.31,
+          "x": 0.11745,
+          "y": 0.309619,
           "facing": 90,
           "arc": 300,
           "range": 1400,
@@ -20450,10 +20955,95 @@
           "speed": 601,
           "turnRate": 0.16,
           "role": "main"
+        },
+        {
+          "id": "coverage-turret-1",
+          "kind": "turret",
+          "x": -0.07047,
+          "y": -0.259519,
+          "facing": -90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-2",
+          "kind": "turret",
+          "x": 0.07047,
+          "y": -0.259519,
+          "facing": 90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-3",
+          "kind": "turret",
+          "x": -0.191275,
+          "y": 0.009018,
+          "facing": -90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-4",
+          "kind": "turret",
+          "x": 0.191275,
+          "y": 0.009018,
+          "facing": 90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-5",
+          "kind": "turret",
+          "x": -0.077181,
+          "y": 0.369739,
+          "facing": -90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
+        },
+        {
+          "id": "coverage-turret-6",
+          "kind": "turret",
+          "x": 0.077181,
+          "y": 0.369739,
+          "facing": 90,
+          "arc": 220,
+          "range": 1012.5,
+          "damage": 149.09,
+          "cooldown": 1.143,
+          "speed": 1400,
+          "turnRate": 2.3,
+          "role": "point-defense"
         }
       ],
       "calibrated": false,
-      "combatVersion": 8
+      "combatVersion": 9,
+      "turretLayoutVersion": 1
     },
     {
       "shipId": "sabre-raven-ex",

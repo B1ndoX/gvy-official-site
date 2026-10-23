@@ -21,7 +21,7 @@ export interface Ship extends Vec {
 }
 export interface Projectile extends Vec { id: number; owner: number; target: number; kind: WeaponKind; role?:Mount['role']; turnRate?:number; vx: number; vy: number; angle: number; speed: number; damage: number; ttl: number; travel: number; range: number; color: number; width?:number; trail?:Vec[]; trailClock?:number }
 export interface BattleEvent extends Vec { id: number; kind: 'hit' | 'shield' | 'destroy' | 'shot'; time: number; radius: number; ship: number; by: number; label: string; weapon?:WeaponKind; angle?:number }
-export interface KillRecord { id: number; time: number; victimId: number; victimName: string; killerId: number; killerName: string }
+export interface KillRecord { id: number; time: number; victimId: number; victimName: string; killerId: number; killerName: string; cause?: 'weapon' | 'asteroid' | 'collision'; mutual?:boolean; friendly?:boolean }
 export type BattlePhase = 'ready' | 'running' | 'paused' | 'finished';
 export interface RosterEntry { specId: string; count: number; member?: Member; npc?: 'boss'|'escort'; team?: string }
 export interface Standing { id: number; member?: Member; npc?: 'boss'|'escort'; name: string; shipName: string; specId: string; kills: number; alive: boolean }

@@ -207,7 +207,8 @@ export class BattleRenderer {
       }
       if(s.spec.class==='capital'&&k>.3)for(let i=0;i<s.spec.mounts.length;i++){
         const m=s.spec.mounts[i];if(m.kind!=='turret')continue;const p=mountWorld(s,m),angle=s.heading+s.turretAngles[i];
-        e.circle(p.x,p.y,2.2*px).fill({color:0x92a8bb,alpha:.8});e.moveTo(p.x,p.y).lineTo(p.x+Math.cos(angle)*7*px,p.y+Math.sin(angle)*7*px).stroke({color:0xccd7df,width:px});
+        const x=p.x-s.x,y=p.y-s.y,base=Math.min(2.2*px,s.spec.beam*.008);
+        marker.circle(x,y,base).fill({color:0x92a8bb,alpha:.8});marker.moveTo(x,y).lineTo(x+Math.cos(angle)*base*2.5,y+Math.sin(angle)*base*2.5).stroke({color:0xccd7df,width:Math.min(px,base*.65)});
       }
     }
     drawWeaponEffects(this.engine,e,px);

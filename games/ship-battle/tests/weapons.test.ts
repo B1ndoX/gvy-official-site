@@ -22,7 +22,7 @@ test('finite nose beam uses actual collision, then cools down and resets cleanly
 test('Odin draws one broad beam with one damage budget',()=>{
  const e=duel('odin','beam'),t=e.ships[1],m=e.ships[0].spec.mounts[0];t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  step(e,1);expect(e.beams[0].segments).toHaveLength(1);expect(m.beamWidth).toBe(45);step(e,Math.ceil(m.duration!*60)+2);
- expect(1e8-t.hull).toBeCloseTo(m.damage*m.duration!,3);expect(e.shots).toBe(1);
+ expect(1e8-t.hull).toBeCloseTo(m.damage*m.duration!*defenseRules.nonBossWeaponDamageMultiplier*defenseRules.memberBeamDamageMultiplier*defenseRules.nonBossBeamDamageMultiplier,3);expect(e.shots).toBe(1);
  expect(weaponDps(m)).toBeGreaterThan(15000);
 });
 test('asteroids block continuous beams and prevent damage behind them',()=>{
@@ -73,7 +73,7 @@ test('broad beam can hit a hull overlapping its edge, while still using one tota
 test.each([['idris-p',112500,4.5,14/3],['tiburon',62400,3.9,11/3],['mauler',288000,5.4,14/3],['odin',1400000,6,6]] as const)('%s stronger beam retains its duration, cooldown and single volley budget', (id,total,seconds,cooldown)=>{
  const e=duel(id,'beam'),t=e.ships[1],m=e.ships[0].spec.mounts[0];t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  expect(m.duration!*.75).toBeCloseTo(seconds);expect(m.cooldown*.75).toBeCloseTo(cooldown);
- step(e,Math.ceil(m.duration!*60)+2);expect(e.shots).toBe(1);expect(1e8-t.hull).toBeCloseTo(total,3);
+ step(e,Math.ceil(m.duration!*60)+2);expect(e.shots).toBe(1);expect(1e8-t.hull).toBeCloseTo(total*defenseRules.nonBossWeaponDamageMultiplier*defenseRules.memberBeamDamageMultiplier*defenseRules.nonBossBeamDamageMultiplier,3);
 });
 test('Polaris torpedo impacts once, caps ordinary damage at 55% and keeps boss protection',()=>{
  for(const boss of [false,true]){
@@ -94,10 +94,10 @@ test.each(['idris-p','tiburon','mauler','odin'])('%s beam settles five times per
  t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  step(e,15);expect(e.hits).toBe(0);
  for(let tick=1;tick<=5;tick++){
-  step(e,1);expect(e.hits).toBe(tick);expect(1e8-t.hull).toBeCloseTo(m.damage*4/15*tick,3);
+  step(e,1);expect(e.hits).toBe(tick);expect(1e8-t.hull).toBeCloseTo(m.damage*4/15*tick*defenseRules.nonBossWeaponDamageMultiplier*defenseRules.memberBeamDamageMultiplier*defenseRules.nonBossBeamDamageMultiplier,3);
   if(tick<5){step(e,15);expect(e.hits).toBe(tick);}
  }
- expect(1e8-t.hull).toBeCloseTo(m.damage*4/3,3);
+ expect(1e8-t.hull).toBeCloseTo(m.damage*4/3*defenseRules.nonBossWeaponDamageMultiplier*defenseRules.memberBeamDamageMultiplier*defenseRules.nonBossBeamDamageMultiplier,3);
 });
 
 test.each(['brawl','bounty','challenge'] as const)('five-tick beams retain %s boss burst protection',mode=>{

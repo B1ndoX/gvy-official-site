@@ -187,7 +187,10 @@
   "challengeDamageMultiplier": 0.45,
   "escortDefenseMultiplier": 0.4,
   "escortDamageMultiplier": 0.35,
-  "bossDamageMultiplier": 4,
+  "nonBossWeaponDamageMultiplier": 1.265,
+  "memberBeamDamageMultiplier": 0.9,
+  "nonBossBeamDamageMultiplier": 0.9,
+  "bossDamageMultiplier": 3,
   "handling": {
     "small": {
       "speed": 245,

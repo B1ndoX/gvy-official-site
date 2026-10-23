@@ -5,7 +5,7 @@ export interface ShipAsset {
   author: string; source: string; permission: string;
   licenseStatus: 'permission-recorded' | 'user-directed-noncommercial';
   length: number; beam: number; noseDegrees: number; center: Vec;
-  engines: Vec[]; mounts: Mount[]; calibrated: boolean; combatVersion?:number;
+  engines: Vec[]; mounts: Mount[]; calibrated: boolean; combatVersion?:number; turretLayoutVersion?:number;
 }
 export interface AssetManifest { version: 1; assets: ShipAsset[] }
 const DB='gvy-ship-battle-assets-v1';
@@ -48,11 +48,12 @@ export function withAssets(specs:ShipSpec[],assets:ShipAsset[]):ShipSpec[]{
 }
 export const assetURL=(a:ShipAsset)=>a.url.startsWith('data:')?a.url:import.meta.env.BASE_URL+a.url;
 export function upgradeCombat(local:ShipAsset,builtin:ShipAsset):ShipAsset{
-  if((local.combatVersion??0)>=(builtin.combatVersion??0))return local;
+  const combat=(local.combatVersion??0)<(builtin.combatVersion??0),layout=(local.turretLayoutVersion??0)<(builtin.turretLayoutVersion??0);
+  if(!combat&&!layout)return local;
   const localMounts=new Map(local.mounts.map(m=>[m.id,m]));
-  // Preserve calibrated coordinates for retained mounts; remove retired generic
-  // guns and add new primary weapons. Old IndexedDB entries must not mask upgrades.
-  return {...local,combatVersion:builtin.combatVersion,mounts:builtin.mounts.map(m=>{const old=localMounts.get(m.id);return old?{...m,x:old.x,y:old.y,facing:old.facing,arc:old.arc}:m;})};
+  // Upgrade stock render geometry; explicit user calibrations and custom artwork remain theirs.
+  const stockLayout=layout&&!local.calibrated&&local.url===builtin.url;
+  return {...local,combatVersion:builtin.combatVersion,turretLayoutVersion:builtin.turretLayoutVersion,mounts:builtin.mounts.map(m=>{const old=localMounts.get(m.id);return old?{...m,x:stockLayout&&m.kind==='turret'?m.x:old.x,y:stockLayout&&m.kind==='turret'?m.y:old.y,facing:stockLayout&&m.kind==='turret'?m.facing:old.facing,arc:stockLayout&&m.kind==='turret'?m.arc:old.arc}:m;})};
 }
 export async function readLibrary(specs:ShipSpec[]):Promise<{assets:ShipAsset[];warning:string|null}>{
   const ids=new Set(specs.map(s=>s.id));

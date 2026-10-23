@@ -370,5 +370,18 @@
       "supportDps": 174,
       "combatVersion": 5
     }
-  ]
+  ],
+  "capitalCoverage": {
+    "version": 9,
+    "minLength": 480,
+    "ships": {
+      "javelin": 4,
+      "mauler": 4,
+      "odin": 6,
+      "pegasus": 6,
+      "bengal": 6,
+      "retribution": 10
+    },
+    "description": "Additional distributed point-defense turrets for Javelin-size and larger ships. Boss output is normalized before the NPC damage multiplier."
+  }
 }
