@@ -1,3 +1,4 @@
+import {bossCoverageScale} from '../src/sim/weapons';
 import {expect,test} from 'vitest';
 import data from '../src/data/ships.json';
 import rules from '../src/data/defense-balance.json';
@@ -37,7 +38,7 @@ test('casualties never change the current boss or reduce a later challenge wave'
   for(let i=0;i<361;i++)e.step();
   const next=e.snapshot().boss!,base=specs.find(s=>s.id==='odin')!;
   expect(next.spec.id).toBe('odin');expect(next.spec.hull).toBe(bossDefense(base,'challenge',members,32,2).hull);
-  expect(next.spec.mounts[0].damage).toBeCloseTo(base.mounts[0].damage*rules.bossDamageMultiplier*rules.challengeDamageMultiplier,6);
+  expect(next.spec.mounts[0].damage).toBeCloseTo(base.mounts[0].damage*bossCoverageScale(base.mounts)*rules.bossDamageMultiplier*rules.challengeDamageMultiplier,6);
 });
 test('reset uses the new starting roster and ordinary member combat keeps its ship stats',()=>{
   const e=setup(64,'bounty');e.reset(battleRoster([{specId:'gladius',count:8}],'bounty',42),specs,42,'bounty');e.start();

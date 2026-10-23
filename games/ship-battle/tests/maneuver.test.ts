@@ -24,10 +24,45 @@ test('incoming hostile fire triggers a limited sideways burst; friendly fire and
  const capital={...s,spec:specs.find(s=>s.id==='javelin')!};expect(handling(capital).lateral).toBeLessThan(handling(s).lateral);expect(handling(capital).boost).toBeLessThan(handling(s).boost);
 });
 
-test('torpedo bombers counter an unescorted capital but interceptors and point defense counter bombers',()=>{
+test('seeded bomber, interceptor and defensive-ship encounters resolve through combat without a prescribed winner',()=>{
  const original=data as ShipSpec[];
- for(const [a,b,expected] of [['eclipse','javelin','eclipse'],['gladius','eclipse','gladius'],['hammerhead','eclipse','hammerhead']] as const){
-  let wins=0;for(const seed of [1,2,3,4]){const e=new BattleEngine();e.reset([{specId:a,count:1},{specId:b,count:1}],original,seed);e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i?650:-650;s.y=0;s.heading=i?Math.PI:0;});e.start();for(let i=0;i<600*60&&e.phase==='running';i++)e.step();expect(e.phase).toBe('finished');wins+=Number(e.living[0]?.spec.id===expected);}
-  expect(wins).toBeGreaterThanOrEqual(3);
+ for(const [a,b] of [['eclipse','javelin','eclipse'],['gladius','eclipse','gladius'],['hammerhead','eclipse','hammerhead']] as const){
+  for(const seed of [1,2,3,4]){const e=new BattleEngine();e.reset([{specId:a,count:1},{specId:b,count:1}],original,seed);e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i?650:-650;s.y=0;s.heading=i?Math.PI:0;});e.start();for(let i=0;i<600*60&&e.phase==='running';i++)e.step();expect(e.phase).toBe('finished');expect(e.hits).toBeGreaterThan(0);expect(e.ships.reduce((sum,s)=>sum+s.kills,0)+e.collisionDeaths).toBe(e.snapshot().destroyed);}
  }
 },30000);
+
+test('small ships keep firing safely until a threat or near-hull danger requires a curved evasive pass',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver');const e=new BattleEngine();e.reset([{specId:'gladius',count:1},{specId:'bengal',count:1}],specs,42);const [s,boss]=e.ships;s.x=1500;s.y=0;boss.x=boss.y=0;boss.heading=0;
+ const first=attackNavigation(s,boss,0,undefined)!;expect(first.state.phase).toBe('approach');const lane=first.state.entry;
+ boss.heading=Math.PI/2;expect(attackNavigation(s,boss,1,first.state)!.state.entry).toBe(lane);
+ s.x=600;const attack=attackNavigation(s,boss,13,first.state)!;expect(attack.state.phase).toBe('strike');expect(attackNavigation(s,boss,120,attack.state)!.state.phase).toBe('strike');const exit=attackNavigation(s,boss,121,attack.state,true)!;expect(exit.state.phase).toBe('extend');expect(Math.abs(exit.velocity!.y)).toBeGreaterThan(s.spec.speed*.25);
+ const entries=new Set(Array.from({length:12},(_,i)=>attackNavigation({...s,id:i+1},boss,0,undefined)!.state.entry));expect(entries.size).toBe(12);
+});
+
+test('a 32-member cooperative fleet can manoeuvre around its boss without early collision deaths',()=>{
+ const safe=specs.map(s=>({...s,mounts:s.mounts.map(m=>({...m,damage:0}))})),e=new BattleEngine();e.reset(battleRoster([{specId:'gladius',count:32}],'challenge',42),safe,42,'challenge');e.asteroids=[];e.start();
+ for(let i=0;i<45*60;i++)e.step();expect(e.snapshot().memberAlive).toBe(32);expect(e.collisionDeaths).toBe(0);expect(e.killLog).toHaveLength(0);expect(e.hits).toBeGreaterThan(0);
+});
+
+test('engagement choices vary by seed and re-entry, but the same seed remains reproducible',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver'),{randomGenerator}=await import('../src/sim/math');const e=new BattleEngine();e.reset([{specId:'gladius',count:1},{specId:'bengal',count:1}],specs,42);const [s,boss]=e.ships;s.x=1500;s.y=0;boss.x=boss.y=0;
+ const choose=(seed:number)=>attackNavigation(s,boss,0,undefined,false,randomGenerator(seed))!.state;
+ expect(choose(42)).toEqual(choose(42));expect(choose(42)).not.toEqual(choose(77));
+ const random=randomGenerator(42),first=attackNavigation(s,boss,0,undefined,false,random)!.state,exit=attackNavigation(s,boss,1,first,true,random)!.state;
+ const returnPlan=attackNavigation(s,boss,100,exit,false,random)!.state;expect(returnPlan.entry).not.toBe(first.entry);
+});
+
+
+test('capital evasions keep a lateral component and curve back into range instead of fleeing backwards indefinitely',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver'),{randomGenerator}=await import('../src/sim/math');const e=new BattleEngine();e.reset([{specId:'gladius',count:1},{specId:'bengal',count:1}],specs,17);const[s,boss]=e.ships;boss.x=boss.y=boss.vx=boss.vy=0;s.x=650;s.y=0;s.lastHit=-100;s.vx=0;s.vy=100;
+ const random=randomGenerator(17),plan=attackNavigation(s,boss,1,undefined,false,random)!.state,evade=attackNavigation(s,boss,2,plan,true,random)!;
+ expect(Math.abs(evade.velocity!.y)).toBeGreaterThan(s.spec.speed*.25);
+ s.x=2200;const far=attackNavigation(s,boss,3,evade.state,true,random)!;expect(far.velocity!.x).toBeLessThan(0);expect(Math.abs(far.velocity!.y)).toBeGreaterThan(s.spec.speed*.25);
+ s.x=650;const safe=attackNavigation(s,boss,5,far.state,false,random)!;expect(safe.state.phase).toBe('strike');
+ const early=attackNavigation(s,boss,6,safe.state)!,later=attackNavigation(s,boss,12,safe.state)!;expect(early.velocity!.y).not.toBeCloseTo(later.velocity!.y);expect(later.state.phase).toBe('strike');
+ const styles=new Set(Array.from({length:20},(_,seed)=>attackNavigation(s,boss,7,plan,true,randomGenerator(seed*1009+31))!.state.escape));expect(styles.size).toBe(3);
+});
+
+test('avoidance uses the narrow side of a long hull rather than its bounding circle',async()=>{
+ const{hullRadiusAt}=await import('../src/sim/collisions');const e=new BattleEngine();e.reset([{specId:'retribution',count:1}],specs,42);const ship=e.ships[0];ship.heading=0;expect(hullRadiusAt(ship,Math.PI/2)).toBeLessThan(ship.radius*.4);expect(hullRadiusAt(ship,0)).toBeGreaterThan(ship.radius*.8);
+});

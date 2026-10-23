@@ -1,0 +1,950 @@
+{
+  "version": 1,
+  "description": "Canonical turret mount coordinates aligned to the shipped top-view render. Public references establish armament/platform identity; this is 2D render calibration, not verified 3D game hardpoint transforms. Other weapon statistics remain unchanged.",
+  "references": [
+    "https://robertsspaceindustries.com/en/ship-matrix",
+    "https://robertsspaceindustries.com/en/comm-link/engineering/16185-The-Shipyard-Turrets",
+    "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf",
+    "https://media.robertsspaceindustries.com/z7y4v16krcyk2/source.pdf"
+  ],
+  "ships": {
+    "perseus": {
+      "url": "assets/ships/perseus.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": 0.183837,
+          "y": -0.17968
+        },
+        "turret-2": {
+          "x": 0.277975,
+          "y": 0.194695
+        },
+        "turret-3": {
+          "x": -0.277975,
+          "y": 0.194695
+        },
+        "turret-4": {
+          "x": -0.000888,
+          "y": 0.244745
+        }
+      }
+    },
+    "polaris": {
+      "url": "assets/ships/polaris.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": 0.109562,
+          "y": -0.166667
+        },
+        "turret-2": {
+          "x": -0.109562,
+          "y": -0.166667
+        },
+        "turret-3": {
+          "x": 0.290837,
+          "y": 0.18969
+        },
+        "turret-4": {
+          "x": -0.290837,
+          "y": 0.18969
+        },
+        "turret-5": {
+          "x": 0.0,
+          "y": 0.412913
+        },
+        "turret-6": {
+          "x": 0,
+          "y": -0.30981
+        }
+      }
+    },
+    "idris-p": {
+      "url": "assets/ships/idris-p.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.000949,
+          "y": -0.343844
+        },
+        "turret-2": {
+          "x": 0.183112,
+          "y": -0.004505
+        },
+        "turret-3": {
+          "x": 0.317837,
+          "y": 0.077578
+        },
+        "turret-4": {
+          "x": -0.317837,
+          "y": 0.077578
+        },
+        "turret-5": {
+          "x": 0.310247,
+          "y": 0.21972
+        },
+        "turret-6": {
+          "x": -0.310247,
+          "y": 0.21972
+        },
+        "turret-7": {
+          "x": 0.109108,
+          "y": 0.077578
+        },
+        "turret-8": {
+          "x": -0.109108,
+          "y": 0.077578
+        }
+      }
+    },
+    "javelin": {
+      "url": "assets/ships/javelin.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": 0.146552,
+          "y": -0.193694
+        },
+        "turret-2": {
+          "x": -0.144397,
+          "y": -0.193694
+        },
+        "turret-3": {
+          "x": 0.193966,
+          "y": -0.107608
+        },
+        "turret-4": {
+          "x": -0.193966,
+          "y": -0.107608
+        },
+        "turret-5": {
+          "x": 0.198276,
+          "y": -0.035536
+        },
+        "turret-6": {
+          "x": -0.198276,
+          "y": -0.035536
+        },
+        "turret-7": {
+          "x": 0.193966,
+          "y": 0.035536
+        },
+        "turret-8": {
+          "x": -0.193966,
+          "y": 0.035536
+        },
+        "turret-9": {
+          "x": 0.053879,
+          "y": 0.243744
+        },
+        "turret-10": {
+          "x": -0.053879,
+          "y": 0.243744
+        },
+        "turret-11": {
+          "x": 0.198276,
+          "y": 0.161662
+        },
+        "turret-12": {
+          "x": -0.198276,
+          "y": 0.161662
+        },
+        "coverage-turret-1": {
+          "x": 0.168103,
+          "y": -0.25976
+        },
+        "coverage-turret-2": {
+          "x": -0.168103,
+          "y": -0.25976
+        },
+        "coverage-turret-3": {
+          "x": 0.24569,
+          "y": 0.186687
+        },
+        "coverage-turret-4": {
+          "x": -0.24569,
+          "y": 0.186687
+        }
+      }
+    },
+    "caterpillar": {
+      "url": "assets/ships/caterpillar.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.085714,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.085714,
+          "y": -0.099198
+        },
+        "turret-3": {
+          "x": -0.2,
+          "y": 0.265531
+        },
+        "turret-4": {
+          "x": 0.2,
+          "y": 0.265531
+        }
+      }
+    },
+    "merchantman": {
+      "url": "assets/ships/merchantman.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.075342,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.079909,
+          "y": -0.079158
+        }
+      }
+    },
+    "reclaimer": {
+      "url": "assets/ships/reclaimer.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-3": {
+          "x": -0.184375,
+          "y": 0.263527
+        },
+        "turret-4": {
+          "x": 0.184375,
+          "y": 0.263527
+        }
+      }
+    },
+    "orion": {
+      "url": "assets/ships/orion.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.141304,
+          "y": -0.09519
+        },
+        "turret-2": {
+          "x": 0.163043,
+          "y": -0.091182
+        },
+        "turret-3": {
+          "x": -0.206522,
+          "y": 0.253507
+        },
+        "turret-4": {
+          "x": 0.195652,
+          "y": 0.253507
+        }
+      }
+    },
+    "retaliator-bomber": {
+      "url": "assets/ships/retaliator-bomber.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.133987,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.133987,
+          "y": -0.103206
+        }
+      }
+    },
+    "hull-d": {
+      "url": "assets/ships/hull-d.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-3": {
+          "x": -0.15896,
+          "y": 0.265531
+        },
+        "turret-4": {
+          "x": 0.153179,
+          "y": 0.261523
+        }
+      }
+    },
+    "hull-e": {
+      "url": "assets/ships/hull-e.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-3": {
+          "x": -0.115385,
+          "y": 0.273547
+        },
+        "turret-4": {
+          "x": 0.128205,
+          "y": 0.273547
+        }
+      }
+    },
+    "genesis-starliner": {
+      "url": "assets/ships/genesis-starliner.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.082645,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.082645,
+          "y": -0.09519
+        }
+      }
+    },
+    "endeavor": {
+      "url": "assets/ships/endeavor.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.095041,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.103306,
+          "y": -0.099198
+        }
+      }
+    },
+    "retaliator-base": {
+      "url": "assets/ships/retaliator-base.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.133987,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.133987,
+          "y": -0.103206
+        }
+      }
+    },
+    "defender": {
+      "url": "assets/ships/defender.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.326389,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.319444,
+          "y": -0.123246
+        }
+      }
+    },
+    "hammerhead": {
+      "url": "assets/ships/hammerhead.png",
+      "version": 2,
+      "basis": "user-marked-six-turret-rings",
+      "turretCount": 6,
+      "preserveTurretDps": true,
+      "mounts": {
+        "turret-1": {
+          "x": 0.35473,
+          "y": -0.384,
+          "facing": 90,
+          "arc": 260
+        },
+        "turret-2": {
+          "x": -0.351351,
+          "y": -0.384,
+          "facing": -90,
+          "arc": 260
+        },
+        "turret-3": {
+          "x": 0.412162,
+          "y": -0.022,
+          "facing": 90,
+          "arc": 260
+        },
+        "turret-4": {
+          "x": -0.415541,
+          "y": -0.022,
+          "facing": -90,
+          "arc": 260
+        },
+        "turret-5": {
+          "x": -0.006757,
+          "y": 0.026,
+          "facing": 0,
+          "arc": 360
+        },
+        "turret-6": {
+          "x": -0.006757,
+          "y": 0.342,
+          "facing": 180,
+          "arc": 300
+        }
+      }
+    },
+    "corsair": {
+      "url": "assets/ships/corsair.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-2": {
+          "x": 0.049053,
+          "y": -0.039078
+        }
+      }
+    },
+    "400i": {
+      "url": "assets/ships/400i.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.136704,
+          "y": -0.09519
+        },
+        "turret-2": {
+          "x": 0.140449,
+          "y": -0.091182
+        }
+      }
+    },
+    "e1-spirit": {
+      "url": "assets/ships/e1-spirit.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.162447,
+          "y": -0.099198
+        }
+      }
+    },
+    "caterpillar-pirate": {
+      "url": "assets/ships/caterpillar-pirate.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-2": {
+          "x": 0.061798,
+          "y": -0.099198
+        },
+        "turret-4": {
+          "x": 0.207865,
+          "y": 0.265531
+        }
+      }
+    },
+    "caterpillar-2949-best-in-show": {
+      "url": "assets/ships/caterpillar-2949-best-in-show.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-2": {
+          "x": 0.061798,
+          "y": -0.099198
+        },
+        "turret-4": {
+          "x": 0.207865,
+          "y": 0.265531
+        }
+      }
+    },
+    "reclaimer-2949-best-in-show": {
+      "url": "assets/ships/reclaimer-2949-best-in-show.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-3": {
+          "x": -0.184375,
+          "y": 0.263527
+        },
+        "turret-4": {
+          "x": 0.184375,
+          "y": 0.263527
+        }
+      }
+    },
+    "pegasus": {
+      "url": "assets/ships/pegasus.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.075758,
+          "y": -0.09519
+        },
+        "turret-2": {
+          "x": 0.151515,
+          "y": -0.09519
+        },
+        "turret-3": {
+          "x": -0.166667,
+          "y": 0.253507
+        },
+        "turret-4": {
+          "x": 0.166667,
+          "y": 0.253507
+        },
+        "boss-turret-1": {
+          "x": 0.007576,
+          "y": -0.319639
+        },
+        "boss-turret-2": {
+          "x": 0.25,
+          "y": -0.319639
+        },
+        "boss-turret-3": {
+          "x": -0.037879,
+          "y": -0.199399
+        },
+        "boss-turret-4": {
+          "x": 0.25,
+          "y": -0.199399
+        },
+        "boss-turret-5": {
+          "x": -0.128788,
+          "y": 0.099198
+        },
+        "boss-turret-6": {
+          "x": 0.242424,
+          "y": 0.099198
+        },
+        "boss-turret-7": {
+          "x": -0.19697,
+          "y": 0.305611
+        },
+        "boss-turret-8": {
+          "x": 0.242424,
+          "y": 0.309619
+        },
+        "coverage-turret-1": {
+          "x": 0.037879,
+          "y": -0.37976
+        },
+        "coverage-turret-2": {
+          "x": 0.159091,
+          "y": -0.37976
+        },
+        "coverage-turret-3": {
+          "x": -0.083333,
+          "y": 0.001002
+        },
+        "coverage-turret-4": {
+          "x": 0.212121,
+          "y": 0.001002
+        },
+        "coverage-turret-5": {
+          "x": -0.166667,
+          "y": 0.369739
+        },
+        "coverage-turret-6": {
+          "x": 0.227273,
+          "y": 0.369739
+        }
+      }
+    },
+    "retribution": {
+      "url": "assets/ships/retribution.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.182243,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.182243,
+          "y": -0.099198
+        },
+        "turret-3": {
+          "x": -0.154206,
+          "y": 0.249499
+        },
+        "turret-4": {
+          "x": 0.154206,
+          "y": 0.249499
+        },
+        "boss-turret-1": {
+          "x": -0.200935,
+          "y": -0.319639
+        },
+        "boss-turret-2": {
+          "x": 0.200935,
+          "y": -0.319639
+        },
+        "boss-turret-3": {
+          "x": -0.21028,
+          "y": -0.179359
+        },
+        "boss-turret-4": {
+          "x": 0.21028,
+          "y": -0.179359
+        },
+        "boss-turret-5": {
+          "x": -0.172897,
+          "y": 0.099198
+        },
+        "boss-turret-6": {
+          "x": 0.172897,
+          "y": 0.099198
+        },
+        "boss-turret-7": {
+          "x": -0.154206,
+          "y": 0.299599
+        },
+        "boss-turret-8": {
+          "x": 0.154206,
+          "y": 0.299599
+        },
+        "coverage-turret-1": {
+          "x": -0.154206,
+          "y": -0.37976
+        },
+        "coverage-turret-2": {
+          "x": 0.182243,
+          "y": -0.37976
+        },
+        "coverage-turret-3": {
+          "x": -0.228972,
+          "y": -0.249499
+        },
+        "coverage-turret-4": {
+          "x": 0.228972,
+          "y": -0.249499
+        },
+        "coverage-turret-5": {
+          "x": -0.191589,
+          "y": -0.029058
+        },
+        "coverage-turret-6": {
+          "x": 0.191589,
+          "y": -0.029058
+        },
+        "coverage-turret-7": {
+          "x": -0.21028,
+          "y": 0.169339
+        },
+        "coverage-turret-8": {
+          "x": 0.21028,
+          "y": 0.169339
+        },
+        "coverage-turret-9": {
+          "x": -0.126168,
+          "y": 0.339679
+        },
+        "coverage-turret-10": {
+          "x": 0.126168,
+          "y": 0.339679
+        }
+      }
+    },
+    "idris-m": {
+      "url": "assets/ships/idris-m.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.001901,
+          "y": -0.343687
+        },
+        "turret-2": {
+          "x": 0.184411,
+          "y": -0.00501
+        },
+        "turret-3": {
+          "x": 0.31749,
+          "y": 0.077154
+        },
+        "turret-4": {
+          "x": -0.31749,
+          "y": 0.077154
+        }
+      }
+    },
+    "bengal": {
+      "url": "assets/ships/bengal.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.130324,
+          "y": -0.043544
+        },
+        "turret-2": {
+          "x": 0.12862,
+          "y": -0.043544
+        },
+        "turret-3": {
+          "x": -0.212095,
+          "y": 0.253754
+        },
+        "turret-4": {
+          "x": 0.212095,
+          "y": 0.253754
+        },
+        "boss-turret-1": {
+          "x": -0.120102,
+          "y": -0.403904
+        },
+        "boss-turret-2": {
+          "x": 0.120102,
+          "y": -0.403904
+        },
+        "boss-turret-3": {
+          "x": -0.079216,
+          "y": -0.263764
+        },
+        "boss-turret-4": {
+          "x": 0.079216,
+          "y": -0.263764
+        },
+        "boss-turret-5": {
+          "x": -0.130324,
+          "y": 0.0996
+        },
+        "boss-turret-6": {
+          "x": 0.130324,
+          "y": 0.0996
+        },
+        "boss-turret-7": {
+          "x": -0.270017,
+          "y": 0.314815
+        },
+        "boss-turret-8": {
+          "x": 0.270017,
+          "y": 0.314815
+        },
+        "coverage-turret-1": {
+          "x": -0.094549,
+          "y": -0.34985
+        },
+        "coverage-turret-2": {
+          "x": 0.094549,
+          "y": -0.34985
+        },
+        "coverage-turret-3": {
+          "x": -0.114991,
+          "y": 0.014515
+        },
+        "coverage-turret-4": {
+          "x": 0.114991,
+          "y": 0.014515
+        },
+        "coverage-turret-5": {
+          "x": -0.065588,
+          "y": 0.37988
+        },
+        "coverage-turret-6": {
+          "x": 0.065588,
+          "y": 0.37988
+        }
+      }
+    },
+    "endeavor-master-set": {
+      "url": "assets/ships/endeavor-master-set.png",
+      "basis": "opaque-hull-correction",
+      "mounts": {
+        "turret-1": {
+          "x": -0.095109,
+          "y": -0.073146
+        },
+        "turret-2": {
+          "x": 0.171196,
+          "y": -0.093186
+        },
+        "turret-3": {
+          "x": -0.203804,
+          "y": 0.251503
+        },
+        "turret-4": {
+          "x": 0.225543,
+          "y": 0.239479
+        }
+      }
+    },
+    "mauler": {
+      "url": "assets/ships/mauler.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.18018,
+          "y": -0.109218
+        },
+        "turret-2": {
+          "x": 0.18018,
+          "y": -0.109218
+        },
+        "turret-3": {
+          "x": -0.184685,
+          "y": 0.241483
+        },
+        "turret-4": {
+          "x": 0.184685,
+          "y": 0.245491
+        },
+        "boss-turret-1": {
+          "x": -0.22973,
+          "y": -0.319639
+        },
+        "boss-turret-2": {
+          "x": 0.22973,
+          "y": -0.319639
+        },
+        "boss-turret-3": {
+          "x": -0.261261,
+          "y": -0.179359
+        },
+        "boss-turret-4": {
+          "x": 0.261261,
+          "y": -0.179359
+        },
+        "boss-turret-5": {
+          "x": -0.198198,
+          "y": 0.009018
+        },
+        "boss-turret-6": {
+          "x": 0.198198,
+          "y": 0.009018
+        },
+        "boss-turret-7": {
+          "x": -0.162162,
+          "y": 0.319639
+        },
+        "boss-turret-8": {
+          "x": 0.162162,
+          "y": 0.319639
+        },
+        "coverage-turret-1": {
+          "x": -0.238739,
+          "y": -0.259519
+        },
+        "coverage-turret-2": {
+          "x": 0.22973,
+          "y": -0.255511
+        },
+        "coverage-turret-3": {
+          "x": -0.256757,
+          "y": 0.205411
+        },
+        "coverage-turret-4": {
+          "x": 0.256757,
+          "y": 0.205411
+        }
+      }
+    },
+    "odin": {
+      "url": "assets/ships/odin.png",
+      "basis": "render-platforms",
+      "mounts": {
+        "turret-1": {
+          "x": -0.171141,
+          "y": -0.099198
+        },
+        "turret-2": {
+          "x": 0.171141,
+          "y": -0.099198
+        },
+        "turret-3": {
+          "x": -0.171141,
+          "y": 0.249499
+        },
+        "turret-4": {
+          "x": 0.171141,
+          "y": 0.249499
+        },
+        "boss-turret-1": {
+          "x": -0.057047,
+          "y": -0.319639
+        },
+        "boss-turret-2": {
+          "x": 0.057047,
+          "y": -0.319639
+        },
+        "boss-turret-3": {
+          "x": -0.130872,
+          "y": -0.169339
+        },
+        "boss-turret-4": {
+          "x": 0.130872,
+          "y": -0.169339
+        },
+        "boss-turret-5": {
+          "x": -0.151007,
+          "y": 0.099198
+        },
+        "boss-turret-6": {
+          "x": 0.151007,
+          "y": 0.099198
+        },
+        "boss-turret-7": {
+          "x": -0.11745,
+          "y": 0.309619
+        },
+        "boss-turret-8": {
+          "x": 0.11745,
+          "y": 0.309619
+        },
+        "coverage-turret-1": {
+          "x": -0.07047,
+          "y": -0.259519
+        },
+        "coverage-turret-2": {
+          "x": 0.07047,
+          "y": -0.259519
+        },
+        "coverage-turret-3": {
+          "x": -0.191275,
+          "y": 0.009018
+        },
+        "coverage-turret-4": {
+          "x": 0.191275,
+          "y": 0.009018
+        },
+        "coverage-turret-5": {
+          "x": -0.077181,
+          "y": 0.369739
+        },
+        "coverage-turret-6": {
+          "x": 0.077181,
+          "y": 0.369739
+        }
+      }
+    },
+    "hammerhead-2949-best-in-show": {
+      "url": "assets/ships/hammerhead-2949-best-in-show.png",
+      "version": 2,
+      "basis": "user-marked-six-turret-rings",
+      "turretCount": 6,
+      "preserveTurretDps": true,
+      "mounts": {
+        "turret-1": {
+          "x": 0.355219,
+          "y": -0.384,
+          "facing": 90,
+          "arc": 260
+        },
+        "turret-2": {
+          "x": -0.351852,
+          "y": -0.384,
+          "facing": -90,
+          "arc": 260
+        },
+        "turret-3": {
+          "x": 0.412458,
+          "y": -0.022,
+          "facing": 90,
+          "arc": 260
+        },
+        "turret-4": {
+          "x": -0.415825,
+          "y": -0.022,
+          "facing": -90,
+          "arc": 260
+        },
+        "turret-5": {
+          "x": -0.005051,
+          "y": 0.026,
+          "facing": 0,
+          "arc": 360
+        },
+        "turret-6": {
+          "x": -0.005051,
+          "y": 0.342,
+          "facing": 180,
+          "arc": 300
+        }
+      }
+    }
+  }
+}

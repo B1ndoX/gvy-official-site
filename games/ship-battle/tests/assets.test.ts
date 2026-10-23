@@ -18,3 +18,22 @@ test('old boss calibration gains new independent turrets without duplicating the
  const base=manifest.assets.find(a=>a.shipId==='mauler') as ShipAsset,local={...base,combatVersion:3,mounts:base.mounts.filter(m=>!m.id.startsWith('boss-turret-')).map(m=>({...m,x:.123}))};
  const next=upgradeCombat(local,base);expect(next.mounts).toHaveLength(base.mounts.length);expect(next.mounts[0].x).toBe(.123);expect(next.mounts[0].speed).toBe(base.mounts[0].speed);expect(new Set(next.mounts.map(m=>m.id)).size).toBe(next.mounts.length);expect(upgradeCombat(next,base)).toBe(next);
 });
+
+
+test('new stock turret geometry replaces stale default coordinates even with current combat data; custom calibration survives',()=>{
+ const base=manifest.assets.find(a=>a.shipId==='bengal') as ShipAsset,old={...base,turretLayoutVersion:0,mounts:base.mounts.map(m=>({...m,x:.49,y:.49}))};
+ const next=upgradeCombat(old,base);expect(next.turretLayoutVersion).toBe(base.turretLayoutVersion);expect(next.mounts.filter(m=>m.kind==='turret')).toEqual(base.mounts.filter(m=>m.kind==='turret'));expect(next.mounts.find(m=>m.kind!=='turret')!.x).toBe(.49);
+ const custom=upgradeCombat({...old,calibrated:true},base);expect(custom.mounts.every(m=>m.x===.49)).toBe(true);
+ const imported=upgradeCombat({...old,url:'data:image/png;base64,custom'},base);expect(imported.mounts.every(m=>m.x===.49)).toBe(true);expect(upgradeCombat(next,base)).toBe(next);
+});
+
+test.each(['hammerhead','hammerhead-2949-best-in-show'])('%s uses the six user-marked turret rings without increasing the old total turret output',id=>{
+ const base=manifest.assets.find(a=>a.shipId===id) as ShipAsset,spec=data.find(s=>s.id===id)!;
+ const turrets=spec.mounts.filter(m=>m.kind==='turret');expect(turrets).toHaveLength(6);expect(base.mounts).toEqual(spec.mounts);
+ expect(turrets.reduce((sum,m)=>sum+m.damage/m.cooldown,0)).toBeCloseTo(4*256.5/.919,5);
+ // Four outer rings plus the centre and nose rings, in the shipped image's canonical frame.
+ expect(turrets.filter(m=>Math.abs(m.x)>.3)).toHaveLength(4);expect(turrets.filter(m=>Math.abs(m.x)<.03)).toHaveLength(2);
+ expect(turrets.some(m=>m.y>.3)).toBe(true);expect(new Set(turrets.map(m=>`${m.x}:${m.y}`)).size).toBe(6);
+ const old={...base,turretLayoutVersion:1,mounts:base.mounts.filter(m=>!['turret-5','turret-6'].includes(m.id)).map(m=>m.kind==='turret'?{...m,x:.1,y:.1,facing:0}:m)};
+ expect(upgradeCombat(old,base).mounts).toEqual(base.mounts);expect(upgradeCombat(old,base).turretLayoutVersion).toBe(2);
+});

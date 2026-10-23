@@ -3,9 +3,15 @@ import {clamp,distance,randomGenerator} from './math';
 export interface Asteroid extends Vec {id:number;radius:number;rotation:number}
 export function createAsteroids(ships:Ship[],arena:number,seed:number):Asteroid[]{
  const random=randomGenerator(seed^0xa57e),rocks:Asteroid[]=[];
- for(let i=0;i<12;i++)for(let attempt=0;attempt<150;attempt++){
-  const rock={id:i+1,x:(random()-.5)*arena*1.2,y:(random()-.5)*arena*1.2,radius:i<2?110+random()*75:i<6?45+random()*45:16+random()*18,rotation:random()*Math.PI*2};
-  if(ships.some(s=>distance(s,rock)<s.radius+rock.radius+150)||rocks.some(r=>distance(r,rock)<r.radius+rock.radius+120))continue;
+ // Eighteen separated cells across three area bands keep the centre from becoming a rock pile.
+ const bands=[[.08,.45],[.45,.66],[.66,.86]],offset=random()*Math.PI*2;
+ for(let i=0;i<18;i++)for(let attempt=0;attempt<150;attempt++){
+  const band=Math.floor(i/6),sector=i%6,[inner,outer]=bands[band];
+  const slot=attempt<75?sector+.15+random()*.7:random()*6;
+  const angle=offset+(slot+band*.31)*Math.PI/3;
+  const radius=arena*Math.sqrt(inner*inner+random()*(outer*outer-inner*inner));
+  const rock={id:i+1,x:Math.cos(angle)*radius,y:Math.sin(angle)*radius,radius:i===12||i===15?110+random()*75:i%3===1?45+random()*45:16+random()*18,rotation:random()*Math.PI*2};
+  if(Math.hypot(rock.x,rock.y)+rock.radius>arena*.94||ships.some(s=>distance(s,rock)<s.radius+rock.radius+150)||rocks.some(r=>distance(r,rock)<r.radius+rock.radius+120))continue;
   rocks.push(rock);break;
  }return rocks;
 }
