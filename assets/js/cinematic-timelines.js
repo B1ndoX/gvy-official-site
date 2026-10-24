@@ -1,6 +1,18 @@
 const TIMELINE_PREFIX = "gvy-";
 const LARGE_16_9_DESKTOP_QUERY = "(min-width: 1920px) and (max-width: 2560px) and (min-height: 1100px) and (min-aspect-ratio: 17 / 10)";
 
+export function selectOperationIndex(currentTime, activeIndex, operationCount, stageSpan = 2.5) {
+  const lastIndex = Math.max(0, operationCount - 1);
+  let nextIndex = Math.max(0, Math.min(lastIndex, activeIndex));
+  // Ignore tiny reversals at a fade boundary while allowing deliberate backtracking.
+  const boundaryMargin = 0.04;
+  while (nextIndex < lastIndex
+    && currentTime >= (nextIndex + 1) * stageSpan - 0.22 + boundaryMargin) nextIndex += 1;
+  while (nextIndex > 0
+    && currentTime < nextIndex * stageSpan - 0.22 - boundaryMargin) nextIndex -= 1;
+  return nextIndex;
+}
+
 // Reallocate the existing scroll budget to reading, without extending a scene.
 function readingPacing(count, baseline) {
   const gaps = Math.max(0, count - 1);
@@ -394,10 +406,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     let activeOperationIndex = -1;
     const syncActiveOperation = () => {
       const currentTime = operationsTimeline?.time?.() || 0;
-      let nextIndex = 0;
-      for (let index = 1; index < operationCount; index += 1) {
-        if (currentTime >= index * stageSpan - 0.22) nextIndex = index;
-      }
+      const nextIndex = selectOperationIndex(currentTime, activeOperationIndex, operationCount, stageSpan);
       if (nextIndex !== activeOperationIndex) {
         activeOperationIndex = nextIndex;
         operations.dataset.operationActive = String(nextIndex);
@@ -421,6 +430,7 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
     };
 
     operationsTimeline = gsap.timeline({
+      onUpdate: syncActiveOperation,
       scrollTrigger: {
         id: "gvy-operations",
         trigger: operations,
@@ -429,7 +439,6 @@ function createDesktopTimelines(gsap, ScrollTrigger, root) {
         end: "bottom bottom",
         scrub: 0.42,
         invalidateOnRefresh: true,
-        onUpdate: syncActiveOperation,
         onRefresh: syncActiveOperation,
       },
     });
