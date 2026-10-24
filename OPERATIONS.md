@@ -12,27 +12,48 @@
 4. 验证同样按关联范围选择。第二款游戏的改动只测该游戏、构建产物和必要官网入口；没有相关变化，不默认重跑视频长测、相册、第一款游戏或整个站点。文档修改只检查文档差异、路径和状态准确性。
 5. 任务完成、阶段交接或压缩前，更新这组现有项目资料和外部交接，准确区分最终要求、中途撤回方案、已部署与仅本地内容、实际通过的检查和未测范围。不得把旧参数的胜率当成新参数统计。
 
-### 当前发布进度：用户已授权同步（2026-10-24，发布中）
+### 当前发布：四段行动滚动修复（2026-10-24，用户已授权部署）
 
-- 用户最新“没问题后就同步”已授权当前确认预览同步官网。范围：GVY-UI-A01仅复制群号/卡片微光（行动标签已恢复原样）；此前确认未发布的官网两项动效、20颗陨石、小屏多条击杀/排行间距修正一并保留。
-- 用户随后明确取消刚加的内部视频预览框发光/阴影，已恢复原fleet-game-media规则；最终不含内部预览边光，仅保留之前确认的外层卡片微光。38相关检查/5尺寸Chrome/Clipboard/清理检查与此前地形15项、动效5尺寸证据已在下节记录，不重复无关测试。发布前运行包--check重建一致、54个JS语法检查通过，508产物/301引用检查通过。
-- 已fetch确认main与origin/main均9a33f2d无差异，建立`feat/gvy-ui-a01-release-20261024`分支保留完整本地改动；正式回退标签`backup-production-before-ui-a01-20261024`指向9a33f2d。单独撤回A01仍使用下节5文件增量，不等于全批退回PR22。
-- 已推送候选bf4758f及正式回退标签，尚未创建PR/合并/上线。用户取消内部预览边光后以普通追加提交修正，不强推；最终PR仅按差异发布已确认内容。当前main保护严格要求Site on EdgeOne Node22及Full runtime/publisher Node24两个检查；既有CI仍自动跑全站串行浏览器，不在本次候选临时改CI或跳过门禁，本机不再重复全站长测。通过后普通合并，等EdgeOne再核对双域相关文件SHA和新交互；没有相关视频素材变化，不做全视频长测。
+- 用户最新明确“部署”，授权本次已验看的四段行动滚动修复；Apple其余建议仅分析，不实施/夹带。产品范围仅cinematic-timelines.js、进度CSS规则、新operation-progress测试及关联现有架构/交接文档。
+- 源文件和dist关键文件SHA已与刚才通过43项/6尺寸检查的版本核对一致，复用已通过证据，不重复本机全站测试。正式暂仍PR23/de6fece；待PR两个原必需检查通过后普通合并，再等待EdgeOne并核4文件×双域SHA与行动交互。既有CI仍自动全套，不修改/绕过门禁。
+- 发布分支fix/operation-scroll-sync-20261024，完整生产回退标签backup-production-before-operation-scroll-20261024指向de6fece。证据位于gvy-apple-operation-20261024/release/。本节发布进度优先于下方原本地验收记录；完成后本地更新交接，不为状态文档再次触发CI。
 
-### 当前本地候选 GVY-UI-A01（2026-10-24，未部署，可单独撤回）
+### 当前本地任务：Apple整站模式参考＋四段行动滚动修复（2026-10-24，未部署）
+
+- 用户要求用REA研究Apple官网适合舰队站的升级，并明确优化截图的4条行动进度，反馈不顺/反复。已仅改`assets/js/cinematic-timelines.js`与原CSS进度规则，新增`tests/operation-progress.test.js`；未改游戏、相册、媒体内容、首屏距离、其他官网模块、依赖/CI/云端。正式仍下节PR23/de6fece；本轮没有提交、推送或部署，不把上轮同步授权当本批自动发布。
+- 根因实测：原ScrollTrigger.onUpdate读scrub尚在追赶的timeline.time；停手后画面继续、阶段/进度/视频选中仍旧，下次滚动才补跳。进度还叠CSS transform120ms，边界微小反向则反复换项。已改为原timeline自身onUpdate同步并保留onRefresh/原scrub .42，删除进度transform过渡，保留hover反馈；阶段在原阈值±.04时间线单位形成双向余量（1440视口每侧约8px），允许正常向上回看及多阶段直接跳转，无定时锁或第二套scroll/RAF。
+- 真实Chrome前后复现：time2.56148停手后旧active0、新active1；边界±.012摆动旧版0/1反复、新版保持。1440×900全部geometry逐项一致：行动start3852/end5850、全页10769px；首屏/段落/滚动预算不增加。三处边界越过±.06可双向切换；连续下滚阶段单调；快速连点最后目标1成功，已加载视频loadstart增量[0,0,0,0]且最多1段播放；cleanup后0触发器/0行动播放。
+- 43项相关Node检查通过（含新4项行为回归），语法/构建/508产物301引用/diff通过。Chrome尺寸1440×900、1920×1080、2560×1440、700×800、390×844、3840×2160无横溢出/页面控制台错误；桌面1个行动时间线，手机/超宽原纵向静态分支保持。未重跑全站/视频、游戏、相册长测，也不冒称Safari/实体机。Browser skill缺席，采用此前用户授权独立Playwright。
+- Apple按代表页面类型研究：主页全局导航/主次入口/画廊，Mac总览分类/卡片/详情，iPhone详情章节/画廊、HomeView分段、服务总览。REA被动读取5页同源DOM/可访问性/实际脚本，Playwright实际页签/画廊/详情关闭与390截图。不是抓遍商店/支持/所有地区页面，不宣称Apple全站性能测量。推荐行动概览、真实内容按需详情、招募主次入口和手机内容优先，仅候选未实施；原行动标签保持原样，不恢复已取消的内部视频框发光。现有相册/懒加载/减少动态效果不重复建设。
+- 证据`/Users/bindox/Documents/Codex/Previews/gvy-apple-operation-20261024/`：analysis.md、manifest.json、rea-evidence.json（21.9MB/6记录，含一次大结果保留后导出，未重复分析）、apple-source-findings.json/交互/图；before/after-operation.json、operation-qa.json、unit.log、6尺寸截图及operation-smooth-preview.webm。5页REA证据ID见analysis。Apple的hysteresis字样属3D LOD，不误说为其UI防抖算法；Mac详情Escape/焦点恢复未证实通过，不原样照搬。
+- 本地8021预览进程已重启并保留；`http://127.0.0.1:8021/#operations`刷新看修复。当前main保留本轮2源文件/新测试、ARCHITECTURE/本文件交接变更，外部交接同步。下一步由用户验看及选择其他建议，不自动扩改或发布。
+
+### 最新正式版本：PR23 / GVY-UI-A01 已上线（2026-10-24）
+
+- 用户“没问题后就同步”授权的确认预览已正常发布。PR [23](https://github.com/B1ndoX/gvy-official-site/pull/23)，最终候选`e5fe3c3ed2b2214418ea48fc541a52185ad80658`，正式`main=de6fecea2798643da8aab94021fda3d77d7cc6d9`，北京时间2026-10-24 00:56:38合并。Verify `39988289773` 的Node22/Node24两个必需检查全成功后严格匹配候选普通合并；没有强推、绕过保护、修改CI或云端设置。仓库不支持auto-merge，未为此修改仓库设置。
+- 两个正式域`https://www.gvyvoyagers.vip/`、`https://gvyvoyagers.vip/`均已更新：本批9个关联文件×双域，18/18 SHA-256一致。合并后首次0/18属于EdgeOne尚未完成，后续均通过；一次TLS EOF仅重试该文件后成功，没有清缓存或重复部署。2026-10-24 07:54（北京时间）完成最终线上交互核对。
+- 最终A01仅保留QQ复制胶囊/群号附近小提示，以及两张游戏选择卡的外层边缘微光。**用户取消的内部视频预览框发光/阴影已移除**，两个`fleet-game-media`实测`box-shadow:none`且无新增`::after`；行动标签/进度条恢复原样。不要把已取消内框效果的旧截图当最终预览。
+- 同批此前确认内容现已上线：官网统一动效节奏/每段一个主视觉（首屏及全页滚动距离不增加）、陨石总数20（内/中/外6/7/7、轻微分散）、解除小屏击杀仅1条/强制单行/矮屏隐藏限制、排行按真实交火卡片高度留6–10px呼吸位置且卡片固定右下。排行默认仍原视口逻辑，未改全尺寸默认开启；未变更本轮武器/BOSS伤害。
+- 最终运行包`games/ship-battle/assets/index-C86zm4Nl.js` / `index-BqBFnh5y.css`。线上Chrome真实剪贴板复制并读回691311516后恢复原剪贴板，宽度不变；游戏选择前iframe未加载；第二款从官网入口启动、运行3秒、暂停及交火卡片可见通过。390×844模拟触屏复制反馈、无横向溢出通过；0页面/控制台错误。启动阶段文字在紧凑布局被正常隐藏，测试从可见断言改为已附着状态断言，无产品代码修改；不冒称Safari/实体机或新胜率统计。
+- 发布证据`/Users/bindox/Documents/Codex/Previews/GVY-UI-A01/release/`：release-state.json、expected-live-files.json、live-fingerprints.json；production/live-ui.json和recruit-desktop.png、recruit-phone.png、game-cards.png、ship-paused.png。原38项/5尺寸/剪贴板失败与清理检查、地形及动效证据见下节，不重复无关全站/视频长测；既有必需CI自动全套已通过。
+- 本地已正常fetch并快进到`main=origin/main=de6fece`，产品源文件与发布一致，仅本文件最终状态未提交；外部交接已同步。交接文档本地更新，不为状态再次触发发布。全批正式回退标签`backup-production-before-ui-a01-20261024`指向上版`9a33f2d`；只撤回A01时按下节5文件增量，不等于整批退回PR22。
+
+### GVY-UI-A01 实现与局部回退记录（已发布，可单独撤回）
 
 - 用户先要求按建议做一版并给特别编号，随后修正为“只保留复制群号和边缘微光，行动标签恢复原样”，并要求用REA找按钮复刻、小号提示靠近群号。最终A01只有这两项；初步行动文字标签已完整撤回，现有4条进度线的HTML/CSS与A01开始前备份逐字节相同，原阶段/媒体逻辑未动。前轮官网两项动效、20颗陨石、交火框右下回退等全部保留。
 - 按钮参考Aceternity官方`https://ui.aceternity.com/components/tailwindcss-buttons`中的Tailwind Connect：REA实际同源脚本证据ev_206af3c468611ebb08c439416ffe30b2446f2656e33c3bc941bae15e00402e95；已查看原按钮悬停截图，按深色胶囊/顶部radial柔光/底部细渐变亮线复刻，使用原生CSS而非安装React/Motion。触控高度44px以上、复制图标与结果占位固定；初版方形金边按钮及全行下方大提示已撤回。小号10–12px提示定位在群号胶囊正下5px，与该控制紧邻。
 - QQ复制由新增`assets/js/recruit-actions.js`单独负责，通过现有cinematic-homepage唯一入口初始化/清理。真实clipboard Promise完成才显示成功；等待禁用防重复，失败恢复并选中可见群号以手动复制，cleanup后忽略旧异步结果。无独立计时器、无全局监听。边缘微光仅2张游戏选择卡，复用game-card-previews原指针RAF计算角度，离开清除；粗指针/减少动态效果保持静态，保留原短视频预览和游戏懒加载，不改两款游戏内部。
-- 变更产品文件仅index.html、assets/cinematic-homepage.css、assets/js/cinematic-homepage.js、assets/js/game-card-previews.js及新增recruit-actions.js；HTML根data-ui-revision=GVY-UI-A01用于识别。媒体/相册/游戏战斗/依赖/CI/云端均未改，无推送或部署。
-- 回退基线在`/Users/bindox/Documents/Codex/Previews/GVY-UI-A01/`：manifest.json包含HEAD、开始前dirty状态及5文件before/after SHA；before/after保留逐字节源文件；GVY-UI-A01.patch仅本版增量，`git apply --check --reverse`已通过。开始前完整dirty补丁workspace-before.patch和当时untracked运行包也保存。不能直接reset到HEAD（会误删其他未部署工作）。
-- 用户以后明确要求“撤回GVY-UI-A01”时，可运行该目录revert.py；它先核对全部after SHA，任一文件后续改变就拒绝写入，全部匹配才恢复本版5个源文件/删除新增模块。然后在官网仓库执行npm run build与check:dist更新本地预览，并更新本节/外部交接。出现后续修改时应检查增量补丁并有选择回退，不覆盖新工作。回退脚本尚未实际执行，反向补丁仅只读检查通过。
+- 变更产品文件仅index.html、assets/cinematic-homepage.css、assets/js/cinematic-homepage.js、assets/js/game-card-previews.js及新增recruit-actions.js；HTML根data-ui-revision=GVY-UI-A01用于识别。A01自身未改媒体/相册/游戏战斗/依赖/CI/云端；本版已随PR23发布，其他同批确认内容见上节。
+- 回退基线在`/Users/bindox/Documents/Codex/Previews/GVY-UI-A01/`：manifest.json包含HEAD、开始前dirty状态及5文件before/after SHA；before/after保留逐字节源文件；GVY-UI-A01.patch仅本版增量，`git apply --check --reverse`已通过。开始前完整dirty补丁workspace-before.patch和当时untracked运行包也保存。不得直接reset或强推；该补丁只撤回A01，保留同批已确认的动效、地形与游戏UI。
+- 用户以后明确要求“撤回GVY-UI-A01”时，可运行该目录revert.py；它先核对全部after SHA，任一文件后续改变就拒绝写入，全部匹配才恢复本版5个源文件/删除新增模块。先在正常工作分支执行，随后npm run build与check:dist更新本地预览，按相同受保护PR流程发布回退并更新本节/外部交接。出现后续修改时应检查增量补丁并有选择回退，不覆盖新工作。回退脚本尚未实际执行，反向补丁仅只读检查通过。
 - 验证：最终38项现有页面契约/手机高度稳定/游戏窗口生命周期检查通过；构建、508文件/301本地引用、改动JS语法/diff检查通过。独立Chrome真实API写入并读回QQ群号后恢复原剪贴板；另受控Promise检查等待去重/固定宽度、拒绝后可重试/手动复制、清理后旧结果不更新。真实hover检查边缘角度变化/离开清除，游戏选择时iframe仍未加载；手机触控复制与卡片静态、减少动态效果静态通过。
 - 尺寸1440×900、700×800、390×844（触屏模拟）、2560×1440、3840×2160：无横溢出/页面或控制台错误，首屏高度、全页高度与A01前一致；非招募文字触发器起止均相同。招募文字触发器按局部控件高度重新测量，未手工调整时间线。没有重跑无关全站/视频长测、Safari/实体机或游戏数值测试。Browser skill不在当前目录，采用用户已授权独立Playwright。
 - 最终证据同目录qa.json、unit-final.log、cleanup-check.json、copy-button-detail.png、after-recruit.png/phone.png、after-game-cards.png/phone.png；reference/含原按钮截图、公开代码/REA bundle约50MB（内含之前保留观察，不等于本轮重复抓全站）。前期qa-failure/旧行动标签截图属于已撤回尝试，不描述为最终行为。
-- 本地`http://127.0.0.1:8021/?preview=GVY-UI-A01#recruit`已构建更新，需刷新已有页面；query只标识本次预览而非冻结独立站点。正式仍PR22/main9a33f2d。外部交接同步，原8021进程保留，不为本版自动发布。
+- 本地`http://127.0.0.1:8021/?preview=GVY-UI-A01#recruit`已构建更新，需刷新已有页面；query只标识本次预览而非冻结独立站点。正式现为PR23/main de6fece；本地预览query不是独立冻结版本。外部交接同步，原8021进程保留。
 
-### 最新只读分析：Aceternity UI（2026-10-23，未实施/未部署）
+### 实施历史（下文“未部署”等为当时状态，当前以顶部PR23为准）
+
+### Aceternity UI 初次只读分析（2026-10-23）
 
 - 用户指定`https://ui.aceternity.com/components`并要求用REA研究适合官网的改良。本轮仅分析，不将“看看哪些可以用”解释为全站重做或发布授权；前轮本地交火框回退/两项动效/20颗陨石保持。
 - 通览114个唯一组件条目；REA捕获目录和8重点页面DOM/可访问性/实际同源脚本（Glowing、Stateful、Expandable、Bento、Apple Carousel、Tabs、Timeline、Resizable Navbar），另读18个相关官方公开源码。桌面实际hover/状态按钮/展开卡Escape/Tabs交互，以及6种预览390×844容器检查；没有114全量交互、Safari/实体手机、FPS/耗电或全网抓包结论。REA附着/同源过滤局限保留，客户端大结果用retained ledger导出恢复，未重复分析。
@@ -72,7 +93,7 @@
 - 观察到重点概览卡、按需查看的产品细节、固定局部导航、FAQ展开，脚本有响应式图片/媒体按需加载、统一动画、减少动态效果分支。适合官网的建议：优先统一各段标题/说明/画面的进入与停留节奏；让活动每段只有一个视觉主角；以现有四类行动做简明概览；招募条件/流程可按需展开；相册沿用既有控制器完善状态反馈。保留深色星际风格、首屏即播与既有媒体清晰度。
 - 官网本已具备响应式图片、离屏媒体预热、相册控制/键盘与减少动态效果处理，不应为模仿Apple再叠第二套控制器。没有修改首页布局、视频、招募文案、相册或导航，也没有引入Apple脚本/素材。这段记录初次分析；随后用户已选择前两项，见本节顶部。其他建议仍未获实施选择，全部改动都禁止自动部署。
 
-### 当前正式版本（2026-10-23）
+### 上一个正式版本（2026-10-23，PR22）
 
 - PR：[22](https://github.com/B1ndoX/gvy-official-site/pull/22)，候选 `39ac81fb425f69246a02e8845b4c02bc5af55d9c`；正式 `main` 为 `9a33f2d0683f219ca6d2bb339d852ee09692392b`，北京时间 2026-10-23 14:36:58 正常合并。
 - EdgeOne 双域发布完成；本轮 40 项关键文件 SHA-256 全部匹配。线上真实浏览器完整跑完挑战和乱斗：挑战五关通关、幸存 7/32，游戏时长03:55；乱斗最终幸存者正常结算，游戏时长02:23。两局都是实际4×运行，0页面/控制台错误；单局结果不代表总体胜率。
@@ -85,10 +106,9 @@
 
 ### 当前工作区与待办
 
-- PR22游戏代码已部署；本地基于上述正式 `main`，另有本节顶部所列官网动效、陨石20颗与UI变更尚未发布。
-- 前轮交接要求的`README.md`/本文件和本轮UI/运行包改动均在本地；外部《舰队官网相关.md》已同步。不要为文档额外触发发布。
-- **自动 CI 按变更路径分流尚未实施。** 本轮既有工作流对每个PR自动执行全站串行浏览器测试，浏览器阶段实际约15分钟；用户已明确要求今后收紧。后续若处理发布流程，单独改相关工作流及其验证，保留必需检查语义，按真实关联选择测试；不能把“已记录规则”说成“流水线已改好”。不要在已通过门禁的发布候选里临时夹带CI改造。
-- 不重复部署PR22，不默认重跑无关长测；有新任务先核对 `git status`、分支、最新用户范围和资料。
+- PR23已正式发布，本地`main`跟踪`origin/main`，产品源码/生成运行包无待发修改；仅本文件最终交接状态本地未提交，外部《舰队官网相关.md》已同步。不要为文档额外触发发布。
+- **自动CI按变更路径分流尚未实施。** 既有工作流对每个PR自动执行全站串行浏览器测试，浏览器阶段约15分钟；用户已明确要求今后收紧。后续若处理发布流程，作为独立任务改相关工作流及验证，保留必需检查语义，按真实关联选择测试；不能把“已记录规则”说成“流水线已改好”。
+- 不重复部署PR23，不默认重跑已通过或无关长测；有新任务先核对`git status`、分支、最新用户范围和现有资料。
 
 ## 1. 运行时边界
 
