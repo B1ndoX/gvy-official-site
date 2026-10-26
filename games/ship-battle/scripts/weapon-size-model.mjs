@@ -15,4 +15,3 @@ export function sizedGunParameters(weapon,family,catalog,classify){
  return {damage:rule.damage*scale**sizeRules.damageSizePower*modelDamage,cooldown:Math.max(.04,rule.interval*pace)/.75,
   ...(rule.burstCount?{burstCount:rule.burstCount,burstCooldown:rule.burstRecovery*pace/.75}:{})};
 }
-
