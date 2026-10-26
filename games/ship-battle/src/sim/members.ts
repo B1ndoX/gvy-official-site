@@ -1,7 +1,7 @@
 import type { Member, RosterEntry, ShipSpec, Standing, BattleMode } from './types';
 import { randomGenerator, mixSeed } from './math';
 
-export const isMemberShip=(spec:ShipSpec)=>!spec.bossOnly&&spec.battleReady!==false;
+export const isMemberShip=(spec:ShipSpec)=>!spec.bossOnly&&spec.battleReady!==false&&spec.mounts.some(m=>!m.interceptsOnly);
 
 /** Uniform draw with replacement: every member has the same access to the full pool. */
 export function assignMemberShips(members:Member[],specs:ShipSpec[],seed:number):RosterEntry[]{

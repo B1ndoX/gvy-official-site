@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "mode": "reference",
+  "description": "Use sourced hull/shield health, single-shot damage, RPM and projectile speed before balancing. Keep navigation AI, beam inertia, interception and collision rules. Missing source parameters remain explicitly estimated.",
+  "turrets": {"referenceSize": 3, "referenceTurnRate": 0.375, "sizePower": 1.3, "minimumTurnRate": 0.08, "maximumTurnRate": 0.65},
+  "estimatedBeam": {"referenceSize": 10, "referenceDps": 15000, "sizePower": 2}
+}

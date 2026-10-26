@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "description": "Game-scale ordinary gun conversion. S-size controls the base curve; matching-version model damage/RPM relative to the same size and family preserve model differences. Seconds are real time at 1x. Reviewed signature weapons, guided ordnance and interception-only PDC are excluded.",
+  "referenceSize": 3,
+  "damageSizePower": 1.65,
+  "modelDamagePower": 0.65,
+  "modelDamageRatio": [0.4, 3],
+  "modelCadencePower": 0.5,
+  "modelCadenceRatio": [0.5, 3],
+  "mounting": "Each installed barrel fires its own projectile with the shared model's single-barrel damage. No merged damage or diminishing gun-count multiplier.",
+  "families": {
+    "repeater": {"damage": 50, "interval": 0.18, "sizeCadencePower": 0.25},
+    "energy-cannon": {"damage": 180, "interval": 0.6, "sizeCadencePower": 0.35},
+    "ballistic-cannon": {"damage": 220, "interval": 0.85, "sizeCadencePower": 0.35},
+    "gatling": {"damage": 22, "interval": 0.06, "burstRecovery": 0.34, "burstCount": 4, "sizeCadencePower": 0.25},
+    "scatter": {"damage": 220, "interval": 1, "sizeCadencePower": 0.35},
+    "distortion": {"damage": 70, "interval": 0.32, "sizeCadencePower": 0.3}
+  }
+}

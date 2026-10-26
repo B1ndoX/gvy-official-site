@@ -28,7 +28,10 @@
             0
           ],
           "width": 3.2,
-          "color": 6936831
+          "color": 6936831,
+          "weaponId": "s10-exodus-10-laser-beam",
+          "weaponName": "出路-10 激光光束炮",
+          "weaponSize": 10
         }
       ],
       "sources": [
@@ -66,7 +69,10 @@
             0
           ],
           "width": 2.8,
-          "color": 8117247
+          "color": 8117247,
+          "weaponId": "s10-supremacy-10t-laser-beam",
+          "weaponName": "霸权-10T 激光光束炮",
+          "weaponSize": 10
         }
       ],
       "sources": [
@@ -105,7 +111,10 @@
             0.09
           ],
           "width": 3.8,
-          "color": 15295045
+          "color": 15295045,
+          "weaponId": "reference-s10-beam",
+          "weaponSize": 10,
+          "weaponCount": 1
         }
       ],
       "sources": [
@@ -144,7 +153,10 @@
           ],
           "width": 4.2,
           "color": 16759395,
-          "beamWidth": 45
+          "beamWidth": 45,
+          "weaponId": "reference-s12-beam",
+          "weaponSize": 12,
+          "weaponCount": 1
         }
       ],
       "sources": [
@@ -177,7 +189,10 @@
           "charge": 1.5999999999999999,
           "speed": 680,
           "turnRate": 3,
-          "color": 10216959
+          "color": 10216959,
+          "weaponId": "s10-destroyer-mass-driver-cannon",
+          "weaponName": "毁灭者 电磁加农炮",
+          "weaponSize": 10
         }
       ],
       "sources": [
@@ -271,7 +286,10 @@
           "turnRate": 0.65,
           "role": "anti-capital",
           "charge": 0.5333333333333333,
-          "color": 16758379
+          "color": 16758379,
+          "weaponId": "user-confirmed-retaliator-module",
+          "weaponName": "鱼雷模块（保留已确认配置）",
+          "weaponSize": 9
         }
       ],
       "sources": [
@@ -300,7 +318,10 @@
           "turnRate": 0.65,
           "role": "anti-capital",
           "charge": 0.5333333333333333,
-          "color": 16758379
+          "color": 16758379,
+          "weaponId": "user-confirmed-retaliator-module",
+          "weaponName": "鱼雷模块（保留已确认配置）",
+          "weaponSize": 9
         }
       ],
       "sources": [
@@ -323,21 +344,31 @@
           "facing": 0,
           "arc": 100,
           "range": 3000,
-          "damage": 11500,
+          "damage": 65000,
           "cooldown": 21.333333333333332,
-          "speed": 290,
-          "turnRate": 0.65,
+          "speed": 270,
+          "turnRate": 0.3,
           "role": "anti-capital",
           "charge": 0.5333333333333333,
           "color": 16758379,
-          "width": 1.7
+          "width": 1.7,
+          "impact": "heavy-torpedo",
+          "ammo": 28,
+          "launcherCount": 4,
+          "barrelSpacing": 2,
+          "weaponName": "VT-T10 “真理” 鱼雷",
+          "weaponSize": 10,
+          "weaponId": "s10-vt-t10-veritas-torpedo"
         }
       ],
       "sources": [
         "https://robertsspaceindustries.com/en/comm-link/transmission/19933-Aegis-Retaliator",
         "https://media.robertsspaceindustries.com/9kbjk79zwgy37/source.pdf"
       ],
-      "combatVersion": 5
+      "combatVersion": 10,
+      "balance": {
+        "note": "S10 fixed impact damage scaled from the matching bot snapshot; no victim-size multiplier or ordinary 55% cap. Encounter boss protection retained. Four ports alternate, one torpedo per launch, shared stock 28."
+      }
     },
     {
       "id": "ares-inferno",
@@ -361,7 +392,10 @@
           "turnRate": 3,
           "burstCount": 10,
           "burstCooldown": 1.1,
-          "color": 16762745
+          "color": 16762745,
+          "weaponId": "s7-sf7b-gatling",
+          "weaponName": "SF7B 加特林",
+          "weaponSize": 7
         }
       ],
       "sources": [
@@ -369,6 +403,72 @@
       ],
       "supportDps": 174,
       "combatVersion": 5
+    },
+    {
+      "id": "perseus",
+      "remove": [
+        "turret-2",
+        "turret-3",
+        "turret-4"
+      ],
+      "mounts": [
+        {
+          "id": "turret-2",
+          "kind": "turret",
+          "x": 0,
+          "y": -0.265,
+          "facing": 0,
+          "arc": 300,
+          "range": 1800,
+          "damage": 6750,
+          "cooldown": 4,
+          "speed": 406.4,
+          "turnRate": 0.2,
+          "role": "anti-capital",
+          "barrels": 2,
+          "barrelSpacing": 1.6,
+          "projectileKind": "ballistic",
+          "impact": "heavy-cannon",
+          "weaponName": "RSI 美杜莎 加农炮",
+          "weaponSize": 8,
+          "width": 2.2,
+          "color": 16764042,
+          "cooldownJitter": 0.12,
+          "weaponId": "s8-rsi-medusa-cannon"
+        },
+        {
+          "id": "turret-3",
+          "kind": "turret",
+          "x": 0,
+          "y": 0.15,
+          "facing": 0,
+          "arc": 300,
+          "range": 1800,
+          "damage": 6750,
+          "cooldown": 4,
+          "speed": 406.4,
+          "turnRate": 0.2,
+          "role": "anti-capital",
+          "barrels": 2,
+          "barrelSpacing": 1.6,
+          "projectileKind": "ballistic",
+          "impact": "heavy-cannon",
+          "weaponName": "RSI 美杜莎 加农炮",
+          "weaponSize": 8,
+          "width": 2.2,
+          "color": 16764042,
+          "cooldownJitter": 0.12,
+          "weaponId": "s8-rsi-medusa-cannon"
+        }
+      ],
+      "sources": [
+        "Star Citizen bot public Erkul snapshot 4.10.2-LIVE.12913470",
+        "User-marked bow and belly turrets, 2026-10-25"
+      ],
+      "balance": {
+        "note": "Two independently aimed twin S8 ballistic turrets; each shell carries one per-barrel damage budget. Actual trajectories and slow traverse limit fighter accuracy; no target-size damage multiplier."
+      },
+      "combatVersion": 10
     }
   ],
   "capitalCoverage": {

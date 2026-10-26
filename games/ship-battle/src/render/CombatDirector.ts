@@ -89,3 +89,9 @@ export function trackedCenter(center:{x:number;y:number},previous:{id:number;x:n
  const x=center.x+dx,y=center.y+dy;
  return {x:x+(frame.x-x)*blend,y:y+(frame.y-y)*blend};
 }
+
+/** A previous giant hull/overview must not make the next fighter microscopic.
+ * This constrains only automatic framing, leaving the user's zoom multiplier. */
+export function spectatorSpan(current:number,wanted:number,changed:boolean){
+ return changed?Math.max(wanted*.6,Math.min(wanted*1.7,current)):current;
+}

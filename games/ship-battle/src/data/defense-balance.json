@@ -1,6 +1,6 @@
 {
-  "version": 5,
-  "description": "Game defense values, not official Star Citizen statistics. Regenerate ships.json with npm run balance:generate.",
+  "version": 6,
+  "description": "Shared combat protections, recovery and non-boss output. Physical conversion: ship-game-balance.json; boss-only modes: boss-mode-balance.json.",
   "tiers": [
     {
       "id": "snub",
@@ -57,73 +57,6 @@
       "shield": 40000
     }
   ],
-  "roles": {
-    "fighter-heavy": {
-      "hull": 1.5,
-      "shield": 1.4
-    },
-    "fighter-medium": {
-      "hull": 1.2,
-      "shield": 1.15
-    },
-    "fighter-light": {
-      "hull": 1,
-      "shield": 1
-    },
-    "stealth": {
-      "hull": 0.95,
-      "shield": 0.85
-    },
-    "racing": {
-      "hull": 0.75,
-      "shield": 0.75
-    },
-    "military": {
-      "hull": 1.15,
-      "shield": 1.1
-    },
-    "armored-transport": {
-      "hull": 1.05,
-      "shield": 1
-    },
-    "civilian": {
-      "hull": 0.8,
-      "shield": 0.85
-    },
-    "multirole": {
-      "hull": 0.95,
-      "shield": 0.95
-    }
-  },
-  "bossBase": {
-    "mauler": {
-      "hull": 24000,
-      "shield": 13000
-    },
-    "odin": {
-      "hull": 30000,
-      "shield": 16500
-    },
-    "pegasus": {
-      "hull": 34000,
-      "shield": 18500
-    },
-    "bengal": {
-      "hull": 36000,
-      "shield": 19500
-    },
-    "retribution": {
-      "hull": 66000,
-      "shield": 36000
-    }
-  },
-  "challengeSeconds": [
-    45,
-    55,
-    65,
-    75,
-    90
-  ],
   "hitEfficiency": {
     "laser": 0.85,
     "turret": 0.9,
@@ -135,7 +68,6 @@
   },
   "shieldRecoveryDelay": 7,
   "shieldRecoveryPerSecond": 0.002,
-  "defenseMultiplier": 4,
   "intermission": {
     "seconds": 6,
     "hullRecovery": 0.15,
@@ -155,90 +87,9 @@
       "perSecond": 0.035
     }
   },
-  "weaponDps": {
-    "snub": 160,
-    "light": 300,
-    "medium": 500,
-    "gunship": 850,
-    "corvette": 1350,
-    "frigate": 2000,
-    "destroyer": 2800,
-    "carrier": 3400,
-    "supercapital": 4000
-  },
-  "roleDps": {
-    "fighter-heavy": 1.25,
-    "fighter-medium": 1.1,
-    "fighter-light": 1,
-    "stealth": 1.1,
-    "racing": 0.65,
-    "military": 1.15,
-    "armored-transport": 0.7,
-    "civilian": 0.55,
-    "multirole": 0.85
-  },
-  "bossDps": {
-    "mauler": 5000,
-    "odin": 6000,
-    "pegasus": 6500,
-    "bengal": 7500,
-    "retribution": 8500
-  },
-  "challengeDamageMultiplier": 0.45,
   "escortDefenseMultiplier": 0.4,
   "escortDamageMultiplier": 0.35,
   "nonBossWeaponDamageMultiplier": 1.265,
   "memberBeamDamageMultiplier": 0.9,
-  "nonBossBeamDamageMultiplier": 0.9,
-  "bossDamageMultiplier": 3,
-  "handling": {
-    "small": {
-      "speed": 245,
-      "acceleration": 155,
-      "turnRate": 3.5,
-      "laserCooldown": 0.38,
-      "turretCooldown": 0.72,
-      "missileCooldown": 9
-    },
-    "medium": {
-      "speed": 150,
-      "acceleration": 72,
-      "turnRate": 1.45,
-      "laserCooldown": 0.9,
-      "turretCooldown": 1.35,
-      "missileCooldown": 10.5
-    },
-    "large": {
-      "speed": 82,
-      "acceleration": 28,
-      "turnRate": 0.55,
-      "laserCooldown": 3.1,
-      "turretCooldown": 3.6,
-      "missileCooldown": 14
-    }
-  },
-  "roleMobility": {
-    "fighter-heavy": 0.9,
-    "fighter-medium": 0.98,
-    "fighter-light": 1.08,
-    "stealth": 1.04,
-    "racing": 1.18,
-    "military": 0.96,
-    "armored-transport": 0.84,
-    "civilian": 0.86,
-    "multirole": 0.95
-  },
-  "referenceLengths": [
-    9,
-    20,
-    30,
-    55,
-    120,
-    250,
-    480,
-    1000,
-    2400
-  ],
-  "bountyDefenseMultiplier": 5.6,
-  "challengeBudgetMultiplier": 1.1
+  "nonBossBeamDamageMultiplier": 0.9
 }

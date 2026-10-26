@@ -1,35 +1,46 @@
-import type { ActiveBeam, BattlePhase, BattleMode, BattleOutcome, BattleSnapshot, Ship, ShipSpec, RosterEntry, Projectile, BattleEvent, KillRecord, Mount, Vec, WeaponKind } from './types';
+import type { ActiveBeam, BattlePhase, BattleMode, BattleOutcome, BattleSnapshot, Ship, ShipSpec, RosterEntry, Projectile, BattleEvent, KillRecord, Mount, Vec, WeaponKind, WeaponCycle, AimTracking } from './types';
 import { clamp, distance, hullIntersection, intercept, mountWorld, randomGenerator, TAU, wrap } from './math';
 import { rankMembers, BOSS_IDS } from './members';
 import { bossDefense, bossPopulation } from './balance';
+import bossRules from '../data/boss-mode-balance.json';
 import defenseRules from '../data/defense-balance.json';
-import {createAsteroids,avoidAsteroids,segmentRock,type Asteroid} from './asteroids';
+import {createAsteroids,avoidAsteroids,asteroidContact,segmentRock,type Asteroid} from './asteroids';
 import {battleSeconds,simulationSeconds} from './pacing';
 import {evasion,evasionVelocity,attackNavigation,type AttackRun,type Evasion} from './maneuver';
-import {fixedWeapon,guidedWeapon,projectileDamage,bossCoverageScale} from './weapons';
+import {fixedWeapon,turretControlled,guidedWeapon,projectileDamage} from './weapons';
 import {hullRadiusAt,shipContact,shipImpact,shipMass,SHIP_IMPACT_PER_SECOND} from './collisions';
+import {WeaponCollisionGrid} from './weapon-collision-grid';
+import simulationProfile from '../data/simulation-profile.json';
+import {trackAim} from './turret-tracking';
+import aimRules from '../data/aim-tracking-rules.json';
+import {weaponCycle,rechargeWeapons,energyReady,spendEnergy,kineticGun} from './weapon-resources';
+import {chargedWeapon,chargeDamageMultiplier,chooseChargeGoal} from './charged-weapon';
+import resourceRules from '../data/weapon-resource-rules.json';
+import {firingObstacle,terrainCourse,type TerrainLane} from './terrain-navigation';
 
 export const STEP = 1 / 60;
 export const MAX_SHIPS = 100;
 export class BattleEngine {
-  asteroids:Asteroid[]=[];collisionDeaths=0;private collisions=new Map<number,number>();
+  constructor(readonly referenceMode=simulationProfile.mode==='reference'){}
+  asteroids:Asteroid[]=[];collisionDeaths=0;private collisions=new Map<string,[number,number]>();
   ships: Ship[]=[]; projectiles: Projectile[]=[]; beams:ActiveBeam[]=[]; events: BattleEvent[]=[]; killLog: KillRecord[]=[];
-  phase: BattlePhase='ready'; mode:BattleMode='brawl'; outcome:BattleOutcome=null; wave=1; nextWaveIn=0; private specMap=new Map<string,ShipSpec>(); private pendingBossId:string|null=null; private escortQueue:string[]=[];private nextEscortAt=0; time=0; shots=0; hits=0; arena=2400; seed=2956;
+  phase: BattlePhase='ready'; mode:BattleMode='brawl'; outcome:BattleOutcome=null; wave=1; nextWaveIn=0; private specMap=new Map<string,ShipSpec>(); private pendingBossId:string|null=null; private escortQueue:string[]=[];private nextEscortAt=0; time=0; shots=0; hits=0; defenseShots=0;interceptions=0; arena=2400; seed=2956;
   private random=randomGenerator(this.seed); private sequence=0;private attackRuns=new Map<number,AttackRun>();private evasions=new Map<number,Evasion>();private burst=new Map<number,{time:number;available:number}>();
   private initialFleet:Ship[]=[];
-  private beamTurns=new Map<number,number>();
+  private beamTurns=new Map<number,AimTracking>();
+  private terrainLanes=new Map<number,TerrainLane>();
   private shipContacts=new Map<string,[number,number]>();
   private shipImpacts=new Map<number,{time:number;amount:number}[]>();
   get living() { return this.ships.filter(s=>s.alive); }
   reset(roster: RosterEntry[], specs: ShipSpec[], seed=this.seed,mode:BattleMode='brawl') {
     this.mode=mode;this.outcome=null;this.wave=1;this.nextWaveIn=0;this.pendingBossId=null;this.escortQueue=[];this.nextEscortAt=0;this.seed=seed; this.random=randomGenerator(seed);this.sequence=0;
-    this.asteroids=[];this.collisionDeaths=0;this.collisions.clear();this.ships=[];this.projectiles=[];this.beams=[];this.events=[];this.killLog=[];this.burst.clear();this.evasions.clear();this.attackRuns.clear();this.beamTurns.clear();this.shipContacts.clear();this.shipImpacts.clear();this.phase='ready';this.time=0;this.shots=0;this.hits=0;
+    this.asteroids=[];this.collisionDeaths=0;this.collisions.clear();this.ships=[];this.projectiles=[];this.beams=[];this.events=[];this.killLog=[];this.burst.clear();this.evasions.clear();this.attackRuns.clear();this.beamTurns.clear();this.terrainLanes.clear();this.shipContacts.clear();this.shipImpacts.clear();this.phase='ready';this.time=0;this.shots=0;this.hits=0;this.defenseShots=0;this.interceptions=0;
     const byId=new Map(specs.map(s=>[s.id,s]));this.specMap=byId;
     const selected:{spec:ShipSpec;member?:RosterEntry['member'];npc?:RosterEntry['npc'];team?:string}[]=[];
     const members=new Set<string>();
     if(mode!=='brawl'){this.pendingBossId=roster.find(r=>r.npc==='boss')?.specId??null;this.escortQueue=mode==='bounty'?roster.filter(r=>r.npc==='escort').flatMap(r=>Array.from({length:r.count},()=>r.specId)):[];}
     const deployed=mode==='brawl'?roster:roster.filter(r=>!r.npc);
-    for(const row of deployed){let spec=byId.get(row.specId);if(row.member&&members.has(row.member.handle))continue;if(row.member)members.add(row.member.handle);if(spec&&row.npc==='boss')spec={...spec,hull:spec.hull*(spec.id==='retribution'?1:2)};if(spec)for(let n=0;n<Math.min(row.member?1:MAX_SHIPS,Math.max(0,Math.floor(row.count)));n++)if(selected.length<(row.npc?MAX_SHIPS+21:MAX_SHIPS))selected.push({spec,member:row.member,npc:row.npc,team:row.npc?row.team:mode==='brawl'||mode==='teams'?row.team:'members'});}
+    for(const row of deployed){let spec=byId.get(row.specId);if(row.member&&members.has(row.member.handle))continue;if(row.member)members.add(row.member.handle);if(spec&&row.npc==='boss'&&!this.referenceMode)spec={...spec,hull:spec.hull*(spec.id==='retribution'?1:2)};if(spec)for(let n=0;n<Math.min(row.member?1:MAX_SHIPS,Math.max(0,Math.floor(row.count)));n++)if(selected.length<(row.npc?MAX_SHIPS+21:MAX_SHIPS))selected.push({spec,member:row.member,npc:row.npc,team:row.npc?row.team:mode==='brawl'||mode==='teams'?row.team:'members'});}
     this.arena=Math.max(2200,Math.sqrt(selected.reduce((sum,s)=>sum+(Math.max(s.spec.length,s.spec.beam)*.5+40)**2,0))*3.2);
     const positions:({x:number;y:number;radius:number}|undefined)[]=new Array(selected.length);
     // Reserve large hulls first while preserving original member IDs and tie order.
@@ -62,7 +73,9 @@ export class BattleEngine {
     let best:Ship|null=null,score=Infinity;
     for(const other of candidates){
       if(other.id===s.id||(s.team&&s.team===other.team))continue;
-      const dist=distance(origin,other);
+      const dx=origin.x-other.x,dy=origin.y-other.y;
+      if(mount&&(Math.abs(dx)>mount.range+other.radius||Math.abs(dy)>mount.range+other.radius))continue;
+      const dist=Math.sqrt(dx*dx+dy*dy);
       if(mount){if(dist>mount.range+other.radius)continue;const delta=wrap(Math.atan2(other.y-origin.y,other.x-origin.x)-s.heading-mount.facing*Math.PI/180);if(Math.abs(delta)>mount.arc*Math.PI/360)continue;}
       const retaliation=other.targetId===s.id?.82:1,stickiness=other.id===(mount?previous:s.targetId)?(mount?.role==='point-defense'?.65:.55):1;
       const health=.65+.35*(other.hull/other.spec.hull);
@@ -78,31 +91,37 @@ export class BattleEngine {
     if(this.phase!=='running')return;
     if(!Number.isFinite(dt)||dt<=0||dt>STEP*1.01)throw new Error('BattleEngine.step requires a fixed 1/60s step');
     this.time+=dt;
+    if(this.referenceMode)for(const ship of this.ships)if(ship.alive)rechargeWeapons(ship,this.time,dt);
     if(this.nextWaveIn>0){this.nextWaveIn=Math.max(0,this.nextWaveIn-dt);if(this.nextWaveIn===0)this.spawnNextBoss();return;}
     if(this.escortQueue.length&&this.time>=this.nextEscortAt){const boss=this.ships.filter(s=>s.npc==='boss').at(-1);if(boss?.alive){this.spawnEnemy(this.escortQueue.shift()!,'escort');this.nextEscortAt=this.time+.28;}else this.escortQueue=[];}
     const living=this.living, byId=new Map(living.map(s=>[s.id,s])),allById=new Map(this.ships.map(s=>[s.id,s]));
+    const incoming=this.projectiles.filter(p=>guidedWeapon(p)&&!p.intercepted);
     const beamFiring=new Set(this.beams.filter(b=>b.remaining>0).map(b=>b.owner));
-    for(const id of this.beamTurns.keys())if(!beamFiring.has(id)||!byId.has(id))this.beamTurns.delete(id);
+    for(const id of this.beamTurns.keys())if(!byId.has(id)||!beamFiring.has(id)&&!byId.get(id)!.spec.mounts.some(m=>chargedWeapon(m)))this.beamTurns.delete(id);
+    for(const id of this.terrainLanes.keys())if(!byId.has(id))this.terrainLanes.delete(id);
     if(this.checkOutcome())return;
     for(const s of living){
       if(s.enterUntil&&this.time<s.enterUntil){s.x+=s.vx*dt;s.y+=s.vy*dt;continue;}
       const committedHull=s.npc==='boss'||s.spec.length>=100;
-      const busy=committedHull&&(this.beams.some(b=>b.owner===s.id)||s.weaponCycles?.some((c,i)=>fixedWeapon(s.spec.mounts[i])&&c.chargeLeft>0));
+      const busy=committedHull&&(this.beams.some(b=>b.owner===s.id)||s.weaponCycles?.some((c,i)=>fixedWeapon(s.spec.mounts[i])&&(c.chargeLeft>0||chargedWeapon(s.spec.mounts[i])&&c.chargeLeft===0)));
       if(this.time>=s.searchAt&&!busy||!byId.has(s.targetId??-1)) {
         const next=this.target(s,living);s.targetId=next?.id??null;
         const turn=next?Math.abs(wrap(Math.atan2(next.y-s.y,next.x-s.x)-s.heading))/Math.max(.01,s.spec.turnRate):0;
         s.searchAt=this.time+(committedHull?clamp(simulationSeconds(s.npc==='boss'?6:4)+turn,simulationSeconds(s.npc==='boss'?6:4),simulationSeconds(s.npc==='boss'?20:14)):.55+this.random()*.35);
       }
       const target=byId.get(s.targetId??-1);
-      if(!target)continue;
+      if(!target){this.terrainLanes.delete(s.id);continue;}
       // Continuous rays do not need projectile lead; tracking has physical response time.
-      const lead=beamFiring.has(s.id)?target:intercept(s,target,Math.max(450,s.spec.mounts[0]?.speed??900));
+      const mainWeapon=s.spec.mounts.find(m=>!m.interceptsOnly);
+      const lead=beamFiring.has(s.id)?target:intercept(s,target,Math.max(450,mainWeapon?.speed??900));
       const dist=distance(s,target),optimum=Math.max(s.spec.preferredRange,s.radius+target.radius+50);
       const bearing=Math.atan2(target.y-s.y,target.x-s.x);
       const dodge=evasion(s,allById,this.projectiles,this.time,this.evasions.get(s.id)??{until:0,readyAt:0,scanAt:0,side:s.id%2?1:-1},this.random);this.evasions.set(s.id,dodge);
       const attack=attackNavigation(s,target,this.time,this.attackRuns.get(s.id),this.time<dodge.until,this.random);
       if(attack)this.attackRuns.set(s.id,attack.state);else this.attackRuns.delete(s.id);
-      let desired=attack?.heading??Math.atan2(lead.y-s.y,lead.x-s.x);
+      const terrain=mainWeapon?terrainCourse(s,target,mountWorld(s,mainWeapon),this.asteroids,this.terrainLanes.get(s.id),this.random):null;
+      if(terrain)this.terrainLanes.set(s.id,terrain.state);else this.terrainLanes.delete(s.id);
+      let desired=terrain?.heading??attack?.heading??Math.atan2(lead.y-s.y,lead.x-s.x);
       const stalled=this.time-s.lastDealt>12;
       if(stalled&&!attack&&!committedHull){const angle=Math.atan2(target.y-s.y,target.x-s.x);desired=angle+(s.id%2?1:-1)*.65;}
 
@@ -122,31 +141,39 @@ export class BattleEngine {
       for(const other of living){if(other===s)continue;const d=distance(s,other),angle=Math.atan2(other.y-s.y,other.x-s.x),safe=hullRadiusAt(s,angle)+hullRadiusAt(other,angle+Math.PI)+(fighter?75:65);if(d<safe&&d>.001){const weight=(safe-d)/safe*Math.min(1,other.radius/s.radius);avoidX+=(s.x-other.x)/d*weight;avoidY+=(s.y-other.y)/d*weight;}}
       const obstacle=avoidAsteroids(s,this.asteroids);avoidX+=obstacle.x;avoidY+=obstacle.y;
       if(Math.hypot(avoidX,avoidY)>.7&&dist>optimum*.8)desired=Math.atan2(Math.sin(desired)+avoidY*1.3,Math.cos(desired)+avoidX*1.3);
-      const delta=wrap(desired-s.heading);
+      const delta=wrap(desired-s.heading),previousHeading=s.heading;
       if(beamFiring.has(s.id)){
-        // Retain 80% handling; a short angular response lets moving targets escape the ray.
-        const limit=s.spec.turnRate*.8,response=simulationSeconds(.15),acceleration=limit/simulationSeconds(.2);
-        const wanted=clamp(delta/response,-limit,limit),previous=this.beamTurns.get(s.id)??0;
-        const velocity=previous+clamp(wanted-previous,-acceleration*dt,acceleration*dt);
-        this.beamTurns.set(s.id,velocity);s.heading=wrap(s.heading+velocity*dt);
+        // The ray stays hull-fixed. Every hull uses the same sampled bearing and
+        // angular inertia as a gunner; NPC/boss status never grants live lock-on.
+        const tracking=this.beamTurns.get(s.id)??{};
+        const aimed=trackAim(tracking,s.heading,desired,target.id,this.time,dt,s.spec.turnRate*aimRules.beamHullTurnFraction,this.random);
+        this.beamTurns.set(s.id,tracking);s.heading=aimed.angle;
+      }else if(mainWeapon&&chargedWeapon(mainWeapon)&&!terrain&&Math.hypot(avoidX,avoidY)<=.7){
+        const tracking=this.beamTurns.get(s.id)??{};
+        const aimed=trackAim(tracking,s.heading,desired,target.id,this.time,dt,s.spec.turnRate,this.random,{origin:mountWorld(s,mainWeapon),target,speed:mainWeapon.speed});
+        this.beamTurns.set(s.id,tracking);s.heading=aimed.angle;
       }else s.heading=wrap(s.heading+clamp(delta,-s.spec.turnRate*dt,s.spec.turnRate*dt));
+      // Turrets retain world orientation while the hull turns. Hull yaw cannot
+      // bypass their traverse limit or drag every gun straight onto a new target.
+      for(let i=0;i<s.spec.mounts.length;i++)if(turretControlled(s.spec.mounts[i]))s.turretAngles[i]=wrap(s.turretAngles[i]-wrap(s.heading-previousHeading));
       if(attack)speed=s.spec.speed*attack.boost;else if(stalled)speed=Math.max(speed,s.spec.speed*.65);
       else if(Math.abs(delta)>1)speed*=.65;
       // Brief aiming windows retain fixed-gun accuracy; no permanent stopped/aiming state.
       const aimWindow=stalled&&Math.sin(phase*2)>.3;
-      const strafe=!attack&&inCombat?lane*s.spec.speed*(fighter?.34:capital?.1:.22)*(aimWindow?.3:1):0;
+      const strafe=!terrain&&!attack&&inCombat?lane*s.spec.speed*(fighter?.34:capital?.1:.22)*(aimWindow?.3:1):0;
       const defensive=evasionVelocity(s,bearing,dodge,this.time),dodging=defensive.boost>1;
-      let vx=(attack?.velocity?.x??Math.cos(s.heading)*speed)-Math.sin(bearing)*(dodging?0:strafe)+defensive.x+avoidX*s.spec.speed*.9;
-      let vy=(attack?.velocity?.y??Math.sin(s.heading)*speed)+Math.cos(bearing)*(dodging?0:strafe)+defensive.y+avoidY*s.spec.speed*.9;
+      let vx=(terrain?.velocity.x??attack?.velocity?.x??Math.cos(s.heading)*speed)-Math.sin(bearing)*(dodging?0:strafe)+defensive.x+avoidX*s.spec.speed*.9;
+      let vy=(terrain?.velocity.y??attack?.velocity?.y??Math.sin(s.heading)*speed)+Math.cos(bearing)*(dodging?0:strafe)+defensive.y+avoidY*s.spec.speed*.9;
       // A boost is a short lateral burst, not a permanent change to the ship's base stats.
       if(dodging&&fighter){vx+=Math.cos(s.heading)*s.spec.speed*.18;vy+=Math.sin(s.heading)*s.spec.speed*.18;}
       const maxSpeed=s.spec.speed*(dodging?defensive.boost:attack?.boost??1),velocity=Math.hypot(vx,vy);
       if(velocity>maxSpeed&&velocity>0){vx*=maxSpeed/velocity;vy*=maxSpeed/velocity;}
       if(Math.hypot(s.x,s.y)>this.arena*.88){vx-=s.x/this.arena*s.spec.speed;vy-=s.y/this.arena*s.spec.speed;}
-      const dvx=vx-s.vx,dvy=vy-s.vy,dv=Math.hypot(dvx,dvy),factor=dv?Math.min(1,s.spec.acceleration*(dodging&&fighter?2.2:1)*dt/dv):0;
+      const dvx=vx-s.vx,dvy=vy-s.vy,dv=Math.hypot(dvx,dvy),factor=dv?Math.min(1,s.spec.acceleration*(dodging?(fighter?2.2:this.time<(dodge.emergencyUntil??0)&&s.spec.length<200?1.35:1):1)*dt/dv):0;
       s.vx+=dvx*factor;s.vy+=dvy*factor;s.x+=s.vx*dt;s.y+=s.vy*dt;
-      if(this.time-s.lastHit>defenseRules.shieldRecoveryDelay)s.shield=Math.min(s.spec.shield,s.shield+s.spec.shieldRegen*dt);
-      this.fire(s,living,dt);
+      const shieldDelay=this.referenceMode?(s.shield<=0?s.spec.shieldDownDelay:s.spec.shieldRecoveryDelay)??defenseRules.shieldRecoveryDelay:defenseRules.shieldRecoveryDelay;
+      if(this.time-s.lastHit>shieldDelay)s.shield=Math.min(s.spec.shield,s.shield+s.spec.shieldRegen*dt);
+      this.fire(s,living,dt,incoming,allById);
     }
     // Damage once per contact; separation hysteresis prevents grazing from grinding hulls.
     for(let iteration=0;iteration<3;iteration++)for(let a=0;a<living.length;a++)for(let b=a+1;b<living.length;b++){
@@ -166,38 +193,95 @@ export class BattleEngine {
     for(const [key,[a,b]]of this.shipContacts){const s=byId.get(a),o=byId.get(b);if(!s?.alive||!o?.alive||!shipContact(s,o,4))this.shipContacts.delete(key);}
     if(this.checkOutcome())return;
     for(const s of living)for(const rock of this.asteroids){
-      if(!s.alive)break;const dx=s.x-rock.x,dy=s.y-rock.y,d=Math.hypot(dx,dy),minimum=s.radius+rock.radius;
-      if(d>=minimum)continue;const nx=d>.001?dx/d:Math.cos(s.heading),ny=d>.001?dy/d:Math.sin(s.heading),speed=Math.hypot(s.vx,s.vy),inward=s.vx*nx+s.vy*ny;
-      s.x=rock.x+nx*(minimum+2);s.y=rock.y+ny*(minimum+2);if(inward<0){s.vx-=nx*inward*1.5;s.vy-=ny*inward*1.5;}
-      if(this.time-(this.collisions.get(s.id)??-100)<.8)continue;this.collisions.set(s.id,this.time);
-      const fatal=s.spec.length<35&&speed>Math.max(185,s.spec.speed*.78),total=s.spec.hull+s.spec.shield;
-      this.damage(s,fatal?total:total*Math.min(.45,.015+(speed/300)**2*.25),0,{x:rock.x+nx*rock.radius,y:rock.y+ny*rock.radius},true);
+      if(!s.alive)break;const contact=asteroidContact(s,rock);if(!contact)continue;
+      const {nx,ny,depth}=contact,closing=Math.max(0,s.vx*nx+s.vy*ny),key=`${s.id}:${rock.id}`;
+      s.x-=nx*(depth+2);s.y-=ny*(depth+2);
+      if(closing>0){s.vx-=nx*closing*1.05;s.vy-=ny*closing*1.05;}
+      if(this.collisions.has(key))continue;this.collisions.set(key,[s.id,rock.id]);
+      // Resting contact, separation correction and tangential flight do no damage.
+      if(closing<=80)continue;
+      const fatal=s.spec.length<35&&closing>Math.max(185,s.spec.speed*.78),total=s.spec.hull+s.spec.shield;
+      const amount=fatal?total:this.limitShipImpact(s,total*Math.min(.05,.035*((closing-80)/200)**2));
+      if(amount>0)this.damage(s,amount,0,{x:rock.x-nx*rock.radius,y:rock.y-ny*rock.radius},true);
     }
+    const rocksById=new Map(this.asteroids.map(r=>[r.id,r]));
+    for(const [key,[shipId,rockId]]of this.collisions){const s=byId.get(shipId),rock=rocksById.get(rockId);if(!s?.alive||!rock||!asteroidContact(s,rock,4))this.collisions.delete(key);}
     this.updateProjectiles(dt,byId);
     if(this.phase==='running')this.updateBeams(dt,byId);
     this.events=this.events.filter(e=>this.time-e.time<2.8).slice(-800);
     this.checkOutcome();
   }
-  private fire(s:Ship,living:Ship[],dt:number){
-    const cycles=s.weaponCycles??(s.weaponCycles=[]);
+  private defend(s:Ship,m:Mount,index:number,cycle:WeaponCycle,incoming:Projectile[],owners:Map<number,Ship>,dt:number){
+    s.turretTargets[index]=null;
+    const origin=mountWorld(s,m),facing=m.facing*Math.PI/180;
+    const eligible=(p:Projectile)=>{
+      const owner=owners.get(p.owner);if(p.intercepted||p.owner===s.id||s.team&&owner?.team===s.team||distance(origin,p)>m.range)return false;
+      if(Math.abs(wrap(Math.atan2(p.y-origin.y,p.x-origin.x)-s.heading-facing))>m.arc*Math.PI/360)return false;
+      if(p.target===s.id)return true;
+      const vx=p.vx-s.vx,vy=p.vy-s.vy,dx=p.x-s.x,dy=p.y-s.y,t=-(dx*vx+dy*vy)/Math.max(1,vx*vx+vy*vy);
+      return t>0&&t<4&&Math.hypot(dx+vx*t,dy+vy*t)<s.radius+40;
+    };
+    let target=incoming.find(p=>p.id===cycle.interceptId&&eligible(p));
+    if(!target){let score=Infinity;for(const p of incoming){if(!eligible(p))continue;const next=distance(origin,p)/Math.max(1,p.speed);if(next<score){score=next;target=p;}}}
+    cycle.interceptId=target?.id;if(!target)return;
+    const desired=wrap(Math.atan2(target.y-origin.y,target.x-origin.x)-s.heading);
+    s.turretAngles[index]=wrap(s.turretAngles[index]+clamp(wrap(desired-s.turretAngles[index]),-m.turnRate*dt,m.turnRate*dt));
+    if(s.cooldowns[index]>0)return;
+    const angle=s.heading+s.turretAngles[index],to={x:origin.x+Math.cos(angle)*m.range,y:origin.y+Math.sin(angle)*m.range};
+    const hit=segmentRock(origin,to,{x:target.x,y:target.y,radius:target.kind==='torpedo'?6:3});
+    if(hit===null||this.asteroids.some(rock=>{const block=segmentRock(origin,to,rock);return block!==null&&block<=hit;}))return;
+    s.cooldowns[index]=m.cooldown;this.defenseShots++;
+    target.integrity=(target.integrity??(target.impact==='heavy-torpedo'?6:target.kind==='torpedo'?3:1))-1;
+    const point={x:origin.x+(to.x-origin.x)*hit,y:origin.y+(to.y-origin.y)*hit};
+    this.events.push({id:++this.sequence,kind:'intercept',...point,from:origin,time:this.time,radius:6,ship:0,by:0,label:'近防拦截',weapon:'turret'});
+    if(target.integrity<=0){target.intercepted=true;this.projectiles=this.projectiles.filter(p=>p.id!==target!.id);this.interceptions++;}
+  }
+  private fire(s:Ship,living:Ship[],dt:number,incoming:Projectile[],owners:Map<number,Ship>){
     s.spec.mounts.forEach((m,i)=>{
-      s.cooldowns[i]=Math.max(0,s.cooldowns[i]-dt);if(m.kind==='ballistic'&&s.cooldowns[i]<1e-8)s.cooldowns[i]=0;
-      const cycle=cycles[i]??(cycles[i]={chargeLeft:-1,burstLeft:0});
+      const carry=this.referenceMode&&!m.charge&&!m.burstCount&&m.kind!=='beam'&&!m.interceptsOnly;
+      s.cooldowns[i]=Math.max(carry?-dt:0,s.cooldowns[i]-dt);if(!carry&&m.kind==='ballistic'&&s.cooldowns[i]<1e-8)s.cooldowns[i]=0;
+      const cycle=weaponCycle(s,i);
+      const chargeRule=chargedWeapon(m);
       if(cycle.chargeLeft>=0)cycle.chargeLeft=Math.max(0,cycle.chargeLeft-dt);
+      if(m.interceptsOnly){this.defend(s,m,i,cycle,incoming,owners,dt);return;}
+      if(cycle.ammoLeft===0){
+        if(!m.ammoReload)return;
+        cycle.reloadLeft=(cycle.reloadLeft??m.ammoReload)-dt;
+        if(cycle.reloadLeft>0)return;
+        cycle.ammoLeft=m.ammo;cycle.reloadLeft=undefined;
+      }
       if(m.kind==='beam'&&this.beams.some(b=>b.owner===s.id&&b.mount===i))return;
       const origin=mountWorld(s,m),target=this.target(s,living,origin,m,s.turretTargets[i]);s.turretTargets[i]=target?.id??null;
-      if(!target){cycle.chargeLeft=-1;return;}
+      if(!target){cycle.chargeLeft=-1;cycle.chargeGoal=undefined;cycle.chargeTarget=undefined;return;}
+      if(chargeRule&&cycle.chargeLeft>=0&&cycle.chargeTarget!==target.id){
+        // Energy belongs to this firing opportunity. A cancelled lock cannot
+        // lend a fully charged instant shot to a newly acquired target.
+        cycle.chargeLeft=-1;cycle.chargeGoal=undefined;cycle.chargeTarget=undefined;
+      }
       const point=guidedWeapon(m)||m.kind==='beam'?target:intercept(origin,target,m.speed);
-      const aimed=Math.atan2(point.y-origin.y,point.x-origin.x),relative=wrap(aimed-s.heading),facing=m.facing*Math.PI/180;
+      const hullAim=chargeRule?this.beamTurns.get(s.id):undefined;
+      const aimed=chargeRule?hullAim?.aimAngle??s.heading:Math.atan2(point.y-origin.y,point.x-origin.x),facing=m.facing*Math.PI/180;
+      let relative=wrap(aimed-s.heading),trackingReady=!chargeRule||hullAim?.aimTarget===target.id&&this.time>=(hullAim.acquireUntil??Infinity);
       if(Math.abs(wrap(relative-facing))>m.arc*Math.PI/360)return;
       const desired=fixedWeapon(m)?facing:relative;
-      s.turretAngles[i]=wrap(s.turretAngles[i]+clamp(wrap(desired-s.turretAngles[i]),-m.turnRate*dt,m.turnRate*dt));
+      if(turretControlled(m)){
+        const tracked=trackAim(cycle,wrap(s.heading+s.turretAngles[i]),aimed,target.id,this.time,dt,m.turnRate,this.random,{origin,target,speed:m.speed});
+        s.turretAngles[i]=wrap(tracked.angle-s.heading);relative=wrap(tracked.goal-s.heading);trackingReady=tracked.ready;
+      }else s.turretAngles[i]=fixedWeapon(m)?facing:wrap(s.turretAngles[i]+clamp(wrap(desired-s.turretAngles[i]),-m.turnRate*dt,m.turnRate*dt));
       const error=Math.abs(wrap(relative-s.turretAngles[i]));
       const tolerance=guidedWeapon(m)?.3:Math.max(.012,Math.atan2(Math.min(target.spec.beam,target.spec.length)*.28+2,distance(origin,target)));
-      if(s.cooldowns[i]>0||error>tolerance||this.projectiles.length>=3500)return;
-      if(m.charge&&cycle.chargeLeft<0){cycle.chargeLeft=m.charge;return;}
-      if(cycle.chargeLeft>0)return;
+      if(!trackingReady||s.cooldowns[i]>0||error>tolerance||this.projectiles.length+(m.barrels??1)*(m.pellets??1)>3500)return;
+      const direction=s.heading+s.turretAngles[i],reach=distance(origin,point),end={x:origin.x+Math.cos(direction)*reach,y:origin.y+Math.sin(direction)*reach};
+      if(firingObstacle(origin,end,target,this.asteroids))return;
+      const rounds=Math.min(m.barrels??1,cycle.ammoLeft??Infinity);
+      if(this.referenceMode&&!energyReady(m,cycle,rounds))return;
+      if(m.charge&&cycle.chargeLeft<0){cycle.chargeLeft=m.charge;if(chargeRule){cycle.chargeGoal=chooseChargeGoal(m,s,target,this.random);cycle.chargeTarget=target.id;}return;}
+      const chargedFor=chargeRule?Math.max(0,m.charge!-cycle.chargeLeft):0;
+      if(chargeRule?chargedFor<(cycle.chargeGoal??m.charge!):cycle.chargeLeft>0)return;
+      const damageMultiplier=chargeRule?chargeDamageMultiplier(m,chargedFor):1,chargeCooldown=chargeRule?Math.max(0,m.charge!-chargedFor):0;
       cycle.chargeLeft=-1;
+      cycle.chargeGoal=undefined;
+      cycle.chargeTarget=undefined;
       const angular=Math.abs((target.x-origin.x)*target.vy-(target.y-origin.y)*target.vx)/Math.max(1,distance(origin,target)**2);
       const spread=guidedWeapon(m)||m.kind==='beam'||m.kind==='railgun'?0:m.kind==='ballistic'?.006:m.role==='point-defense'?.0025:Math.min(s.spec.length>=100?.14:.035,.002+angular/Math.max(.1,m.turnRate)*(s.spec.length>=100?.08:.016));
       const angle=s.heading+s.turretAngles[i]+(this.random()-.5)*2*spread;
@@ -205,8 +289,23 @@ export class BattleEngine {
         this.beams.push({owner:s.id,mount:i,remaining:m.duration??1,elapsed:0,pending:0,segments:[]});
         s.cooldowns[i]=m.cooldown+(m.duration??1);
       }else{
-        this.projectiles.push({id:++this.sequence,owner:s.id,target:target.id,kind:m.kind,role:m.role,turnRate:m.turnRate,x:origin.x,y:origin.y,vx:Math.cos(angle)*m.speed,vy:Math.sin(angle)*m.speed,angle,speed:m.speed,damage:m.damage,ttl:m.range/m.speed+dt,travel:0,range:m.range,color:m.color??(s.id%2?0xf3cc7e:0x84c4ff),width:m.width,...(m.kind==='torpedo'?{trail:[{...origin}],trailClock:0}:{})});
-        if(m.burstCount){cycle.burstLeft=(cycle.burstLeft||m.burstCount)-1;s.cooldowns[i]=cycle.burstLeft?m.cooldown:m.burstCooldown??m.cooldown;}else s.cooldowns[i]=m.cooldown;
+        const kind=m.projectileKind??m.kind;
+        for(let barrel=0;barrel<rounds;barrel++){
+          // A turret shares one target/rotation; each barrel still has its own real trajectory.
+          const port=m.launcherCount?((m.ammo??0)-(cycle.ammoLeft??0))%m.launcherCount:barrel;
+          const offset=(port-((m.launcherCount??rounds)-1)/2)*(m.barrelSpacing??0);
+          const muzzle={x:origin.x-Math.sin(angle)*offset,y:origin.y+Math.cos(angle)*offset};
+          const pellets=m.pellets??1;
+          for(let pellet=0;pellet<pellets;pellet++){
+            const shotAngle=angle+(pellets>1?(pellet/(pellets-1)-.5)*(m.scatterAngle??.09):0);
+            this.projectiles.push({id:++this.sequence,owner:s.id,target:target.id,kind,role:m.role,impact:m.impact,referenceWeapon:!!m.weaponId,weaponId:m.weaponId,damageType:m.damageType,turnRate:m.turnRate,...muzzle,vx:Math.cos(shotAngle)*m.speed,vy:Math.sin(shotAngle)*m.speed,angle:shotAngle,speed:m.speed,damage:m.damage*damageMultiplier/pellets,ttl:m.range/m.speed+dt,travel:0,range:m.range,color:m.color??(s.id%2?0xf3cc7e:0x84c4ff),width:m.width,weaponSize:m.weaponSize,...(m.kind==='torpedo'?{trail:[{...muzzle}],trailClock:0}:{})});
+          }
+          if(m.projectileKind)this.events.push({id:++this.sequence,kind:'shot',weapon:kind,angle,...muzzle,time:this.time,radius:s.radius,ship:s.id,by:s.id,label:s.label});
+        }
+        if(cycle.ammoLeft!==undefined)cycle.ammoLeft-=rounds;
+        if(this.referenceMode)spendEnergy(m,cycle,rounds,this.time);
+        this.shots+=rounds*(m.pellets??1)-1;
+        if(m.burstCount){cycle.burstLeft=(cycle.burstLeft||m.burstCount)-1;s.cooldowns[i]=cycle.burstLeft?m.cooldown:m.burstCooldown??m.cooldown;}else s.cooldowns[i]=(carry?Math.min(0,s.cooldowns[i]):0)+chargeCooldown+m.cooldown*(m.cooldownJitter?1+(this.random()-.5)*2*m.cooldownJitter:1);
       }
       if(['beam','railgun','torpedo','ballistic'].includes(m.kind))this.events.push({id:++this.sequence,kind:'shot',weapon:m.kind,angle,...origin,time:this.time,radius:s.radius,ship:s.id,by:s.id,label:s.label});
       this.shots++;
@@ -251,20 +350,21 @@ export class BattleEngine {
   }
   private updateProjectiles(dt:number,byId:Map<number,Ship>){
     const survivors:Projectile[]=[],owners=new Map(this.ships.map(s=>[s.id,s]));
+    const grid=byId.size>16?new WeaponCollisionGrid([...byId.values()],dt):null;
     for(const p of this.projectiles){
       if(guidedWeapon(p)) { const target=byId.get(p.target);if(target?.alive){const aim=Math.atan2(target.y-p.y,target.x-p.x);p.angle=wrap(p.angle+clamp(wrap(aim-p.angle),-(p.turnRate??(p.role==='anti-capital'?.72:2.3))*dt,(p.turnRate??(p.role==='anti-capital'?.72:2.3))*dt));p.vx=Math.cos(p.angle)*p.speed;p.vy=Math.sin(p.angle)*p.speed;}}
       const next={x:p.x+p.vx*dt,y:p.y+p.vy*dt};
       let victim:Ship|null=null,impact=Infinity;
       const owner=owners.get(p.owner);
-      for(const s of byId.values()){
+      for(const s of grid?grid.query(p,next):byId.values()){
         if(s.id===p.owner||!s.alive||(owner?.team&&owner.team===s.team))continue;
         if(Math.abs(s.x-p.x)>s.radius+p.speed*dt+5||Math.abs(s.y-p.y)>s.radius+p.speed*dt+5)continue;
         // Relative motion compensates for the target advancing during the same fixed step.
         const hit=hullIntersection({x:p.x+s.vx*dt,y:p.y+s.vy*dt},next,s);
-        if(hit!==null&&hit<impact){impact=hit;victim=s;}
+        if(hit!==null&&(hit<impact||hit===impact&&s.id<(victim?.id??Infinity))){impact=hit;victim=s;}
       }
       let terrain=Infinity;for(const rock of this.asteroids){const hit=segmentRock(p,next,rock);if(hit!==null&&hit<terrain)terrain=hit;}if(Number.isFinite(terrain)&&terrain<=impact)continue;
-      if(victim){this.damage(victim,projectileDamage(p.kind,p.damage,p.travel+p.speed*dt*impact)*(p.role==='anti-capital'?clamp((victim.spec.length/40)**1.65,.12,24):1),p.owner,{x:p.x+(next.x-p.x)*impact,y:p.y+(next.y-p.y)*impact},false,p.kind);
+      if(victim){this.damage(victim,(this.referenceMode?p.damage:projectileDamage(p.kind,p.damage,p.travel+p.speed*dt*impact))*(!this.referenceMode&&p.role==='anti-capital'&&!p.impact&&!p.referenceWeapon?clamp((victim.spec.length/40)**1.65,.12,24):1),p.owner,{x:p.x+(next.x-p.x)*impact,y:p.y+(next.y-p.y)*impact},false,p.kind,0,'weapon',p.impact,p.damageType);
         // Settle at the first last-survivor event, before later projectiles in this step.
         if(this.checkOutcome()){this.projectiles=[];return;}continue;}
       p.x=next.x;p.y=next.y;p.ttl-=dt;p.travel+=p.speed*dt;
@@ -278,10 +378,13 @@ export class BattleEngine {
     const allowed=Math.max(0,Math.min(amount,ship.spec.hull*SHIP_IMPACT_PER_SECOND-used));
     if(allowed>0)recent.push({time:this.time,amount:allowed});this.shipImpacts.set(ship.id,recent);return allowed;
   }
-  private damage(s:Ship,amount:number,owner:number,point:Vec,environment=false,weapon?:WeaponKind,beamSeconds=0,cause:'weapon'|'asteroid'|'collision'=environment?'asteroid':'weapon'){
+  private damage(s:Ship,amount:number,owner:number,point:Vec,environment=false,weapon?:WeaponKind,beamSeconds=0,cause:'weapon'|'asteroid'|'collision'=environment?'asteroid':'weapon',impact?:Mount['impact'],damageType?:Mount['damageType']){
     const attacker=this.ships.find(o=>o.id===owner);
+    const kinetic=this.referenceMode&&!environment&&cause==='weapon'&&kineticGun(weapon??'');
+    if(kinetic)amount*=resourceRules.ballistic.damageMultiplier;
+    if(!environment&&cause==='weapon'&&amount>0)s.lastAttacker=owner;
     // Non-boss ships gain output once; boss weapons and encounter health budgets stay unchanged.
-    if(!environment&&cause==='weapon'&&attacker){
+    if(!this.referenceMode&&!environment&&cause==='weapon'&&attacker){
       if(attacker.npc!=='boss'){
         amount*=defenseRules.nonBossWeaponDamageMultiplier;
         if(weapon==='beam')amount*=defenseRules.nonBossBeamDamageMultiplier;
@@ -292,10 +395,15 @@ export class BattleEngine {
     const bucket=this.burst.get(s.id)??{time:this.time,available:total*rule.capacity};
     bucket.available=Math.min(total*rule.capacity,bucket.available+(this.time-bucket.time)*total*rule.perSecond);bucket.time=this.time;
     // Capital beams use the same 50%-per-second ceiling (10% per 0.2-second tick).
-    // Railgun bypasses ordinary protection; bosses retain their encounter cap.
+    // Designated heavy ordnance bypasses ordinary protection; bosses retain their encounter cap.
     const protectedBoss=s.npc==='boss';
-    if(!environment&&!(weapon==='railgun'&&!protectedBoss))amount=weapon==='beam'&&!protectedBoss?Math.min(amount,total*.5*battleSeconds(beamSeconds)):weapon==='torpedo'&&!protectedBoss?Math.min(amount,total*.55):Math.min(amount,bucket.available);if(cause!=='collision'){bucket.available=Math.max(0,bucket.available-amount);this.burst.set(s.id,bucket);}
-    const absorbed=cause==='collision'?0:Math.min(s.shield,amount);s.shield-=absorbed;s.hull=Math.max(0,s.hull-(amount-absorbed));s.lastHit=this.time;this.hits++;
+    if(!this.referenceMode&&!environment&&!((weapon==='railgun'||impact==='heavy-cannon'||impact==='heavy-torpedo')&&!protectedBoss))amount=weapon==='beam'&&!protectedBoss?Math.min(amount,total*.5*battleSeconds(beamSeconds)):weapon==='torpedo'&&!protectedBoss?Math.min(amount,total*.55):Math.min(amount,bucket.available);if(!this.referenceMode&&cause!=='collision'){bucket.available=Math.max(0,bucket.available-amount);this.burst.set(s.id,bucket);}
+    const absorbed=cause==='collision'?0:Math.min(s.shield,amount*(kinetic?1-resourceRules.ballistic.shieldBypass:1));s.shield-=absorbed;
+    const physical=weapon==='ballistic'||weapon==='railgun'||weapon==='torpedo'||weapon==='missile';
+    const armor=!environment&&cause==='weapon'?(physical?s.spec.armorPhysicalMultiplier:s.spec.armorEnergyMultiplier)??1:1;
+    const previousHull=s.hull;
+    s.hull=Math.max(0,s.hull-(amount-absorbed)*armor*(damageType==='distortion'?(this.referenceMode?0:.15):1));if(s.hull<1e-8)s.hull=0;s.lastHit=this.time;this.hits++;
+    if(!environment&&cause==='weapon'&&s.hull<previousHull){const old=s.hitStreak;s.hitStreak=old&&this.time-old.last<simulationSeconds(.7)?{since:old.since,last:this.time,count:Math.min(20,old.count+1)}:{since:this.time,last:this.time,count:1};}
     if(attacker&&cause!=='collision')attacker.lastDealt=this.time;
     this.events.push({id:++this.sequence,kind:absorbed>0?'shield':'hit',...point,time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});
     if(s.hull<=0){const friendly=cause==='collision'&&Boolean(attacker?.team&&attacker.team===s.team),credited=attacker&&!friendly;if(environment&&!credited)this.collisionDeaths++;s.alive=false;s.shield=0;if(credited)attacker.kills++;const id=++this.sequence;this.events.push({id,kind:'destroy',x:s.x,y:s.y,time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});this.killLog.push({id,time:this.time,victimId:s.id,victimName:s.label,killerId:owner,killerName:cause==='asteroid'?'陨石撞击':attacker?.label??'未知成员',cause,...(friendly?{friendly:true}:{})});this.killLog=this.killLog.slice(-12);}
@@ -304,6 +412,10 @@ export class BattleEngine {
   private checkOutcome(){
     if(this.phase==='finished')return true;
     const living=this.living;
+    // Resolve a genuine ammunition stalemate only after the last shell lands.
+    // Empty test/unarmed hulls are not treated as ships that spent ammunition.
+    const exhausted=this.referenceMode&&living.length>1&&!this.projectiles.length&&!this.beams.length&&living.some(s=>s.spec.mounts.some((m,i)=>!m.interceptsOnly&&m.ammo!==undefined&&s.weaponCycles?.[i]?.ammoLeft===0))&&living.every(s=>!s.spec.mounts.some((m,i)=>!m.interceptsOnly&&(m.ammo===undefined||m.ammoReload||(s.weaponCycles?.[i]?.ammoLeft??m.ammo)>0)));
+    if(exhausted&&(this.mode==='brawl'||this.mode==='teams')){this.finish('draw');return true;}
     if(this.mode==='teams'){const red=living.some(s=>s.team==='red'),blue=living.some(s=>s.team==='blue');if(!red||!blue){this.finish(red?'red':blue?'blue':'draw');return true;}return false;}
     if(this.mode==='brawl'){
       if(living.length<=1||(living.length>0&&Boolean(living[0].team)&&living.every(s=>s.team===living[0].team))){this.finish(!living.length?'draw':living[0]?.npc?'boss':'member');return true;}
@@ -323,9 +435,11 @@ export class BattleEngine {
   private spawnEnemy(specId:string,npc:'boss'|'escort'){
     const original=this.specMap.get(specId);if(!original)return;
     const crowd=clamp(Math.sqrt(this.ships.filter(s=>!s.npc).length/32),.45,1.5);
-    const escortScale=defenseRules.escortDefenseMultiplier*crowd;
-    const defense=npc==='boss'?bossDefense(original,this.mode,this.initialFleet,this.initialFleet.length,this.wave):{hull:Math.round(original.hull*escortScale),shield:Math.round(original.shield*escortScale),shieldRegen:original.shieldRegen*escortScale};
-    const damageFactor=npc==='boss'?bossPopulation(this.initialFleet.length).damage*bossCoverageScale(original.mounts)*defenseRules.bossDamageMultiplier*(this.mode==='challenge'?defenseRules.challengeDamageMultiplier:1):defenseRules.escortDamageMultiplier*crowd;
+    const escortScale=this.referenceMode?1:defenseRules.escortDefenseMultiplier*crowd;
+    const tuned=npc==='boss'&&this.mode==='challenge'?original.encounterTuning:undefined,ratio=Math.max(1,this.initialFleet.length)/(tuned?.populationReference??32),tunedHealth=tuned?tuned.health*ratio**tuned.healthPower:1;
+    const tunedShield=tuned?tuned.shieldReference*(original.shield/tuned.shieldReference)**tuned.shieldPower*tunedHealth:original.shield;
+    const defense=tuned?{hull:Math.round(tuned.hullReference*(original.hull/tuned.hullReference)**tuned.hullPower*tunedHealth),shield:Math.round(tunedShield),shieldRegen:original.shieldRegen*tunedShield/Math.max(1,original.shield)}:npc==='boss'?bossDefense(original,this.mode,this.initialFleet,this.initialFleet.length,this.wave,this.referenceMode):{hull:Math.round(original.hull*escortScale),shield:Math.round(original.shield*escortScale),shieldRegen:original.shieldRegen*escortScale};
+    const damageFactor=tuned?tuned.damage*ratio**tuned.damagePower:this.referenceMode?1:npc==='boss'?bossPopulation(this.initialFleet.length).damage*bossRules.damageMultiplier*(this.mode==='challenge'?bossRules.challengeDamageMultiplier:1):defenseRules.escortDamageMultiplier*crowd;
     const mounts=damageFactor===1?original.mounts:original.mounts.map(m=>({...m,damage:m.damage*damageFactor}));
     const spec={...original,mounts,hull:defense.hull,shield:defense.shield,shieldRegen:defense.shieldRegen};
     const members=this.living.filter(s=>!s.npc),radius=Math.max(9,Math.max(spec.length,spec.beam)*.5);

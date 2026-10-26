@@ -4,6 +4,7 @@ import{BattleEngine}from'../src/sim/engine';
 import{STEP}from'../src/sim/engine';
 import{wrap}from'../src/sim/math';
 import{simulationSeconds}from'../src/sim/pacing';
+import rules from '../src/data/aim-tracking-rules.json';
 import type{ShipSpec}from'../src/sim/types';
 function duel(id='idris-p'){
  const owner=structuredClone(data.find(s=>s.id===id)!) as ShipSpec,target=structuredClone(data.find(s=>s.id==='arrow')!) as ShipSpec;
@@ -19,13 +20,15 @@ test.each(['idris-p','tiburon','mauler','odin'])('%s lateral movement escapes th
  expect(Math.abs(wrap(Math.atan2(target.y-owner.y,target.x-owner.x)-owner.heading))).toBeGreaterThan(.01);
 });
 test('firing retains 80% maximum turn rate with a bounded acceleration, and reverses gradually',()=>{
- const e=duel(),[owner,target]=e.ships,rate=owner.spec.turnRate*.8,acceleration=rate/simulationSeconds(.2);target.y=1000;
- let previous=0,peak=0;for(let i=0;i<30;i++){const heading=owner.heading;e.step();const velocity=wrap(owner.heading-heading)/STEP;expect(Math.abs(velocity)).toBeLessThanOrEqual(rate+1e-8);expect(Math.abs(velocity-previous)).toBeLessThanOrEqual(acceleration*STEP+1e-8);peak=Math.max(peak,velocity);previous=velocity;}
+ const e=duel(),[owner,target]=e.ships,rate=owner.spec.turnRate*rules.beamHullTurnFraction,acceleration=rate/simulationSeconds(rules.angularAccelerationSeconds);target.y=1000;
+ let previous=0,peak=0;for(let i=0;i<120;i++){const heading=owner.heading;e.step();const velocity=wrap(owner.heading-heading)/STEP;expect(Math.abs(velocity)).toBeLessThanOrEqual(rate+1e-8);expect(Math.abs(velocity-previous)).toBeLessThanOrEqual(acceleration*STEP+1e-8);peak=Math.max(peak,velocity);previous=velocity;}
  expect(peak).toBeCloseTo(rate,6);target.y=-1000;const heading=owner.heading;e.step();expect(wrap(owner.heading-heading)/STEP).toBeGreaterThan(0);
 });
 test('normal aiming and turning recover immediately after the beam ends, and reset drops its inertia',()=>{
- const e=duel(),[owner,target]=e.ships;target.y=1000;e.step();e.beams=[];target.y=-1000;const heading=owner.heading;e.step();expect(wrap(owner.heading-heading)).toBeCloseTo(-owner.spec.turnRate*STEP,6);
- const fresh=duel(),specs=fresh.ships.map(s=>s.spec);e.reset([{specId:specs[0].id,count:1},{specId:specs[1].id,count:1}],specs,42);e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i*1500;s.y=0;s.heading=0;s.cooldowns.fill(0)});e.start();e.step();e.ships[1].y=1000;const before=e.ships[0].heading;e.step();expect(wrap(e.ships[0].heading-before)).toBeCloseTo(owner.spec.turnRate*.8/simulationSeconds(.2)*STEP*STEP,6);
+ const e=duel(),[owner,target]=e.ships;target.y=1000;for(let i=0;i<90;i++)e.step();expect(owner.heading).toBeGreaterThan(0);e.beams=[];target.y=-1000;const heading=owner.heading;e.step();expect(wrap(owner.heading-heading)).toBeCloseTo(-owner.spec.turnRate*STEP,6);
+ const fresh=duel(),specs=fresh.ships.map(s=>s.spec);e.reset([{specId:specs[0].id,count:1},{specId:specs[1].id,count:1}],specs,42);e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i*1500;s.y=0;s.heading=0;s.cooldowns.fill(0)});e.start();e.step();e.ships[1].y=fresh.ships[1].y=1000;
+ e.step();fresh.step();expect(e.ships[0].heading).toBe(0);expect(fresh.ships[0].heading).toBe(0);
+ for(let i=0;i<90;i++){e.step();fresh.step();expect(e.ships[0].heading).toBeCloseTo(fresh.ships[0].heading,10);}expect(e.ships[0].heading).toBeGreaterThan(0);
 });
 test('pause freezes heading, beam lifetime and its damage settlement',()=>{
  const e=duel(),[owner,target]=e.ships;target.y=500;for(let i=0;i<10;i++)e.step();e.pause();const state={heading:owner.heading,remaining:e.beams[0].remaining,hits:e.hits};for(let i=0;i<120;i++)e.step();expect({heading:owner.heading,remaining:e.beams[0].remaining,hits:e.hits}).toEqual(state);

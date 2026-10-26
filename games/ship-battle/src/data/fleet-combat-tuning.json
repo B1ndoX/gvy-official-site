@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "enabled": false,
+  "referenceHull": 1000000,
+  "referenceShield": 500000,
+  "hullPower": 0.65,
+  "shieldPower": 0.65,
+  "bossHealth": 0.6,
+  "bossDamage": 0.5,
+  "populationReference": 32,
+  "populationHealthPower": 1,
+  "populationDamagePower": 0.5
+}

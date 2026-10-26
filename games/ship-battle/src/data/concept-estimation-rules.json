@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "description": "Estimates only missing source fields. Same airframe/series first, then mission and similar length; functional ships never use combat donors. Public weapon sizes/counts and known source facts are preserved. Not a game difficulty or output multiplier.",
+  "families": [{"pattern":"^hull-","reference":"hull-c"},{"pattern":"^[ace]1-spirit$","reference":"c1-spirit"},{"pattern":"^zeus(?:-|$)","reference":"zeus-mkii-es"}],
+  "lengthPowers": {"hullTotal":1.65,"shieldCapacity":1.3,"mass":2.2,"scm":-0.12,"yawDegrees":-0.5,"physicalDamageMultiplier":0,"energyDamageMultiplier":0,"shieldDelay":0,"shieldDownDelay":0},
+  "minimumLengthRatio":0.2,
+  "maximumLengthRatio":8
+}

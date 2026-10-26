@@ -1,0 +1,798 @@
+{
+  "inputs": {
+    "shipmatrix-index.json": "586ecdb98a6765dd88ca81a4059d6f25e1a4d78b79b340eb2a077b22a0bdb4cb",
+    "ship-supplemental.json": "14100c6287e7afc5e56f7cebada03b8fd867df3ed9ebffbd90937ee856e5aa62"
+  },
+  "ships": {
+    "javelin": {
+      "status": "reference",
+      "source": "Javelin",
+      "known": [
+        {
+          "weaponId": "reference-s9-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "s7-m9a-cannon",
+          "count": 26,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "s4-ad4b-ballistic-gatling",
+          "count": 12,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "missiles",
+          "name": "Aegis Retaliator Torpedo Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "MSD-442 Missile Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "merchantman": {
+      "status": "reference",
+      "source": "Merchantman",
+      "known": [
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s1-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "orion": {
+      "status": "reference",
+      "source": "Orion",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "hull-d": {
+      "status": "reference",
+      "source": "Hull D",
+      "known": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "weapons",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "TBD Missile",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "hull-e": {
+      "status": "reference",
+      "source": "Hull E",
+      "known": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "weapons",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "TBD Missile",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "genesis-starliner": {
+      "status": "reference",
+      "source": "Genesis",
+      "known": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "endeavor": {
+      "status": "reference",
+      "source": "Endeavor",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "crucible": {
+      "status": "reference",
+      "source": "Crucible",
+      "known": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "pioneer": {
+      "status": "reference",
+      "source": "Pioneer",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "vulcan": {
+      "status": "reference",
+      "source": "Vulcan",
+      "known": [
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "nautilus": {
+      "status": "reference",
+      "source": "Nautilus ",
+      "known": [
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "Remote Missile Turret",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "liberator": {
+      "status": "reference",
+      "source": "Liberator",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-repeater",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-missile",
+          "count": 16
+        }
+      ],
+      "unknown": []
+    },
+    "odyssey": {
+      "status": "reference",
+      "source": "Odyssey",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "expanse": {
+      "status": "reference",
+      "source": "Expanse",
+      "known": [
+        {
+          "weaponId": "reference-s1-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "legionnaire": {
+      "status": "reference",
+      "source": "Legionnaire",
+      "known": [
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "e1-spirit": {
+      "status": "reference",
+      "source": "E1 Spirit",
+      "known": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "missiles",
+          "name": "MSD-423 Missile Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "galaxy": {
+      "status": "reference",
+      "source": "Galaxy",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-missile",
+          "count": 8
+        }
+      ],
+      "unknown": []
+    },
+    "zeus-mkii-mr": {
+      "status": "reference",
+      "source": "Zeus Mk II MR",
+      "known": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-missile",
+          "count": 8
+        }
+      ],
+      "unknown": []
+    },
+    "arrastra": {
+      "status": "reference",
+      "source": "Arrastra",
+      "known": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 12,
+          "banks": [
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "reference-s3-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "reference-s1-missile",
+          "count": 32
+        }
+      ],
+      "unknown": []
+    },
+    "nautilus-solstice": {
+      "status": "reference",
+      "source": "Nautilus Solstice Edition",
+      "known": [
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "Remote Missile Turret",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ]
+    },
+    "pegasus": {
+      "status": "fallback",
+      "source": null,
+      "known": [],
+      "unknown": [],
+      "reason": "No reliable weapon size/count in available weapon-card sources; original simulation retained, not claimed authentic."
+    },
+    "retribution": {
+      "status": "fallback",
+      "source": null,
+      "known": [],
+      "unknown": [],
+      "reason": "No reliable weapon size/count in available weapon-card sources; original simulation retained, not claimed authentic."
+    },
+    "kraken-privateer": {
+      "status": "reference",
+      "source": "Kraken Privateer",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "kraken": {
+      "status": "reference",
+      "source": "Kraken",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "bengal": {
+      "status": "fallback",
+      "source": null,
+      "known": [],
+      "unknown": [],
+      "reason": "No reliable weapon size/count in available weapon-card sources; original simulation retained, not claimed authentic."
+    },
+    "endeavor-master-set": {
+      "status": "reference",
+      "source": "Endeavor",
+      "known": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "zeus": {
+      "status": "fallback",
+      "source": null,
+      "known": [],
+      "unknown": [],
+      "reason": "No reliable weapon size/count in available weapon-card sources; original simulation retained, not claimed authentic."
+    },
+    "mauler": {
+      "status": "reference",
+      "source": "Vanduul Mauler Destroyer",
+      "known": [
+        {
+          "weaponId": "reference-s10-beam",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s9-weapon-energy-cannon",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 10,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "unknown": []
+    },
+    "odin": {
+      "status": "reference",
+      "source": "Odin",
+      "known": [
+        {
+          "weaponId": "reference-s12-beam",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 24,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "reference-s2-pdc",
+          "count": 42,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s12-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            3,
+            3
+          ]
+        },
+        {
+          "weaponId": "reference-s10-weapon-energy-cannon",
+          "count": 11,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s12-torpedo",
+          "count": 20
+        }
+      ],
+      "unknown": []
+    }
+  }
+}

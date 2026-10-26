@@ -1,0 +1,4401 @@
+{
+  "version": 1,
+  "gameVersion": "4.10.2-LIVE.12913470",
+  "snapshotDate": "2026-10-20T12:38:06Z",
+  "inputSHA256": {
+    "ship-loadouts-erkul.json": "575ed87934f7561091161533c2520118f9d5306436466d1c9069667fa1741260",
+    "component-matrix-erkul.json": "8f5d6ade05b29f1483ed12e77109d7c1b8f342909dd91bdc4f2dc876a50103fc"
+  },
+  "ships": {
+    "f8c-lightning": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tarantula-gt-870-mark-2-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-tarantula-gt-870-mark-3-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F8C Lightning"
+    },
+    "gladius": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Gladius"
+    },
+    "arrow": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-yellowjacket-gt-210-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 3
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 3
+        }
+      ],
+      "sourceShip": "Anvil Arrow"
+    },
+    "hornet-mk2": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C Hornet Mk II"
+    },
+    "sabre": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Sabre"
+    },
+    "scorpius": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 8
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "RSI Scorpius"
+    },
+    "vanguard-warden": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-mvsa-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-sw16br2-sawbuck-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-deadbolt-v-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Vanguard Warden"
+    },
+    "constellation-andromeda": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 28
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk IV Andromeda"
+    },
+    "perseus": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 6
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 8
+        },
+        {
+          "weaponId": "s8-rsi-medusa-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-reaper-v-missile",
+          "count": 20
+        }
+      ],
+      "sourceShip": "RSI Perseus"
+    },
+    "polaris": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 7
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 12
+        },
+        {
+          "weaponId": "s4-omnisky-xii-cannon",
+          "count": 8
+        },
+        {
+          "weaponId": "s6-maris-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 12
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s10-vt-t10-veritas-torpedo",
+          "count": 28
+        }
+      ],
+      "sourceShip": "RSI Polaris"
+    },
+    "idris-p": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 11
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 8
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 14
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Idris-P",
+      "note": "基础P公开配装＋用户已确认K套件持续光束，不冒称基础P自带光束。"
+    },
+    "javelin": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Javelin",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/aegis-javelin/Javelin",
+      "systems": [
+        {
+          "weaponId": "reference-s9-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "s7-m9a-cannon",
+          "count": 26,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "s4-ad4b-ballistic-gatling",
+          "count": 12,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "missiles",
+          "name": "Aegis Retaliator Torpedo Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "MSD-442 Missile Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "aurora-es": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-9-series-longsword-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-taskforce-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I ES"
+    },
+    "aurora-lx": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I  LX"
+    },
+    "aurora-mr": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I MR"
+    },
+    "aurora-cl": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-taskforce-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I CL"
+    },
+    "aurora-ln": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I LN"
+    },
+    "300i": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-sw16br3-shredder-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 300i"
+    },
+    "315p": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-sw16br3-shredder-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 315p"
+    },
+    "325a": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-sw16br3-shredder-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Origin 325a"
+    },
+    "350r": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 350r"
+    },
+    "f7c-hornet": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7C Hornet Mk I"
+    },
+    "f7c-s-hornet-ghost": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7C-S Hornet Ghost Mk I"
+    },
+    "f7c-r-hornet-tracker": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7C-R Hornet Tracker Mk I"
+    },
+    "f7c-m-super-hornet": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C-M Super Hornet Mk I"
+    },
+    "freelancer": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Freelancer"
+    },
+    "m50": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin M50 Interceptor"
+    },
+    "caterpillar": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Drake Caterpillar"
+    },
+    "scythe": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-weak-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-war-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s5-wrath-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s1-arrow-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Vanduul Scythe"
+    },
+    "freelancer-dur": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-attrition-3-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Freelancer DUR"
+    },
+    "freelancer-max": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Freelancer MAX"
+    },
+    "freelancer-mis": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 20
+        }
+      ],
+      "sourceShip": "MISC Freelancer MIS"
+    },
+    "khartu-al": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aopoa Khartu-al"
+    },
+    "merchantman": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Merchantman",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/merchantman/Merchantman",
+      "systems": [
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s1-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "hull-c": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 6
+        }
+      ],
+      "sourceShip": "MISC Hull C"
+    },
+    "constellation-taurus": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk IV Taurus"
+    },
+    "constellation-aquila": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk IV Aquila"
+    },
+    "constellation-phoenix": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-omnisky-xv-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 28
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk IV Phoenix"
+    },
+    "reclaimer": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 7
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 12
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Reclaimer"
+    },
+    "890-jump": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 7
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 32
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Origin 890 Jump"
+    },
+    "cutlass-black": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Drake Cutlass Black"
+    },
+    "cutlass-red": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Cutlass Red"
+    },
+    "cutlass-blue": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-dr-model-xj3-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "Drake Cutlass Blue"
+    },
+    "redeemer": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-ad4b-ballistic-gatling",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-c-788-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Aegis Redeemer"
+    },
+    "herald": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 18
+        }
+      ],
+      "sourceShip": "Drake Herald"
+    },
+    "carrack": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil Carrack"
+    },
+    "gladiator": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-stalker-v-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil Gladiator"
+    },
+    "mustang-alpha": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "C.O. Mustang Alpha"
+    },
+    "mustang-beta": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "C.O. Mustang Beta"
+    },
+    "mustang-gamma": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "C.O. Mustang Gamma"
+    },
+    "mustang-delta": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "C.O. Mustang Delta"
+    },
+    "mustang-omega": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "C.O. Mustang Omega"
+    },
+    "orion": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Orion",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/orion/Orion",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "retaliator-bomber": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 10
+        },
+        {
+          "weaponId": "reference-s9-torpedo",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Aegis Retaliator",
+      "note": "基础舰公开炮塔＋用户已确认鱼雷模块；模块不在此聚合表内，保留原已确认鱼雷。",
+      "approvedModule": {
+        "name": "Front and rear torpedo modules",
+        "sourceURL": "https://media.robertsspaceindustries.com/7b992m2rft3xu/source.pdf",
+        "size": 9,
+        "capacity": 6
+      }
+    },
+    "hull-a": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "MISC Hull A"
+    },
+    "hull-b": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "MISC Hull B"
+    },
+    "hull-d": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Hull D",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/hull/Hull-D",
+      "systems": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "weapons",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "TBD Missile",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "hull-e": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Hull E",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/hull/Hull-E",
+      "systems": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "weapons",
+          "name": "TBD",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        },
+        {
+          "category": "missiles",
+          "name": "TBD Missile",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "starfarer": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Starfarer"
+    },
+    "starfarer-gemini": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 9
+        }
+      ],
+      "sourceShip": "MISC Starfarer Gemini"
+    },
+    "reliant-kore": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Reliant Kore"
+    },
+    "genesis-starliner": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Genesis",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/starliner/Genesis",
+      "systems": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "p-52-merlin": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tigerstrike-t-19p",
+          "count": 1
+        }
+      ],
+      "sourceShip": "Kruger P-52 Merlin"
+    },
+    "glaive": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-weak-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-wrath-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-bullet-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Esperia Glaive"
+    },
+    "vanguard-harbinger": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cvsa-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-deadbolt-v-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-stalker-v-missile",
+          "count": 3
+        }
+      ],
+      "sourceShip": "Aegis Vanguard Harbinger"
+    },
+    "vanguard-sentinel": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-atvs-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-suckerpunch-l-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-attrition-5-repeater",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Vanguard Sentinel"
+    },
+    "endeavor": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Endeavor",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/misc-endeavor/Endeavor",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "retaliator-base": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 10
+        },
+        {
+          "weaponId": "reference-s9-torpedo",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Aegis Retaliator",
+      "note": "基础舰公开炮塔＋用户已确认鱼雷模块；模块不在此聚合表内，保留原已确认鱼雷。",
+      "approvedModule": {
+        "name": "Front and rear torpedo modules",
+        "sourceURL": "https://media.robertsspaceindustries.com/7b992m2rft3xu/source.pdf",
+        "size": 9,
+        "capacity": 6
+      }
+    },
+    "avenger-stalker": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Avenger Stalker"
+    },
+    "avenger-warlock": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Avenger Warlock"
+    },
+    "avenger-titan": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Avenger Titan"
+    },
+    "crucible": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Crucible",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/crucible/Crucible",
+      "systems": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "p72-archimedes": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Kruger P-72 Archimedes"
+    },
+    "reliant-mako": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Reliant Mako"
+    },
+    "reliant-sen": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "MISC Reliant Sen"
+    },
+    "reliant-tana": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "MISC Reliant Tana"
+    },
+    "blade": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-whip-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-warlord-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-arrow-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Esperia Blade"
+    },
+    "prospector": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "MISC Prospector"
+    },
+    "buccaneer": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-yellowjacket-gt-210-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Buccaneer"
+    },
+    "mpuv-personnel": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Argo MPUV Personnel",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "mpuv-cargo": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Argo MPUV Cargo",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "terrapin": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil Terrapin"
+    },
+    "prowler": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-lightstrike-iii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-deadbolt-v-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Esperia Prowler"
+    },
+    "85x": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 85X Limited"
+    },
+    "razor": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Mirai Razor"
+    },
+    "vanguard-hoplite": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-brvs-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-sw16br2-sawbuck-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-deadbolt-v-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Vanguard Hoplite"
+    },
+    "hurricane": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil Hurricane"
+    },
+    "defender": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-singe-cannon-s3",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Banu Defender"
+    },
+    "eclipse": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s9-argos-ix-torpedo",
+          "count": 3
+        }
+      ],
+      "sourceShip": "Aegis Eclipse"
+    },
+    "600i-touring": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 3
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Origin 600i Touring"
+    },
+    "600i-explorer": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 3
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Origin 600i"
+    },
+    "pioneer": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Pioneer",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/pioneer/Pioneer",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "hawk": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-suckerpunch-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil Hawk"
+    },
+    "hammerhead": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 24
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Aegis Hammerhead"
+    },
+    "vulcan": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Vulcan",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/vulcan/Vulcan",
+      "systems": [
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "razor-ex": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-hellion-scattergun",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Mirai Razor EX"
+    },
+    "razor-lx": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Mirai Razor LX"
+    },
+    "100i": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 100i"
+    },
+    "125a": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Origin 125a"
+    },
+    "135c": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Origin 135c"
+    },
+    "c2-hercules": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Crusader C2 Hercules Starlifter"
+    },
+    "m2-hercules": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Crusader M2 Hercules Starlifter"
+    },
+    "a2-hercules": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-omnisky-xv-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Crusader A2 Hercules Starlifter"
+    },
+    "vulture": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Vulture"
+    },
+    "apollo-triage": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "RSI Apollo Triage"
+    },
+    "apollo-medivac": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "RSI Apollo Medivac"
+    },
+    "mercury-star-runner": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Crusader Mercury Star Runner"
+    },
+    "valkyrie": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil Valkyrie"
+    },
+    "san-tok-yai": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-yeng-tu-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Aopoa San'tok.yāi"
+    },
+    "srv": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Argo SRV",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "corsair": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Drake Corsair"
+    },
+    "nautilus": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Nautilus ",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/aegis-nautilus/Nautilus",
+      "systems": [
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "Remote Missile Turret",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "mantis": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-fl-33-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 6
+        }
+      ],
+      "sourceShip": "RSI Mantis"
+    },
+    "c8x-pisces-expedition": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-fl-11-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil C8X Pisces Expedition"
+    },
+    "ares-inferno": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s7-sf7b-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 12
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Crusader Ares Star Fighter Inferno"
+    },
+    "ares-ion": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s7-sf7e-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 12
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Crusader Ares Star Fighter Ion"
+    },
+    "mole": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Argo MOLE"
+    },
+    "talon": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-lightstrike-iv-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Esperia Talon"
+    },
+    "talon-shrike": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-lightstrike-ii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "Esperia Talon Shrike"
+    },
+    "nomad": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 3
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "C.O. Nomad"
+    },
+    "railen": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        },
+        {
+          "weaponId": "s1-taskforce-i-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Gatac Railen"
+    },
+    "400i": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Origin 400i"
+    },
+    "liberator": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Liberator",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/liberator/Liberator",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-repeater",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-missile",
+          "count": 16
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "raft": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Argo RAFT"
+    },
+    "odyssey": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Odyssey",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/odyssey/Odyssey",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "cutlass-steel": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Drake Cutlass Steel"
+    },
+    "expanse": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Expanse",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/expanse/Expanse",
+      "systems": [
+        {
+          "weaponId": "reference-s1-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "legionnaire": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Legionnaire",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/legionnaire/Legionnaire",
+      "systems": [
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "c1-spirit": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Crusader C1 Spirit"
+    },
+    "a1-spirit": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Crusader A1 Spirit"
+    },
+    "e1-spirit": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "E1 Spirit",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/spirit/E1-Spirit",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "s3-m5a-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "missiles",
+          "name": "MSD-423 Missile Rack",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "c8r": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil C8R Pisces Rescue"
+    },
+    "cutter": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Drake Cutter"
+    },
+    "scorpius-antares": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "RSI Scorpius Antares"
+    },
+    "galaxy": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Galaxy",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/galaxy/Galaxy",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-missile",
+          "count": 8
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "fury": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Mirai Fury"
+    },
+    "fury-mx": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 12
+        }
+      ],
+      "sourceShip": "Mirai Fury MX"
+    },
+    "fury-lx": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Mirai Fury LX",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "zeus-mkii-es": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-omnisky-xii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "RSI Zeus Mk II ES"
+    },
+    "zeus-mkii-mr": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Zeus Mk II MR",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/zeus-mk-ii/Zeus-Mk-II-MR",
+      "systems": [
+        {
+          "weaponId": "reference-s4-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s2-missile",
+          "count": 8
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "zeus-mkii-cl": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-omnisky-xii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "RSI Zeus Mk II CL"
+    },
+    "cutter-scout": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Cutter Scout"
+    },
+    "arrastra": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Arrastra",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/arrastra/Arrastra",
+      "systems": [
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 12,
+          "banks": [
+            4,
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "reference-s3-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "reference-s1-missile",
+          "count": 32
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "syulen": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 3
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 12
+        }
+      ],
+      "sourceShip": "Gatac Syulen"
+    },
+    "cutter-rambler": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Drake Cutter Rambler"
+    },
+    "sabre-firebird": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "Aegis Sabre Firebird"
+    },
+    "mpuv-tractor": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Argo MPUV Tractor",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "ironclad": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-scorpion-gt-215-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-sw16br3-shredder-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s5-ad5b-ballistic-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-reaper-v-missile",
+          "count": 10
+        }
+      ],
+      "sourceShip": "Drake Ironclad"
+    },
+    "ironclad-assault": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-scorpion-gt-215-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-sw16br3-shredder-repeater",
+          "count": 16
+        },
+        {
+          "weaponId": "s5-ad5b-ballistic-gatling",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-reaper-v-missile",
+          "count": 10
+        }
+      ],
+      "sourceShip": "Drake Ironclad Assault"
+    },
+    "sabre-peregrine": {
+      "status": "unarmed",
+      "match": "direct",
+      "systems": [],
+      "sourceShip": "Aegis Sabre Peregrine",
+      "note": "公开快照无舰载作战武器；保留模型，战斗抽签不凭空装炮。"
+    },
+    "starlancer-max": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "MISC Starlancer MAX"
+    },
+    "starlancer-tac": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 12
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "MISC Starlancer TAC"
+    },
+    "intrepid": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 1
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Crusader Intrepid"
+    },
+    "paladin": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s4-raptor-iv-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil Paladin"
+    },
+    "terrapin-medic": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil Terrapin Medic"
+    },
+    "f7c-r-hornet-tracker-mk-ii": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C-R Hornet Tracker Mk II"
+    },
+    "f7c-s-hornet-ghost-mk-ii": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C-S Hornet Ghost Mk II"
+    },
+    "guardian": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Mirai Guardian"
+    },
+    "guardian-qi": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Mirai Guardian QI"
+    },
+    "fortune": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "MISC Fortune"
+    },
+    "sabre-comet": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-pyroburst-scattergun",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Sabre Comet"
+    },
+    "gladius-valiant": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-pioneer-i-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Gladius Valiant"
+    },
+    "f7c-hornet-wildfire": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-tarantula-gt-870-mark-3-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7C Hornet Wildfire Mk I"
+    },
+    "avenger-titan-renegade": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-11-series-broadsword-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Avenger Titan Renegade"
+    },
+    "caterpillar-pirate": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Drake Caterpillar Pirate"
+    },
+    "constellation-phoenix-emerald": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-omnisky-xv-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 28
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk IV Phoenix Emerald"
+    },
+    "valkyrie-liberator": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        }
+      ],
+      "variantOf": "valkyrie",
+      "sourceShip": "Anvil Valkyrie"
+    },
+    "mustang-alpha-vindicator": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "variantOf": "mustang-alpha",
+      "sourceShip": "C.O. Mustang Alpha"
+    },
+    "f7cm-hornet-heartseeker-mkii": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-tmsb-5-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C-M Hornet Heartseeker Mk II"
+    },
+    "f7c-m-super-hornet-heartseeker": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-m6a-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-rattler-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7C-M Hornet Heartseeker Mk I"
+    },
+    "nautilus-solstice": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Nautilus Solstice Edition",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/aegis-nautilus/Nautilus-Solstice-Edition",
+      "systems": [
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s3-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "partial",
+      "unknown": [
+        {
+          "category": "turrets",
+          "name": "Remote Missile Turret",
+          "reason": "Unknown weapon size/model or launcher capacity; rack size is not missile size"
+        }
+      ],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "pirate-gladius": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 2
+        }
+      ],
+      "variantOf": "gladius",
+      "sourceShip": "Aegis Gladius"
+    },
+    "cutlass-black-2949-best-in-show": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "variantOf": "cutlass-black",
+      "sourceShip": "Drake Cutlass Black"
+    },
+    "caterpillar-2949-best-in-show": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        }
+      ],
+      "variantOf": "caterpillar",
+      "sourceShip": "Drake Caterpillar"
+    },
+    "hammerhead-2949-best-in-show": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 24
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 16
+        }
+      ],
+      "variantOf": "hammerhead",
+      "sourceShip": "Aegis Hammerhead"
+    },
+    "reclaimer-2949-best-in-show": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 7
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 12
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 2
+        }
+      ],
+      "variantOf": "reclaimer",
+      "sourceShip": "Aegis Reclaimer"
+    },
+    "mole-carbon": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "variantOf": "mole",
+      "sourceShip": "Argo MOLE"
+    },
+    "mole-talus": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        }
+      ],
+      "variantOf": "mole",
+      "sourceShip": "Argo MOLE"
+    },
+    "carrack-c8x": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        }
+      ],
+      "variantOf": "carrack",
+      "sourceShip": "Anvil Carrack"
+    },
+    "carrack-expedition-c8x": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        }
+      ],
+      "variantOf": "carrack-expedition",
+      "sourceShip": "Anvil Carrack Expedition"
+    },
+    "carrack-expedition": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil Carrack Expedition"
+    },
+    "p72-archimedes-emerald": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Kruger P-72 Archimedes Emerald"
+    },
+    "f7c-m-super-hornet-mk-ii": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7C-M Super Hornet Mk II"
+    },
+    "golem": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Golem"
+    },
+    "guardian-mx": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 24
+        }
+      ],
+      "sourceShip": "Mirai Guardian MX"
+    },
+    "asgard": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 6
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Anvil Asgard"
+    },
+    "prowler-utility": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-deadbolt-iii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-lightstrike-iv-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Esperia Prowler Utility"
+    },
+    "meteor": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-fl-33-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-leonids-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-raptor-iv-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "RSI Meteor"
+    },
+    "l-21-wolf": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-relentless-l-21-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Kruger L-21 Wolf"
+    },
+    "stinger": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-lightstrike-ii-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-lightstrike-iv-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-wrath-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s2-bullet-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Esperia Stinger"
+    },
+    "shiv": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s3-tormenter-s3-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-breakneck-s4-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Grey's Shiv"
+    },
+    "l22-alphawolf": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-axiom-l-22-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Kruger L-22 Alpha Wolf"
+    },
+    "salvation": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        }
+      ],
+      "sourceShip": "RSI Salvation"
+    },
+    "clipper": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 12
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 3
+        }
+      ],
+      "sourceShip": "Drake Clipper"
+    },
+    "golem-ox": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Drake Golem OX"
+    },
+    "hermes": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "RSI Hermes"
+    },
+    "moth": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Argo MOTH"
+    },
+    "aurora-mk-ii": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk II"
+    },
+    "pegasus": {
+      "status": "fallback",
+      "match": "missing",
+      "systems": [],
+      "note": "同版本公开快照缺项，保留当前已确认模拟配装；不宣称原作精确武器。"
+    },
+    "retribution": {
+      "status": "fallback",
+      "match": "missing",
+      "systems": [],
+      "note": "同版本公开快照缺项，保留当前已确认模拟配装；不宣称原作精确武器。"
+    },
+    "sabre-raven": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-quarreler-cannon",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Aegis Sabre Raven"
+    },
+    "kraken-privateer": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Kraken Privateer",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/drake-kraken/Kraken-Privateer",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "kraken": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Kraken",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/drake-kraken/Kraken",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 8,
+          "banks": [
+            2,
+            2,
+            2,
+            2
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "idris-m": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-m2c-swarm",
+          "count": 11
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 8
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 12
+        },
+        {
+          "weaponId": "s7-m9a-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s10-destroyer-mass-driver-cannon",
+          "count": 1
+        },
+        {
+          "weaponId": "s5-stalker-v-missile",
+          "count": 10
+        }
+      ],
+      "sourceShip": "Aegis Idris-M"
+    },
+    "f8c-lightning-executive": {
+      "status": "snapshot",
+      "match": "paint-or-package-variant",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tarantula-gt-870-mark-2-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-tarantula-gt-870-mark-3-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "variantOf": "f8c-lightning",
+      "sourceShip": "Anvil F8C Lightning"
+    },
+    "f7a-hornet": {
+      "status": "snapshot",
+      "match": "explicit-alias",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s4-ad4b-ballistic-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 8
+        },
+        {
+          "weaponId": "s2-dominator-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Anvil F7A Hornet Mk I"
+    },
+    "c8-pisces": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "Anvil C8 Pisces"
+    },
+    "600i-executive": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s5-m7a-cannon",
+          "count": 3
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Origin 600i Executive Edition"
+    },
+    "bengal": {
+      "status": "fallback",
+      "match": "missing",
+      "systems": [],
+      "note": "同版本公开快照缺项，保留当前已确认模拟配装；不宣称原作精确武器。"
+    },
+    "endeavor-master-set": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Endeavor",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/misc-endeavor/Endeavor",
+      "systems": [
+        {
+          "weaponId": "reference-s5-weapon-energy-cannon",
+          "count": 4,
+          "banks": [
+            2,
+            2
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "zeus": {
+      "status": "fallback",
+      "match": "missing",
+      "systems": [],
+      "note": "同版本公开快照缺项，保留当前已确认模拟配装；不宣称原作精确武器。"
+    },
+    "f7a-mkii": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-revenant-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Anvil F7A Hornet Mk II"
+    },
+    "aurora-se": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-ignite-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "RSI Aurora Mk I SE"
+    },
+    "pitbull": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s1-cf-117-bulldog-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 6
+        }
+      ],
+      "sourceShip": "Drake Pitbull"
+    },
+    "m80": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s1-pioneer-i-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s3-thunderbolt-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Origin M80"
+    },
+    "tiburon": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s7-c-07t-cannon",
+          "count": 4
+        },
+        {
+          "weaponId": "s10-supremacy-10t-laser-beam",
+          "count": 1
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s3-viper-iii-missile",
+          "count": 16
+        }
+      ],
+      "sourceShip": "Aegis Tiburon"
+    },
+    "mauler": {
+      "status": "reference",
+      "match": "bot-supplemental-weapon-card",
+      "sourceShip": "Vanduul Mauler Destroyer",
+      "sourceURL": "https://api.star-citizen.wiki/vehicles/vncl-mauler",
+      "systems": [
+        {
+          "weaponId": "reference-s10-beam",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s2-weapon-energy-cannon",
+          "count": 2,
+          "banks": [
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s9-weapon-energy-cannon",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s7-weapon-energy-cannon",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s6-weapon-energy-cannon",
+          "count": 10,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "starlite": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-spark-i-missile",
+          "count": 2
+        }
+      ],
+      "sourceShip": "MISC Starlite"
+    },
+    "tyilui": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-cf-447-rhino-repeater",
+          "count": 8
+        },
+        {
+          "weaponId": "s1-taskforce-i-missile",
+          "count": 16
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Gatac Tyilui"
+    },
+    "basher": {
+      "status": "snapshot",
+      "match": "unique-alias",
+      "systems": [
+        {
+          "weaponId": "s2-deathroll-s2-gatling",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-snapper-s2-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Grey's Basher"
+    },
+    "s-65-stingray": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s2-whiptail-str-e2-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s4-axiom-l-22-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Kruger S-65 Stingray"
+    },
+    "odin": {
+      "status": "reference",
+      "match": "bot-rsi-weapon-card",
+      "sourceShip": "Odin",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/odin/Odin",
+      "systems": [
+        {
+          "weaponId": "reference-s12-beam",
+          "count": 1,
+          "banks": [
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s8-weapon-energy-cannon",
+          "count": 24,
+          "banks": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            4,
+            4
+          ]
+        },
+        {
+          "weaponId": "reference-s2-pdc",
+          "count": 42,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s12-weapon-energy-cannon",
+          "count": 6,
+          "banks": [
+            3,
+            3
+          ]
+        },
+        {
+          "weaponId": "reference-s10-weapon-energy-cannon",
+          "count": 11,
+          "banks": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "weaponId": "reference-s12-torpedo",
+          "count": 20
+        }
+      ],
+      "coverage": "size-and-count",
+      "unknown": [],
+      "note": "Only weapon-card fields. Unpublished model/type/performance remain explicitly estimated; no hull, shield, engine or other systems copied."
+    },
+    "sabre-raven-ex": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-omnisky-ix-cannon",
+          "count": 2
+        },
+        {
+          "weaponId": "s3-arrester-iii-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Aegis Sabre Raven EX"
+    },
+    "constellation-mkv-centaurus": {
+      "status": "snapshot",
+      "match": "direct",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 8
+        },
+        {
+          "weaponId": "s5-cf-557-galdereen-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-strikeforce-ii-missile",
+          "count": 32
+        }
+      ],
+      "sourceShip": "RSI Constellation Mk V Centaurus"
+    }
+  },
+  "referenceInputs": {
+    "shipmatrix-index.json": "586ecdb98a6765dd88ca81a4059d6f25e1a4d78b79b340eb2a077b22a0bdb4cb",
+    "ship-supplemental.json": "14100c6287e7afc5e56f7cebada03b8fd867df3ed9ebffbd90937ee856e5aa62"
+  }
+}

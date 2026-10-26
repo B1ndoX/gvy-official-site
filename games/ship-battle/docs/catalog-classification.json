@@ -599,6 +599,10 @@
     {
       "id": "syulen",
       "reason": "当前渲染为三翼立式展示姿态，尚未取得适合平面飞行的投影与舰首校准。"
+    },
+    {
+      "id": "zeus",
+      "reason": "Unverified concept/historical artwork tagged catalogFake in source catalog; not Zeus Mk II. No verified combat fitting."
     }
   ]
 }

@@ -1,11 +1,12 @@
 import type { ShipSpec, Mount, Vec } from '../sim/types';
+import fleetLoadouts from '../data/fleet-weapon-loadouts.json';
 
 export interface ShipAsset {
   shipId: string; url: string;
   author: string; source: string; permission: string;
   licenseStatus: 'permission-recorded' | 'user-directed-noncommercial';
   length: number; beam: number; noseDegrees: number; center: Vec;
-  engines: Vec[]; mounts: Mount[]; calibrated: boolean; combatVersion?:number; turretLayoutVersion?:number;
+  engines: Vec[]; mounts: Mount[]; calibrated: boolean; combatVersion?:number; turretLayoutVersion?:number; engineLayoutVersion?:number;
 }
 export interface AssetManifest { version: 1; assets: ShipAsset[] }
 const DB='gvy-ship-battle-assets-v1';
@@ -35,10 +36,12 @@ export function validateAsset(value:unknown,ids:Set<string>):asserts value is Sh
   if(!finite(a.length,1,5000)||!finite(a.beam,1,5000)||!finite(a.noseDegrees,-360,360))throw new Error('长度、宽度或舰首角度无效');
   if(!a.center||!finite(a.center.x,0,1)||!finite(a.center.y,0,1))throw new Error('旋转中心必须位于图片范围内');
   if(!['permission-recorded','user-directed-noncommercial'].includes(a.licenseStatus)||![a.author,a.source,a.permission].every(s=>typeof s==='string'&&s.trim().length>1&&s.length<=3000))throw new Error('请保留作者、来源和使用许可记录');
-  if(!Array.isArray(a.engines)||a.engines.length>32||!Array.isArray(a.mounts)||a.mounts.length<1||a.mounts.length>64)throw new Error('喷口最多 32 个，武器挂点需要 1–64 个');
+  if(!Array.isArray(a.engines)||a.engines.length>32||!Array.isArray(a.mounts)||a.mounts.length>64||a.mounts.length===0&&(fleetLoadouts.ships as Record<string,{status:string}>)[a.shipId]?.status!=='unarmed')throw new Error('喷口最多 32 个，武器挂点最多64个（无武装舰可为空）');
   for(const p of [...a.engines,...a.mounts])if(!finite(p.x,-1,1)||!finite(p.y,-1,1))throw new Error('挂点坐标超出范围');
   const mountIds=new Set();
-  for(const m of a.mounts){if(m.role!==undefined&&!['main','point-defense','anti-capital'].includes(m.role))throw new Error('武器定位不合法');if(typeof m.id!=='string'||mountIds.has(m.id)||!['laser','turret','missile','beam','railgun','torpedo','ballistic'].includes(m.kind)||!finite(m.facing,-180,180)||!finite(m.arc,1,360)||!finite(m.cooldown,.05,60)||!finite(m.damage,1,250000)||!finite(m.range,10,10000)||!finite(m.speed,10,10000)||!finite(m.turnRate,.01,30))throw new Error('武器挂点参数不合法');
+  for(const m of a.mounts){if(m.role!==undefined&&!['main','point-defense','anti-capital'].includes(m.role))throw new Error('武器定位不合法');if(typeof m.id!=='string'||mountIds.has(m.id)||!['laser','turret','missile','beam','railgun','torpedo','ballistic'].includes(m.kind)||!finite(m.facing,-180,180)||!finite(m.arc,1,360)||!finite(m.cooldown,.05,60)||!finite(m.damage,1,10000000)||!finite(m.range,10,10000)||!finite(m.speed,10,10000)||!finite(m.turnRate,.01,30))throw new Error('武器挂点参数不合法');
+    if(m.weaponCount!==undefined&&(!Number.isInteger(m.weaponCount)||!finite(m.weaponCount,1,256))||m.interceptsOnly!==undefined&&(typeof m.interceptsOnly!=='boolean'||m.interceptsOnly&&m.kind!=='turret')||m.ammoReload!==undefined&&(!finite(m.ammoReload,1,120)||m.ammo===undefined)||m.pellets!==undefined&&(!Number.isInteger(m.pellets)||!finite(m.pellets,1,9))||m.scatterAngle!==undefined&&!finite(m.scatterAngle,0,.4)||m.weaponId!==undefined&&(typeof m.weaponId!=='string'||m.weaponId.length<1||m.weaponId.length>160)||m.damageType!==undefined&&m.damageType!=='distortion'||m.cooldownJitter!==undefined&&!finite(m.cooldownJitter,0,.3)||m.barrels!==undefined&&(!Number.isInteger(m.barrels)||!finite(m.barrels,1,8))||m.barrelSpacing!==undefined&&!finite(m.barrelSpacing,0,20)||m.ammo!==undefined&&(!Number.isInteger(m.ammo)||!finite(m.ammo,1,1000000))||m.launcherCount!==undefined&&(!Number.isInteger(m.launcherCount)||!finite(m.launcherCount,1,8)||m.kind!=='torpedo'||m.ammo===undefined)||m.projectileKind!==undefined&&(m.projectileKind!=='ballistic'||m.kind!=='turret')||m.impact!==undefined&&!['heavy-cannon','heavy-torpedo'].includes(m.impact)||m.impact==='heavy-torpedo'&&m.kind!=='torpedo'||m.impact==='heavy-cannon'&&(m.kind!=='turret'||m.projectileKind!=='ballistic')||m.weaponName!==undefined&&(typeof m.weaponName!=='string'||m.weaponName.length>120)||m.weaponSize!==undefined&&(!Number.isInteger(m.weaponSize)||!finite(m.weaponSize,1,20)))throw new Error('重型武器分组参数不合法');
+    if(m.capacitor!==undefined&&(!Number.isInteger(m.capacitor)||!finite(m.capacitor,1,1000000)||m.ammo!==undefined)||m.resourceEstimated!==undefined&&typeof m.resourceEstimated!=='boolean')throw new Error('武器弹药或电容参数不合法');
     if(m.beamWidth!==undefined&&!finite(m.beamWidth,1,1000)||m.kind==='beam'&&!finite(m.duration,.1,8)||m.charge!==undefined&&!finite(m.charge,0,5)||m.emitters!==undefined&&(!Array.isArray(m.emitters)||m.emitters.length<1||m.emitters.length>12||!m.emitters.every(x=>finite(x,-.5,.5)))||m.width!==undefined&&!finite(m.width,.5,8)||m.color!==undefined&&!finite(m.color,0,0xffffff)||m.burstCount!==undefined&&(!Number.isInteger(m.burstCount)||!finite(m.burstCount,1,16))||m.burstCooldown!==undefined&&!finite(m.burstCooldown,.05,15))throw new Error('武器周期参数不合法');mountIds.add(m.id);}
   if(typeof a.calibrated!=='boolean')throw new Error('缺少校准状态');
 }
@@ -49,11 +52,13 @@ export function withAssets(specs:ShipSpec[],assets:ShipAsset[]):ShipSpec[]{
 export const assetURL=(a:ShipAsset)=>a.url.startsWith('data:')?a.url:import.meta.env.BASE_URL+a.url;
 export function upgradeCombat(local:ShipAsset,builtin:ShipAsset):ShipAsset{
   const combat=(local.combatVersion??0)<(builtin.combatVersion??0),layout=(local.turretLayoutVersion??0)<(builtin.turretLayoutVersion??0);
-  if(!combat&&!layout)return local;
+  const engineLayout=(local.engineLayoutVersion??0)<(builtin.engineLayoutVersion??0);
+  if(!combat&&!layout&&!engineLayout)return local;
   const localMounts=new Map(local.mounts.map(m=>[m.id,m]));
   // Upgrade stock render geometry; explicit user calibrations and custom artwork remain theirs.
   const stockLayout=layout&&!local.calibrated&&local.url===builtin.url;
-  return {...local,combatVersion:builtin.combatVersion,turretLayoutVersion:builtin.turretLayoutVersion,mounts:builtin.mounts.map(m=>{const old=localMounts.get(m.id);return old?{...m,x:stockLayout&&m.kind==='turret'?m.x:old.x,y:stockLayout&&m.kind==='turret'?m.y:old.y,facing:stockLayout&&m.kind==='turret'?m.facing:old.facing,arc:stockLayout&&m.kind==='turret'?m.arc:old.arc}:m;})};
+  const stockDimensions=combat&&!local.calibrated&&local.url===builtin.url&&(builtin.combatVersion??0)>=14;
+  return {...local,...(engineLayout&&!local.calibrated&&local.url===builtin.url?{engines:builtin.engines}:{}),engineLayoutVersion:builtin.engineLayoutVersion,...(stockDimensions?{length:builtin.length,beam:builtin.beam}:{}),combatVersion:builtin.combatVersion,turretLayoutVersion:builtin.turretLayoutVersion,mounts:builtin.mounts.map(m=>{const old=localMounts.get(m.id),point=stockLayout&&(m.kind==='turret'||(builtin.combatVersion??0)>=11&&!!m.weaponId);return old?{...m,x:point?m.x:old.x,y:point?m.y:old.y,facing:m.fireControl==='pilot'?0:point?m.facing:old.facing,arc:m.fireControl==='pilot'?m.arc:point?m.arc:old.arc}:m;})};
 }
 export async function readLibrary(specs:ShipSpec[]):Promise<{assets:ShipAsset[];warning:string|null}>{
   const ids=new Set(specs.map(s=>s.id));

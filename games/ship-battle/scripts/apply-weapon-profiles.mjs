@@ -1,6 +1,8 @@
 import { readFile,writeFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
+import {applyFleetWeapons,applyFleetGunFirepower,usesFleetWeapons,FLEET_WEAPON_VERSION,fittingVersion} from './fleet-weapon-mapping.mjs';
 const root=new URL('../',import.meta.url);
+const statRules=JSON.parse(await readFile(new URL('src/data/ship-game-balance.json',root),'utf8'));
 const layouts=JSON.parse(await readFile(new URL('src/data/turret-layouts.json',root),'utf8'));
 export function applyTurretLayouts(ships){
   for(const ship of ships){
@@ -17,11 +19,12 @@ export function applyTurretLayouts(ships){
     }
   }return ships;
 }
-export function turretLayoutVersion(id){return layouts.ships[id]?(layouts.ships[id].version??layouts.version):0;}
+export function turretLayoutVersion(id){return Math.max(layouts.ships[id]?(layouts.ships[id].version??layouts.version):0,usesFleetWeapons(id)?4:0);}
 const profiles=JSON.parse(await readFile(new URL('src/data/weapon-profiles.json',root),'utf8'));
-export function weaponProfileVersion(id,fallback){const p=profiles.ships.find(p=>p.id===id);return Math.max(p?(p.combatVersion??profiles.version):fallback,profiles.capitalCoverage?.ships[id]?profiles.capitalCoverage.version:0);}
+export function weaponProfileVersion(id,fallback){const p=profiles.ships.find(p=>p.id===id);return Math.max(statRules.combatVersion,p?(p.combatVersion??profiles.version):fallback,profiles.capitalCoverage?.ships[id]?profiles.capitalCoverage.version:0,usesFleetWeapons(id)?FLEET_WEAPON_VERSION:0,fittingVersion(id));}
 export function applyCapitalCoverage(ships){
   for(const ship of ships){
+    if(usesFleetWeapons(ship.id))continue;
     const count=profiles.capitalCoverage?.ships[ship.id];if(!count||ship.length<profiles.capitalCoverage.minLength)continue;
     ship.mounts=ship.mounts.filter(m=>!m.id.startsWith('coverage-turret-'));
     const template=ship.mounts.find(m=>m.kind==='turret'&&m.role==='point-defense');if(!template)throw new Error(`Missing defense turret ${ship.id}`);
@@ -29,22 +32,30 @@ export function applyCapitalCoverage(ships){
   }return applyTurretLayouts(ships);
 }
 /** Idempotent: regeneration cannot silently restore the old generic weapons. */
-export function applyWeaponProfiles(ships){
+export function applyWeaponProfiles(ships,selectedIds=null){
+  applyFleetWeapons(selectedIds?ships.filter(s=>selectedIds.has(s.id)):ships);
   for(const p of profiles.ships){
+    if(selectedIds&&!selectedIds.has(p.id))continue;
+    if(['eclipse','retaliator-base','retaliator-bomber'].includes(p.id)&&usesFleetWeapons(p.id))continue;
     const s=ships.find(s=>s.id===p.id);if(!s)throw new Error(`Unknown weapon profile ${p.id}`);
     s.mounts=s.mounts.filter(m=>!m.id.startsWith('coverage-turret-'));
-    const replaced=new Set([...p.remove,...p.mounts.map(m=>m.id)]);
+    const replaced=new Set([...(usesFleetWeapons(p.id)?[]:p.remove),...p.mounts.map(m=>m.id)]);
     const support=s.mounts.filter(m=>!replaced.has(m.id));
-    if(p.supportDps!==undefined){const total=support.reduce((n,m)=>n+m.damage/m.cooldown,0);for(const m of support)m.damage=Number((m.damage*p.supportDps/total).toFixed(2));}
+    if(p.supportDps!==undefined&&!usesFleetWeapons(p.id)){const total=support.reduce((n,m)=>n+m.damage/m.cooldown,0);for(const m of support)m.damage=Number((m.damage*p.supportDps/total).toFixed(2));}
     s.mounts=[...structuredClone(p.mounts),...support];
   }
-  return applyCapitalCoverage(ships);
+  applyCapitalCoverage(selectedIds?ships.filter(s=>selectedIds.has(s.id)):ships);
+  applyFleetGunFirepower(selectedIds?ships.filter(s=>selectedIds.has(s.id)):ships,profiles.ships);
+  return ships;
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href){
-  const file=new URL('src/data/ships.json',root),ships=applyWeaponProfiles(JSON.parse(await readFile(file,'utf8')));
+  const file=new URL('src/data/ships.json',root),ships=JSON.parse(await readFile(file,'utf8'));
+  const selection=process.argv.find(arg=>arg.startsWith('--ships='))?.slice(8).split(',').filter(Boolean),selectedIds=selection?new Set(selection):null;
+  if(selectedIds&&[...selectedIds].some(id=>!ships.some(s=>s.id===id)))throw new Error('Unknown selected ship');
+  applyWeaponProfiles(selectedIds?ships.filter(s=>selectedIds.has(s.id)):ships,selectedIds);
   await writeFile(file,JSON.stringify(ships,null,2)+'\n');
   const manifestFile=new URL('public/assets/ships/manifest.json',root),manifest=JSON.parse(await readFile(manifestFile,'utf8'));
-  for(const a of manifest.assets){const s=ships.find(s=>s.id===a.shipId);a.mounts=s.mounts;a.combatVersion=weaponProfileVersion(s.id,a.combatVersion);a.turretLayoutVersion=turretLayoutVersion(s.id);}
+  for(const a of manifest.assets){if(selectedIds&&!selectedIds.has(a.shipId))continue;const s=ships.find(s=>s.id===a.shipId);a.mounts=s.mounts;a.combatVersion=weaponProfileVersion(s.id,a.combatVersion);a.turretLayoutVersion=turretLayoutVersion(s.id);}
   await writeFile(manifestFile,JSON.stringify(manifest,null,2)+'\n');
-  console.log(`Applied ${profiles.ships.length} signature weapon profiles; ship images unchanged.`);
+  console.log(`Applied ${selectedIds?profiles.ships.filter(p=>selectedIds.has(p.id)).length:profiles.ships.length} signature weapon profiles; ship images unchanged.`);
 }

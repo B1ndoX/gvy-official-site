@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Game adaptation layered over immutable sourced single-shot damage/RPM. Capacitor recharge timings are shared game rules, not verified original ship capacitor values. Ballistic shield bypass is the user's requested 75 percent; no extra kinetic damage bonus is stacked onto the source model values.",
+  "capacitor": {"rechargeDelaySeconds": 0.6, "emptyToFullSeconds": 2.2, "resumeFraction": 0.6},
+  "ballistic": {"shieldBypass": 0.75, "damageMultiplier": 1.0}
+}
