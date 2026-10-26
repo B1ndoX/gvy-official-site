@@ -1,0 +1,904 @@
+{
+  "version": 1,
+  "sourceCommit": "7b57db9d8980f88c5d1d104d0ecba1cb3b45b974",
+  "sourceSHA256": "ced4a1e693e7aedcc6dcad8e9eb339c33b4b0b31b81ecb237002c58b37dc9080",
+  "note": "Historical PR24 comparison only. No longer consumed by weapon generation or battle. Active weapon size/model rules are weapon-size-balance.json; generated shared model table is weapon-game-values.json.",
+  "ships": {
+    "f8c-lightning": {
+      "gunDps": 456.27204309934126,
+      "supportGunDps": 456.27204309934126
+    },
+    "gladius": {
+      "gunDps": 230.75129533678756,
+      "supportGunDps": 230.75129533678756
+    },
+    "arrow": {
+      "gunDps": 179.94219653179192,
+      "supportGunDps": 179.94219653179192
+    },
+    "hornet-mk2": {
+      "gunDps": 305.2795873249816,
+      "supportGunDps": 305.2795873249816
+    },
+    "sabre": {
+      "gunDps": 295.8139534883721,
+      "supportGunDps": 295.8139534883721
+    },
+    "scorpius": {
+      "gunDps": 414.2905019184089,
+      "supportGunDps": 414.2905019184089
+    },
+    "vanguard-warden": {
+      "gunDps": 563.5420076931056,
+      "supportGunDps": 563.5420076931056
+    },
+    "constellation-andromeda": {
+      "gunDps": 920.2289441336046,
+      "supportGunDps": 920.2289441336046
+    },
+    "perseus": {
+      "gunDps": 1179.5723891509579,
+      "supportGunDps": 490.3853331130731
+    },
+    "polaris": {
+      "gunDps": 1151.7358452014705,
+      "supportGunDps": 1151.7358452014705
+    },
+    "idris-p": {
+      "gunDps": 9819.681180807962,
+      "supportGunDps": 1180.6026825144472
+    },
+    "javelin": {
+      "gunDps": 3265.20854777355,
+      "supportGunDps": 3265.20854777355
+    },
+    "aurora-es": {
+      "gunDps": 106.7945205479452,
+      "supportGunDps": 106.7945205479452
+    },
+    "aurora-lx": {
+      "gunDps": 106.7945205479452,
+      "supportGunDps": 106.7945205479452
+    },
+    "aurora-mr": {
+      "gunDps": 194.13698630136986,
+      "supportGunDps": 194.13698630136986
+    },
+    "aurora-cl": {
+      "gunDps": 106.7945205479452,
+      "supportGunDps": 106.7945205479452
+    },
+    "aurora-ln": {
+      "gunDps": 194.13698630136986,
+      "supportGunDps": 194.13698630136986
+    },
+    "300i": {
+      "gunDps": 169.95670995670994,
+      "supportGunDps": 169.95670995670994
+    },
+    "315p": {
+      "gunDps": 169.95670995670994,
+      "supportGunDps": 169.95670995670994
+    },
+    "325a": {
+      "gunDps": 355.3246753246753,
+      "supportGunDps": 355.3246753246753
+    },
+    "350r": {
+      "gunDps": 200.82251082251082,
+      "supportGunDps": 200.82251082251082
+    },
+    "f7c-hornet": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "f7c-s-hornet-ghost": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "f7c-r-hornet-tracker": {
+      "gunDps": 135.83535108958839,
+      "supportGunDps": 135.83535108958839
+    },
+    "f7c-m-super-hornet": {
+      "gunDps": 318.4753363228699,
+      "supportGunDps": 318.4753363228699
+    },
+    "freelancer": {
+      "gunDps": 288.28222996515683,
+      "supportGunDps": 288.28222996515683
+    },
+    "m50": {
+      "gunDps": 87.5,
+      "supportGunDps": 87.5
+    },
+    "caterpillar": {
+      "gunDps": 628.862334172743,
+      "supportGunDps": 628.862334172743
+    },
+    "scythe": {
+      "gunDps": 393.69047619047615,
+      "supportGunDps": 393.69047619047615
+    },
+    "freelancer-dur": {
+      "gunDps": 288.28222996515683,
+      "supportGunDps": 288.28222996515683
+    },
+    "freelancer-max": {
+      "gunDps": 288.28222996515683,
+      "supportGunDps": 288.28222996515683
+    },
+    "freelancer-mis": {
+      "gunDps": 602.8014854208693,
+      "supportGunDps": 602.8014854208693
+    },
+    "khartu-al": {
+      "gunDps": 172.106824925816,
+      "supportGunDps": 172.106824925816
+    },
+    "merchantman": {
+      "gunDps": 946.0716730302113,
+      "supportGunDps": 946.0716730302113
+    },
+    "hull-c": {
+      "gunDps": 531.176000192196,
+      "supportGunDps": 531.176000192196
+    },
+    "constellation-taurus": {
+      "gunDps": 450.82183654674,
+      "supportGunDps": 450.82183654674
+    },
+    "constellation-aquila": {
+      "gunDps": 415.0723232451678,
+      "supportGunDps": 415.0723232451678
+    },
+    "constellation-phoenix": {
+      "gunDps": 415.0723232451678,
+      "supportGunDps": 415.0723232451678
+    },
+    "reclaimer": {
+      "gunDps": 760.9838852840761,
+      "supportGunDps": 760.9838852840761
+    },
+    "890-jump": {
+      "gunDps": 880.4810440598183,
+      "supportGunDps": 880.4810440598183
+    },
+    "cutlass-black": {
+      "gunDps": 274.162894601919,
+      "supportGunDps": 274.162894601919
+    },
+    "cutlass-red": {
+      "gunDps": 274.162894601919,
+      "supportGunDps": 274.162894601919
+    },
+    "cutlass-blue": {
+      "gunDps": 573.2439756830001,
+      "supportGunDps": 573.2439756830001
+    },
+    "redeemer": {
+      "gunDps": 806.402835078811,
+      "supportGunDps": 806.402835078811
+    },
+    "herald": {
+      "gunDps": 143.9622641509434,
+      "supportGunDps": 143.9622641509434
+    },
+    "carrack": {
+      "gunDps": 674.150126450965,
+      "supportGunDps": 674.150126450965
+    },
+    "gladiator": {
+      "gunDps": 137.28813559322035,
+      "supportGunDps": 137.28813559322035
+    },
+    "mustang-alpha": {
+      "gunDps": 127.34491315136475,
+      "supportGunDps": 127.34491315136475
+    },
+    "mustang-beta": {
+      "gunDps": 127.34491315136475,
+      "supportGunDps": 127.34491315136475
+    },
+    "mustang-gamma": {
+      "gunDps": 150.4714640198511,
+      "supportGunDps": 150.4714640198511
+    },
+    "mustang-delta": {
+      "gunDps": 231.51364764267987,
+      "supportGunDps": 231.51364764267987
+    },
+    "mustang-omega": {
+      "gunDps": 150.4714640198511,
+      "supportGunDps": 150.4714640198511
+    },
+    "orion": {
+      "gunDps": 1149.037667634255,
+      "supportGunDps": 1149.037667634255
+    },
+    "retaliator-bomber": {
+      "gunDps": 591.7075040026199,
+      "supportGunDps": 591.7075040026199
+    },
+    "hull-a": {
+      "gunDps": 102.98591549295776,
+      "supportGunDps": 102.98591549295776
+    },
+    "hull-b": {
+      "gunDps": 338.2620113245969,
+      "supportGunDps": 338.2620113245969
+    },
+    "hull-d": {
+      "gunDps": 888.7392431121698,
+      "supportGunDps": 888.7392431121698
+    },
+    "hull-e": {
+      "gunDps": 1200.5463470974394,
+      "supportGunDps": 1200.5463470974394
+    },
+    "starfarer": {
+      "gunDps": 598.2714150554659,
+      "supportGunDps": 598.2714150554659
+    },
+    "starfarer-gemini": {
+      "gunDps": 598.2714150554659,
+      "supportGunDps": 598.2714150554659
+    },
+    "reliant-kore": {
+      "gunDps": 92.43243243243244,
+      "supportGunDps": 92.43243243243244
+    },
+    "genesis-starliner": {
+      "gunDps": 511.3687386643468,
+      "supportGunDps": 511.3687386643468
+    },
+    "p-52-merlin": {
+      "gunDps": 145.125,
+      "supportGunDps": 145.125
+    },
+    "glaive": {
+      "gunDps": 393.69047619047615,
+      "supportGunDps": 393.69047619047615
+    },
+    "vanguard-harbinger": {
+      "gunDps": 379.3769306042199,
+      "supportGunDps": 379.3769306042199
+    },
+    "vanguard-sentinel": {
+      "gunDps": 291.68837962274023,
+      "supportGunDps": 291.68837962274023
+    },
+    "endeavor": {
+      "gunDps": 869.9294921707893,
+      "supportGunDps": 869.9294921707893
+    },
+    "retaliator-base": {
+      "gunDps": 703.2001400916963,
+      "supportGunDps": 703.2001400916963
+    },
+    "avenger-stalker": {
+      "gunDps": 135.83535108958839,
+      "supportGunDps": 135.83535108958839
+    },
+    "avenger-warlock": {
+      "gunDps": 284.01937046004844,
+      "supportGunDps": 284.01937046004844
+    },
+    "avenger-titan": {
+      "gunDps": 135.83535108958839,
+      "supportGunDps": 135.83535108958839
+    },
+    "crucible": {
+      "gunDps": 527.9753646497313,
+      "supportGunDps": 527.9753646497313
+    },
+    "p72-archimedes": {
+      "gunDps": 94.3125,
+      "supportGunDps": 94.3125
+    },
+    "reliant-mako": {
+      "gunDps": 92.43243243243244,
+      "supportGunDps": 92.43243243243244
+    },
+    "reliant-sen": {
+      "gunDps": 92.43243243243244,
+      "supportGunDps": 92.43243243243244
+    },
+    "reliant-tana": {
+      "gunDps": 167.98798798798796,
+      "supportGunDps": 167.98798798798796
+    },
+    "blade": {
+      "gunDps": 183.65714285714287,
+      "supportGunDps": 183.65714285714287
+    },
+    "prospector": {
+      "gunDps": 147.90697674418604,
+      "supportGunDps": 147.90697674418604
+    },
+    "buccaneer": {
+      "gunDps": 197.92284866468842,
+      "supportGunDps": 197.92284866468842
+    },
+    "mpuv-personnel": {
+      "gunDps": 91.1875,
+      "supportGunDps": 91.1875
+    },
+    "mpuv-cargo": {
+      "gunDps": 91.1875,
+      "supportGunDps": 91.1875
+    },
+    "terrapin": {
+      "gunDps": 113.78238341968913,
+      "supportGunDps": 113.78238341968913
+    },
+    "prowler": {
+      "gunDps": 276.2616822429907,
+      "supportGunDps": 276.2616822429907
+    },
+    "85x": {
+      "gunDps": 85.13931888544892,
+      "supportGunDps": 85.13931888544892
+    },
+    "razor": {
+      "gunDps": 91,
+      "supportGunDps": 91
+    },
+    "vanguard-hoplite": {
+      "gunDps": 371.2523167250639,
+      "supportGunDps": 371.2523167250639
+    },
+    "hurricane": {
+      "gunDps": 299.1666666666667,
+      "supportGunDps": 299.1666666666667
+    },
+    "defender": {
+      "gunDps": 511.51213438248635,
+      "supportGunDps": 511.51213438248635
+    },
+    "eclipse": {
+      "gunDps": 66.66666666666667,
+      "supportGunDps": 66.66666666666667
+    },
+    "600i-touring": {
+      "gunDps": 534.3384766684753,
+      "supportGunDps": 534.3384766684753
+    },
+    "600i-explorer": {
+      "gunDps": 534.3384766684753,
+      "supportGunDps": 534.3384766684753
+    },
+    "pioneer": {
+      "gunDps": 960.1327784540781,
+      "supportGunDps": 960.1327784540781
+    },
+    "hawk": {
+      "gunDps": 187.26760563380284,
+      "supportGunDps": 187.26760563380284
+    },
+    "hammerhead": {
+      "gunDps": 1395.5334672581675,
+      "supportGunDps": 1395.5334672581675
+    },
+    "vulcan": {
+      "gunDps": 295.09216815024075,
+      "supportGunDps": 295.09216815024075
+    },
+    "razor-ex": {
+      "gunDps": 154,
+      "supportGunDps": 154
+    },
+    "razor-lx": {
+      "gunDps": 91,
+      "supportGunDps": 91
+    },
+    "100i": {
+      "gunDps": 110.37234042553192,
+      "supportGunDps": 110.37234042553192
+    },
+    "125a": {
+      "gunDps": 200.6914893617021,
+      "supportGunDps": 200.6914893617021
+    },
+    "135c": {
+      "gunDps": 110.37234042553192,
+      "supportGunDps": 110.37234042553192
+    },
+    "c2-hercules": {
+      "gunDps": 540.5678435431871,
+      "supportGunDps": 540.5678435431871
+    },
+    "m2-hercules": {
+      "gunDps": 688.0154340110596,
+      "supportGunDps": 688.0154340110596
+    },
+    "a2-hercules": {
+      "gunDps": 702.9947853811515,
+      "supportGunDps": 702.9947853811515
+    },
+    "vulture": {
+      "gunDps": 210.5142857142857,
+      "supportGunDps": 210.5142857142857
+    },
+    "apollo-triage": {
+      "gunDps": 431.2684969452533,
+      "supportGunDps": 431.2684969452533
+    },
+    "apollo-medivac": {
+      "gunDps": 431.2684969452533,
+      "supportGunDps": 431.2684969452533
+    },
+    "mercury-star-runner": {
+      "gunDps": 390.2445621252572,
+      "supportGunDps": 390.2445621252572
+    },
+    "valkyrie": {
+      "gunDps": 430.5290549894885,
+      "supportGunDps": 430.5290549894885
+    },
+    "san-tok-yai": {
+      "gunDps": 295.8139534883721,
+      "supportGunDps": 295.8139534883721
+    },
+    "srv": {
+      "gunDps": 199.64566929133858,
+      "supportGunDps": 199.64566929133858
+    },
+    "corsair": {
+      "gunDps": 372.8530549037716,
+      "supportGunDps": 372.8530549037716
+    },
+    "nautilus": {
+      "gunDps": 1398.8858077078783,
+      "supportGunDps": 1398.8858077078783
+    },
+    "mantis": {
+      "gunDps": 396.5587044534413,
+      "supportGunDps": 396.5587044534413
+    },
+    "c8x-pisces-expedition": {
+      "gunDps": 79.8125,
+      "supportGunDps": 79.8125
+    },
+    "ares-inferno": {
+      "gunDps": 380,
+      "supportGunDps": 0
+    },
+    "ares-ion": {
+      "gunDps": 386.23376623376623,
+      "supportGunDps": 386.23376623376623
+    },
+    "mole": {
+      "gunDps": 332.511219864234,
+      "supportGunDps": 332.511219864234
+    },
+    "talon": {
+      "gunDps": 296.1419068736142,
+      "supportGunDps": 296.1419068736142
+    },
+    "talon-shrike": {
+      "gunDps": 296.1419068736142,
+      "supportGunDps": 296.1419068736142
+    },
+    "nomad": {
+      "gunDps": 166.43326039387307,
+      "supportGunDps": 166.43326039387307
+    },
+    "railen": {
+      "gunDps": 375.3260896575717,
+      "supportGunDps": 375.3260896575717
+    },
+    "400i": {
+      "gunDps": 410.24053371070454,
+      "supportGunDps": 410.24053371070454
+    },
+    "liberator": {
+      "gunDps": 1356.9771886733024,
+      "supportGunDps": 1356.9771886733024
+    },
+    "raft": {
+      "gunDps": 298.4280198565913,
+      "supportGunDps": 298.4280198565913
+    },
+    "odyssey": {
+      "gunDps": 717.4771441532032,
+      "supportGunDps": 717.4771441532032
+    },
+    "cutlass-steel": {
+      "gunDps": 348.92638980443854,
+      "supportGunDps": 348.92638980443854
+    },
+    "expanse": {
+      "gunDps": 213.81132075471695,
+      "supportGunDps": 213.81132075471695
+    },
+    "legionnaire": {
+      "gunDps": 426.09708737864077,
+      "supportGunDps": 426.09708737864077
+    },
+    "c1-spirit": {
+      "gunDps": 346.6438423819099,
+      "supportGunDps": 346.6438423819099
+    },
+    "a1-spirit": {
+      "gunDps": 450.80170741171906,
+      "supportGunDps": 450.80170741171906
+    },
+    "e1-spirit": {
+      "gunDps": 346.6438423819099,
+      "supportGunDps": 346.6438423819099
+    },
+    "c8r": {
+      "gunDps": 79.8125,
+      "supportGunDps": 79.8125
+    },
+    "cutter": {
+      "gunDps": 113.78238341968913,
+      "supportGunDps": 113.78238341968913
+    },
+    "scorpius-antares": {
+      "gunDps": 336.1395348837209,
+      "supportGunDps": 336.1395348837209
+    },
+    "galaxy": {
+      "gunDps": 965.3861125929739,
+      "supportGunDps": 965.3861125929739
+    },
+    "fury": {
+      "gunDps": 160,
+      "supportGunDps": 160
+    },
+    "fury-mx": {
+      "gunDps": 160,
+      "supportGunDps": 160
+    },
+    "fury-lx": {
+      "gunDps": 104,
+      "supportGunDps": 104
+    },
+    "zeus-mkii-es": {
+      "gunDps": 338.2620113245969,
+      "supportGunDps": 338.2620113245969
+    },
+    "zeus-mkii-mr": {
+      "gunDps": 707.2590959367698,
+      "supportGunDps": 707.2590959367698
+    },
+    "zeus-mkii-cl": {
+      "gunDps": 338.2620113245969,
+      "supportGunDps": 338.2620113245969
+    },
+    "cutter-scout": {
+      "gunDps": 113.78238341968913,
+      "supportGunDps": 113.78238341968913
+    },
+    "arrastra": {
+      "gunDps": 665.5837187193046,
+      "supportGunDps": 665.5837187193046
+    },
+    "syulen": {
+      "gunDps": 146.2908011869436,
+      "supportGunDps": 146.2908011869436
+    },
+    "cutter-rambler": {
+      "gunDps": 113.78238341968913,
+      "supportGunDps": 113.78238341968913
+    },
+    "sabre-firebird": {
+      "gunDps": 296.1419068736142,
+      "supportGunDps": 296.1419068736142
+    },
+    "mpuv-tractor": {
+      "gunDps": 91.1875,
+      "supportGunDps": 91.1875
+    },
+    "ironclad": {
+      "gunDps": 829.2964936306901,
+      "supportGunDps": 829.2964936306901
+    },
+    "ironclad-assault": {
+      "gunDps": 1362.3984317721636,
+      "supportGunDps": 1362.3984317721636
+    },
+    "sabre-peregrine": {
+      "gunDps": 192.50554323725052,
+      "supportGunDps": 192.50554323725052
+    },
+    "starlancer-max": {
+      "gunDps": 504.4642030281095,
+      "supportGunDps": 504.4642030281095
+    },
+    "starlancer-tac": {
+      "gunDps": 1054.7639333294273,
+      "supportGunDps": 1054.7639333294273
+    },
+    "intrepid": {
+      "gunDps": 139.95226730310264,
+      "supportGunDps": 139.95226730310264
+    },
+    "paladin": {
+      "gunDps": 828.6102537928482,
+      "supportGunDps": 828.6102537928482
+    },
+    "terrapin-medic": {
+      "gunDps": 113.78238341968913,
+      "supportGunDps": 113.78238341968913
+    },
+    "f7c-r-hornet-tracker-mk-ii": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "f7c-s-hornet-ghost-mk-ii": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "guardian": {
+      "gunDps": 353.51473922902494,
+      "supportGunDps": 353.51473922902494
+    },
+    "guardian-qi": {
+      "gunDps": 353.51473922902494,
+      "supportGunDps": 353.51473922902494
+    },
+    "fortune": {
+      "gunDps": 162.88248337028824,
+      "supportGunDps": 162.88248337028824
+    },
+    "sabre-comet": {
+      "gunDps": 295.8139534883721,
+      "supportGunDps": 295.8139534883721
+    },
+    "gladius-valiant": {
+      "gunDps": 206.89119170984455,
+      "supportGunDps": 206.89119170984455
+    },
+    "f7c-hornet-wildfire": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "avenger-titan-renegade": {
+      "gunDps": 135.83535108958839,
+      "supportGunDps": 135.83535108958839
+    },
+    "caterpillar-pirate": {
+      "gunDps": 628.862334172743,
+      "supportGunDps": 628.862334172743
+    },
+    "constellation-phoenix-emerald": {
+      "gunDps": 415.0723232451678,
+      "supportGunDps": 415.0723232451678
+    },
+    "valkyrie-liberator": {
+      "gunDps": 430.5290549894885,
+      "supportGunDps": 430.5290549894885
+    },
+    "mustang-alpha-vindicator": {
+      "gunDps": 127.34491315136475,
+      "supportGunDps": 127.34491315136475
+    },
+    "f7cm-hornet-heartseeker-mkii": {
+      "gunDps": 295.8139534883721,
+      "supportGunDps": 295.8139534883721
+    },
+    "f7c-m-super-hornet-heartseeker": {
+      "gunDps": 318.4753363228699,
+      "supportGunDps": 318.4753363228699
+    },
+    "nautilus-solstice": {
+      "gunDps": 1398.8858077078783,
+      "supportGunDps": 1398.8858077078783
+    },
+    "pirate-gladius": {
+      "gunDps": 206.89119170984455,
+      "supportGunDps": 206.89119170984455
+    },
+    "cutlass-black-2949-best-in-show": {
+      "gunDps": 274.162894601919,
+      "supportGunDps": 274.162894601919
+    },
+    "caterpillar-2949-best-in-show": {
+      "gunDps": 628.862334172743,
+      "supportGunDps": 628.862334172743
+    },
+    "hammerhead-2949-best-in-show": {
+      "gunDps": 1395.5334672581675,
+      "supportGunDps": 1395.5334672581675
+    },
+    "reclaimer-2949-best-in-show": {
+      "gunDps": 760.9838852840761,
+      "supportGunDps": 760.9838852840761
+    },
+    "mole-carbon": {
+      "gunDps": 332.511219864234,
+      "supportGunDps": 332.511219864234
+    },
+    "mole-talus": {
+      "gunDps": 332.511219864234,
+      "supportGunDps": 332.511219864234
+    },
+    "carrack-c8x": {
+      "gunDps": 674.150126450965,
+      "supportGunDps": 674.150126450965
+    },
+    "carrack-expedition-c8x": {
+      "gunDps": 674.150126450965,
+      "supportGunDps": 674.150126450965
+    },
+    "carrack-expedition": {
+      "gunDps": 674.150126450965,
+      "supportGunDps": 674.150126450965
+    },
+    "p72-archimedes-emerald": {
+      "gunDps": 94.3125,
+      "supportGunDps": 94.3125
+    },
+    "f7c-m-super-hornet-mk-ii": {
+      "gunDps": 295.8139534883721,
+      "supportGunDps": 295.8139534883721
+    },
+    "golem": {
+      "gunDps": 96.83284457478005,
+      "supportGunDps": 96.83284457478005
+    },
+    "guardian-mx": {
+      "gunDps": 353.51473922902494,
+      "supportGunDps": 353.51473922902494
+    },
+    "asgard": {
+      "gunDps": 444.69921331105536,
+      "supportGunDps": 444.69921331105536
+    },
+    "prowler-utility": {
+      "gunDps": 217.0841121495327,
+      "supportGunDps": 217.0841121495327
+    },
+    "meteor": {
+      "gunDps": 379.31174089068827,
+      "supportGunDps": 379.31174089068827
+    },
+    "l-21-wolf": {
+      "gunDps": 231.51364764267987,
+      "supportGunDps": 231.51364764267987
+    },
+    "stinger": {
+      "gunDps": 463.1456310679612,
+      "supportGunDps": 463.1456310679612
+    },
+    "shiv": {
+      "gunDps": 623.0892844063576,
+      "supportGunDps": 623.0892844063576
+    },
+    "l22-alphawolf": {
+      "gunDps": 231.51364764267987,
+      "supportGunDps": 231.51364764267987
+    },
+    "salvation": {
+      "gunDps": 92.43243243243244,
+      "supportGunDps": 92.43243243243244
+    },
+    "clipper": {
+      "gunDps": 246.0986547085202,
+      "supportGunDps": 246.0986547085202
+    },
+    "golem-ox": {
+      "gunDps": 96.83284457478005,
+      "supportGunDps": 96.83284457478005
+    },
+    "hermes": {
+      "gunDps": 433.484070673087,
+      "supportGunDps": 433.484070673087
+    },
+    "moth": {
+      "gunDps": 332.511219864234,
+      "supportGunDps": 332.511219864234
+    },
+    "aurora-mk-ii": {
+      "gunDps": 315.21367521367523,
+      "supportGunDps": 315.21367521367523
+    },
+    "pegasus": {
+      "gunDps": 7469.638335502423,
+      "supportGunDps": 7469.638335502423
+    },
+    "retribution": {
+      "gunDps": 10895.054908215854,
+      "supportGunDps": 10895.054908215854
+    },
+    "sabre-raven": {
+      "gunDps": 340.57649667405764,
+      "supportGunDps": 340.57649667405764
+    },
+    "kraken-privateer": {
+      "gunDps": 1010.8594401556412,
+      "supportGunDps": 1010.8594401556412
+    },
+    "kraken": {
+      "gunDps": 2113.612655599501,
+      "supportGunDps": 2113.612655599501
+    },
+    "idris-m": {
+      "gunDps": 4748.917120902414,
+      "supportGunDps": 582.2504542357484
+    },
+    "f8c-lightning-executive": {
+      "gunDps": 370.19955654101994,
+      "supportGunDps": 370.19955654101994
+    },
+    "f7a-hornet": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "c8-pisces": {
+      "gunDps": 79.8125,
+      "supportGunDps": 79.8125
+    },
+    "600i-executive": {
+      "gunDps": 534.3384766684753,
+      "supportGunDps": 534.3384766684753
+    },
+    "bengal": {
+      "gunDps": 8618.804076738068,
+      "supportGunDps": 8618.804076738068
+    },
+    "endeavor-master-set": {
+      "gunDps": 869.9294921707893,
+      "supportGunDps": 869.9294921707893
+    },
+    "zeus": {
+      "gunDps": 395.3541902507633,
+      "supportGunDps": 395.3541902507633
+    },
+    "f7a-mkii": {
+      "gunDps": 271.67070217917677,
+      "supportGunDps": 271.67070217917677
+    },
+    "aurora-se": {
+      "gunDps": 197.45945945945948,
+      "supportGunDps": 197.45945945945948
+    },
+    "pitbull": {
+      "gunDps": 160,
+      "supportGunDps": 160
+    },
+    "m80": {
+      "gunDps": 463.1456310679612,
+      "supportGunDps": 463.1456310679612
+    },
+    "tiburon": {
+      "gunDps": 6461.657603175531,
+      "supportGunDps": 623.8197653376918
+    },
+    "mauler": {
+      "gunDps": 23576.665656367913,
+      "supportGunDps": 3607.482297354046
+    },
+    "starlite": {
+      "gunDps": 203.80582524271844,
+      "supportGunDps": 203.80582524271844
+    },
+    "tyilui": {
+      "gunDps": 847.6080770087352,
+      "supportGunDps": 847.6080770087352
+    },
+    "basher": {
+      "gunDps": 161.16207951070336,
+      "supportGunDps": 161.16207951070336
+    },
+    "s-65-stingray": {
+      "gunDps": 266.6341463414634,
+      "supportGunDps": 266.6341463414634
+    },
+    "odin": {
+      "gunDps": 84856.20410135819,
+      "supportGunDps": 4086.973332127427
+    },
+    "sabre-raven-ex": {
+      "gunDps": 325.7649667405765,
+      "supportGunDps": 325.7649667405765
+    },
+    "constellation-mkv-centaurus": {
+      "gunDps": 776.9067141692029,
+      "supportGunDps": 776.9067141692029
+    }
+  }
+}

@@ -1,0 +1,3593 @@
+{
+  "version": 4,
+  "coordinateSystem": "x starboard / beam, y aft / length; nose-left PNG maps x=.5-v,y=u-.5",
+  "sources": [
+    "Bot-retained public RSI shipmatrix (thruster rows may be empty; no UV coordinates)",
+    "https://robertsspaceindustries.com/en/comm-link/engineering/16179-The-Shipyard-Ship-Thrusters-And-You",
+    "https://robertsspaceindustries.com/en/ship-matrix",
+    "Retained immutable STARJUMP PNG, all 224 images visually inspected in eight contact sheets",
+    "User hand-marked review GVY-喷口人工核验-R17-20261026: 40 group sheets plus Javelin and Polaris supplements; original screenshots and SHA retained externally.",
+    "Latest user corrections in GVY-VFX01-20261026: Idris family four side-pod outlets, Apollo family two external side-pod outlets."
+  ],
+  "ships": {
+    "f8c-lightning": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "7938d19f5c42de6d6d9528126ac695682fb04d50e256f60d36eeb62a561671b8",
+      "sourceURL": "https://cdn1.fleetviewer.link/f8c-lightning__top_s_e7e7486c728392132b190db500cb3704.png",
+      "nozzles": [
+        {
+          "x": 0.06979,
+          "y": 0.40991
+        },
+        {
+          "x": -0.06979,
+          "y": 0.40991
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "gladius": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "bc4ba687468469aa63dcc67cf0d8dac24ac50b66608c9ca24dce9326ec1ea219",
+      "sourceURL": "https://cdn1.fleetviewer.link/gladius__top_s_2e6cf1455e5737e149d9227886ea5c71.png",
+      "nozzles": [
+        {
+          "x": 0.109816,
+          "y": 0.46997
+        },
+        {
+          "x": -0.109816,
+          "y": 0.46997
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "arrow": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2b603326a5e4ab818fef53086edf208a0365f548b9129256b40dab50c5e17dc5",
+      "sourceURL": "https://cdn1.fleetviewer.link/arrow__top_s_9884d68c311b9a5317381cc2d0df70ac.png",
+      "nozzles": [
+        {
+          "x": -0.000745,
+          "y": 0.18969
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hornet-mk2": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "424a76f5a6373712725c2903a3f7c8aa014409d41cd2c68adb1afb8d546e67d5",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-mkii__top_s_c2e9df679bdc3dd42fe3c2111cf85ba0.png",
+      "nozzles": [
+        {
+          "x": -0.000509,
+          "y": 0.32983
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "sabre": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "7a057a5503bf2c311d40b4948f01d6563f7c7e58ffcfa075d1c512f81772bba8",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre__top_s_b2bfa8751219127198de17b9303d9051.png",
+      "nozzles": [
+        {
+          "x": 0.06962,
+          "y": 0.47998
+        },
+        {
+          "x": -0.06962,
+          "y": 0.47998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "scorpius": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b18d68b5048f9f15fb49332e589f85ebd8dade6e1d5fe0438759b62c320920a2",
+      "sourceURL": "https://cdn1.fleetviewer.link/scorpius__top_s_b287ba16a76d584371215f160293ed99.png",
+      "nozzles": [
+        {
+          "x": 0.039669,
+          "y": 0.25976
+        },
+        {
+          "x": -0.039669,
+          "y": 0.25976
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "vanguard-warden": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "de1520a16dc780895fadfc589e03e988fdac293508206e68da647b6f0e5e1a3d",
+      "sourceURL": "https://cdn1.fleetviewer.link/vanguard-warden__top_s_59fa6ce7ce4a98addf6c198c8b2722c3.png",
+      "nozzles": [
+        {
+          "x": 0.160021,
+          "y": 0.41992
+        },
+        {
+          "x": -0.160021,
+          "y": 0.41992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "constellation-andromeda": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "0defa3cc97a5b25d61dcb68106c05857b124aa4e094acc320b80cbc2ea942f43",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-andromeda__top_s_6bfde4c39d46dc326b75cbc777563e17.png",
+      "nozzles": [
+        {
+          "x": 0.301843,
+          "y": 0.471972
+        },
+        {
+          "x": 0.129032,
+          "y": 0.467968
+        },
+        {
+          "x": -0.131336,
+          "y": 0.46997
+        },
+        {
+          "x": -0.304147,
+          "y": 0.46997
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "perseus": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9ae4f6988fee46eec72578087d3014294c83f9f3b4fc6b37cc07ac649b3e44a6",
+      "sourceURL": "https://cdn1.fleetviewer.link/perseus__top_s_40bbcf6655fb9677982dbebba9931ca1.png",
+      "nozzles": [
+        {
+          "x": 0.279751,
+          "y": 0.45996
+        },
+        {
+          "x": -0.279751,
+          "y": 0.45996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "polaris": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "ac0f1923d7c2dbbfbbaebec375e1ecea51c7b5f37fa1297ddfd4e0e33a9d3427",
+      "sourceURL": "https://cdn1.fleetviewer.link/polaris__top_s_51d2f02192cf7018a4deeab0517dd2e4.png",
+      "nozzles": [
+        {
+          "x": 0.401816,
+          "y": 0.450014
+        },
+        {
+          "x": 0.296171,
+          "y": 0.432018
+        },
+        {
+          "x": -0.301289,
+          "y": 0.435617
+        },
+        {
+          "x": -0.3944,
+          "y": 0.411623
+        }
+      ],
+      "note": "Four aft outlets, two on each side; no central hull flame. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "supplement-polaris.png",
+        "sha256": "2ed6be205328a4c2b7dadacaf47aef007ef2c834445115811c8fdfc2cdcdae64"
+      }
+    },
+    "idris-p": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "3acc42879a4f0311bbe125e087e418a80d02a8e41787e319b87bfba9436de3c7",
+      "sourceURL": "https://cdn1.fleetviewer.link/idris-p__top_s_1745a07f43e89ab9b3f4fbd89ee6029b.png",
+      "note": "Same exterior/main-engine arrangement; edit only idris-m",
+      "aliasOf": "idris-m"
+    },
+    "javelin": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "0bff9b7a6888f84be03c8c301c9c8f0f8b34d23d39ff19015f953e2f78476d33",
+      "sourceURL": "https://cdn1.fleetviewer.link/javelin__top_s_e4594e7b347828a83bf49753fb50b9c3.png",
+      "nozzles": [
+        {
+          "x": 0.451098,
+          "y": 0.352014
+        },
+        {
+          "x": 0.345532,
+          "y": 0.381577
+        },
+        {
+          "x": 0.327679,
+          "y": -0.15056
+        },
+        {
+          "x": 0.163121,
+          "y": 0.460171
+        },
+        {
+          "x": -0.147367,
+          "y": 0.461614
+        },
+        {
+          "x": -0.324345,
+          "y": 0.388787
+        },
+        {
+          "x": -0.342974,
+          "y": -0.170028
+        },
+        {
+          "x": -0.459407,
+          "y": 0.344082
+        }
+      ],
+      "note": "Six side pods and two aft main outlets; discard the previous four split central outlets. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "supplement-javelin.png",
+        "sha256": "f1701161663926067ffc4cb11116beb1eaa0f7610c15654e84f55eb8afa31ad5"
+      }
+    },
+    "aurora-es": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "7592babc3c546e1f9f68473244350ac54415f0dfbd2f704819c4ca9e713446b8",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-es__top_xs_5e7739b1f3a3f6a746ada20848c59429.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-lx": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "25c8187188db77071ba1e2604a5cfbbe519d8b65c0ee759a3e38018959d6e877",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-lx__top_xs_fb770edc9360df72ac3c7e316278ae40.png",
+      "nozzles": [
+        {
+          "x": -0.002242,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-mr": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "85f54d4bc936a279ff1580a3a2bdcbf3af303e473b20d0c2b982348ab92d2758",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-mr__top_xs_33983888a73dc22a2e2515637a2f3b0d.png",
+      "nozzles": [
+        {
+          "x": -0.002242,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-cl": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2a8a6ed34f9e19ac613f978e73f405dfbc6fec75f0a92ffd46810d5a213bccd1",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-cl__top_xs_a7397a90dae46e4747b3f83a4dc0714b.png",
+      "nozzles": [
+        {
+          "x": -0.002242,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-ln": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f5186a7ca386430829ff8153cac944a149eb189c611ba09795c947f44334549e",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-ln__top_xs_08ea57a7693a942059e68a47095b3e00.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "300i": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "469d18697422927d9bfe6624b3c84852534d24731cfaa5b89476c2a479896127",
+      "sourceURL": "https://cdn1.fleetviewer.link/300i__top_xs_245a73bfad0bf66aba9752b6c85c504e.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "315p": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "e9c63be5a92b726a7d0e798f6f4ce832d5e2ed21c118eb12227144fcf0b8096e",
+      "sourceURL": "https://cdn1.fleetviewer.link/315p__top_xs_96e6dfbcf87a82f8d86c9cc0cabca987.png",
+      "nozzles": [
+        {
+          "x": -0.001529,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "325a": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "8474a6a0c34253eb82b30ea31947d4736aaba8dd372a9d3f60d973e9e26b8a15",
+      "sourceURL": "https://cdn1.fleetviewer.link/325a__top_xs_6e0c4c1a428d8f3d4a8459cbd521da24.png",
+      "nozzles": [
+        {
+          "x": 0.001618,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "350r": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b9ee1b29fb1fcd6861162b7d089a672a1a6fde5580c236771e9d13e77c21d41f",
+      "sourceURL": "https://cdn1.fleetviewer.link/350r__top_xs_562050437646a12cb8bc561e16259514.png",
+      "nozzles": [
+        {
+          "x": 0.071429,
+          "y": 0.46994
+        },
+        {
+          "x": -0.071429,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-hornet": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "db6bd56956ac058b6e4ac3c585c32924107278c59f07af7bbda3a97be289c3a1",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-hornet__top_xs_f5a1647af41f61d567ba46dea111057c.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.313627
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-s-hornet-ghost": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "dfb9e665c5ce86b7b9ac275bee20df003e8c9132722851b76f2315714723e689",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-s-hornet-ghost__top_xs_3e2e935413026c08e2057d1877069310.png",
+      "nozzles": [
+        {
+          "x": -0.001044,
+          "y": 0.317635
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-r-hornet-tracker": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "da54481454eb5674b165332e3ea5fe4967f9ccf120d5206ef82187cd9d7e3752",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-r-hornet-tracker__top_xs_9f71f967768a2ab42f6439b35b363fee.png",
+      "nozzles": [
+        {
+          "x": -0.001099,
+          "y": 0.321643
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-m-super-hornet": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "d7a9fe5fb19808552f9e6b284b5a88c54e1a8b694a2c41938b4415744e81a0c7",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-m-super-hornet__top_xs_7165a8f91e9ff916147de4cce113869f.png",
+      "nozzles": [
+        {
+          "x": -0.001062,
+          "y": 0.335671
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "freelancer": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "74fd9e2823a67234a010df2dc179d5cf7a7e030cf87dacfa30af7c3c58688020",
+      "sourceURL": "https://cdn1.fleetviewer.link/freelancer__top_xs_64a9006ffde29411ffb339402aae8938.png",
+      "nozzles": [
+        {
+          "x": 0.27,
+          "y": 0.425
+        },
+        {
+          "x": -0.27,
+          "y": 0.425
+        }
+      ],
+      "note": "User marked nozzle openings in chat 2026-10-26. Same exterior variants share this record; not official 3D coordinates."
+    },
+    "m50": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "bca8b74c480c71c349e41c2e876b0a78089e73e214064d52b3b0e6f6da42e978",
+      "sourceURL": "https://cdn1.fleetviewer.link/m50__top_xs_29f5319513442beed0420df2439322f3.png",
+      "nozzles": [
+        {
+          "x": 0.110989,
+          "y": 0.45992
+        },
+        {
+          "x": -0.110989,
+          "y": 0.45992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "caterpillar": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c89baa9e26980ac12dd3e053edb0a65f9f6890f9204371a584fef457285d3b7d",
+      "sourceURL": "https://cdn1.fleetviewer.link/caterpillar__top_xs_28c5b5afdc316e98f4e5b2f1446def13.png",
+      "nozzles": [
+        {
+          "x": 0.103571,
+          "y": 0.493988
+        },
+        {
+          "x": -0.103571,
+          "y": 0.493988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "scythe": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "328150a7d88e9ae4a46843e6a70ae3a040442e5733f3dcc5013f2fddda727a02",
+      "sourceURL": "https://cdn1.fleetviewer.link/scythe__top_xs_f18e2c222d570298c8e50f08bec37b4f.png",
+      "nozzles": [
+        {
+          "x": -0.077586,
+          "y": 0.445892
+        },
+        {
+          "x": -0.232759,
+          "y": 0.433868
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "01_scythe.png",
+        "sha256": "8cdb8900e972520f7bcd9b0b7e8dc4d559f67f65898e527966f44b4b1dfa47ec"
+      }
+    },
+    "freelancer-dur": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "aaf4a3f45a61dd8e7c33b30b3423fbcca361cecc8041c93ba127f06e478c17b7",
+      "sourceURL": "https://cdn1.fleetviewer.link/freelancer-dur__top_xs_0ba744cf90c9002b733c80db51314c7e.png",
+      "note": "Same exterior/main-engine arrangement; edit only freelancer",
+      "aliasOf": "freelancer"
+    },
+    "freelancer-max": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "53b53eff26a39b4fcb34454da37016a64dc369ef8c060bb7baadc989f903aaa0",
+      "sourceURL": "https://cdn1.fleetviewer.link/freelancer-max__top_xs_b98e1ee966f7092457e603b516d4fcd4.png",
+      "nozzles": [
+        {
+          "x": 0.330986,
+          "y": 0.425852
+        },
+        {
+          "x": 0.234742,
+          "y": 0.425852
+        },
+        {
+          "x": -0.237089,
+          "y": 0.425852
+        },
+        {
+          "x": -0.335681,
+          "y": 0.425852
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "freelancer-mis": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "41c31eac0f353e6d0f5676adb2487616245a5fd5910b502c6c32b72f660bba0e",
+      "sourceURL": "https://cdn1.fleetviewer.link/freelancer-mis__top_xs_4fbb19e63d63c3baf7604da8bd691564.png",
+      "note": "Same exterior/main-engine arrangement; edit only freelancer",
+      "aliasOf": "freelancer"
+    },
+    "khartu-al": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "50cd59cfa7f554045c0f78a9230d0bbf908fe37ee06db27ce5adf995e03922cf",
+      "sourceURL": "https://cdn1.fleetviewer.link/khartu-al__top_xs_bb27e70bb8a55ecf6f4148057317c531.png",
+      "nozzles": [
+        {
+          "x": 0.301358,
+          "y": 0.125
+        },
+        {
+          "x": 0.231749,
+          "y": 0.233173
+        },
+        {
+          "x": -0.250424,
+          "y": 0.223558
+        },
+        {
+          "x": -0.335314,
+          "y": 0.115385
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "02_khartu-al.png",
+        "sha256": "da671c0803d1c9f79c451b2a9365bc303c7c11bb282a3eb3f01ff9fa271fa2f4"
+      }
+    },
+    "merchantman": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b664be23e8066e14322106cb4311e420910c5ea6d28763ad222cfb5eedcc4d6c",
+      "sourceURL": "https://cdn1.fleetviewer.link/merchantman__top_xs_3e55827fc1ce61acb55d16be696241b5.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hull-c": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f39f7d7903a463fcfa66dbcd16674bcfc1231aa613ab90d1a2bfb675b94b83f1",
+      "sourceURL": "https://cdn1.fleetviewer.link/hull-c__top_xs_bda159b530bfe396b524faa22055ecf8.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "constellation-taurus": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "a43ada6f251e57392e18d8e9e2b066a2311127281c6b69f4fb59920b3fccd6e3",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-taurus__top_xs_6ddbe62462da3f91b70cc45c852f881e.png",
+      "nozzles": [
+        {
+          "x": 0.307292,
+          "y": 0.46994
+        },
+        {
+          "x": 0.130208,
+          "y": 0.465932
+        },
+        {
+          "x": -0.130208,
+          "y": 0.46994
+        },
+        {
+          "x": -0.302083,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "constellation-aquila": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9056bcc803d1c80efff229634f742d63a62cd20f19834fd41fa7ba13033928c1",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-aquila__top_xs_94031111faf1a36c78b7c6adcdeada24.png",
+      "nozzles": [
+        {
+          "x": 0.303653,
+          "y": 0.46994
+        },
+        {
+          "x": 0.130137,
+          "y": 0.46994
+        },
+        {
+          "x": -0.130137,
+          "y": 0.46994
+        },
+        {
+          "x": -0.303653,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "constellation-phoenix": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "ac1d3ddc3b52dce2700cc3e56feb40c339c69e229125a2346b72ed3a94ea89b1",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-phoenix__top_xs_c45b7bab6de2c4053f4dbe105bc26a3d.png",
+      "nozzles": [
+        {
+          "x": 0.284038,
+          "y": 0.46994
+        },
+        {
+          "x": 0.124413,
+          "y": 0.46994
+        },
+        {
+          "x": -0.119718,
+          "y": 0.46994
+        },
+        {
+          "x": -0.279343,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "reclaimer": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "4e16123cb97681ea079cb31318a6522d801cec58254a4ac6cd297c958359dff0",
+      "sourceURL": "https://cdn1.fleetviewer.link/reclaimer__top_xs_95798b87afad5ace5a489e337377b253.png",
+      "nozzles": [
+        {
+          "x": 0.44375,
+          "y": -0.091182
+        },
+        {
+          "x": 0.35,
+          "y": 0.067134
+        },
+        {
+          "x": -0.334375,
+          "y": 0.063126
+        },
+        {
+          "x": -0.440625,
+          "y": -0.10521
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "03_reclaimer.png",
+        "sha256": "345db0b2bb29b3d6d0c7af5813c1c5cfe9616b8cebab04e5650ec8041ae5e3a4"
+      }
+    },
+    "890-jump": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "1a9b3e98a4b75340ae179b60bfe35fa7b2ffc43b69bcfa8bbcde8a258da85b61",
+      "sourceURL": "https://cdn1.fleetviewer.link/890-jump__top_xs_55e6b35e726d5c825ccbf73050f729f4.png",
+      "nozzles": [
+        {
+          "x": 0.22,
+          "y": 0.46994
+        },
+        {
+          "x": -0.202857,
+          "y": 0.471944
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "04_890-jump.png",
+        "sha256": "aea099b7fe7b343c6febe23e3b5b432bc79f337b8cdd59a4bd11ebd8a2620a99"
+      }
+    },
+    "cutlass-black": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "0f8542691207760cfe280434389ffb1d17f7af6b7ec1a88675a283b327af07c9",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutlass-black__top_xs_da81fbf52c6b74260b7424200b0e09a6.png",
+      "nozzles": [
+        {
+          "x": 0.401099,
+          "y": 0.431864
+        },
+        {
+          "x": -0.401099,
+          "y": 0.431864
+        }
+      ],
+      "note": "Existing two marked candidates left unchanged in the completed review. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "05_cutlass-black.png",
+        "sha256": "3655d2fce563c1bae6a5ef4b02e3bdc9218eae5cd0544b7cc1a60aeca78f3a59"
+      }
+    },
+    "cutlass-red": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "d4785892c5d86733aadc98d1208325e8c13fcd84c91bb7a763d5040dcf93db98",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutlass-red__top_xs_1a783e765b50e3478f99756e6f930543.png",
+      "nozzles": [
+        {
+          "x": 0.4,
+          "y": 0.433868
+        },
+        {
+          "x": -0.4,
+          "y": 0.433868
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "cutlass-blue": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "e6ec2aa17b18e4b6bd7a0382c346bd48a649d4b193acd83b7dfdd0655fd06155",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutlass-blue__top_xs_cc6c874ddf88ed8ae4141572d18510b2.png",
+      "nozzles": [
+        {
+          "x": 0.400826,
+          "y": 0.431864
+        },
+        {
+          "x": -0.400826,
+          "y": 0.431864
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "redeemer": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c256e1885adbbb18ff2724756c5a5f805d478ca2ce29dde60846cc0a47b46ecc",
+      "sourceURL": "https://cdn1.fleetviewer.link/redeemer__top_xs_7d3d6cc7889abe916be9af10daf05314.png",
+      "nozzles": [
+        {
+          "x": 0.392241,
+          "y": 0.239479
+        },
+        {
+          "x": -0.387931,
+          "y": 0.237475
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "herald": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "5490d944b5487e9c17f8da80fc067f110e640acbe6526a5adf3734695ec233c1",
+      "sourceURL": "https://cdn1.fleetviewer.link/herald__top_xs_a21fb709d8776e1b2cd56a6fafe4e9af.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "carrack": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "22a8f81ad8cd63fae8d7a345e326813684ab457995a7da563d4c9efc3ee46c40",
+      "sourceURL": "https://cdn1.fleetviewer.link/carrack__top_xs_75d6d665d4eeefeba5da52a09d074471.png",
+      "nozzles": [
+        {
+          "x": 0.068421,
+          "y": 0.47996
+        },
+        {
+          "x": -0.068421,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "gladiator": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "15deb210043734bd80c704c12845962949822afa9da7bbc2e4c3c4e51093e52c",
+      "sourceURL": "https://cdn1.fleetviewer.link/gladiator__top_xs_8c99c6dfe77fa0c1dd70e5aa8f982b12.png",
+      "nozzles": [
+        {
+          "x": 0.113734,
+          "y": 0.319639
+        },
+        {
+          "x": -0.113734,
+          "y": 0.317635
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "06_gladiator.png",
+        "sha256": "917a648386161a5865588e1b177cf0709b6474305e272e1c83edec5810ec19cb"
+      }
+    },
+    "mustang-alpha": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "a268df7b675116db47042c1a443aecb265dd271ada73f1995d61d7d369786f65",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-alpha__top_xs_92cbb7cdb039b08340f714cb993b1b25.png",
+      "nozzles": [
+        {
+          "x": 0.14899,
+          "y": 0.40982
+        },
+        {
+          "x": -0.14899,
+          "y": 0.40982
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mustang-beta": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "e28e1ba60bdf7b5b9ea23964c855d5de84387002cb5167f586abeb6989cfe076",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-beta__top_xs_e00e275ecf738d9f4a3191de8f1673d8.png",
+      "nozzles": [
+        {
+          "x": 0.150754,
+          "y": 0.40982
+        },
+        {
+          "x": -0.150754,
+          "y": 0.40982
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mustang-gamma": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "19a8e7d1e8c41d4cfaff19a5162d8b08d75177c7c5e5d3636ad4cfc494851101",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-gamma__top_xs_a4fc8194d03d6bc12bd8d0198b10b227.png",
+      "nozzles": [
+        {
+          "x": 0.14988,
+          "y": 0.40982
+        },
+        {
+          "x": -0.14988,
+          "y": 0.40982
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mustang-delta": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "11b66a1195a55067061a9b849755cde8c097995d843324c06c058e5eb1678d45",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-delta__top_xs_c290d87cea64d5cc6f03d545b54170ef.png",
+      "nozzles": [
+        {
+          "x": 0.149746,
+          "y": 0.40982
+        },
+        {
+          "x": -0.149746,
+          "y": 0.40982
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mustang-omega": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c06a34cee038fd2503e55c88986f7482c365aab084a7db87cc98605c0f20e900",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-omega__top_xs_de1d7db25091fcc242bc575dd61d4f11.png",
+      "nozzles": [
+        {
+          "x": 0.149038,
+          "y": 0.40982
+        },
+        {
+          "x": -0.149038,
+          "y": 0.40982
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "orion": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2d496cb9c9c8b02caa3b453118e43bbd4369b31ba25adf946773ebb89bd1e7b3",
+      "sourceURL": "https://cdn1.fleetviewer.link/orion__top_xs_2dd30af270dbc4f23646b7840165047f.png",
+      "nozzles": [
+        {
+          "x": 0.201087,
+          "y": 0.485972
+        },
+        {
+          "x": -0.201087,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "retaliator-bomber": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "611110c2e762f64909a18e388510f9563b6d0fe38c4497170271a23541db64a6",
+      "sourceURL": "https://cdn1.fleetviewer.link/retaliator-bomber__top_xs_31543cd15145e605f76cdc4006de105a.png",
+      "nozzles": [
+        {
+          "x": 0.114379,
+          "y": 0.42986
+        },
+        {
+          "x": -0.114379,
+          "y": 0.427856
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hull-a": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "36448a3789fd4d2300531537a567e6ab31f5b671985665d8917e8098993dcd30",
+      "sourceURL": "https://cdn1.fleetviewer.link/hull-a__top_xs_eaaa9f0cc7684e55416d417bfe4eeba3.png",
+      "nozzles": [
+        {
+          "x": 0.002488,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hull-b": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "75cca94c70cb12b5c229c469a024cf62cb7a23148fb2d980effaa7780a50356f",
+      "sourceURL": "https://cdn1.fleetviewer.link/hull-b__top_xs_75cca94c70cb12b5c229c469a024cf62cb7a23148fb2d980effaa7780a50356f.png",
+      "nozzles": [
+        {
+          "x": -0.002793,
+          "y": 0.477956
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hull-d": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "63e0ca19a83ddc3cf52380a24feb160d7b1359bfcd1347d08f690af7b707ee24",
+      "sourceURL": "https://cdn1.fleetviewer.link/hull-d__top_xs_d7c8c28888153a64f590e059400b36d3.png",
+      "nozzles": [
+        {
+          "x": 0.2,
+          "y": 0.44
+        },
+        {
+          "x": 0.0,
+          "y": 0.49
+        },
+        {
+          "x": -0.2,
+          "y": 0.44
+        }
+      ],
+      "note": "User marked nozzle openings in chat 2026-10-26. Same exterior variants share this record; not official 3D coordinates."
+    },
+    "hull-e": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "597210d47ce32d23066afeed28cd922616a4a7bd83df568a6c7c85198139b728",
+      "sourceURL": "https://cdn1.fleetviewer.link/hull-e__top_xs_58a481d4c1586d4925a12eacf3cb1a9e.png",
+      "nozzles": [
+        {
+          "x": 0.211538,
+          "y": 0.445892
+        },
+        {
+          "x": -0.019231,
+          "y": 0.490982
+        },
+        {
+          "x": -0.217949,
+          "y": 0.457916
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "07_hull-e.png",
+        "sha256": "d4b72cc64c22ae56929c94c69ff3d1c48a326d7488ed63d030e160e8655ec447"
+      }
+    },
+    "starfarer": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "d4e73114b7764cb5ccc25e981f7f19c8816d7ba3643feb3c2c6fb748d327c141",
+      "sourceURL": "https://cdn1.fleetviewer.link/starfarer__top_xs_1d123c3cfaa91e900cec0fab6112761b.png",
+      "nozzles": [
+        {
+          "x": 0.148069,
+          "y": 0.42986
+        },
+        {
+          "x": -0.148069,
+          "y": 0.42986
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "starfarer-gemini": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "dfc05d7874e1c40882e93be7c9e710de49d1bc8610f5c1c62c34fab4796991d4",
+      "sourceURL": "https://cdn1.fleetviewer.link/starfarer-gemini__top_xs_e8516ea340e254a5628d9747da7b115a.png",
+      "nozzles": [
+        {
+          "x": 0.148069,
+          "y": 0.42986
+        },
+        {
+          "x": -0.148069,
+          "y": 0.42986
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "reliant-kore": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "7c5650b4efd2b7e228a30ed186e51c84b89da3cf928b4db1d6dae836ff05aa05",
+      "sourceURL": "https://cdn1.fleetviewer.link/reliant-kore__top_xs_e310951b04d666842762a2248601baab.png",
+      "nozzles": [
+        {
+          "x": 0.133277,
+          "y": 0.136656
+        },
+        {
+          "x": -0.143463,
+          "y": 0.117363
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "08_reliant-kore.png",
+        "sha256": "dc90d3b2ed3624a8ee06b50f984011999003101c44d95e7f354e029608caad11"
+      }
+    },
+    "genesis-starliner": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "8bc847d8ee383307619b9e5ea273b07931ccaf730e4b011c69cf727bbc680f1a",
+      "sourceURL": "https://cdn1.fleetviewer.link/genesis-starliner__top_xs_a7d03698779fe2b11398e30fb7b6a7e7.png",
+      "nozzles": [
+        {
+          "x": 0.039256,
+          "y": 0.477956
+        },
+        {
+          "x": -0.039256,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "p-52-merlin": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f3c34580325a231a40307d0b6ecf52ccc68e1018321b3cd35d5fd5fd17f996e6",
+      "sourceURL": "https://cdn1.fleetviewer.link/p-52-merlin__top_xs_b6ecd98f5c4c9a824e97c5d26ff5c557.png",
+      "nozzles": [
+        {
+          "x": 0.079439,
+          "y": 0.47996
+        },
+        {
+          "x": -0.079439,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "glaive": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c2830e03a43e8ca2a1969d64fc072dc7addcb9c12a8dc6f573b9aae5f55cde1d",
+      "sourceURL": "https://cdn1.fleetviewer.link/glaive__top_xs_f467aa8bd5ef698a3d84bf088078507c.png",
+      "nozzles": [
+        {
+          "x": 0.001014,
+          "y": 0.45992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "vanguard-harbinger": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "65c79559a35bfabf5bbf6c9f17bf767b6f262f302b72258d30f56f086b8c9243",
+      "sourceURL": "https://cdn1.fleetviewer.link/vanguard-harbinger__top_xs_fc9a4df10f170e8563afda3976c76bb8.png",
+      "nozzles": [
+        {
+          "x": 0.160173,
+          "y": 0.41984
+        },
+        {
+          "x": -0.160173,
+          "y": 0.41984
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "vanguard-sentinel": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "36e84e19dd78d5016dddc7e2df57f1ed7d7ad12db52e3b4f36044dc9bf80da9b",
+      "sourceURL": "https://cdn1.fleetviewer.link/vanguard-sentinel__top_xs_8904ad6e33205bab5cbba434824f5ebb.png",
+      "nozzles": [
+        {
+          "x": 0.16087,
+          "y": 0.41984
+        },
+        {
+          "x": -0.16087,
+          "y": 0.41984
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "endeavor": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "665245b6f63efc38cc9c143a871b559ca4761ee1f0c06a6e804626e952724ff7",
+      "sourceURL": "https://cdn1.fleetviewer.link/endeavor__top_xs_c0535eb73607c994c992b77be0350fea.png",
+      "nozzles": [
+        {
+          "x": 0.103306,
+          "y": 0.48998
+        },
+        {
+          "x": -0.103306,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "retaliator-base": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "611110c2e762f64909a18e388510f9563b6d0fe38c4497170271a23541db64a6",
+      "sourceURL": "https://cdn1.fleetviewer.link/retaliator-base__top_xs_31543cd15145e605f76cdc4006de105a.png",
+      "nozzles": [
+        {
+          "x": 0.114379,
+          "y": 0.42986
+        },
+        {
+          "x": -0.114379,
+          "y": 0.427856
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "avenger-stalker": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "7e3304dd6e9780be9d5c84e0944b35aed7d6a077898d3a2cc19dd19d2c8d5cbb",
+      "sourceURL": "https://cdn1.fleetviewer.link/avenger-stalker__top_xs_26bd743017f1b4415678708260cb7c27.png",
+      "note": "Same exterior/main-engine arrangement; edit only avenger-titan",
+      "aliasOf": "avenger-titan"
+    },
+    "avenger-warlock": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "7e3304dd6e9780be9d5c84e0944b35aed7d6a077898d3a2cc19dd19d2c8d5cbb",
+      "sourceURL": "https://cdn1.fleetviewer.link/avenger-warlock__top_xs_26bd743017f1b4415678708260cb7c27.png",
+      "note": "Same exterior/main-engine arrangement; edit only avenger-titan",
+      "aliasOf": "avenger-titan"
+    },
+    "avenger-titan": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "7e3304dd6e9780be9d5c84e0944b35aed7d6a077898d3a2cc19dd19d2c8d5cbb",
+      "sourceURL": "https://cdn1.fleetviewer.link/avenger-titan__top_xs_26bd743017f1b4415678708260cb7c27.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "crucible": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c47d796132f2d30a26494585fb32ccc1457bc22cdde337e377656fe1d88f2171",
+      "sourceURL": "https://cdn1.fleetviewer.link/crucible__top_xs_5d6fc1803aa0148838e74d5bc9b748ca.png",
+      "nozzles": [
+        {
+          "x": 0.16005,
+          "y": 0.46994
+        },
+        {
+          "x": -0.16005,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "p72-archimedes": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2579960e00a874b61cf28f94ecc5478d54a108a2aa85af1e2418df305cc7480b",
+      "sourceURL": "https://cdn1.fleetviewer.link/p72-archimedes__top_xs_2d408d18d6aebf4f348421a47587cac4.png",
+      "nozzles": [
+        {
+          "x": 0.08006,
+          "y": 0.47996
+        },
+        {
+          "x": -0.08006,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "reliant-mako": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "76dec8c594f6007daaf281c6c63c76b1d02c277a428a98f9b9f2e92c511fddab",
+      "sourceURL": "https://cdn1.fleetviewer.link/reliant-mako__top_xs_fa6a5741b0e12034f8693033de269b42.png",
+      "note": "Same exterior/main-engine arrangement; edit only reliant-kore",
+      "aliasOf": "reliant-kore"
+    },
+    "reliant-sen": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "53af01ff3e88f5db8e7a5863ac5246797667e760943b5ea3ebbfad8170885c0c",
+      "sourceURL": "https://cdn1.fleetviewer.link/reliant-sen__top_xs_bea63e149cbf8a92e0ec1884eb15ec79.png",
+      "note": "Same exterior/main-engine arrangement; edit only reliant-kore",
+      "aliasOf": "reliant-kore"
+    },
+    "reliant-tana": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "690e72ac4c49f723c9bcc0a93bef6ed4e7fe17e41aed312a33bab6032f36429e",
+      "sourceURL": "https://cdn1.fleetviewer.link/reliant-tana__top_xs_5824f27c9a5b8346728214b1e540da87.png",
+      "note": "Same exterior/main-engine arrangement; edit only reliant-kore",
+      "aliasOf": "reliant-kore"
+    },
+    "blade": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c54a4aa4b425ae1db0ae1457612a64c04853ef4eefdda62974b30b9f9c5da251",
+      "sourceURL": "https://cdn1.fleetviewer.link/blade__top_xs_739141532f032e8e5cb99478d86b7a8e.png",
+      "nozzles": [
+        {
+          "x": 0.016049,
+          "y": 0.455912
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "prospector": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "15b8cfa1bb43ccab1850d6f27a2fef50ddad3b124cabcbc0db25547099fd4b66",
+      "sourceURL": "https://cdn1.fleetviewer.link/prospector__top_xs_290c3ef7d17acd6d5d59f02f10502df7.png",
+      "nozzles": [
+        {
+          "x": 0.434932,
+          "y": 0.347695
+        },
+        {
+          "x": -0.393836,
+          "y": 0.337675
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "09_prospector.png",
+        "sha256": "e664f26c8c8330edec8d9a589678df9c8c76e5526b6388eae1c0d82025814a05"
+      }
+    },
+    "buccaneer": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "074f913a2d70fb8064b31060aff6c830b984eaf59c7ba25bfe68d1afb6864fce",
+      "sourceURL": "https://cdn1.fleetviewer.link/buccaneer__top_xs_26f8db05318b7314c62e1a17481bb805.png",
+      "nozzles": [
+        {
+          "x": 0.230129,
+          "y": 0.307615
+        },
+        {
+          "x": -0.23475,
+          "y": 0.293587
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "10_buccaneer.png",
+        "sha256": "f099d8519cf9f41a039c1152c02b601d201257809d5ada4f6e9480f2c9276710"
+      }
+    },
+    "mpuv-personnel": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "a5b6cb41264d7fa433ec7da9030f771098fd67f778d93cbec8f04b73de8f00a7",
+      "sourceURL": "https://cdn1.fleetviewer.link/mpuv-personnel__top_xs_c3a25c5beb7963fb77a5dd548bc40f01.png",
+      "nozzles": [
+        {
+          "x": 0.16005,
+          "y": 0.487976
+        },
+        {
+          "x": -0.157568,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mpuv-cargo": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "0d6f09bba0abeb5d16011749673ca9f6763da835276ae6812b8fe809b67523b7",
+      "sourceURL": "https://cdn1.fleetviewer.link/mpuv-cargo__top_xs_b4223acbda064cef977f8a4681723cd1.png",
+      "nozzles": [
+        {
+          "x": 0.160333,
+          "y": 0.48998
+        },
+        {
+          "x": -0.160333,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "terrapin": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2b0b26513e93b0170e5481d09aded0bb1c51ab08e37da618212da15143bde9a4",
+      "sourceURL": "https://cdn1.fleetviewer.link/terrapin__top_xs_481ba3042e8852c64d4acfd814c46dd5.png",
+      "nozzles": [
+        {
+          "x": 0.401554,
+          "y": 0.349699
+        },
+        {
+          "x": -0.401554,
+          "y": 0.349699
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "prowler": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "6290913ac68e28d6e23f3afc16e6b0eb93154aa80b319a197f30cacb504e8eaa",
+      "sourceURL": "https://cdn1.fleetviewer.link/prowler__top_xs_0cf1ef02fc8bf289feea5b7185cb64a9.png",
+      "nozzles": [
+        {
+          "x": 0.42,
+          "y": 0.082
+        },
+        {
+          "x": -0.42,
+          "y": 0.082
+        }
+      ],
+      "note": "User marked nozzle openings in chat 2026-10-26. Same exterior variants share this record; not official 3D coordinates."
+    },
+    "85x": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "177d368ae9e6fe4b4a31776a408523eb1b327f7505573b2fb03f8af452b6fb10",
+      "sourceURL": "https://cdn1.fleetviewer.link/85x__top_xs_68327875d4c7080f5f416710bd185e67.png",
+      "nozzles": [
+        {
+          "x": -0.001292,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "razor": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b04f1348f90945482600aa95e5dde9ed2ecd0bf4c88dd12a9faf94aabb505f4e",
+      "sourceURL": "https://cdn1.fleetviewer.link/razor__top_xs_f1024194527987000c7813e3fb715f99.png",
+      "nozzles": [
+        {
+          "x": 0.101156,
+          "y": 0.47996
+        },
+        {
+          "x": -0.101156,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "vanguard-hoplite": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "4ac1181d5b2cbf6689b3e9547c0eb735f7b30c541351bb4de2d1d4ab804b1c45",
+      "sourceURL": "https://cdn1.fleetviewer.link/vanguard-hoplite__top_xs_4d1355fb15073d0ece46358c75883e63.png",
+      "nozzles": [
+        {
+          "x": 0.159664,
+          "y": 0.41984
+        },
+        {
+          "x": -0.159664,
+          "y": 0.41984
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hurricane": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "6803afc91b748e1bec58292d39a5f145b83d2447d5081235b5925aad9fe6555d",
+      "sourceURL": "https://cdn1.fleetviewer.link/hurricane__top_xs_ed7107604640b69fc6b76bf1d81b6acf.png",
+      "nozzles": [
+        {
+          "x": 0.150235,
+          "y": 0.38978
+        },
+        {
+          "x": -0.150235,
+          "y": 0.38978
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "defender": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "2664b85941a109342ac723f158ab93923d59114fe6498eee209c51997b0d67b5",
+      "sourceURL": "https://cdn1.fleetviewer.link/defender__top_xs_90b76931e42656f582cb5ce38268972e.png",
+      "nozzles": [
+        {
+          "x": 0.072917,
+          "y": 0.38978
+        },
+        {
+          "x": -0.076389,
+          "y": 0.391784
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "11_defender.png",
+        "sha256": "f7a41e6223c09c884444d8cef49b571e0c6ac869fdda875dfb35bf8cf25b8dc5"
+      }
+    },
+    "eclipse": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "48828d33c6f73b824e1f23914f6b3849642347ebf8dcb252697c1eee94f0c08a",
+      "sourceURL": "https://cdn1.fleetviewer.link/eclipse__top_xs_495c589670ab7a6642f8852a9a0e0b8a.png",
+      "nozzles": [
+        {
+          "x": 0.040268,
+          "y": 0.45992
+        },
+        {
+          "x": -0.040268,
+          "y": 0.45992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "600i-touring": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c07ffd4aca2061556dbe1685d99db5f93ba57258d8056ccd94af81b278708153",
+      "sourceURL": "https://cdn1.fleetviewer.link/600i-touring__top_xs_5327c240e63330841bb9b3ea7611627f.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "600i-explorer": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c07ffd4aca2061556dbe1685d99db5f93ba57258d8056ccd94af81b278708153",
+      "sourceURL": "https://cdn1.fleetviewer.link/600i-explorer__top_xs_5327c240e63330841bb9b3ea7611627f.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "pioneer": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b4ba75d988fcce45567cd479cc2ae0f1b5b6cd51d1b487dd2b46e7e321744147",
+      "sourceURL": "https://cdn1.fleetviewer.link/pioneer__top_xs_a04efff690ab4ef3e348153876b3c939.png",
+      "nozzles": [
+        {
+          "x": 0.126812,
+          "y": 0.473948
+        },
+        {
+          "x": -0.130435,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hawk": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "9fb7d089c5e94768869cfc55a1b6cf8cb07999acbcf42058d5f6ecaadf624031",
+      "sourceURL": "https://cdn1.fleetviewer.link/hawk__top_xs_f4aba6fed55d46590610c48abf8ab571.png",
+      "nozzles": [
+        {
+          "x": 0.12309,
+          "y": 0.013605
+        },
+        {
+          "x": -0.165535,
+          "y": -0.007937
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "12_hawk.png",
+        "sha256": "917558a2fdab0ffa1cedcf06d483ac564d2dfb4e4b120cf093b82b2701426bc1"
+      }
+    },
+    "hammerhead": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "ad799aaff773dea9553dce6c70d782b4d3648c419aa8f81d9f1e85fb714865c2",
+      "sourceURL": "https://cdn1.fleetviewer.link/hammerhead__top_xs_ed1ab0264794155e4d8b2551b98f7ade.png",
+      "nozzles": [
+        {
+          "x": 0.2,
+          "y": 0.35
+        },
+        {
+          "x": -0.2,
+          "y": 0.35
+        }
+      ],
+      "note": "User marked nozzle openings in chat 2026-10-26. Same exterior variants share this record; not official 3D coordinates."
+    },
+    "vulcan": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "3527754f411b3bdf843a9227c808e2ac8a3224f9fa696fb216fc7db87730a001",
+      "sourceURL": "https://cdn1.fleetviewer.link/vulcan__top_xs_d9f57c4de9776a8aa134c1c8ab9caf11.png",
+      "nozzles": [
+        {
+          "x": 0.061321,
+          "y": 0.47996
+        },
+        {
+          "x": -0.061321,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "razor-ex": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "7db7d7b43ebdd47c9028a9a16dff49e4b8e1e52d3bc71b0c971cb13f683ae450",
+      "sourceURL": "https://cdn1.fleetviewer.link/razor-ex__top_xs_0a9517437d3e84b3b31eb36e9180f25a.png",
+      "note": "Same exterior/main-engine arrangement; edit only razor",
+      "aliasOf": "razor"
+    },
+    "razor-lx": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "a983a387ba68bf4b8ad9aaf13975eca700e9549230bf5271284d617662428d14",
+      "sourceURL": "https://cdn1.fleetviewer.link/razor-lx__top_xs_a00880970c7c9523dd431cbb70d6b924.png",
+      "note": "Same exterior/main-engine arrangement; edit only razor",
+      "aliasOf": "razor"
+    },
+    "100i": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "e39e52aa394e00d72851050f6dac1f70f40b830d1304434da9e411d13963e6f1",
+      "sourceURL": "https://cdn1.fleetviewer.link/100i__top_xs_121c34c8f04ebafdaf15d977a96f900a.png",
+      "nozzles": [
+        {
+          "x": -0.001672,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "125a": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9320169a69ebb5d8a4beda3c9df433d2f927488993452e7194d4cf72fe129a45",
+      "sourceURL": "https://cdn1.fleetviewer.link/125a__top_xs_3f09b84b77bb96b633cc573bd4892905.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "135c": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "4c8979112df79fa244a23a66d2df4845f60eee0a8d0ae3a57fa2d8f5c4cdf3d9",
+      "sourceURL": "https://cdn1.fleetviewer.link/135c__top_xs_81f6bbee167899b0e83633c3b02b4a51.png",
+      "nozzles": [
+        {
+          "x": -0.001672,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "c2-hercules": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "aa1759857474e64488ca6e32c7cf9ab7d709884b24245adb22b8bc886c9cfe57",
+      "sourceURL": "https://cdn1.fleetviewer.link/c2-hercules__top_xs_e44dd368a003aa021c24fa2fc8ff73de.png",
+      "nozzles": [
+        {
+          "x": 0.16,
+          "y": 0.31
+        },
+        {
+          "x": 0.0,
+          "y": 0.31
+        },
+        {
+          "x": -0.16,
+          "y": 0.31
+        }
+      ],
+      "note": "User marked nozzle openings in chat 2026-10-26. Same exterior variants share this record; not official 3D coordinates."
+    },
+    "m2-hercules": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "2ab97b66856358c96be417f47a4961c4ce33e0dc53ebf70e521335395deba500",
+      "sourceURL": "https://cdn1.fleetviewer.link/m2-hercules__top_xs_6189ef3850ba445e31b1d357209d95ce.png",
+      "note": "Same exterior/main-engine arrangement; edit only c2-hercules",
+      "aliasOf": "c2-hercules"
+    },
+    "a2-hercules": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "ca756fb02d090f572fc7e76e95d70d8452065ff29cdca95c2ae1ed4955835109",
+      "sourceURL": "https://cdn1.fleetviewer.link/a2-hercules__top_xs_8119a06a0930c4a74ed60048f5f9e3fc.png",
+      "note": "Same exterior/main-engine arrangement; edit only c2-hercules",
+      "aliasOf": "c2-hercules"
+    },
+    "vulture": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "4dcdf43861e02bda9b4bf761f4a5b8e99be3c7294c3da65736a83add2d4ac3c1",
+      "sourceURL": "https://cdn1.fleetviewer.link/vulture__top_xs_0f35fbf8e6b06f6d1e4c26cee2263a89.png",
+      "nozzles": [
+        {
+          "x": 0.404959,
+          "y": 0.375752
+        },
+        {
+          "x": -0.417355,
+          "y": 0.393788
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "13_vulture.png",
+        "sha256": "8a9ca2e66e9bf5c4902b0db0e426676d030f94dfc95f63826d6e346293b0bd2e"
+      }
+    },
+    "apollo-triage": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "d856ae1b29b4c14d08c99f6fb7ba7cd4eaf3a355dc37437e6e77e131de9f125b",
+      "sourceURL": "https://cdn1.fleetviewer.link/apollo-triage__top_xs_9c79dd1edf68609bfd0cb6325122435b.png",
+      "note": "Same exterior/main-engine arrangement; edit only apollo-medivac",
+      "aliasOf": "apollo-medivac"
+    },
+    "apollo-medivac": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "3a5a8702daff87b2f2b1f0b76df2a95dae8b9816aecb5aa4fe7d656aaa0b380d",
+      "sourceURL": "https://cdn1.fleetviewer.link/apollo-medivac__top_xs_a14c176a086a1d88bc59266551bc05a4.png",
+      "nozzles": [
+        {
+          "x": 0.31,
+          "y": 0.4
+        },
+        {
+          "x": -0.31,
+          "y": 0.4
+        }
+      ],
+      "note": "User marked the two external side-pod outlets; replace the incorrect central aft pair. Apollo Medivac/Triage share the arrangement. 2D sprite calibration, not official 3D coordinates.",
+      "annotation": {
+        "review": "GVY-VFX01-20261026-latest-port-corrections",
+        "file": "apollo-user-annotation.png",
+        "sha256": "cd217db094d255c3d21ac95ef91dc930dd4a6b8158457273df2916386b79b63e"
+      }
+    },
+    "mercury-star-runner": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "6d36ed0cabe8de562f815c44cf448641cdbbf4c988dbc1eecae432bd02202e66",
+      "sourceURL": "https://cdn1.fleetviewer.link/mercury-star-runner__top_xs_a545cf4798936b2102b7d7ba743ec361.png",
+      "nozzles": [
+        {
+          "x": 0.220879,
+          "y": 0.485972
+        },
+        {
+          "x": 0.02967,
+          "y": 0.473948
+        },
+        {
+          "x": -0.056044,
+          "y": 0.473948
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "valkyrie": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "c9ca31f0a86d450aeb0d0c2027d9a6e7cfeee201c631ddb05c5bd9f486b79219",
+      "sourceURL": "https://cdn1.fleetviewer.link/valkyrie__top_xs_85d14175a525a5eb4b06e269c0224852.png",
+      "nozzles": [
+        {
+          "x": 0.351206,
+          "y": -0.131263
+        },
+        {
+          "x": 0.253351,
+          "y": 0.297595
+        },
+        {
+          "x": -0.261394,
+          "y": 0.283567
+        },
+        {
+          "x": -0.33244,
+          "y": -0.148297
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "14_valkyrie.png",
+        "sha256": "5defd295bce6afb8e2bd493dc7aa91e82b5e96effd1ea01f388871bde9993973"
+      }
+    },
+    "san-tok-yai": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "793b56baf1518067bdeae7262ca8b6ed71ed388ff1d1729d7b658e684297234f",
+      "sourceURL": "https://cdn1.fleetviewer.link/san-tok-yai__top_xs_67ae8f53e48ca1b257a235e661d9d0d2.png",
+      "nozzles": [
+        {
+          "x": 0.31409,
+          "y": -0.009018
+        },
+        {
+          "x": -0.297456,
+          "y": 0.031062
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "15_san-tok-yai.png",
+        "sha256": "bc930a6eaf61ee617a12059d71c6bcd147e8177083935cbf76e8c302936a1a92"
+      }
+    },
+    "srv": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "900a995c289139a0167423b2a5d0dddb1d96a60b5e54ad4c926db4752e1a0ae4",
+      "sourceURL": "https://cdn1.fleetviewer.link/srv__top_xs_ab3a8d36d8a8ddf39ba33d17b5150960.png",
+      "nozzles": [
+        {
+          "x": 0.250751,
+          "y": 0.485972
+        },
+        {
+          "x": -0.250751,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "corsair": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "0bdd17d32d70bae22994affdb7d08b00c5e25ef714e9b31420ecaea6e28e560a",
+      "sourceURL": "https://cdn1.fleetviewer.link/corsair__top_xs_6f89c8100dc4a7eed1749fed0013d0a7.png",
+      "nozzles": [
+        {
+          "x": 0.068847,
+          "y": 0.281563
+        },
+        {
+          "x": -0.291738,
+          "y": 0.263527
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "16_corsair.png",
+        "sha256": "4d759adf9e73e38ebdd48562e99781adcf252e56bd38b91a35d8dc857e5fd8aa"
+      }
+    },
+    "nautilus": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "0519c7dbdf1a3fac6b6e274736c72e01911994209d876dc806bb57279af2d18b",
+      "sourceURL": "https://cdn1.fleetviewer.link/nautilus__top_xs_60a1abdb48eda63df8b089107ad37d0b.png",
+      "nozzles": [
+        {
+          "x": 0.482143,
+          "y": 0.171343
+        },
+        {
+          "x": -0.453571,
+          "y": 0.187375
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "17_nautilus.png",
+        "sha256": "f8f7e6b937242e325213df0d5dc70d3b97f2af4bf8ab499437ac98672ebc2a56"
+      }
+    },
+    "mantis": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "fd1500ef7f1aebc9934b78ccae0252f6364895fcf0e97e5e6a3e2d958bd47f65",
+      "sourceURL": "https://cdn1.fleetviewer.link/mantis__top_xs_2cee0b66f6560808c33e5d893e321618.png",
+      "nozzles": [
+        {
+          "x": 0.389286,
+          "y": 0.367735
+        },
+        {
+          "x": 0.021429,
+          "y": 0.281563
+        },
+        {
+          "x": -0.414286,
+          "y": 0.303607
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "18_mantis.png",
+        "sha256": "15a789b8253a2240a0f45949d0d6d4ccf27ab8d3050150bd7c474a26d4c83596"
+      }
+    },
+    "c8x-pisces-expedition": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "a4d5ec8f85e09e25d71bd69d8822c85dad087c3585b33a43d2b15f5c66c733b9",
+      "sourceURL": "https://cdn1.fleetviewer.link/c8x-pisces-expedition__top_xs_d82ea729e9e475b193346657798f7bf4.png",
+      "nozzles": [
+        {
+          "x": 0.06962,
+          "y": 0.485972
+        },
+        {
+          "x": -0.06962,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "ares-inferno": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "bd13caf1ea603645e5e0d862924ab705b5f304137c1222f2976484e52be46823",
+      "sourceURL": "https://cdn1.fleetviewer.link/ares-inferno__top_xs_50d8c773191dafec52cde8884548f079.png",
+      "nozzles": [
+        {
+          "x": 0.139138,
+          "y": 0.43988
+        },
+        {
+          "x": -0.139138,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "ares-ion": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "1ff75ccae1b3b5f49a8fdcdb6b3bd5d2d7049836d0baca16820d1be746f25548",
+      "sourceURL": "https://cdn1.fleetviewer.link/ares-ion__top_xs_baf7035c6022156dcfde91f3acdd3c93.png",
+      "nozzles": [
+        {
+          "x": 0.140794,
+          "y": 0.43988
+        },
+        {
+          "x": -0.140794,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mole": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "2ec37df2aef9f313bec05eba6ea5caff5ed43cc1e51b492ca081ef1bdd922ac6",
+      "sourceURL": "https://cdn1.fleetviewer.link/mole__top_xs_469e0f59726137dd0a160bd7c7375872.png",
+      "nozzles": [
+        {
+          "x": 0.25,
+          "y": 0.45992
+        },
+        {
+          "x": -0.25,
+          "y": 0.45992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "talon": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "71aeae7b1c8511d4d6560af08859910749d9aee88bfe27137fa629c1535c6d04",
+      "sourceURL": "https://cdn1.fleetviewer.link/talon__top_xs_d2b41cb81e25c8e4c67577da9bf22540.png",
+      "nozzles": [
+        {
+          "x": 0.163136,
+          "y": -0.127255
+        },
+        {
+          "x": -0.154661,
+          "y": -0.175351
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "19_talon.png",
+        "sha256": "315c5e139346b5ae70e7899e8260eb724e9fae9800013f08df1bb36c2b977afc"
+      }
+    },
+    "talon-shrike": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "5bfdcd625a15039900968c90bfb6a021f6e75f483cd7750c389f66ec3d585ae9",
+      "sourceURL": "https://cdn1.fleetviewer.link/talon-shrike__top_xs_30ea7d4d605a240603722ce8ba77ab9d.png",
+      "note": "Same exterior/main-engine arrangement; edit only talon",
+      "aliasOf": "talon"
+    },
+    "nomad": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "5c79689deab7ac57f34dcadaa7025436080b4a38becf6b164720149ab24baecc",
+      "sourceURL": "https://cdn1.fleetviewer.link/nomad__top_xs_254cf41b8be52c5acced0acd2b16ad0c.png",
+      "nozzles": [
+        {
+          "x": 0.355556,
+          "y": 0.024048
+        },
+        {
+          "x": -0.397222,
+          "y": 0.03507
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "20_nomad.png",
+        "sha256": "f318f805b6fa819582bec0f509afd229d6dd7b5cef9631dd801042cb867e9961"
+      }
+    },
+    "railen": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "fe65ba2c1f0057dfbb9916feca45ee460e37f5c373ff87315c4b2e341019a6ed",
+      "sourceURL": "https://cdn1.fleetviewer.link/railen__top_xs_fe65ba2c1f0057dfbb9916feca45ee460e37f5c373ff87315c4b2e341019a6ed.png",
+      "nozzles": [
+        {
+          "x": 0.313627,
+          "y": -0.059118
+        },
+        {
+          "x": 0.003006,
+          "y": 0.325651
+        },
+        {
+          "x": -0.355711,
+          "y": -0.06513
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "21_railen.png",
+        "sha256": "17f88eaf44ee63951ce96bd574d8b0555ad599ff883696ae8180b2572d414781"
+      }
+    },
+    "400i": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "83f4d7be13437bd7f3773528ac9df8ce9396d1405b126a7b9d7ee063248acdf3",
+      "sourceURL": "https://cdn1.fleetviewer.link/400i__top_xs_2ab8efa7f45fd8c180234c29a8633c0b.png",
+      "nozzles": [
+        {
+          "x": -0.001873,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "liberator": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9eff01be4e62717abac3c7c2b3d36aa96d64702c746858541d79c122ed8c3e56",
+      "sourceURL": "https://cdn1.fleetviewer.link/liberator__top_xs_663089b33bc8316c1f2aeb2234d38056.png",
+      "nozzles": [
+        {
+          "x": 0.278571,
+          "y": 0.495992
+        },
+        {
+          "x": -0.278571,
+          "y": 0.495992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "raft": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "381d97ce5edad81369be067de255f1aa1b4752f7cd340a1d441866c0ce8048e3",
+      "sourceURL": "https://cdn1.fleetviewer.link/raft__top_xs_324607a41c4e6770886623255cf8dcb3.png",
+      "nozzles": [
+        {
+          "x": 0.19338,
+          "y": 0.47996
+        },
+        {
+          "x": -0.19338,
+          "y": 0.47996
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "odyssey": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "bcd6ed0d498561872235f63072fc6661a5c522d3f8c4f00565544db7a5f59d04",
+      "sourceURL": "https://cdn1.fleetviewer.link/odyssey__top_xs_a29ec4e350a47246a1681775fe8e542b.png",
+      "nozzles": [
+        {
+          "x": 0.275194,
+          "y": 0.433868
+        },
+        {
+          "x": -0.271318,
+          "y": 0.433868
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "cutlass-steel": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "626376e95b17bc8b050bae9ffdd0aa0904df75c6513967694a3e3074c037d83c",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutlass-steel__top_xs_4e27b48e6fef6486a32ec82eb489f624.png",
+      "note": "Same exterior/main-engine arrangement; edit only cutlass-black",
+      "aliasOf": "cutlass-black"
+    },
+    "expanse": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b862158aac28bfe6293dc2aa47b1d646d4ca39bcfb060a58a377604d7ed84418",
+      "sourceURL": "https://cdn1.fleetviewer.link/expanse__top_xs_cab44aa5b14c73a8fdce82cb5ed46fe5.png",
+      "nozzles": [
+        {
+          "x": 0.20903,
+          "y": 0.485972
+        },
+        {
+          "x": -0.20903,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "legionnaire": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "248b1cf43df9ff2d82797affb5abfcb8aafba3dae04b354d5d0cde3a2825aefb",
+      "sourceURL": "https://cdn1.fleetviewer.link/legionnaire__top_xs_0bb604c60592361921de27d4fac45ea7.png",
+      "nozzles": [
+        {
+          "x": 0.368984,
+          "y": 0.475952
+        },
+        {
+          "x": -0.36631,
+          "y": 0.477956
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "c1-spirit": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "84d5b99cda648625a8461031077edd57414949afea11aead358f276641ccee3b",
+      "sourceURL": "https://cdn1.fleetviewer.link/c1-spirit__top_xs_e38f63cb9eaed11a3cea2cba4ed0c955.png",
+      "nozzles": [
+        {
+          "x": 0.2,
+          "y": 0.377756
+        },
+        {
+          "x": -0.1875,
+          "y": 0.343687
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "22_c1-spirit.png",
+        "sha256": "78eef84e58f1f533cf04a54708705879144fafcec68c9d729b33f4ca4ac9da69"
+      }
+    },
+    "a1-spirit": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "53a8c5e09e6dc40d6746cbeb3de50b80a0562b5c288b09c1adc27e7e4ce61147",
+      "sourceURL": "https://cdn1.fleetviewer.link/a1-spirit__top_xs_149f94f3faf38630ff85139ecae4abaf.png",
+      "note": "Same exterior/main-engine arrangement; edit only c1-spirit",
+      "aliasOf": "c1-spirit"
+    },
+    "e1-spirit": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "335fa6b9e2e05bbf7a4aa1b14c05b3950a72305c743ad586b9e9518c1e7a3e89",
+      "sourceURL": "https://cdn1.fleetviewer.link/e1-spirit__top_xs_3c86fbdb05ab9370c39fa9696c4c213f.png",
+      "note": "Same exterior/main-engine arrangement; edit only c1-spirit",
+      "aliasOf": "c1-spirit"
+    },
+    "c8r": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "e907d11242613062f94104e929fc69a001b7e013e70eda82f8508e5ea721b9da",
+      "sourceURL": "https://cdn1.fleetviewer.link/c8r__top_xs_7ad84afdb6a29d48f9f6b0416eeb763d.png",
+      "nozzles": [
+        {
+          "x": 0.069652,
+          "y": 0.485972
+        },
+        {
+          "x": -0.069652,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "cutter": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "ecf1c3077dc1729f701e88ba7754af4cf695243bd0daff92a8d30c5ee95d29c5",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutter__top_xs_8ae790d25a10565e783f5e069e518b4d.png",
+      "nozzles": [
+        {
+          "x": 0.084665,
+          "y": 0.475952
+        },
+        {
+          "x": -0.084665,
+          "y": 0.475952
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "scorpius-antares": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f68c499678a622bfa3ecda56ce3037196106059da9d11bf7ec4ed3d1912d8430",
+      "sourceURL": "https://cdn1.fleetviewer.link/scorpius-antares__top_xs_f2832a61118187dc61fe6da20ab1e5ff.png",
+      "nozzles": [
+        {
+          "x": 0.040212,
+          "y": 0.259519
+        },
+        {
+          "x": -0.040212,
+          "y": 0.259519
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "galaxy": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "89745862e031ca9037d58a23bb752c46ed6551ca7debaaf7069d661555694886",
+      "sourceURL": "https://cdn1.fleetviewer.link/galaxy__top_xs_ee1a4eb3e4adf4513934213346711a36.png",
+      "nozzles": [
+        {
+          "x": 0.256654,
+          "y": 0.38978
+        },
+        {
+          "x": -0.241445,
+          "y": 0.38978
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "23_galaxy.png",
+        "sha256": "bc221c291868ef431fbce90bbd0890bc29e5ad020b4c67b19e8cd5c5ac7fb090"
+      }
+    },
+    "fury": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b9c75f4f295c52bb25445c804da3f4efbb14bed65d91d49f9314ec545d189082",
+      "sourceURL": "https://cdn1.fleetviewer.link/fury__top_xs_49eb75c9fb21550744b0e7d20b769293.png",
+      "nozzles": [
+        {
+          "x": 0.298982,
+          "y": 0.485972
+        },
+        {
+          "x": -0.298982,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "fury-mx": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f58655a18c161305b477d2ba6f7e58ffb6d1d6a6a14e2907937524f1e559caa3",
+      "sourceURL": "https://cdn1.fleetviewer.link/fury-mx__top_xs_b34bf0a410a2767541be8448259b764a.png",
+      "nozzles": [
+        {
+          "x": 0.3,
+          "y": 0.485972
+        },
+        {
+          "x": -0.3,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "fury-lx": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "220c32b0d4c8734d36da5b12f36aed28f61a9c876d6ef6f42fc92eacda8b1126",
+      "sourceURL": "https://cdn1.fleetviewer.link/fury-lx__top_xs_ea7b56caa4a5d7bbf9ee504bf267d50f.png",
+      "nozzles": [
+        {
+          "x": 0.3,
+          "y": 0.3998
+        },
+        {
+          "x": -0.3,
+          "y": 0.3998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "zeus-mkii-es": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "6c7ec4c802442c161389ec753bdb0bd46120e9ab2e6a45b19d8ee127d9fe0dcd",
+      "sourceURL": "https://cdn1.fleetviewer.link/zeus-mkii-es__top_xs_faa5ed428dd7e85f99a5ab63c57f1399.png",
+      "nozzles": [
+        {
+          "x": 0.16129,
+          "y": 0.43988
+        },
+        {
+          "x": 0.080645,
+          "y": 0.43988
+        },
+        {
+          "x": -0.080645,
+          "y": 0.43988
+        },
+        {
+          "x": -0.16129,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "zeus-mkii-mr": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "ff1d004df8d25d7c38a21980509b7a11d5060a9ef1335ca8f5cc0768836e04ff",
+      "sourceURL": "https://cdn1.fleetviewer.link/zeus-mkii-mr__top_xs_c9556792f424858f063d521921bf9ec8.png",
+      "nozzles": [
+        {
+          "x": 0.159517,
+          "y": 0.43988
+        },
+        {
+          "x": 0.079088,
+          "y": 0.43988
+        },
+        {
+          "x": -0.079088,
+          "y": 0.43988
+        },
+        {
+          "x": -0.159517,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "zeus-mkii-cl": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9a18f256b86f23e06b9a4d4e2c643a01d874822f03c400d5fb57b5b91a751496",
+      "sourceURL": "https://cdn1.fleetviewer.link/zeus-mkii-cl__top_xs_248c0a03161ea4e24fa089ac5629a6ca.png",
+      "nozzles": [
+        {
+          "x": 0.16129,
+          "y": 0.43988
+        },
+        {
+          "x": 0.080645,
+          "y": 0.43988
+        },
+        {
+          "x": -0.080645,
+          "y": 0.43988
+        },
+        {
+          "x": -0.16129,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "cutter-scout": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "38c5facbce258df4c72dbff3b73967c1731646cfb4129f37d40e8c8dcecfd54b",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutter-scout__top_xs_50e374b8f55e97d2387fb89556e1b768.png",
+      "nozzles": [
+        {
+          "x": 0.090625,
+          "y": 0.485972
+        },
+        {
+          "x": -0.090625,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "arrastra": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "08ceb79572bf9707d8334d824b8bcbf08045f28a86b163229b7c69e8d09f1a74",
+      "sourceURL": "https://cdn1.fleetviewer.link/arrastra__top_xs_597f0c89d3114748ecca1f14d39782d7.png",
+      "nozzles": [
+        {
+          "x": 0.4,
+          "y": 0.48998
+        },
+        {
+          "x": -0.4,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "syulen": {
+      "status": "not-visible-confirmed",
+      "imageSHA256": "fb08f5dc61354aaea6f04788bd507989b62b8293ad31f137ef047742982bcd75",
+      "sourceURL": "https://cdn1.fleetviewer.link/syulen__top_xs_7aae121aafd82c50461c3f6e074466f9.png",
+      "nozzles": [],
+      "note": "No reliable main-engine opening in this projection, or excluded artwork. Do not draw generic double exhaust."
+    },
+    "cutter-rambler": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "5e43bb52cd72db9d1f58f244c297b9b3a59ac031e63494defe57e1ee91dbedd0",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutter-rambler__top_xs_dcacd72332e9ccbb06afa6fd452691e8.png",
+      "nozzles": [
+        {
+          "x": 0.087302,
+          "y": 0.475952
+        },
+        {
+          "x": -0.087302,
+          "y": 0.475952
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "sabre-firebird": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "560d7bda451ab4f1187ae48b5a57e069d7e304e0c566d09234bce314ff564a46",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre-firebird__top_xs_23cca638ee12519effe668675afa8aae.png",
+      "nozzles": [
+        {
+          "x": 0.001199,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "mpuv-tractor": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "436256b6a167bbc9db8c61fa7319559b30122ecd0f5d7312ffe558505800f09e",
+      "sourceURL": "https://cdn1.fleetviewer.link/mpuv-tractor__top_xs_07c8d9d4be0fcd8c0090417b5ef0f629.png",
+      "nozzles": [
+        {
+          "x": 0.159472,
+          "y": 0.48998
+        },
+        {
+          "x": -0.159472,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "ironclad": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "6c2c35099bd291f65e9a91bdba9fa55c59e40617a5f0064318d300b6fd42c43d",
+      "sourceURL": "https://cdn1.fleetviewer.link/ironclad__top_xs_6c2c35099bd291f65e9a91bdba9fa55c59e40617a5f0064318d300b6fd42c43d.png",
+      "nozzles": [
+        {
+          "x": 0.285366,
+          "y": 0.493988
+        },
+        {
+          "x": 0.002439,
+          "y": 0.495992
+        },
+        {
+          "x": -0.280488,
+          "y": 0.495992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "ironclad-assault": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "0bd0e94c1f8ed2de66c297a612efc10f982bebd178e4d59facc46ae8f36b430b",
+      "sourceURL": "https://cdn1.fleetviewer.link/ironclad-assault__top_xs_0bd0e94c1f8ed2de66c297a612efc10f982bebd178e4d59facc46ae8f36b430b.png",
+      "nozzles": [
+        {
+          "x": 0.285366,
+          "y": 0.495992
+        },
+        {
+          "x": 0.002439,
+          "y": 0.495992
+        },
+        {
+          "x": -0.280488,
+          "y": 0.495992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "sabre-peregrine": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "36b03f9712f98327dddc83258ed2c6529f0af0702dcabfa51793e6e68d50c7a8",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre-peregrine__top_xs_c03bd295db72436699c0ca9d3b66d609.png",
+      "nozzles": [
+        {
+          "x": -0.001193,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "starlancer-max": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "702b18852bb766bcb894f135c47d52a862b57c6b6bdec438faa79a009dcf9cb1",
+      "sourceURL": "https://cdn1.fleetviewer.link/starlancer-max__top_xs_d2ca453f6362352e167f6344d48b44c5.png",
+      "nozzles": [
+        {
+          "x": 0.258958,
+          "y": 0.329659
+        },
+        {
+          "x": -0.258958,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "starlancer-tac": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "444f7c577aba9f1dba5e402a16eb9f455b2c02805c7044024eb4b4729d8e0f12",
+      "sourceURL": "https://cdn1.fleetviewer.link/starlancer-tac__top_xs_a20f3f908c1dace63f18655d73538adc.png",
+      "nozzles": [
+        {
+          "x": 0.259076,
+          "y": 0.329659
+        },
+        {
+          "x": -0.259076,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "intrepid": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "0cdecf20de02c512d7365fbba5fdf3ed2febfb57ef74b37ca67878945a118e67",
+      "sourceURL": "https://cdn1.fleetviewer.link/intrepid__top_xs_0f5845bbc41916477d958b6feda39a45.png",
+      "nozzles": [
+        {
+          "x": 0.149203,
+          "y": 0.485972
+        },
+        {
+          "x": -0.149203,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "paladin": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9ab9f57d1b7c6c305cadb873cfb1d57303e90d07e98b6b35b68b490238248695",
+      "sourceURL": "https://cdn1.fleetviewer.link/paladin__top_xs_2979740eea2e2338b9607c171cd7fe78.png",
+      "nozzles": [
+        {
+          "x": 0.145533,
+          "y": 0.477956
+        },
+        {
+          "x": -0.136888,
+          "y": 0.475952
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "terrapin-medic": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "345e4072c1d5bf7e74dbebf53cd7fdd3f03c0c956f04c639fe2dd45b40a664cf",
+      "sourceURL": "https://cdn1.fleetviewer.link/terrapin-medic__top_xs_1abbade1382b9661c9da0e196ef12236.png",
+      "nozzles": [
+        {
+          "x": 0.398795,
+          "y": 0.349699
+        },
+        {
+          "x": -0.401205,
+          "y": 0.349699
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-r-hornet-tracker-mk-ii": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "5c929e4316886771cd8578f40100e474dac4748fd580d99cec8032befcff16cd",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-r-hornet-tracker-mk-ii__top_xs_fb3e2872f7ddd885a1412ab50391952c.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-s-hornet-ghost-mk-ii": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "b239f4df34cd6a6c7c78eebe5b990ff4290b88a4e2e0733ae0c91c534c18b540",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-s-hornet-ghost-mk-ii__top_xs_e9da459425f5e6f677c56d280da2c1f4.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "guardian": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "456f9e39335f51602b7b4858817642e39b8fcb2ee24e4a1c77800d3ece5de036",
+      "sourceURL": "https://cdn1.fleetviewer.link/guardian__top_xs_3735ea6516c1b99931f0147692727eb8.png",
+      "nozzles": [
+        {
+          "x": 0.329341,
+          "y": 0.485972
+        },
+        {
+          "x": -0.329341,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "guardian-qi": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "3c0c6fe6934399eb1c11481d27149f7d2cfec10d4dd5364347036749a6947eac",
+      "sourceURL": "https://cdn1.fleetviewer.link/guardian-qi__top_xs_be0e1a1b49a4484cd62918595495baba.png",
+      "note": "Same exterior/main-engine arrangement; edit only guardian",
+      "aliasOf": "guardian"
+    },
+    "fortune": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "6a09c9ff57835ff2710b95e29041a326df920385ef0b08c38fd6fab3d3f17691",
+      "sourceURL": "https://cdn1.fleetviewer.link/fortune__top_xs_b0bfefdb37bcc93df88f983b9113d158.png",
+      "nozzles": [
+        {
+          "x": 0.406355,
+          "y": 0.339679
+        },
+        {
+          "x": 0.295987,
+          "y": -0.167335
+        },
+        {
+          "x": -0.295987,
+          "y": -0.167335
+        },
+        {
+          "x": -0.413043,
+          "y": 0.371743
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "24_fortune.png",
+        "sha256": "09e621f8f2b4ba59a8af5ebb937d6c32c1c36435e690af7e08669ebf66354b97"
+      }
+    },
+    "sabre-comet": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "0e155fa94f729fc473b0ab312dd7551e6aef4c11a59393cbee91471128753763",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre-comet__top_xs_8d2bf4c1fbdacbc626f3b3a5dfe44fe8.png",
+      "note": "Same exterior/main-engine arrangement; edit only sabre",
+      "aliasOf": "sabre"
+    },
+    "gladius-valiant": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "3ebfdf4d0b5eaff3cbfd87809f30ef24e5fc640d127d832374c7e4d3e6df3dbc",
+      "sourceURL": "https://cdn1.fleetviewer.link/gladius-valiant__top_xs_03e8210a5d62a2a55a8ede5aaf46782f.png",
+      "note": "Same exterior/main-engine arrangement; edit only gladius",
+      "aliasOf": "gladius"
+    },
+    "f7c-hornet-wildfire": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "311c1b8ff595f972be924564669a9a40250151dee1f495ac096f45b5ee694a6d",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-hornet-wildfire__top_xs_58ee951a355dc1fba16e48892fb192db.png",
+      "nozzles": [
+        {
+          "x": 0.001048,
+          "y": 0.317635
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "avenger-titan-renegade": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "55577d754ed79e2969e80c86545cfda97a4be4fd071efadf63b00035f4722d3b",
+      "sourceURL": "https://cdn1.fleetviewer.link/avenger-titan-renegade__top_xs_7b8bbd753dd144d78e15f34bac44c501.png",
+      "note": "Same exterior/main-engine arrangement; edit only avenger-titan",
+      "aliasOf": "avenger-titan"
+    },
+    "caterpillar-pirate": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "dfd5d92ee76a4738c8bf7a837395eb4319b8032cae3c1573d6e826bb8418df96",
+      "sourceURL": "https://cdn1.fleetviewer.link/caterpillar-pirate__top_xs_7993b20e1e34590a9c839bc813124970.png",
+      "note": "Same exterior/main-engine arrangement; edit only caterpillar",
+      "aliasOf": "caterpillar"
+    },
+    "constellation-phoenix-emerald": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "4a18bc03609971b9f71dc4ed15e1d40acdc434f1a3a6f95cf3bf289a6bcc3f6f",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-phoenix-emerald__top_xs_c48ed8041665746dc2cb19d32ac42f3a.png",
+      "nozzles": [
+        {
+          "x": 0.285047,
+          "y": 0.46994
+        },
+        {
+          "x": 0.126168,
+          "y": 0.46994
+        },
+        {
+          "x": -0.121495,
+          "y": 0.46994
+        },
+        {
+          "x": -0.280374,
+          "y": 0.46994
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "valkyrie-liberator": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "e145f1472fe5b206699d350befd92f5696ab1af94ebe999c11cac01e78f1f3d4",
+      "sourceURL": "https://cdn1.fleetviewer.link/valkyrie-liberator__top_xs_54a9866d0fb9f8625ddd775c6465fb3b.png",
+      "note": "Same exterior/main-engine arrangement; edit only valkyrie",
+      "aliasOf": "valkyrie"
+    },
+    "mustang-alpha-vindicator": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "d7319122d5bec4ebc48288c0dfeaa86d07f21a72910273fe4e187e08b1619ee9",
+      "sourceURL": "https://cdn1.fleetviewer.link/mustang-alpha-vindicator__top_xs_7583b977ce5caa7736afef6d82801021.png",
+      "note": "Same exterior/main-engine arrangement; edit only mustang-alpha",
+      "aliasOf": "mustang-alpha"
+    },
+    "f7cm-hornet-heartseeker-mkii": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "44d05a21bfb3012845fd53f44ade0f050d88e83bd67db55ec46bc3a4578353b7",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7cm-hornet-heartseeker-mkii__top_xs_52162dcf854a980e22242804b9085b12.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.321643
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "f7c-m-super-hornet-heartseeker": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "95d9dd2a3035a20a6ea68366927482ec543a1c4ed40e1f152e1af0e930014440",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-m-super-hornet-heartseeker__top_xs_35efb563983e59f1af110004f4be3ec8.png",
+      "nozzles": [
+        {
+          "x": -0.001053,
+          "y": 0.335671
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "nautilus-solstice": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "60ef5db809891512b0fb8a77e63e71484ade7d4673fd1ad3eea0a88487f665ac",
+      "sourceURL": "https://cdn1.fleetviewer.link/nautilus-solstice__top_xs_74d51a2b8250a601d9c655735c7fcd1d.png",
+      "note": "Same exterior/main-engine arrangement; edit only nautilus",
+      "aliasOf": "nautilus"
+    },
+    "pirate-gladius": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "723626b6693bc3b693662bba10fc15391d3c1e9a4db954f8e2711d9b7c7acfb4",
+      "sourceURL": "https://cdn1.fleetviewer.link/pirate-gladius__top_xs_84bd283f59bee4319e42cd777707183b.png",
+      "note": "Same exterior/main-engine arrangement; edit only gladius",
+      "aliasOf": "gladius"
+    },
+    "cutlass-black-2949-best-in-show": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "483b423db2e38fc4b29d32e625954edee3ea57f0edaef866fed2543dc068f735",
+      "sourceURL": "https://cdn1.fleetviewer.link/cutlass-black-2949-best-in-show__top_xs_6cfe355c783628998e6d751515c6ee88.png",
+      "note": "Same exterior/main-engine arrangement; edit only cutlass-black",
+      "aliasOf": "cutlass-black"
+    },
+    "caterpillar-2949-best-in-show": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "7cab097bd303cd17f38c63d9bface4b2114e6258e95dfc0f7268e418b6381ab7",
+      "sourceURL": "https://cdn1.fleetviewer.link/caterpillar-2949-best-in-show__top_xs_4a0648ce959d0ca31d0338b09a7d0d24.png",
+      "note": "Same exterior/main-engine arrangement; edit only caterpillar",
+      "aliasOf": "caterpillar"
+    },
+    "hammerhead-2949-best-in-show": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "d5e3d1b0e4a0372fb8b2b09f4d6678bb402ae6cb8fec6eda21c6e5e83f034acc",
+      "sourceURL": "https://cdn1.fleetviewer.link/hammerhead-2949-best-in-show__top_xs_00d097ade4fa9ae6b1015cf417d6ce79.png",
+      "note": "Same exterior/main-engine arrangement; edit only hammerhead",
+      "aliasOf": "hammerhead"
+    },
+    "reclaimer-2949-best-in-show": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "a4a2fec30ba24d0ce80619ed5e1d49536db44df9166d63fa3ac1d24bf3b8810f",
+      "sourceURL": "https://cdn1.fleetviewer.link/reclaimer-2949-best-in-show__top_xs_b3498d44a2be273873fe854ff079840c.png",
+      "note": "Same exterior/main-engine arrangement; edit only reclaimer",
+      "aliasOf": "reclaimer"
+    },
+    "mole-carbon": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "a0728fdf250ac77e36ce79c333257f821df27d90e27d194a890b699673978201",
+      "sourceURL": "https://cdn1.fleetviewer.link/mole-carbon__top_xs_96cbcdd872f640732509f11f8296a259.png",
+      "note": "Same exterior/main-engine arrangement; edit only mole",
+      "aliasOf": "mole"
+    },
+    "mole-talus": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "93dd3ff2bd067ce4b752a60f44533696e274517ba603f7890b175ae0944f84ce",
+      "sourceURL": "https://cdn1.fleetviewer.link/mole-talus__top_xs_71b5c2ec7adc20410805b1525917bcff.png",
+      "note": "Same exterior/main-engine arrangement; edit only mole",
+      "aliasOf": "mole"
+    },
+    "carrack-c8x": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "22a8f81ad8cd63fae8d7a345e326813684ab457995a7da563d4c9efc3ee46c40",
+      "sourceURL": "https://cdn1.fleetviewer.link/carrack-c8x__top_xs_75d6d665d4eeefeba5da52a09d074471.png",
+      "note": "Same exterior/main-engine arrangement; edit only carrack",
+      "aliasOf": "carrack"
+    },
+    "carrack-expedition-c8x": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "55391215430a23360175ea8db5e1654fbb759100071c291e7a896679fa98775d",
+      "sourceURL": "https://cdn1.fleetviewer.link/carrack-expedition-c8x__top_xs_53485cc7c3b53e1875f434951ab13336.png",
+      "note": "Same exterior/main-engine arrangement; edit only carrack",
+      "aliasOf": "carrack"
+    },
+    "carrack-expedition": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "55391215430a23360175ea8db5e1654fbb759100071c291e7a896679fa98775d",
+      "sourceURL": "https://cdn1.fleetviewer.link/carrack-expedition__top_xs_53485cc7c3b53e1875f434951ab13336.png",
+      "note": "Same exterior/main-engine arrangement; edit only carrack",
+      "aliasOf": "carrack"
+    },
+    "p72-archimedes-emerald": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "62c4a25f6043958dfb83076fec7b7913502265231035f1d6c8201f9c0de66ea1",
+      "sourceURL": "https://cdn1.fleetviewer.link/p72-archimedes-emerald__top_xs_cedd0a33f0afc73bc889a58335a13191.png",
+      "note": "Same exterior/main-engine arrangement; edit only p72-archimedes",
+      "aliasOf": "p72-archimedes"
+    },
+    "f7c-m-super-hornet-mk-ii": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "5ff4fc704bc1f4031e487fa710f8cffecc912cf768bc88397a9bca2deceb1d49",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7c-m-super-hornet-mk-ii__top_xs_e83d7d2f4b28ab00c34c5595cb4cb89e.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.319639
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "golem": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "6e00a3257ec6c9ef9752e416a4ca72dab106c1f605958de629e3777085034b4a",
+      "sourceURL": "https://cdn1.fleetviewer.link/golem__top_xs_cf50029d4f4ce62341444857de4be5f5.png",
+      "nozzles": [
+        {
+          "x": 0.080913,
+          "y": 0.485972
+        },
+        {
+          "x": -0.080913,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "guardian-mx": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "cb64fd34b8bbefd072ba87badc75e0026e17d75364b53473db1273523565dea4",
+      "sourceURL": "https://cdn1.fleetviewer.link/guardian-mx__top_xs_81c2f199181458f8d0ec8b7963352a6f.png",
+      "note": "Same exterior/main-engine arrangement; edit only guardian",
+      "aliasOf": "guardian"
+    },
+    "asgard": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "a85c9c5829f113b8fd2f55348a1bacd215f61ab8432b161a56750ffafec52175",
+      "sourceURL": "https://cdn1.fleetviewer.link/asgard__top_xs_e3d49d86b4cbeab26f618e917d5c6395.png",
+      "nozzles": [
+        {
+          "x": 0.36087,
+          "y": 0.199399
+        },
+        {
+          "x": -0.36087,
+          "y": 0.199399
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "prowler-utility": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9770c6aa17559ff0111e55e8cbd24079070febf01249dd8dff249398a771b923",
+      "sourceURL": "https://cdn1.fleetviewer.link/prowler-utility__top_xs_1cb1eaaa65321812c98ac1b89e43692b.png",
+      "nozzles": [
+        {
+          "x": 0.370647,
+          "y": 0.079158
+        },
+        {
+          "x": -0.370647,
+          "y": 0.079158
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "meteor": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "1796c56955e1f6a9619546f4c3e67e060b33558465f749bfa516aa9e8ad69893",
+      "sourceURL": "https://cdn1.fleetviewer.link/meteor__top_xs_aeb940ab7bd97db285342cba1fd25ee5.png",
+      "nozzles": [
+        {
+          "x": 0.317857,
+          "y": 0.321643
+        },
+        {
+          "x": -0.271429,
+          "y": 0.299599
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "25_meteor.png",
+        "sha256": "3592751c7a04e2c464416a9b498dc6ff8e04792d7a22b6b7bf5c951ef6cf38ea"
+      }
+    },
+    "l-21-wolf": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "9e1059e737feada658124a4b30c960e836b0d9c6db85db406bdcf8f5377337f1",
+      "sourceURL": "https://cdn1.fleetviewer.link/l-21-wolf__top_xs_4b3f4a5de537c41cee22b74d8e80e3cc.png",
+      "nozzles": [
+        {
+          "x": 0.430328,
+          "y": 0.129259
+        },
+        {
+          "x": -0.430328,
+          "y": 0.129259
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "stinger": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "10cde2725776a73fe8846d1458fda52b25ab96c0aa21ab3d3896519ec9c188c2",
+      "sourceURL": "https://cdn1.fleetviewer.link/stinger__top_xs_a2200935617a2bad7aefda692dc82f5a.png",
+      "nozzles": [
+        {
+          "x": 0.036748,
+          "y": 0.225451
+        },
+        {
+          "x": -0.032294,
+          "y": 0.241483
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "26_stinger.png",
+        "sha256": "823512724e0032b1116343601914905c9fa8439a5c9d2707ce9eef2737160fd7"
+      }
+    },
+    "shiv": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "db57b33ebf5b538e1d45c4f230db39bf6c173c364fa179daecebeed0ee6e7797",
+      "sourceURL": "https://cdn1.fleetviewer.link/shiv__top_xs_bf5c2d157040ae4ad73baa08e254958e.png",
+      "nozzles": [
+        {
+          "x": 0.437662,
+          "y": 0.413828
+        },
+        {
+          "x": 0.242857,
+          "y": 0.039078
+        },
+        {
+          "x": -0.216883,
+          "y": 0.03507
+        },
+        {
+          "x": -0.416883,
+          "y": 0.403808
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "27_shiv.png",
+        "sha256": "f5ffbd8d496f5cca947105e5142599af9f5202950a44567e78c9c80fcde147c1"
+      }
+    },
+    "l22-alphawolf": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f65216fa8b7c05071485339cb642bc6b055e66758560538f1074f68772e7afd6",
+      "sourceURL": "https://cdn1.fleetviewer.link/l22-alphawolf__top_xs_13c484a0e2f6ae7988dee18bed43af0f.png",
+      "nozzles": [
+        {
+          "x": 0.430612,
+          "y": 0.129259
+        },
+        {
+          "x": -0.430612,
+          "y": 0.129259
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "salvation": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "fb30f28c537286f7ec9aded96ba1f221e46ae08161bb5ac282d5f94a43e4109d",
+      "sourceURL": "https://cdn1.fleetviewer.link/salvation__top_xs_dd438b27114a9c0833772100bee43d73.png",
+      "nozzles": [
+        {
+          "x": 0.258621,
+          "y": 0.43988
+        },
+        {
+          "x": -0.258621,
+          "y": 0.43988
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "clipper": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "fb7cc738013549c61cfa8a6ee8027b888ae250f8aae468f2ea466f87370d5dc8",
+      "sourceURL": "https://cdn1.fleetviewer.link/clipper__top_xs_518fc231a72fc93393f572bc2c6a6ba9.png",
+      "nozzles": [
+        {
+          "x": 0.051783,
+          "y": 0.28882
+        },
+        {
+          "x": -0.067912,
+          "y": 0.453416
+        },
+        {
+          "x": -0.201188,
+          "y": 0.28882
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "28_clipper.png",
+        "sha256": "5c15865d3091b524d472cf7cf7ac01e6f3c827f016143b4b1b7aa00784e4ec15"
+      }
+    },
+    "golem-ox": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "10dc822189636ebf651e69f41277c797bb4fab22c5b541996acce2b25633ba78",
+      "sourceURL": "https://cdn1.fleetviewer.link/golem-ox__top_xs_93e5e554c829da4a5764d1cfea5f2323.png",
+      "nozzles": [
+        {
+          "x": 0.078947,
+          "y": 0.485972
+        },
+        {
+          "x": -0.078947,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "hermes": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "68989f1ba1ef100cecc475b5aa96e9e4bc9ab2464ccefd1df69f7f82e1367864",
+      "sourceURL": "https://cdn1.fleetviewer.link/hermes__top_xs_4ed6227fc57d0104db92c3e7eedb17b1.png",
+      "nozzles": [
+        {
+          "x": 0.337438,
+          "y": 0.373747
+        },
+        {
+          "x": -0.369458,
+          "y": 0.347695
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "29_hermes.png",
+        "sha256": "26242e2cfd14c6fc804bb1381fca2dc4cf2d9f4328ed3dbaac9d624652d1aefa"
+      }
+    },
+    "moth": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "87d1f18ee7bd76b82bf4d3198fab55321cb17c397673abead610129b3f1fffa4",
+      "sourceURL": "https://cdn1.fleetviewer.link/moth__top_xs_8dab8e3a152061acf22221dc9d4b0de4.png",
+      "nozzles": [
+        {
+          "x": 0.25,
+          "y": 0.45992
+        },
+        {
+          "x": -0.25,
+          "y": 0.45992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-mk-ii": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "866f65120713249dcd3b6abab0232221de36ac4901cb1c627e0f6a47c97e955f",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-mk-ii__top_xs_95b01d3f864e68c8c77e3bfcabf6cead.png",
+      "nozzles": [
+        {
+          "x": 0.038071,
+          "y": 0.191383
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "30_aurora-mk-ii.png",
+        "sha256": "d6aabd844716784d684d72a2c822df1377bbafafa8d0be77d5cb83608f524dff"
+      }
+    },
+    "pegasus": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "0f58f0c34a0c6d0c54aff834e1050bac45a48120ff2ddf1d37235f0c6684be95",
+      "sourceURL": "https://cdn1.fleetviewer.link/pegasus__top_xs_95a8c5d567f641bef07df33d8a1c09ab.png",
+      "nozzles": [
+        {
+          "x": 0.439394,
+          "y": 0.147295
+        },
+        {
+          "x": 0.272727,
+          "y": 0.3998
+        },
+        {
+          "x": -0.05303,
+          "y": 0.397796
+        },
+        {
+          "x": -0.462121,
+          "y": 0.157315
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "31_pegasus.png",
+        "sha256": "203d46f711d7492cfbd14aa77cf8d121f0fbf36ebad5c673c4fba041408c17e7"
+      }
+    },
+    "retribution": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "67221dc5a14cd1d52e85bd5046c929f80c776f33deeac32200985e0d5c1bbbe9",
+      "sourceURL": "https://cdn1.fleetviewer.link/retribution__top_xs_4c78dd0b5724f3630b08010c55dc353c.png",
+      "nozzles": [
+        {
+          "x": 0.303738,
+          "y": 0.271543
+        },
+        {
+          "x": 0.135514,
+          "y": 0.317635
+        },
+        {
+          "x": -0.088785,
+          "y": 0.317635
+        },
+        {
+          "x": -0.294393,
+          "y": 0.275551
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "32_retribution.png",
+        "sha256": "b7891093010418ab7a0a7ce08d653b748e741ca4a2f13e26b9958aae65eda25c"
+      }
+    },
+    "sabre-raven": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "d964f374c791326961e33ab8abccb7b9864f619383f54534789a56f0d221a3f5",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre-raven__top_xs_6e00fd69961612450ccf3268c29410b0.png",
+      "nozzles": [
+        {
+          "x": 0.001211,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "kraken-privateer": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "c8973750872929c00c65999e96f6dc7d22545b4b153a697f0d2eae529c308092",
+      "sourceURL": "https://cdn1.fleetviewer.link/kraken-privateer__top_xs_965222d2c6203d7955f825dad000a781.png",
+      "nozzles": [
+        {
+          "x": 0.102094,
+          "y": 0.495992
+        },
+        {
+          "x": -0.018325,
+          "y": 0.495992
+        },
+        {
+          "x": -0.102094,
+          "y": 0.495992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "kraken": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f41b89644384aa3e0fdbd183613bbe63fa653accbf7c700cdf182ac9a397a119",
+      "sourceURL": "https://cdn1.fleetviewer.link/kraken__top_xs_7f1c60c5ca501747744d2482b8116944.png",
+      "nozzles": [
+        {
+          "x": 0.098958,
+          "y": 0.495992
+        },
+        {
+          "x": 0.020833,
+          "y": 0.495992
+        },
+        {
+          "x": -0.098958,
+          "y": 0.495992
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "idris-m": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "8827a179ca7d8b39b07031b00cf567e0115168c6dd6d7777c191fddd8e3ed28e",
+      "sourceURL": "https://cdn1.fleetviewer.link/idris-m__top_xs_b4942f924abb75ede4a1e7fa13f07151.png",
+      "nozzles": [
+        {
+          "x": 0.295,
+          "y": -0.044
+        },
+        {
+          "x": 0.447,
+          "y": 0.333
+        },
+        {
+          "x": -0.449,
+          "y": 0.333
+        },
+        {
+          "x": -0.296,
+          "y": -0.044
+        }
+      ],
+      "note": "Latest user correction supersedes the earlier five-outlet annotation. Four side-pod outlets; no central aft flame. Idris-P/M share the arrangement. 2D sprite calibration, not official 3D coordinates.",
+      "annotation": {
+        "review": "GVY-VFX01-20261026-latest-port-corrections",
+        "file": "idris-corrected-user-annotation.png",
+        "sha256": "5adeb0456b025bc18d5108f95732e88597fc53c18c9402f2e6db153495ffbfca"
+      }
+    },
+    "f8c-lightning-executive": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "1d6fb30ded077aa2d9ce4e4ea346ece6bd31207f818bbbadbafa8ecb77db2dc3",
+      "sourceURL": "https://cdn1.fleetviewer.link/f8c-lightning-executive__top_xs_4697a06ada4ac7a8e7acaba66050d559.png",
+      "note": "Same exterior/main-engine arrangement; edit only f8c-lightning",
+      "aliasOf": "f8c-lightning"
+    },
+    "f7a-hornet": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "292bf36dd611d799d42e6608263afa4d6b2cf3c2af3e3a5cc5a22e34b7d0c171",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7a-hornet__top_xs_735cdf90295c03c08d9aebbef8fc2ff6.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "c8-pisces": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "f7b80bdeedbd39d0edf620f978fc1f101ff595d90978124012bfaf1a64ec61c0",
+      "sourceURL": "https://cdn1.fleetviewer.link/c8-pisces__top_xs_219ae2092db53bfb475f00bd0d58119c.png",
+      "nozzles": [
+        {
+          "x": 0.06927,
+          "y": 0.485972
+        },
+        {
+          "x": -0.06927,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "600i-executive": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "8ef6092efe41516c64857f4e6183804e762ab4162a5b5ea61fafec6f71bb1bf1",
+      "sourceURL": "https://cdn1.fleetviewer.link/600i-executive__top_xs_c223e169cdd24c8ff50d6b6bc892fdfe.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.483968
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "bengal": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "dc6874a16e33bfd4e16266f3df63491abdbc6737b205fca419dfa634c46fed7a",
+      "sourceURL": "https://cdn1.fleetviewer.link/bengal__top_s_12f0404b12ade2703b4d30161375b8e5.png",
+      "nozzles": [
+        {
+          "x": 0.286201,
+          "y": 0.358859
+        },
+        {
+          "x": 0.215503,
+          "y": 0.351852
+        },
+        {
+          "x": -0.222317,
+          "y": 0.354855
+        },
+        {
+          "x": -0.288756,
+          "y": 0.358859
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "33_bengal.png",
+        "sha256": "c8ff290bbf41c850f02810754228c261c6deea17a42f1e45d708a1c3e4afd295"
+      }
+    },
+    "endeavor-master-set": {
+      "status": "not-visible-confirmed",
+      "imageSHA256": "c2f1ed950eaae75fdae198dbb28f59b7e87c1d0748d9989bf21d6b601bf465b2",
+      "sourceURL": "https://cdn1.fleetviewer.link/endeavor-master-set__top_xs_ace75c473084c758e897fcee5d0bfaf8.png",
+      "nozzles": [],
+      "note": "No reliable main-engine opening in this projection, or excluded artwork. Do not draw generic double exhaust."
+    },
+    "zeus": {
+      "status": "not-visible-confirmed",
+      "imageSHA256": "2a2108d8253ef3425c70804e51367d108ed1685b46b631b29551c6e4cf809d3f",
+      "sourceURL": "https://cdn1.fleetviewer.link/zeus__top_xs_29b6af7af112e13213130ced2fe32227.png",
+      "nozzles": [],
+      "note": "No reliable main-engine opening in this projection, or excluded artwork. Do not draw generic double exhaust."
+    },
+    "f7a-mkii": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "4bf3ba3ce7c90ad3e2b78dcb584b7b38214daf8b3eb772aaf1ff4639ef06acdf",
+      "sourceURL": "https://cdn1.fleetviewer.link/f7a-mkii__top_xs_3ea5f0e7cdfbba08a5d4664c8c4bbc85.png",
+      "nozzles": [
+        {
+          "x": 0.0,
+          "y": 0.329659
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "aurora-se": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "62a11cda7f1d3764a88f744e5f8261057f8d4b35aed07362882404e36c552533",
+      "sourceURL": "https://cdn1.fleetviewer.link/aurora-se__top_xs_62a11cda7f1d3764a88f744e5f8261057f8d4b35aed07362882404e36c552533.png",
+      "nozzles": [
+        {
+          "x": -0.002242,
+          "y": 0.4499
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "pitbull": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "0b89834ce18f7a8cea7a8f33189ee720e7355fe1bd63d0b9dd2e4801e69ea9c1",
+      "sourceURL": "https://cdn1.fleetviewer.link/pitbull__top_xs_0b89834ce18f7a8cea7a8f33189ee720e7355fe1bd63d0b9dd2e4801e69ea9c1.png",
+      "nozzles": [
+        {
+          "x": 0.001014,
+          "y": 0.48998
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "m80": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "bf87ca0f47f6dd3943bfbd906c5e79b057321d08080fed8d41507853c3d03abf",
+      "sourceURL": "https://cdn1.fleetviewer.link/m80__top_xs_bf87ca0f47f6dd3943bfbd906c5e79b057321d08080fed8d41507853c3d03abf.png",
+      "nozzles": [
+        {
+          "x": 0.325455,
+          "y": 0.475952
+        },
+        {
+          "x": 0.150909,
+          "y": 0.42986
+        },
+        {
+          "x": -0.150909,
+          "y": 0.42986
+        },
+        {
+          "x": -0.321818,
+          "y": 0.477956
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "tiburon": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "112bfa96a256634976e0250eba1e40f60886cebc4cde884106ff50edce1f5ac9",
+      "sourceURL": "https://cdn1.fleetviewer.link/tiburon__top_xs_112bfa96a256634976e0250eba1e40f60886cebc4cde884106ff50edce1f5ac9.png",
+      "nozzles": [
+        {
+          "x": 0.229537,
+          "y": 0.321643
+        },
+        {
+          "x": -0.19395,
+          "y": 0.281563
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "34_tiburon.png",
+        "sha256": "6fa903d14b276e2fbe6aa328b981551a80c60f3f5562cd3a3c55c04697baa5ed"
+      }
+    },
+    "mauler": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "cac5e7ef559ca481e1b8e46d553d7cd3832ca87ae027570dd9c965ad8839b7ae",
+      "sourceURL": "https://cdn1.fleetviewer.link/mauler__top_xs_cac5e7ef559ca481e1b8e46d553d7cd3832ca87ae027570dd9c965ad8839b7ae.png",
+      "nozzles": [
+        {
+          "x": 0.166667,
+          "y": 0.328657
+        },
+        {
+          "x": 0.022523,
+          "y": 0.411824
+        },
+        {
+          "x": -0.189189,
+          "y": 0.335671
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "35_mauler.png",
+        "sha256": "a88b929d8b608563a594f855b91aaeacd1d2e4f00766e1d416ad451d18c5e3ac"
+      }
+    },
+    "starlite": {
+      "status": "projected-opening-reviewed",
+      "imageSHA256": "3fe45ab4aed4b061a6da3048eddfe8dace102e5876b440a67497ec4834c3e0b4",
+      "sourceURL": "https://cdn1.fleetviewer.link/starlite__top_xs_3fe45ab4aed4b061a6da3048eddfe8dace102e5876b440a67497ec4834c3e0b4.png",
+      "nozzles": [
+        {
+          "x": -0.001608,
+          "y": 0.485972
+        }
+      ],
+      "note": "Visible main-engine projected openings only; hidden stacked engines are not duplicated. 2D calibration, not official 3D hardpoint coordinates."
+    },
+    "tyilui": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "cc9454da37a163e3ca8ee9c3494f226e7a4e68de97a3d7ee80486d1c7bab36a4",
+      "sourceURL": "https://cdn1.fleetviewer.link/tyilui__top_xs_cc9454da37a163e3ca8ee9c3494f226e7a4e68de97a3d7ee80486d1c7bab36a4.png",
+      "nozzles": [
+        {
+          "x": 0.128235,
+          "y": 0.431864
+        },
+        {
+          "x": -0.122353,
+          "y": 0.40982
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "36_tyilui.png",
+        "sha256": "7cad3e06ba88972871e1c91a0af65d2468b9d7ba71ae0b5e1e60bb37b6b675f1"
+      }
+    },
+    "basher": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "1713581fdf69365f5b4d7fa8110349142f67cdae82454ba6bc8e47d984694c6a",
+      "sourceURL": "https://cdn1.fleetviewer.link/basher__top_xs_1713581fdf69365f5b4d7fa8110349142f67cdae82454ba6bc8e47d984694c6a.png",
+      "nozzles": [
+        {
+          "x": 0.402676,
+          "y": 0.301603
+        },
+        {
+          "x": -0.001217,
+          "y": 0.437876
+        },
+        {
+          "x": -0.392944,
+          "y": 0.315631
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "37_basher.png",
+        "sha256": "0f033f7b87f378e1b1ba54374e41d11459aaf6666aa25ece973ad441312cfcff"
+      }
+    },
+    "s-65-stingray": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "1c2906ba5a647d88b9b8f5930ccd4dc6f91289d60b38290579916353549a1ff5",
+      "sourceURL": "https://cdn1.fleetviewer.link/s-65-stingray__top_xs_1c2906ba5a647d88b9b8f5930ccd4dc6f91289d60b38290579916353549a1ff5.png",
+      "nozzles": [
+        {
+          "x": 0.00501,
+          "y": 0.176149
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "38_s-65-stingray.png",
+        "sha256": "da8819b6d36bec0a0219011f9510be804b00d512cbe534b19d5dcf34e43806e3"
+      }
+    },
+    "odin": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "9830297e8c3a3dc0a7977048195641f7be40a9fd05f269b8cbaaaa3b6e6f6b8b",
+      "sourceURL": "https://cdn1.fleetviewer.link/odin__top_xs_9830297e8c3a3dc0a7977048195641f7be40a9fd05f269b8cbaaaa3b6e6f6b8b.png",
+      "nozzles": [
+        {
+          "x": 0.365772,
+          "y": 0.329659
+        },
+        {
+          "x": 0.224832,
+          "y": 0.341683
+        },
+        {
+          "x": 0.010067,
+          "y": 0.391784
+        },
+        {
+          "x": -0.194631,
+          "y": 0.355711
+        },
+        {
+          "x": -0.345638,
+          "y": 0.325651
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "39_odin.png",
+        "sha256": "0586f647f7ba1ce00b62c023c6123a9c9d2ef25644a400fb9c8eba440f1609b0"
+      }
+    },
+    "sabre-raven-ex": {
+      "status": "shared-exterior-layout",
+      "imageSHA256": "2788ba8ed72c74c25866101d5ccded5a5f37bbbaa63bdcb53e4f15c12c1f4abb",
+      "sourceURL": "https://cdn1.fleetviewer.link/sabre-raven-ex__top_xs_2788ba8ed72c74c25866101d5ccded5a5f37bbbaa63bdcb53e4f15c12c1f4abb.png",
+      "note": "Same exterior/main-engine arrangement; edit only sabre-raven",
+      "aliasOf": "sabre-raven"
+    },
+    "constellation-mkv-centaurus": {
+      "status": "user-annotated-projection",
+      "imageSHA256": "39c2ce698f7cc386b2939df11ae356fa2e7976affda173df80b97ad1aa67efd6",
+      "sourceURL": "https://cdn1.fleetviewer.link/constellation-mkv-centaurus__top_xs_39c2ce698f7cc386b2939df11ae356fa2e7976affda173df80b97ad1aa67efd6.png",
+      "nozzles": [
+        {
+          "x": 0.265957,
+          "y": 0.341683
+        },
+        {
+          "x": -0.329787,
+          "y": 0.327655
+        }
+      ],
+      "note": "Use red-stroke roots; replace the old yellow candidate set rather than add it. User-reviewed 2D sprite projection; not official 3D hardpoints.",
+      "annotation": {
+        "review": "GVY-喷口人工核验-R17-20261026",
+        "file": "40_constellation-mkv-centaurus.png",
+        "sha256": "a3fdd236e5e2a69a9de888b3cb933459deefa5e6909f6e735d4e6da461b5a3b1"
+      }
+    }
+  },
+  "sharedExteriorGroups": {
+    "idris-m": [
+      "idris-p"
+    ],
+    "c2-hercules": [
+      "m2-hercules",
+      "a2-hercules"
+    ],
+    "freelancer": [
+      "freelancer-dur",
+      "freelancer-mis"
+    ],
+    "hammerhead": [
+      "hammerhead-2949-best-in-show"
+    ],
+    "reclaimer": [
+      "reclaimer-2949-best-in-show"
+    ],
+    "valkyrie": [
+      "valkyrie-liberator"
+    ],
+    "talon": [
+      "talon-shrike"
+    ],
+    "nautilus": [
+      "nautilus-solstice"
+    ],
+    "c1-spirit": [
+      "a1-spirit",
+      "e1-spirit"
+    ],
+    "reliant-kore": [
+      "reliant-mako",
+      "reliant-sen",
+      "reliant-tana"
+    ],
+    "cutlass-black": [
+      "cutlass-black-2949-best-in-show",
+      "cutlass-steel"
+    ],
+    "gladius": [
+      "gladius-valiant",
+      "pirate-gladius"
+    ],
+    "f8c-lightning": [
+      "f8c-lightning-executive"
+    ],
+    "caterpillar": [
+      "caterpillar-pirate",
+      "caterpillar-2949-best-in-show"
+    ],
+    "mole": [
+      "mole-carbon",
+      "mole-talus"
+    ],
+    "carrack": [
+      "carrack-c8x",
+      "carrack-expedition",
+      "carrack-expedition-c8x"
+    ],
+    "p72-archimedes": [
+      "p72-archimedes-emerald"
+    ],
+    "avenger-titan": [
+      "avenger-titan-renegade",
+      "avenger-stalker",
+      "avenger-warlock"
+    ],
+    "mustang-alpha": [
+      "mustang-alpha-vindicator"
+    ],
+    "guardian": [
+      "guardian-qi",
+      "guardian-mx"
+    ],
+    "sabre": [
+      "sabre-comet"
+    ],
+    "sabre-raven": [
+      "sabre-raven-ex"
+    ],
+    "razor": [
+      "razor-ex",
+      "razor-lx"
+    ],
+    "apollo-medivac": [
+      "apollo-triage"
+    ]
+  }
+}

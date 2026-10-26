@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "combatVersion": 17,
+  "description": "Common game conversion for every ship, including boss hulls. Source facts are immutable; missing facts use the same explicit estimates. No per-ship stat overrides.",
+  "reference": {
+    "length": 21,
+    "mass": 48552.06,
+    "hull": 6110,
+    "shieldCapacity": 6336,
+    "scm": 226,
+    "yawDegrees": 52
+  },
+  "hull": {
+    "referenceValue": 13600,
+    "power": 0.38,
+    "minimum": 1800,
+    "maximum": 1100000,
+    "globalMultiplier": 0.75
+  },
+  "shield": {
+    "referenceValue": 8800,
+    "power": 0.42,
+    "minimum": 500,
+    "maximum": 500000,
+    "globalMultiplier": 0.75,
+    "recoveryPerSecond": 0.002
+  },
+  "mobility": {
+    "referenceSpeed": 250,
+    "speedPower": 1,
+    "minimumSpeed": 32,
+    "maximumSpeed": 380,
+    "turnScale": 2.8,
+    "minimumTurn": 0.08,
+    "maximumTurn": 4.5,
+    "responseSeconds": 1.9,
+    "massResponsePower": 0.17
+  },
+  "estimates": {
+    "hullLengthPower": 2.1,
+    "shieldLengthPower": 1.4,
+    "massLengthPower": 2.2,
+    "scmLengthPower": -0.16,
+    "yawMassPower": -0.3
+  },
+  "armor": {
+    "minimumMultiplier": 0.25,
+    "maximumMultiplier": 1,
+    "unknownMultiplier": 1
+  },
+  "estimatedWeapons": {
+    "description": "Only for ships without a reliable weapon list; existing simulated firing positions remain explicitly estimated.",
+    "mainSizeAt100m": 5,
+    "sizeLengthPower": 0.18,
+    "supportSizeOffset": -2,
+    "missileSize": 5,
+    "missileCapacity": 12
+  }
+}

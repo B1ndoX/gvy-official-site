@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "source": "Star Citizen bot public Erkul snapshot; weapon fields only",
+  "gameVersion": "4.10.2-LIVE.12913470",
+  "snapshotDate": "2026-10-20T12:38:06Z",
+  "inputs": {
+    "ship-loadouts-erkul.json": "575ed87934f7561091161533c2520118f9d5306436466d1c9069667fa1741260",
+    "component-matrix-erkul.json": "8f5d6ade05b29f1483ed12e77109d7c1b8f342909dd91bdc4f2dc876a50103fc"
+  },
+  "ships": {
+    "perseus": {
+      "name": "RSI Perseus",
+      "weapons": [
+        "6组 S1 M2C “蜂群” 激光速射炮",
+        "8组 S3 螳螂GT-220 实弹加特林",
+        "4组 S8 RSI 美杜莎 加农炮",
+        "20组 S5 死神 V 导弹"
+      ]
+    },
+    "polaris": {
+      "name": "RSI Polaris",
+      "weapons": [
+        "7组 S1 M2C “蜂群” 激光速射炮",
+        "12组 S3 CF-337 黑豹 激光速射炮",
+        "8组 S4 制空 XII 加农炮",
+        "2组 S6 怒涛 加农炮",
+        "12组 S2 点火 II 导弹",
+        "16组 S3 逮捕者 III 导弹",
+        "28组 S10 VT-T10 “真理” 鱼雷"
+      ]
+    }
+  },
+  "weapons": [
+    {
+      "name": "RSI Medusa Cannon",
+      "nameZh": "RSI 美杜莎 加农炮",
+      "size": 8,
+      "type": "实弹加农炮",
+      "damage": 5400.0,
+      "dps": 4500.0,
+      "rpm": 50.0,
+      "speed": 1016.0
+    },
+    {
+      "name": "VT-T10 \"Veritas\" Torpedo",
+      "nameZh": "VT-T10 “真理” 鱼雷",
+      "size": 10,
+      "type": "鱼雷",
+      "damage": 650000.0,
+      "speed": 270.0
+    }
+  ],
+  "mapping": {
+    "medusaDamageScale": 1.25,
+    "medusaCadenceScale": 2.5,
+    "medusaVelocityScale": 0.4,
+    "polarisTorpedoDamageScale": 0.1,
+    "note": "Original two-ship reference. Current fleet loadouts and abstracted gun budgets are maintained by fleet-weapon-loadouts.json and weapon-firepower-budgets.json.",
+    "medusaCooldownJitter": 0.12
+  }
+}

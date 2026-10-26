@@ -1,0 +1,379 @@
+{
+  "merchantman": {
+    "referenceShip": "ironclad",
+    "mission": "freight",
+    "weapons": [
+      {
+        "mountId": "laser-1",
+        "size": 8,
+        "count": 1,
+        "referenceWeapon": "s7-sf7b-gatling"
+      },
+      {
+        "mountId": "laser-2",
+        "size": 8,
+        "count": 1,
+        "referenceWeapon": "s7-sf7b-gatling"
+      },
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-ad5b-ballistic-gatling"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s3-sw16br3-shredder-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s3-sw16br3-shredder-repeater"
+      },
+      {
+        "mountId": "turret-4",
+        "size": 1,
+        "count": 1,
+        "referenceWeapon": "s1-mrx-torrent"
+      },
+      {
+        "mountId": "model-weapon-1",
+        "size": 1,
+        "count": 1,
+        "referenceWeapon": "s1-mrx-torrent"
+      }
+    ]
+  },
+  "orion": {
+    "referenceShip": "mole",
+    "mission": "mining",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      }
+    ]
+  },
+  "hull-d": {
+    "referenceShip": "hull-c",
+    "mission": "freight",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-4",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      }
+    ]
+  },
+  "hull-e": {
+    "referenceShip": "hull-c",
+    "mission": "freight",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-4",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      }
+    ]
+  },
+  "genesis-starliner": {
+    "referenceShip": "600i-executive",
+    "mission": "passenger",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      }
+    ]
+  },
+  "endeavor": {
+    "referenceShip": "reliant-sen",
+    "mission": "science",
+    "weapons": [
+      {
+        "mountId": "laser-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      }
+    ]
+  },
+  "crucible": {
+    "referenceShip": "starfarer",
+    "mission": "service",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 4,
+        "count": 1,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 4,
+        "count": 1,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      }
+    ]
+  },
+  "pioneer": {
+    "referenceShip": "reclaimer",
+    "mission": "construction",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      },
+      {
+        "mountId": "turret-4",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      },
+      {
+        "mountId": "model-weapon-1",
+        "size": 4,
+        "count": 2,
+        "referenceWeapon": "s4-cf-447-rhino-repeater"
+      }
+    ]
+  },
+  "vulcan": {
+    "referenceShip": "cutlass-red",
+    "mission": "service",
+    "weapons": [
+      {
+        "mountId": "laser-1",
+        "size": 2,
+        "count": 1,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "laser-2",
+        "size": 2,
+        "count": 1,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "turret-1",
+        "size": 2,
+        "count": 1,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 2,
+        "count": 1,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "model-weapon-1",
+        "size": 2,
+        "count": 2,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "model-weapon-2",
+        "size": 2,
+        "count": 2,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      }
+    ]
+  },
+  "liberator": {
+    "referenceShip": "c2-hercules",
+    "mission": "vehicle-transport",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-lightstrike-v-cannon"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 2,
+        "count": 2,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 2,
+        "count": 2,
+        "referenceWeapon": "s2-cf-227-badger-repeater"
+      }
+    ]
+  },
+  "odyssey": {
+    "referenceShip": "carrack",
+    "mission": "exploration",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "laser-1",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "laser-2",
+        "size": 3,
+        "count": 2,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      }
+    ]
+  },
+  "expanse": {
+    "referenceShip": "starlite",
+    "mission": "refinery",
+    "weapons": [
+      {
+        "mountId": "laser-1",
+        "size": 1,
+        "count": 1,
+        "referenceWeapon": "s1-cf-117-bulldog-repeater"
+      },
+      {
+        "mountId": "laser-2",
+        "size": 1,
+        "count": 1,
+        "referenceWeapon": "s1-cf-117-bulldog-repeater"
+      }
+    ]
+  },
+  "e1-spirit": {
+    "referenceShip": "c1-spirit",
+    "mission": "vehicle-transport",
+    "weapons": []
+  },
+  "galaxy": {
+    "referenceShip": "constellation-mkv-centaurus",
+    "mission": "civilian-multirole",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 5,
+        "count": 2,
+        "referenceWeapon": "s5-cf-557-galdereen-repeater"
+      }
+    ]
+  },
+  "arrastra": {
+    "referenceShip": "mole",
+    "mission": "mining",
+    "weapons": [
+      {
+        "mountId": "turret-1",
+        "size": 3,
+        "count": 4,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-2",
+        "size": 3,
+        "count": 4,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      },
+      {
+        "mountId": "turret-3",
+        "size": 3,
+        "count": 4,
+        "referenceWeapon": "s3-cf-337-panther-repeater"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "description": "Explicit user-authorized game behavior; archived weapon source facts remain unchanged.",
+  "weapons": {
+    "s10-destroyer-mass-driver-cannon": {
+      "projectileSpeedMultiplier": 0.65,
+      "charge": {
+        "minimumSeconds": 0.8,
+        "maximumSeconds": 2.4,
+        "minimumDamageMultiplier": 0.75,
+        "maximumDamageMultiplier": 1.5
+      },
+      "projectileGlowMultiplier": 1.5,
+      "source": "User request 2026-10-26: slower Idris M railgun projectile, larger light point, longer charge increases damage, no perfect live aim.",
+      "projectileGlowAlpha": 0.8,
+      "projectileCoreAlpha": 1
+    }
+  }
+}

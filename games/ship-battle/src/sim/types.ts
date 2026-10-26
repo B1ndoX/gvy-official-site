@@ -4,23 +4,29 @@ export type BattleMode='bounty'|'brawl'|'challenge'|'teams';
 export type BattleOutcome='players'|'member'|'boss'|'red'|'blue'|'draw'|null;
 export type WeaponKind = 'laser' | 'turret' | 'missile' | 'beam' | 'railgun' | 'torpedo' | 'ballistic';
 // Beam damage is per simulation second; other weapons deal damage per projectile.
-export interface Mount extends Vec { id: string; kind: WeaponKind; role?:'main'|'point-defense'|'anti-capital'; facing: number; arc: number; range: number; damage: number; cooldown: number; speed: number; turnRate: number; duration?:number; charge?:number; emitters?:number[]; beamWidth?:number; width?:number; color?:number; burstCount?:number; burstCooldown?:number }
-export interface WeaponCycle { chargeLeft:number; burstLeft:number }
+// weaponCount is card inventory, not projectile count. Only barrels changes real shot count.
+// interceptsOnly is missile defense; the point-defense role also includes offensive anti-fighter guns.
+export interface Mount extends Vec { fireControl?:'pilot'|'manned'|'remote'|'pdc'; stationId?:string; controlSource?:string; id: string; kind: WeaponKind; role?:'main'|'point-defense'|'anti-capital'; facing: number; arc: number; range: number; damage: number; cooldown: number; speed: number; turnRate: number; duration?:number; charge?:number; emitters?:number[]; beamWidth?:number; width?:number; color?:number; burstCount?:number; burstCooldown?:number; weaponCount?:number; interceptsOnly?:boolean; pellets?:number; scatterAngle?:number; weaponId?:string; damageType?:'distortion'; cooldownJitter?:number; barrels?:number; barrelSpacing?:number; projectileKind?:'ballistic'; impact?:'heavy-cannon'|'heavy-torpedo'; ammo?:number; capacitor?:number; resourceEstimated?:boolean; estimatedFrom?:{shipId:string;weaponId:string}; ammoReload?:number; launcherCount?:number; weaponName?:string; weaponSize?:number }
+export interface AimTracking { aimTarget?:number; aimAngle?:number; aimAt?:number; acquireUntil?:number; observedAt?:number; observedVx?:number; observedVy?:number; angularVelocity?:number }
+export interface WeaponCycle extends AimTracking { energyLeft?:number; energyLocked?:boolean; lastEnergyShot?:number; chargeLeft:number; chargeGoal?:number; chargeTarget?:number; burstLeft:number; ammoLeft?:number; reloadLeft?:number; interceptId?:number }
 export interface BeamSegment { from:Vec; to:Vec; hit:boolean }
 export interface ActiveBeam { owner:number; mount:number; remaining:number; elapsed:number; pending:number; segments:BeamSegment[] }
 export interface ShipSpec {
+  encounterTuning?:{health:number;damage:number;hullReference:number;shieldReference:number;hullPower:number;shieldPower:number;populationReference:number;healthPower:number;damagePower:number};
   id: string; doctrine?:'interceptor'|'bomber'|'escort'|'capital'|'balanced'; name: string; manufacturer: string; class: 'fighter' | 'heavy' | 'capital'; role: string;
-  length: number; beam: number; dimensionsStatus: string; source: string;
-  hull: number; shield: number; shieldRegen: number; speed: number; acceleration: number; turnRate: number; preferredRange: number;
+  length: number; beam: number; physicalBeam?:number|null; height?:number|null; mass?:number; statVersion?:number; armorPhysicalMultiplier?:number; armorEnergyMultiplier?:number; dimensionsStatus: string; source: string;
+  hull: number; shield: number; shieldRegen: number; shieldRecoveryDelay?:number; shieldDownDelay?:number; speed: number; acceleration: number; turnRate: number; preferredRange: number;
   engines: Vec[]; mounts: Mount[]; calibration: 'draft' | 'verified'; bossOnly?: boolean; battleReady?:boolean; assetIssue?:string; defenseTier?:string; defenseRole?:string;
 }
 export interface Ship extends Vec {
   id: number; spec: ShipSpec; label: string; member?: Member; npc?: 'boss'|'escort'; team?: string; enterUntil?: number; vx: number; vy: number; heading: number;
   hull: number; shield: number; kills: number; alive: boolean; radius: number; targetId: number | null;
+  lastAttacker?:number;
+  hitStreak?:{since:number;last:number;count:number};
   lastHit: number; lastDealt: number; searchAt: number; cooldowns: number[]; turretAngles: number[]; turretTargets: (number | null)[]; weaponCycles?:WeaponCycle[];
 }
-export interface Projectile extends Vec { id: number; owner: number; target: number; kind: WeaponKind; role?:Mount['role']; turnRate?:number; vx: number; vy: number; angle: number; speed: number; damage: number; ttl: number; travel: number; range: number; color: number; width?:number; trail?:Vec[]; trailClock?:number }
-export interface BattleEvent extends Vec { id: number; kind: 'hit' | 'shield' | 'destroy' | 'shot'; time: number; radius: number; ship: number; by: number; label: string; weapon?:WeaponKind; angle?:number }
+export interface Projectile extends Vec { weaponId?:string; id: number; owner: number; target: number; kind: WeaponKind; role?:Mount['role']; turnRate?:number; vx: number; vy: number; angle: number; speed: number; damage: number; ttl: number; travel: number; range: number; color: number; width?:number; weaponSize?:number; trail?:Vec[]; trailClock?:number; impact?:Mount['impact']; referenceWeapon?:boolean; damageType?:Mount['damageType']; integrity?:number; intercepted?:boolean }
+export interface BattleEvent extends Vec { id: number; kind: 'hit' | 'shield' | 'destroy' | 'shot' | 'intercept'; time: number; radius: number; ship: number; by: number; label: string; weapon?:WeaponKind; angle?:number; from?:Vec }
 export interface KillRecord { id: number; time: number; victimId: number; victimName: string; killerId: number; killerName: string; cause?: 'weapon' | 'asteroid' | 'collision'; mutual?:boolean; friendly?:boolean }
 export type BattlePhase = 'ready' | 'running' | 'paused' | 'finished';
 export interface RosterEntry { specId: string; count: number; member?: Member; npc?: 'boss'|'escort'; team?: string }

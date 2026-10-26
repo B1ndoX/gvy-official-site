@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "description": "Encounter-only adjustments applied after the common fleet conversion. No named boss base-stat overrides.",
+  "populationReference": 32,
+  "populationHealthPower": 1,
+  "populationDamagePower": 0.5,
+  "damageMultiplier": 3,
+  "bountyDefenseMultiplier": 9,
+  "challengeDamageMultiplier": 0.4,
+  "challengeBudgetMultiplier": 1,
+  "challengeSeconds": [
+    45,
+    55,
+    65,
+    75,
+    90
+  ],
+  "challengeFleetShare": 0.35,
+  "referenceMemberDps": 650,
+  "challengeMinimumHullMultiplier": 1.5
+}

@@ -1,7 +1,8 @@
 import type {Ship} from './types';
 
 export const SHIP_IMPACT_LIMIT=.05,SHIP_IMPACT_PER_SECOND=.08;
-export const shipMass=(s:Ship)=>Math.max(1,s.spec.length*s.spec.beam*s.spec.beam);
+const SHIP_IMPACT_GAIN=1.38;
+export const shipMass=(s:Ship)=>Math.max(1,s.spec.mass??s.spec.length*s.spec.beam*s.spec.beam);
 
 /** Distance to the hull along a world bearing; long hulls do not repel everything in their bounding circle. */
 export const hullRadiusAt=(ship:Ship,bearing:number)=>1/Math.hypot(Math.cos(bearing-ship.heading)/(ship.spec.length*.48+3),Math.sin(bearing-ship.heading)/(ship.spec.beam*.48+3));
@@ -22,7 +23,7 @@ export function shipContact(a:Ship,b:Ship,padding=0){
 }
 
 export function shipImpact(a:Ship,b:Ship,closing:number,nx:number,ny:number){
-  const intensity=.035*(Math.max(0,closing-80)/200)**2,am=shipMass(a),bm=shipMass(b);
+  const intensity=.035*SHIP_IMPACT_GAIN*(Math.max(0,closing-80)/200)**2,am=shipMass(a),bm=shipMass(b);
   const fatal=(ship:Ship,otherMass:number,ownMass:number,toward:number)=>ship.spec.length<35&&otherMass/ownMass>=25&&closing>=Math.max(340,ship.spec.speed*1.4)&&toward>=Math.max(280,ship.spec.speed*1.25)&&toward/Math.max(1,Math.hypot(ship.vx,ship.vy))>=.85;
   const fatalA=fatal(a,bm,am,a.vx*nx+a.vy*ny),fatalB=fatal(b,am,bm,-b.vx*nx-b.vy*ny);
   const amount=(ship:Ship,share:number)=>ship.spec.hull*Math.min(SHIP_IMPACT_LIMIT,intensity*share);

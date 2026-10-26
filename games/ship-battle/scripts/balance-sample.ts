@@ -2,11 +2,11 @@
 import fs from 'node:fs';
 import data from '../src/data/ships.json';
 import people from '../src/data/members.json';
-import rules from '../src/data/defense-balance.json';
+import rules from '../src/data/boss-mode-balance.json';
 import {BattleEngine} from '../src/sim/engine.ts';
 import {battleRoster,assignMemberShips} from '../src/sim/members.ts';
 const cases=[];const count=Number(process.env.CASES??32),offset=Number(process.env.OFFSET??0),modes=(process.env.MODES??'bounty,challenge').split(',');
-if(process.env.DAMAGE)rules.bossDamageMultiplier=Number(process.env.DAMAGE);
+if(process.env.DAMAGE)rules.damageMultiplier=Number(process.env.DAMAGE);
 if(process.env.DEFENSE)rules.bountyDefenseMultiplier=Number(process.env.DEFENSE);
 if(process.env.BUDGET)rules.challengeBudgetMultiplier=Number(process.env.BUDGET);
 for(const mode of modes){let wins=0,stuck=0,totalTime=0;
@@ -17,5 +17,5 @@ for(let seed=offset+1;seed<=offset+count;seed++){
  cases.push({mode,seed,win:won,phase:e.phase,time:+(e.time*.75).toFixed(1),wave:e.wave,alive:e.living.filter(s=>!s.npc).length,boss:e.snapshot().boss?.spec.id,winner:e.snapshot().winner?.specId,firstKill,firstBossDeath,collisionDeaths:e.collisionDeaths,moving:moving/Math.max(1,samples),peak,large:rows.filter(r=>data.find(s=>s.id===r.specId).length>=100).length,bombers:rows.filter(r=>data.find(s=>s.id===r.specId).doctrine==='bomber').length});
  if(seed%8===0)process.stdout.write(JSON.stringify({mode,done:seed-offset,wins,stuck,mean:Math.round(totalTime/(seed-offset))})+'\n');
 }
-process.stdout.write(JSON.stringify({mode,cases:count,wins,rate:wins/count,stuck,mean:Math.round(totalTime/count),damage:rules.bossDamageMultiplier,defense:rules.bountyDefenseMultiplier,budget:rules.challengeBudgetMultiplier})+'\n');}
+process.stdout.write(JSON.stringify({mode,cases:count,wins,rate:wins/count,stuck,mean:Math.round(totalTime/count),damage:rules.damageMultiplier,defense:rules.bountyDefenseMultiplier,budget:rules.challengeBudgetMultiplier})+'\n');}
 if(process.env.REPORT)fs.writeFileSync(process.env.REPORT,JSON.stringify({parameters:{count,offset,modes,memberCount:people.members.length,rules},cases},null,2));

@@ -1,0 +1,4996 @@
+{
+  "version": 2,
+  "mode": "reference",
+  "fleetWeaponVersion": 17,
+  "timeUnit": "simulation seconds; multiply cooldown by 0.75 for real seconds at 1x; source speeds and beam DPS multiply by 0.75 on import",
+  "sizeRules": {
+    "version": 1,
+    "description": "Game-scale ordinary gun conversion. S-size controls the base curve; matching-version model damage/RPM relative to the same size and family preserve model differences. Seconds are real time at 1x. Reviewed signature weapons, guided ordnance and interception-only PDC are excluded.",
+    "referenceSize": 3,
+    "damageSizePower": 1.65,
+    "modelDamagePower": 0.65,
+    "modelDamageRatio": [
+      0.4,
+      3
+    ],
+    "modelCadencePower": 0.5,
+    "modelCadenceRatio": [
+      0.5,
+      3
+    ],
+    "mounting": "Each installed barrel fires its own projectile with the shared model's single-barrel damage. No merged damage or diminishing gun-count multiplier.",
+    "families": {
+      "repeater": {
+        "damage": 50,
+        "interval": 0.18,
+        "sizeCadencePower": 0.25
+      },
+      "energy-cannon": {
+        "damage": 180,
+        "interval": 0.6,
+        "sizeCadencePower": 0.35
+      },
+      "ballistic-cannon": {
+        "damage": 220,
+        "interval": 0.85,
+        "sizeCadencePower": 0.35
+      },
+      "gatling": {
+        "damage": 22,
+        "interval": 0.06,
+        "burstRecovery": 0.34,
+        "burstCount": 4,
+        "sizeCadencePower": 0.25
+      },
+      "scatter": {
+        "damage": 220,
+        "interval": 1,
+        "sizeCadencePower": 0.35
+      },
+      "distortion": {
+        "damage": 70,
+        "interval": 0.32,
+        "sizeCadencePower": 0.3
+      }
+    }
+  },
+  "sizeBands": {
+    "1": {
+      "repeater": {
+        "damage": 34,
+        "cooldown": 0.16,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 101.2,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 120,
+        "cooldown": 0.4,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 18,
+        "cooldown": 0.05,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 504,
+        "cooldown": 1.333333,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 81,
+        "cooldown": 0.2,
+        "speed": 750
+      }
+    },
+    "2": {
+      "repeater": {
+        "damage": 54,
+        "cooldown": 0.16,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 152.8,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 162,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 14,
+        "cooldown": 0.05,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 792,
+        "cooldown": 1.333333,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 81,
+        "cooldown": 0.2,
+        "speed": 750
+      }
+    },
+    "3": {
+      "repeater": {
+        "damage": 85.5,
+        "cooldown": 0.16,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 218.7,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 225.4,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 32,
+        "cooldown": 0.05,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 840,
+        "cooldown": 1.333333,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 182.5,
+        "cooldown": 0.2,
+        "speed": 750
+      }
+    },
+    "4": {
+      "repeater": {
+        "damage": 85,
+        "cooldown": 0.106667,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 327.9,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 975,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 63,
+        "cooldown": 0.07619,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 1350.293576,
+        "cooldown": 1.474576,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 480,
+        "cooldown": 1.333333,
+        "speed": 750
+      }
+    },
+    "5": {
+      "repeater": {
+        "damage": 98.2,
+        "cooldown": 0.106667,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 567,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 1600,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 162.5,
+        "cooldown": 0.066667,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 1951.325513,
+        "cooldown": 1.594358,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 720,
+        "cooldown": 1.333333,
+        "speed": 750
+      }
+    },
+    "6": {
+      "repeater": {
+        "damage": 505.4,
+        "cooldown": 0.106667,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 738.4,
+        "cooldown": 0.533333,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 3400,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 189.9,
+        "cooldown": 0.066667,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 2636.202569,
+        "cooldown": 1.699414,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 1040,
+        "cooldown": 1.333333,
+        "speed": 750
+      }
+    },
+    "7": {
+      "repeater": {
+        "damage": 651.774613,
+        "cooldown": 0.11258,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 5150,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 4600,
+        "cooldown": 1.6,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 540,
+        "cooldown": 0.166667,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 3399.703026,
+        "cooldown": 1.793621,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 1341.206169,
+        "cooldown": 1.407246,
+        "speed": 750
+      }
+    },
+    "8": {
+      "repeater": {
+        "damage": 812.426635,
+        "cooldown": 0.117966,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 3113.6,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 5400,
+        "cooldown": 1.6,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 673.101367,
+        "cooldown": 0.174641,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 4237.675468,
+        "cooldown": 1.879437,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 1671.792046,
+        "cooldown": 1.474576,
+        "speed": 750
+      }
+    },
+    "9": {
+      "repeater": {
+        "damage": 986.70156,
+        "cooldown": 0.122931,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 4670.5,
+        "cooldown": 0.8,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 121155.99656,
+        "cooldown": 1.667337,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 817.489408,
+        "cooldown": 0.181991,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 5146.705953,
+        "cooldown": 1.958534,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 2030.410809,
+        "cooldown": 1.536635,
+        "speed": 750
+      }
+    },
+    "10": {
+      "repeater": {
+        "damage": 1174.047517,
+        "cooldown": 0.127549,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 5557.292244,
+        "cooldown": 0.830052,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 144160,
+        "cooldown": 13.333333,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 972.706894,
+        "cooldown": 0.188827,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 6123.91587,
+        "cooldown": 2.032106,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 2415.926826,
+        "cooldown": 1.594358,
+        "speed": 750
+      }
+    },
+    "11": {
+      "repeater": {
+        "damage": 1373.990105,
+        "cooldown": 0.131875,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 6503.709977,
+        "cooldown": 0.858208,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 168710.729827,
+        "cooldown": 13.785616,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 1138.360779,
+        "cooldown": 0.195232,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 7166.830715,
+        "cooldown": 2.101037,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 2827.363888,
+        "cooldown": 1.64844,
+        "speed": 750
+      }
+    },
+    "12": {
+      "repeater": {
+        "damage": 1586.115212,
+        "cooldown": 0.135953,
+        "speed": 750
+      },
+      "energy-cannon": {
+        "damage": 7507.793031,
+        "cooldown": 0.884746,
+        "speed": 750
+      },
+      "ballistic-cannon": {
+        "damage": 194757.337894,
+        "cooldown": 14.211901,
+        "speed": 750
+      },
+      "gatling": {
+        "damage": 1314.107972,
+        "cooldown": 0.201269,
+        "speed": 750
+      },
+      "scatter": {
+        "damage": 8273.290458,
+        "cooldown": 2.166006,
+        "speed": 750
+      },
+      "distortion": {
+        "damage": 3263.869847,
+        "cooldown": 1.699414,
+        "speed": 750
+      }
+    }
+  },
+  "weapons": {
+    "s1-dominance-1-scattergun": {
+      "name": "统治-1 能量霰弹炮",
+      "size": 1,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 504,
+        "rpm": 50,
+        "dps": 420,
+        "speed": 900,
+        "ammoCapacity": 75,
+        "type": "激光霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 504,
+        "cooldown": 1.6,
+        "speed": 675
+      }
+    },
+    "s1-havoc-scattergun": {
+      "name": "浩劫 实弹霰弹炮",
+      "size": 1,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 374.4,
+        "rpm": 60,
+        "dps": 374.4,
+        "speed": 900,
+        "ammoCapacity": 2040,
+        "type": "实弹霰弹炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2040,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 374.4,
+        "cooldown": 1.333333,
+        "speed": 675
+      }
+    },
+    "s1-mrx-torrent": {
+      "name": "MRX “狂潮”",
+      "size": 1,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 18,
+        "rpm": 1200,
+        "dps": 360,
+        "speed": 1350,
+        "ammoCapacity": 15000,
+        "type": "实弹加特林炮塔"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 15000,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 18,
+        "cooldown": 0.066667,
+        "speed": 1012.5
+      }
+    },
+    "s1-ndb-26-repeater": {
+      "name": "NDB-26 中子速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 38,
+        "rpm": 500,
+        "dps": 316.5,
+        "speed": 1275,
+        "ammoCapacity": 75,
+        "type": "中子速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 38,
+        "cooldown": 0.16,
+        "speed": 956.25
+      }
+    },
+    "s1-m3a-cannon": {
+      "name": "M3A 激光加农炮",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 182.2,
+        "rpm": 100,
+        "dps": 303.8,
+        "speed": 1200,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 182.2,
+        "cooldown": 0.8,
+        "speed": 900
+      }
+    },
+    "s1-singe-cannon-s1": {
+      "name": "焦糊 快子加农炮 (S1)",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 202.5,
+        "rpm": 90,
+        "dps": 303.8,
+        "speed": 1050,
+        "ammoCapacity": 25,
+        "type": "快子炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 202.5,
+        "cooldown": 0.888889,
+        "speed": 787.5
+      }
+    },
+    "s1-weak-repeater": {
+      "name": "“虚弱”速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 50,
+        "rpm": 350,
+        "dps": 291.7,
+        "speed": 1200,
+        "ammoCapacity": 25,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 50,
+        "cooldown": 0.228571,
+        "speed": 900
+      }
+    },
+    "s1-nn-13-cannon": {
+      "name": "NN-13 中子加农炮",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 101.2,
+        "rpm": 150,
+        "dps": 253,
+        "speed": 765,
+        "ammoCapacity": 25,
+        "type": "中子加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 101.2,
+        "cooldown": 0.533333,
+        "speed": 573.75
+      }
+    },
+    "s1-omnisky-iii-cannon": {
+      "name": "制空 III 加农炮",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 97.2,
+        "rpm": 150,
+        "dps": 243,
+        "speed": 1200,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 97.2,
+        "cooldown": 0.533333,
+        "speed": 900
+      }
+    },
+    "s1-cf-117-bulldog-repeater": {
+      "name": "CF-117 恶犬 激光速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 17.5,
+        "rpm": 750,
+        "dps": 218.7,
+        "speed": 1500,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 17.5,
+        "cooldown": 0.106667,
+        "speed": 1125
+      }
+    },
+    "s1-ardor-1-salvaged-repeater": {
+      "name": "炽热-1 速射炮 翻新版",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 36,
+        "rpm": 350,
+        "dps": 210,
+        "speed": 1500,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 36,
+        "cooldown": 0.228571,
+        "speed": 1125
+      }
+    },
+    "s1-fl-11-cannon": {
+      "name": "FL-11 能量加农炮",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 49.2,
+        "rpm": 250,
+        "dps": 205.2,
+        "speed": 1200,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 49.2,
+        "cooldown": 0.32,
+        "speed": 900
+      }
+    },
+    "s1-lightstrike-i-cannon": {
+      "name": "光击 I 能量加农炮",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 49.2,
+        "rpm": 250,
+        "dps": 205.2,
+        "speed": 1200,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 49.2,
+        "cooldown": 0.32,
+        "speed": 900
+      }
+    },
+    "s1-9-series-longsword-cannon": {
+      "name": "9系 长剑 实弹加农炮",
+      "size": 1,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 48.6,
+        "rpm": 250,
+        "dps": 202.5,
+        "speed": 1200,
+        "ammoCapacity": 495,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 495,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 48.6,
+        "cooldown": 0.32,
+        "speed": 900
+      }
+    },
+    "s1-tarantula-gt-870-mark-1-cannon": {
+      "name": "狼蛛GT-870 Mark 1 实弹加农炮",
+      "size": 1,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 60.8,
+        "rpm": 200,
+        "dps": 202.5,
+        "speed": 1200,
+        "ammoCapacity": 330,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 330,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 60.8,
+        "cooldown": 0.4,
+        "speed": 900
+      }
+    },
+    "s1-yellowjacket-gt-210-gatling": {
+      "name": "黄蜂GT-210 实弹加特林",
+      "size": 1,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 7.6,
+        "rpm": 1600,
+        "dps": 201.6,
+        "speed": 1350,
+        "ammoCapacity": 4440,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4440,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 7.6,
+        "cooldown": 0.05,
+        "speed": 1012.5
+      }
+    },
+    "s1-deadbolt-i-cannon": {
+      "name": "死锁 I 实弹加农炮",
+      "size": 1,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 120,
+        "rpm": 100,
+        "dps": 200,
+        "speed": 1200,
+        "ammoCapacity": 396,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 396,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 120,
+        "cooldown": 0.8,
+        "speed": 900
+      }
+    },
+    "s1-attrition-1-repeater": {
+      "name": "磨损-1 激光速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 34,
+        "rpm": 350,
+        "dps": 198.3,
+        "speed": 1500,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 34,
+        "cooldown": 0.228571,
+        "speed": 1125
+      }
+    },
+    "s1-dr-model-xj1-repeater": {
+      "name": "DR Model-XJ1 畸变速射炮",
+      "size": 1,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 25.7,
+        "rpm": 400,
+        "dps": 171.3,
+        "speed": 1350,
+        "ammoCapacity": 75,
+        "type": "畸变速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 25.7,
+        "cooldown": 0.2,
+        "speed": 1012.5
+      }
+    },
+    "s1-m2c-swarm": {
+      "name": "M2C “蜂群” 激光速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 10,
+        "rpm": 1000,
+        "dps": 166.7,
+        "speed": 1500,
+        "ammoCapacity": 75,
+        "type": "激光炮塔"
+      },
+      "estimated": false,
+      "combat": {
+        "interceptsOnly": true,
+        "cooldown": 0.8,
+        "range": 650,
+        "turnRate": 2.3
+      }
+    },
+    "s1-sw16br1-buzzsaw-repeater": {
+      "name": "SW16BR1 “圆锯” 实弹速射炮",
+      "size": 1,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 18,
+        "rpm": 500,
+        "dps": 150,
+        "speed": 1500,
+        "ammoCapacity": 2664,
+        "type": "实弹速射炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2664,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 18,
+        "cooldown": 0.16,
+        "speed": 1125
+      }
+    },
+    "s1-suckerpunch-cannon": {
+      "name": "偷袭 畸变加农炮",
+      "size": 1,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 81,
+        "rpm": 100,
+        "dps": 135,
+        "speed": 1080,
+        "ammoCapacity": 25,
+        "type": "畸变加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 81,
+        "cooldown": 0.8,
+        "speed": 810
+      }
+    },
+    "s1-sledge-i-mass-driver-cannon": {
+      "name": "大锤 I 电磁加农炮",
+      "size": 1,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 225,
+        "rpm": 30,
+        "dps": 112.5,
+        "speed": 1155,
+        "ammoCapacity": 105,
+        "type": "电磁加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 105,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 225,
+        "cooldown": 2.666667,
+        "speed": 866.25
+      }
+    },
+    "s2-singe-cannon-s2": {
+      "name": "焦糊 快子加农炮 (S2)",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 472.5,
+        "rpm": 90,
+        "dps": 708.8,
+        "speed": 1046,
+        "ammoCapacity": 25,
+        "type": "快子炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 472.5,
+        "cooldown": 0.888889,
+        "speed": 784.5
+      }
+    },
+    "s2-dominance-2-scattergun": {
+      "name": "统治-2 能量霰弹炮",
+      "size": 2,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 792,
+        "rpm": 50,
+        "dps": 660,
+        "speed": 897,
+        "ammoCapacity": 75,
+        "type": "激光霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 792,
+        "cooldown": 1.6,
+        "speed": 672.75
+      }
+    },
+    "s2-gvsr-repeater": {
+      "name": "GVSR 激光速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 99.7,
+        "rpm": 350,
+        "dps": 581.7,
+        "speed": 1495,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 99.7,
+        "cooldown": 0.228571,
+        "speed": 1121.25
+      }
+    },
+    "s2-hellion-scattergun": {
+      "name": "恶棍 实弹霰弹炮",
+      "size": 2,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 560,
+        "rpm": 60,
+        "dps": 560,
+        "speed": 897,
+        "ammoCapacity": 2019,
+        "type": "实弹霰弹炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2019,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 560,
+        "cooldown": 1.333333,
+        "speed": 672.75
+      }
+    },
+    "s2-wasp-repeater": {
+      "name": "“胡蜂”速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 89.1,
+        "rpm": 350,
+        "dps": 519.7,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 89.1,
+        "cooldown": 0.228571,
+        "speed": 897
+      }
+    },
+    "s2-ndb-28-repeater": {
+      "name": "NDB-28 中子速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 57,
+        "rpm": 500,
+        "dps": 474.8,
+        "speed": 1271,
+        "ammoCapacity": 75,
+        "type": "中子速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 57,
+        "cooldown": 0.16,
+        "speed": 953.25
+      }
+    },
+    "s2-m4a-cannon": {
+      "name": "M4A 激光加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 273.4,
+        "rpm": 100,
+        "dps": 455.6,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 273.4,
+        "cooldown": 0.8,
+        "speed": 897
+      }
+    },
+    "s2-whip-cannon": {
+      "name": "“长鞭”加农炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 273.1,
+        "rpm": 100,
+        "dps": 455.2,
+        "speed": 1136,
+        "ammoCapacity": 25,
+        "type": "-"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 273.1,
+        "cooldown": 0.8,
+        "speed": 852
+      }
+    },
+    "s2-mvsa-cannon": {
+      "name": "MVSA 激光加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 273,
+        "rpm": 100,
+        "dps": 455,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 273,
+        "cooldown": 0.8,
+        "speed": 897
+      }
+    },
+    "s2-brvs-repeater": {
+      "name": "BRVS 实弹速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 54,
+        "rpm": 500,
+        "dps": 450,
+        "speed": 1495,
+        "ammoCapacity": 2637,
+        "type": "实弹速射炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2637,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 54,
+        "cooldown": 0.16,
+        "speed": 1121.25
+      }
+    },
+    "s2-tigerstrike-t-19p": {
+      "name": "虎击 T-19P 实弹加特林",
+      "size": 2,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 22.5,
+        "rpm": 1200,
+        "dps": 450,
+        "speed": 1346,
+        "ammoCapacity": 4626,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4626,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 22.5,
+        "cooldown": 0.066667,
+        "speed": 1009.5
+      }
+    },
+    "s2-cvsa-cannon": {
+      "name": "CVSA 实弹加农炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 162,
+        "rpm": 150,
+        "dps": 405,
+        "speed": 1196,
+        "ammoCapacity": 327,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 327,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 162,
+        "cooldown": 0.533333,
+        "speed": 897
+      }
+    },
+    "s2-nn-14-cannon": {
+      "name": "NN-14 中子加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 152.8,
+        "rpm": 150,
+        "dps": 382,
+        "speed": 762,
+        "ammoCapacity": 25,
+        "type": "中子加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 152.8,
+        "cooldown": 0.533333,
+        "speed": 571.5
+      }
+    },
+    "s2-deathroll-s2-gatling": {
+      "name": "死亡翻滚 S2 实弹加特林",
+      "size": 2,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 14,
+        "rpm": 1600,
+        "dps": 373.3,
+        "speed": 1346,
+        "ammoCapacity": 3500,
+        "type": "-"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 3500,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 14,
+        "cooldown": 0.05,
+        "speed": 1009.5
+      }
+    },
+    "s2-omnisky-vi-cannon": {
+      "name": "制空 VI 加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 145.8,
+        "rpm": 150,
+        "dps": 364.5,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 145.8,
+        "cooldown": 0.533333,
+        "speed": 897
+      }
+    },
+    "s2-snapper-s2-repeater": {
+      "name": "疯狗 S2 激光速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 28,
+        "rpm": 750,
+        "dps": 350,
+        "speed": 1495,
+        "ammoCapacity": 65,
+        "type": "-"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 65,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 28,
+        "cooldown": 0.106667,
+        "speed": 1121.25
+      }
+    },
+    "s2-ardor-2-salvaged-repeater": {
+      "name": "炽热-2 速射炮 翻新版",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 59,
+        "rpm": 350,
+        "dps": 344.2,
+        "speed": 1495,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 59,
+        "cooldown": 0.228571,
+        "speed": 1121.25
+      }
+    },
+    "s2-scorpion-gt-215-gatling": {
+      "name": "蝎子GT-215 实弹加特林",
+      "size": 2,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 12.7,
+        "rpm": 1600,
+        "dps": 338.7,
+        "speed": 1346,
+        "ammoCapacity": 4410,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4410,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 12.7,
+        "cooldown": 0.05,
+        "speed": 1009.5
+      }
+    },
+    "s2-cf-227-badger-repeater": {
+      "name": "CF-227 獾 激光速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 26.2,
+        "rpm": 750,
+        "dps": 328.1,
+        "speed": 1495,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 26.2,
+        "cooldown": 0.106667,
+        "speed": 1121.25
+      }
+    },
+    "s2-attrition-2-repeater": {
+      "name": "磨损-2 激光速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 55,
+        "rpm": 350,
+        "dps": 320.8,
+        "speed": 1495,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 55,
+        "cooldown": 0.228571,
+        "speed": 1121.25
+      }
+    },
+    "s2-thlilye-laser-gatling": {
+      "name": "闪烈激光加特林",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 17.1,
+        "rpm": 1100,
+        "dps": 313.5,
+        "speed": 1346,
+        "ammoCapacity": 75,
+        "type": "激光加特林"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 17.1,
+        "cooldown": 0.072727,
+        "speed": 1009.5
+      }
+    },
+    "s2-fl-22-cannon": {
+      "name": "FL-22 能量加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 74,
+        "rpm": 250,
+        "dps": 308.5,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 74,
+        "cooldown": 0.32,
+        "speed": 897
+      }
+    },
+    "s2-lightstrike-ii-cannon": {
+      "name": "光击 II 能量加农炮",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 74,
+        "rpm": 250,
+        "dps": 308.5,
+        "speed": 1196,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 74,
+        "cooldown": 0.32,
+        "speed": 897
+      }
+    },
+    "s2-tarantula-gt-870-mark-2-cannon": {
+      "name": "狼蛛GT-870 Mark 2 实弹加农炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 91.3,
+        "rpm": 200,
+        "dps": 304.2,
+        "speed": 1196,
+        "ammoCapacity": 327,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 327,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 91.3,
+        "cooldown": 0.4,
+        "speed": 897
+      }
+    },
+    "s2-10-series-greatsword-cannon": {
+      "name": "10系 大剑 实弹加农炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 73,
+        "rpm": 250,
+        "dps": 304.1,
+        "speed": 1196,
+        "ammoCapacity": 492,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 492,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 73,
+        "cooldown": 0.32,
+        "speed": 897
+      }
+    },
+    "s2-sledge-ii-mass-driver-cannon": {
+      "name": "大锤 II 电磁炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 525,
+        "rpm": 30,
+        "dps": 262.5,
+        "speed": 1151,
+        "ammoCapacity": 105,
+        "type": "电磁加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 105,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 525,
+        "cooldown": 2.666667,
+        "speed": 863.25
+      }
+    },
+    "s2-strife-mass-driver-cannon": {
+      "name": "纷争 电磁炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 525,
+        "rpm": 30,
+        "dps": 262.5,
+        "speed": 1151,
+        "ammoCapacity": 84,
+        "type": "电磁加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 84,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 525,
+        "cooldown": 2.666667,
+        "speed": 863.25
+      }
+    },
+    "s2-dr-model-xj2-repeater": {
+      "name": "DR Model-XJ2 畸变速射炮",
+      "size": 2,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 38.5,
+        "rpm": 400,
+        "dps": 256.7,
+        "speed": 1346,
+        "ammoCapacity": 75,
+        "type": "畸变速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 38.5,
+        "cooldown": 0.2,
+        "speed": 1009.5
+      }
+    },
+    "s2-deadbolt-ii-cannon": {
+      "name": "死锁 II 实弹加农炮",
+      "size": 2,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 140,
+        "rpm": 100,
+        "dps": 233.3,
+        "speed": 1196,
+        "ammoCapacity": 393,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 393,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 140,
+        "cooldown": 0.8,
+        "speed": 897
+      }
+    },
+    "s2-atvs-repeater": {
+      "name": "ATVS 畸变速射炮",
+      "size": 2,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 27,
+        "rpm": 500,
+        "dps": 225,
+        "speed": 1346,
+        "ammoCapacity": 75,
+        "type": "畸变速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 27,
+        "cooldown": 0.16,
+        "speed": 1009.5
+      }
+    },
+    "s2-suckerpunch-l-cannon": {
+      "name": "偷袭-L 畸变加农炮",
+      "size": 2,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 121.5,
+        "rpm": 100,
+        "dps": 202.5,
+        "speed": 1076,
+        "ammoCapacity": 25,
+        "type": "畸变加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 121.5,
+        "cooldown": 0.8,
+        "speed": 807
+      }
+    },
+    "s2-evsd-cannon": {
+      "name": "EVSD 畸变加农炮",
+      "size": 2,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 81,
+        "rpm": 150,
+        "dps": 202.5,
+        "speed": 1076,
+        "ammoCapacity": 25,
+        "type": "畸变加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 81,
+        "cooldown": 0.533333,
+        "speed": 807
+      }
+    },
+    "s2-sw16br2-sawbuck-repeater": {
+      "name": "SW16BR2 “锯木架” 实弹速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 24,
+        "rpm": 500,
+        "dps": 200,
+        "speed": 1495,
+        "ammoCapacity": 2637,
+        "type": "实弹速射炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2637,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 24,
+        "cooldown": 0.16,
+        "speed": 1121.25
+      }
+    },
+    "s2-whiptail-str-e2-repeater": {
+      "name": "鞭尾 STR-E2 激光速射炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 30,
+        "rpm": 180,
+        "dps": 90,
+        "speed": 1440,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 30,
+        "cooldown": 0.444444,
+        "speed": 1080
+      }
+    },
+    "s3-reign-3-repeater": {
+      "name": "支配-3 激光速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 350,
+        "rpm": 350,
+        "dps": 2041.7,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 350,
+        "cooldown": 0.228571,
+        "speed": 1110
+      }
+    },
+    "s3-singe-cannon-s3": {
+      "name": "焦糊 快子加农炮 (S3)",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 1012.5,
+        "rpm": 90,
+        "dps": 1518.8,
+        "speed": 1036,
+        "ammoCapacity": 25,
+        "type": "快子炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1012.5,
+        "cooldown": 0.888889,
+        "speed": 777
+      }
+    },
+    "s3-dominance-3-scattergun": {
+      "name": "统治-3 能量霰弹炮",
+      "size": 3,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 1116,
+        "rpm": 50,
+        "dps": 930,
+        "speed": 888,
+        "ammoCapacity": 75,
+        "type": "激光霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1116,
+        "cooldown": 1.6,
+        "speed": 666
+      }
+    },
+    "s3-warlord-cannon": {
+      "name": "“军阀”加农炮",
+      "size": 3,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 526.5,
+        "rpm": 100,
+        "dps": 877.5,
+        "speed": 1125,
+        "ammoCapacity": 25,
+        "type": "-"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 526.5,
+        "cooldown": 0.8,
+        "speed": 843.75
+      }
+    },
+    "s3-mantis-gt-220-gatling": {
+      "name": "螳螂GT-220 实弹加特林",
+      "size": 3,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 32,
+        "rpm": 1600,
+        "dps": 853.3,
+        "speed": 1332,
+        "ammoCapacity": 4314,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4314,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 32,
+        "cooldown": 0.05,
+        "speed": 999
+      }
+    },
+    "s3-predator-scattergun": {
+      "name": "捕食者 实弹霰弹炮",
+      "size": 3,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 840,
+        "rpm": 60,
+        "dps": 840,
+        "speed": 888,
+        "ammoCapacity": 1980,
+        "type": "实弹霰弹炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 1980,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 840,
+        "cooldown": 1.333333,
+        "speed": 666
+      }
+    },
+    "s3-ndb-30-repeater": {
+      "name": "NDB-30 中子速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 85.5,
+        "rpm": 500,
+        "dps": 712.5,
+        "speed": 1258,
+        "ammoCapacity": 75,
+        "type": "中子速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 85.5,
+        "cooldown": 0.16,
+        "speed": 943.5
+      }
+    },
+    "s3-m5a-cannon": {
+      "name": "M5A 激光加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 410.2,
+        "rpm": 100,
+        "dps": 683.6,
+        "speed": 1184,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 410.2,
+        "cooldown": 0.8,
+        "speed": 888
+      }
+    },
+    "s3-sledge-iii-mass-driver-cannon": {
+      "name": "大锤 III 电磁加农炮",
+      "size": 3,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 1125,
+        "rpm": 30,
+        "dps": 562.5,
+        "speed": 1140,
+        "ammoCapacity": 102,
+        "type": "电磁加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 102,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1125,
+        "cooldown": 2.666667,
+        "speed": 855
+      }
+    },
+    "s3-tormenter-s3-repeater": {
+      "name": "施虐者 S3 激光速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 39.5,
+        "rpm": 850,
+        "dps": 559.6,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 39.5,
+        "cooldown": 0.094118,
+        "speed": 1110
+      }
+    },
+    "s3-nn-15-cannon": {
+      "name": "NN-15 中子加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 220.7,
+        "rpm": 150,
+        "dps": 551.8,
+        "speed": 755,
+        "ammoCapacity": 25,
+        "type": "中子加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 220.7,
+        "cooldown": 0.533333,
+        "speed": 566.25
+      }
+    },
+    "s3-omnisky-ix-cannon": {
+      "name": "制空 IX 加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 218.7,
+        "rpm": 150,
+        "dps": 546.8,
+        "speed": 1184,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 218.7,
+        "cooldown": 0.533333,
+        "speed": 888
+      }
+    },
+    "s3-quarreler-cannon": {
+      "name": "争吵者能量加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 218.7,
+        "rpm": 150,
+        "dps": 546.8,
+        "speed": 1184,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 218.7,
+        "cooldown": 0.533333,
+        "speed": 888
+      }
+    },
+    "s3-cf-337-panther-repeater": {
+      "name": "CF-337 黑豹 激光速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 43.6,
+        "rpm": 750,
+        "dps": 545.6,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 43.6,
+        "cooldown": 0.106667,
+        "speed": 1110
+      }
+    },
+    "s3-ardor-3-salvaged-repeater": {
+      "name": "炽热-3 速射炮 翻新版",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 92,
+        "rpm": 350,
+        "dps": 536.7,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 92,
+        "cooldown": 0.228571,
+        "speed": 1110
+      }
+    },
+    "s3-yeng-tu-repeater": {
+      "name": "炎图速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 41,
+        "rpm": 750,
+        "dps": 512.5,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 41,
+        "cooldown": 0.106667,
+        "speed": 1110
+      }
+    },
+    "s3-attrition-3-repeater": {
+      "name": "磨损-3 激光速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 86,
+        "rpm": 350,
+        "dps": 501.7,
+        "speed": 1480,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 86,
+        "cooldown": 0.228571,
+        "speed": 1110
+      }
+    },
+    "s3-pyroburst-scattergun": {
+      "name": "“爆炎” 霰弹炮",
+      "size": 3,
+      "family": "scatter",
+      "reviewed": false,
+      "source": {
+        "damage": 396,
+        "rpm": 70,
+        "dps": 462,
+        "speed": 844,
+        "ammoCapacity": 75,
+        "type": "电浆霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 396,
+        "cooldown": 1.142857,
+        "speed": 633
+      }
+    },
+    "s3-fl-33-cannon": {
+      "name": "FL-33 能量加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 110.8,
+        "rpm": 250,
+        "dps": 461.7,
+        "speed": 1184,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 110.8,
+        "cooldown": 0.32,
+        "speed": 888
+      }
+    },
+    "s3-lightstrike-iii-cannon": {
+      "name": "光击 III 能量加农炮",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 110.8,
+        "rpm": 250,
+        "dps": 461.7,
+        "speed": 1184,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 110.8,
+        "cooldown": 0.32,
+        "speed": 888
+      }
+    },
+    "s3-tarantula-gt-870-mark-3-cannon": {
+      "name": "狼蛛GT-870 Mark 3 实弹加农炮",
+      "size": 3,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 136.6,
+        "rpm": 200,
+        "dps": 455.4,
+        "speed": 1184,
+        "ammoCapacity": 324,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 324,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 136.6,
+        "cooldown": 0.4,
+        "speed": 888
+      }
+    },
+    "s3-11-series-broadsword-cannon": {
+      "name": "11系 阔剑 实弹加农炮",
+      "size": 3,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 109.3,
+        "rpm": 250,
+        "dps": 455.2,
+        "speed": 1184,
+        "ammoCapacity": 489,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 489,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 109.3,
+        "cooldown": 0.32,
+        "speed": 888
+      }
+    },
+    "s3-dr-model-xj3-repeater": {
+      "name": "DR Model-XJ3 畸变速射炮",
+      "size": 3,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 57.9,
+        "rpm": 400,
+        "dps": 386,
+        "speed": 1332,
+        "ammoCapacity": 75,
+        "type": "畸变速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 57.9,
+        "cooldown": 0.2,
+        "speed": 999
+      }
+    },
+    "s3-deadbolt-iii-cannon": {
+      "name": "死锁 III 实弹加农炮",
+      "size": 3,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 225.4,
+        "rpm": 100,
+        "dps": 375.7,
+        "speed": 1184,
+        "ammoCapacity": 387,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 387,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 225.4,
+        "cooldown": 0.8,
+        "speed": 888
+      }
+    },
+    "s3-sw16br3-shredder-repeater": {
+      "name": "SW16BR3 “碎纸机” 实弹速射炮",
+      "size": 3,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 45,
+        "rpm": 500,
+        "dps": 375,
+        "speed": 1480,
+        "ammoCapacity": 2589,
+        "type": "实弹速射炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2589,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 45,
+        "cooldown": 0.16,
+        "speed": 1110
+      }
+    },
+    "s3-suckerpunch-xl-cannon": {
+      "name": "偷袭-XL 畸变加农炮",
+      "size": 3,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 182.5,
+        "rpm": 100,
+        "dps": 304.2,
+        "speed": 1066,
+        "ammoCapacity": 25,
+        "type": "畸变加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 182.5,
+        "cooldown": 0.8,
+        "speed": 799.5
+      }
+    },
+    "s4-ad4b-ballistic-gatling": {
+      "name": "AD4B 实弹加特林",
+      "size": 4,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 84.4,
+        "rpm": 900,
+        "dps": 1266,
+        "speed": 1296,
+        "ammoCapacity": 5220,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 5220,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 84.4,
+        "cooldown": 0.088889,
+        "speed": 972
+      }
+    },
+    "s4-revenant-gatling": {
+      "name": "亡魂 加特林",
+      "size": 4,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 63.3,
+        "rpm": 1200,
+        "dps": 1266,
+        "speed": 1296,
+        "ammoCapacity": 3660,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 3660,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 63.3,
+        "cooldown": 0.066667,
+        "speed": 972
+      }
+    },
+    "s4-axiom-l-22-repeater": {
+      "name": "公理 L-22 激光速射炮",
+      "size": 4,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 85,
+        "rpm": 750,
+        "dps": 1062.5,
+        "speed": 1440,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 85,
+        "cooldown": 0.106667,
+        "speed": 1080
+      }
+    },
+    "s4-m6a-cannon": {
+      "name": "M6A 激光加农炮",
+      "size": 4,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 615.3,
+        "rpm": 100,
+        "dps": 1025.5,
+        "speed": 1152,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 615.3,
+        "cooldown": 0.8,
+        "speed": 864
+      }
+    },
+    "s4-deadbolt-iv-cannon": {
+      "name": "死锁 IV 实弹加农炮",
+      "size": 4,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 610,
+        "rpm": 100,
+        "dps": 1016.7,
+        "speed": 1152,
+        "ammoCapacity": 381,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 381,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 610,
+        "cooldown": 0.8,
+        "speed": 864
+      }
+    },
+    "s4-relentless-l-21-gatling": {
+      "name": "无情 L-21 加特林",
+      "size": 4,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 63,
+        "rpm": 950,
+        "dps": 997.5,
+        "speed": 1296,
+        "ammoCapacity": 4200,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4200,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 63,
+        "cooldown": 0.084211,
+        "speed": 972
+      }
+    },
+    "s4-breakneck-s4-gatling": {
+      "name": "折颈 S4 实弹加特林",
+      "size": 4,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 52,
+        "rpm": 1100,
+        "dps": 953.3,
+        "speed": 1296,
+        "ammoCapacity": 10500,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 10500,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 52,
+        "cooldown": 0.072727,
+        "speed": 972
+      }
+    },
+    "s4-tmsb-5-gatling": {
+      "name": "TMSB-5 加特林",
+      "size": 4,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 52.7,
+        "rpm": 1050,
+        "dps": 922.2,
+        "speed": 1346,
+        "ammoCapacity": 5250,
+        "type": "实弹加特林 (x2)"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 5250,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 52.7,
+        "cooldown": 0.07619,
+        "speed": 1009.5
+      }
+    },
+    "s4-omnisky-xii-cannon": {
+      "name": "制空 XII 加农炮",
+      "size": 4,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 327.9,
+        "rpm": 150,
+        "dps": 819.7,
+        "speed": 1152,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 327.9,
+        "cooldown": 0.533333,
+        "speed": 864
+      }
+    },
+    "s4-cf-447-rhino-repeater": {
+      "name": "CF-447 犀牛 激光速射炮",
+      "size": 4,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 65.4,
+        "rpm": 750,
+        "dps": 817.9,
+        "speed": 1440,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 65.4,
+        "cooldown": 0.106667,
+        "speed": 1080
+      }
+    },
+    "s4-c-788-cannon": {
+      "name": "C-788 实弹加农炮",
+      "size": 4,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 975,
+        "rpm": 50,
+        "dps": 812.5,
+        "speed": 1152,
+        "ammoCapacity": 270,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 270,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 975,
+        "cooldown": 1.6,
+        "speed": 864
+      }
+    },
+    "s4-lightstrike-iv-cannon": {
+      "name": "光击 IV 能量加农炮",
+      "size": 4,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 166.2,
+        "rpm": 250,
+        "dps": 692.5,
+        "speed": 1152,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 166.2,
+        "cooldown": 0.32,
+        "speed": 864
+      }
+    },
+    "s4-attrition-4-repeater": {
+      "name": "磨损-4 激光速射炮",
+      "size": 4,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 100,
+        "rpm": 350,
+        "dps": 583.3,
+        "speed": 1440,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 100,
+        "cooldown": 0.228571,
+        "speed": 1080
+      }
+    },
+    "s4-salvation-distortion-scattergun": {
+      "name": "救赎 畸变霰弹炮",
+      "size": 4,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 480,
+        "rpm": 60,
+        "dps": 480,
+        "speed": 778,
+        "ammoCapacity": 75,
+        "type": "畸变霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 480,
+        "cooldown": 1.333333,
+        "speed": 583.5
+      }
+    },
+    "s5-slayer-cannon": {
+      "name": "屠夫 实弹加农炮",
+      "size": 5,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 32000,
+        "rpm": 12,
+        "dps": 6400,
+        "speed": 973,
+        "ammoCapacity": 363,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 363,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 32000,
+        "cooldown": 6.666667,
+        "speed": 729.75
+      }
+    },
+    "s5-leonids-cannon": {
+      "name": "狮子座加农炮",
+      "size": 5,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 1600,
+        "rpm": 225,
+        "dps": 6000,
+        "speed": 1112,
+        "ammoCapacity": 720,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 720,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1600,
+        "cooldown": 0.355556,
+        "speed": 834
+      }
+    },
+    "s5-nv57-ballistic-gatling": {
+      "name": "NV57 实弹加特林",
+      "size": 5,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 162.5,
+        "rpm": 1200,
+        "dps": 3250,
+        "speed": 1251,
+        "ammoCapacity": 9600,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 9600,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 162.5,
+        "cooldown": 0.066667,
+        "speed": 938.25
+      }
+    },
+    "s5-war-cannon": {
+      "name": "“战争”中子加农炮",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 567,
+        "rpm": 200,
+        "dps": 1890,
+        "speed": 709,
+        "ammoCapacity": 25,
+        "type": "中子加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 567,
+        "cooldown": 0.4,
+        "speed": 531.75
+      }
+    },
+    "s5-deadbolt-v-cannon": {
+      "name": "死锁 V 实弹加农炮",
+      "size": 5,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 950,
+        "rpm": 100,
+        "dps": 1583.3,
+        "speed": 1112,
+        "ammoCapacity": 369,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 369,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 950,
+        "cooldown": 0.8,
+        "speed": 834
+      }
+    },
+    "s5-ad5b-ballistic-gatling": {
+      "name": "AD5B 实弹加特林",
+      "size": 5,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 102.5,
+        "rpm": 900,
+        "dps": 1537.5,
+        "speed": 1251,
+        "ammoCapacity": 5004,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 5004,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 102.5,
+        "cooldown": 0.088889,
+        "speed": 938.25
+      }
+    },
+    "s5-m7a-cannon": {
+      "name": "M7A 激光加农炮",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 921.8,
+        "rpm": 100,
+        "dps": 1536.3,
+        "speed": 1112,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 921.8,
+        "cooldown": 0.8,
+        "speed": 834
+      }
+    },
+    "s5-echion-repeater": {
+      "name": "蛇裔速射炮",
+      "size": 5,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 95,
+        "rpm": 800,
+        "dps": 1266.7,
+        "speed": 1390,
+        "ammoCapacity": 225,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 225,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 95,
+        "cooldown": 0.1,
+        "speed": 1042.5
+      }
+    },
+    "s5-omnisky-xv-cannon": {
+      "name": "制空 XV 加农炮",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 492.2,
+        "rpm": 150,
+        "dps": 1230.4,
+        "speed": 1112,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 492.2,
+        "cooldown": 0.533333,
+        "speed": 834
+      }
+    },
+    "s5-cf-557-galdereen-repeater": {
+      "name": "CF-557 吼兽 激光速射炮",
+      "size": 5,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 98.2,
+        "rpm": 750,
+        "dps": 1227.4,
+        "speed": 1390,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 98.2,
+        "cooldown": 0.106667,
+        "speed": 1042.5
+      }
+    },
+    "s5-lightstrike-v-cannon": {
+      "name": "光击 V 能量加农炮",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 248.7,
+        "rpm": 250,
+        "dps": 1036.1,
+        "speed": 1112,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 248.7,
+        "cooldown": 0.32,
+        "speed": 834
+      }
+    },
+    "s5-attrition-5-repeater": {
+      "name": "磨损-5 激光速射炮",
+      "size": 5,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 150,
+        "rpm": 350,
+        "dps": 875,
+        "speed": 1390,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 150,
+        "cooldown": 0.228571,
+        "speed": 1042.5
+      }
+    },
+    "s5-wrath-cannon": {
+      "name": "“愤怒”加农炮",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 972,
+        "rpm": 50,
+        "dps": 810,
+        "speed": 1056,
+        "ammoCapacity": 25,
+        "type": "电浆加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 972,
+        "cooldown": 1.6,
+        "speed": 792
+      }
+    },
+    "s5-absolution-distortion-scattergun": {
+      "name": "赦免 畸变霰弹炮",
+      "size": 5,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 720,
+        "rpm": 60,
+        "dps": 720,
+        "speed": 751,
+        "ammoCapacity": 75,
+        "type": "畸变霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 720,
+        "cooldown": 1.333333,
+        "speed": 563.25
+      }
+    },
+    "s6-attrition-6-repeater": {
+      "name": "磨损-6 激光速射炮",
+      "size": 6,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 505.4,
+        "rpm": 350,
+        "dps": 2947.9,
+        "speed": 1350,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 505.4,
+        "cooldown": 0.228571,
+        "speed": 1012.5
+      }
+    },
+    "s6-ad6b-ballistic-gatling": {
+      "name": "AD6B 实弹加特林",
+      "size": 6,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 189.9,
+        "rpm": 900,
+        "dps": 2848.5,
+        "speed": 1215,
+        "ammoCapacity": 4734,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 4734,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 189.9,
+        "cooldown": 0.088889,
+        "speed": 911.25
+      }
+    },
+    "s6-draugar-gatling": {
+      "name": "尸鬼 加特林",
+      "size": 6,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 142.4,
+        "rpm": 1200,
+        "dps": 2848,
+        "speed": 1215,
+        "ammoCapacity": 3309,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 3309,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 142.4,
+        "cooldown": 0.066667,
+        "speed": 911.25
+      }
+    },
+    "s6-maris-cannon": {
+      "name": "怒涛 加农炮",
+      "size": 6,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 3400,
+        "rpm": 50,
+        "dps": 2833.3,
+        "speed": 1112,
+        "ammoCapacity": 2700,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2700,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 3400,
+        "cooldown": 1.6,
+        "speed": 834
+      }
+    },
+    "s6-deadbolt-vi-cannon": {
+      "name": "死锁 VI 实弹加农炮",
+      "size": 6,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 1537.2,
+        "rpm": 100,
+        "dps": 2562,
+        "speed": 1080,
+        "ammoCapacity": 354,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 354,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1537.2,
+        "cooldown": 0.8,
+        "speed": 810
+      }
+    },
+    "s6-m8a-cannon": {
+      "name": "M8A 激光加农炮",
+      "size": 6,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 1383.5,
+        "rpm": 100,
+        "dps": 2305.8,
+        "speed": 1080,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1383.5,
+        "cooldown": 0.8,
+        "speed": 810
+      }
+    },
+    "s6-omnisky-xviii-cannon": {
+      "name": "制空 XVIII 加农炮",
+      "size": 6,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 738.4,
+        "rpm": 150,
+        "dps": 1846,
+        "speed": 1080,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 738.4,
+        "cooldown": 0.533333,
+        "speed": 810
+      }
+    },
+    "s6-cf-667-mammoth-repeater": {
+      "name": "CF-667 猛犸 激光速射炮",
+      "size": 6,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": 147.3,
+        "rpm": 750,
+        "dps": 1841.6,
+        "speed": 1350,
+        "ammoCapacity": 75,
+        "type": "激光速射炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 147.3,
+        "cooldown": 0.106667,
+        "speed": 1012.5
+      }
+    },
+    "s6-lightstrike-vi-cannon": {
+      "name": "光击 VI 能量加农炮",
+      "size": 6,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 374.1,
+        "rpm": 250,
+        "dps": 1558.9,
+        "speed": 1080,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 374.1,
+        "cooldown": 0.32,
+        "speed": 810
+      }
+    },
+    "s6-condemnation-distortion-scattergun": {
+      "name": "谴责 畸变霰弹炮",
+      "size": 6,
+      "family": "distortion",
+      "reviewed": false,
+      "source": {
+        "damage": 1040,
+        "rpm": 60,
+        "dps": 1040,
+        "speed": 729,
+        "ammoCapacity": 75,
+        "type": "畸变霰弹炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1040,
+        "cooldown": 1.333333,
+        "speed": 546.75
+      }
+    },
+    "s7-sf7e-cannon": {
+      "name": "SF7E 激光加农炮",
+      "size": 7,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 5150,
+        "rpm": 55,
+        "dps": 4720.8,
+        "speed": 1048,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 5150,
+        "cooldown": 1.454545,
+        "speed": 786
+      }
+    },
+    "s7-sf7b-gatling": {
+      "name": "SF7B 加特林",
+      "size": 7,
+      "family": "gatling",
+      "reviewed": false,
+      "source": {
+        "damage": 540,
+        "rpm": 480,
+        "dps": 4320,
+        "speed": 1179,
+        "ammoCapacity": 2994,
+        "type": "实弹加特林"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 2994,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 540,
+        "cooldown": 0.166667,
+        "speed": 884.25
+      }
+    },
+    "s7-m9a-cannon": {
+      "name": "M9A 激光加农炮",
+      "size": 7,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 2075.7,
+        "rpm": 100,
+        "dps": 3459.5,
+        "speed": 1048,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 2075.7,
+        "cooldown": 0.8,
+        "speed": 786
+      }
+    },
+    "s7-conqueror-7": {
+      "name": "征服者-7",
+      "size": 7,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 4000,
+        "rpm": 50,
+        "dps": 3333.3,
+        "speed": 1048,
+        "ammoCapacity": 800,
+        "type": "实弹加农炮塔"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 800,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 4000,
+        "cooldown": 1.6,
+        "speed": 786
+      }
+    },
+    "s7-c-07t-cannon": {
+      "name": "C-07T 加农炮",
+      "size": 7,
+      "family": "ballistic-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 4600,
+        "rpm": 35,
+        "dps": 2683.3,
+        "speed": 1048,
+        "ammoCapacity": 800,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 800,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 4600,
+        "cooldown": 2.285714,
+        "speed": 786
+      }
+    },
+    "s8-m10a-cannon": {
+      "name": "M10A 火炮",
+      "size": 8,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 3113.6,
+        "rpm": 100,
+        "dps": 5189.4,
+        "speed": 1016,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 3113.6,
+        "cooldown": 0.8,
+        "speed": 762
+      }
+    },
+    "s8-rsi-medusa-cannon": {
+      "name": "RSI 美杜莎 加农炮",
+      "size": 8,
+      "family": "ballistic-cannon",
+      "reviewed": true,
+      "source": {
+        "damage": 5400,
+        "rpm": 50,
+        "dps": 4500,
+        "speed": 1016,
+        "ammoCapacity": 900,
+        "type": "实弹加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 900,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 5400,
+        "cooldown": 1.6,
+        "speed": 762
+      }
+    },
+    "s9-m11a-cannon": {
+      "name": "M11A 火炮",
+      "size": 9,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": 4670.5,
+        "rpm": 100,
+        "dps": 7784.1,
+        "speed": 992,
+        "ammoCapacity": 25,
+        "type": "激光加农炮"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 4670.5,
+        "cooldown": 0.8,
+        "speed": 744
+      }
+    },
+    "s10-supremacy-10t-laser-beam": {
+      "name": "霸权-10T 激光光束炮",
+      "size": 10,
+      "family": "beam",
+      "reviewed": true,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": 18000,
+        "speed": 1220,
+        "ammoCapacity": 100,
+        "type": "激光束"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 13500,
+        "cooldown": 4.888889,
+        "duration": 5.2,
+        "charge": 0.6
+      }
+    },
+    "s10-exodus-10-laser-beam": {
+      "name": "出路-10 激光光束炮",
+      "size": 10,
+      "family": "beam",
+      "reviewed": true,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": 15000,
+        "speed": 1220,
+        "ammoCapacity": 60,
+        "type": "激光束"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 11250,
+        "cooldown": 6.222222,
+        "duration": 6,
+        "charge": 0.8
+      }
+    },
+    "s10-destroyer-mass-driver-cannon": {
+      "name": "毁灭者 电磁加农炮",
+      "size": 10,
+      "family": "ballistic-cannon",
+      "reviewed": true,
+      "source": {
+        "damage": 144160,
+        "rpm": 6,
+        "dps": 14416,
+        "speed": 939,
+        "ammoCapacity": 1500,
+        "type": "电磁加农炮"
+      },
+      "resources": {
+        "kind": "ballistic",
+        "capacityPerBarrel": 1500,
+        "estimated": false
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 144160,
+        "cooldown": 13.333333,
+        "speed": 704.25
+      }
+    },
+    "s1-spark-i-missile": {
+      "name": "火花 I 导弹",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 800,
+        "rpm": null,
+        "dps": null,
+        "speed": 1372,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 800,
+        "speed": 1029,
+        "cooldown": 10.4
+      }
+    },
+    "s1-pioneer-i-missile": {
+      "name": "先锋 I 导弹",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 750,
+        "rpm": null,
+        "dps": null,
+        "speed": 1372,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 750,
+        "speed": 1029,
+        "cooldown": 10.4
+      }
+    },
+    "s1-taskforce-i-missile": {
+      "name": "特遣 I 导弹",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 700,
+        "rpm": null,
+        "dps": null,
+        "speed": 1372,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 700,
+        "speed": 1029,
+        "cooldown": 10.4
+      }
+    },
+    "s1-marksman-i-missile": {
+      "name": "神射手 I 导弹",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 650,
+        "rpm": null,
+        "dps": null,
+        "speed": 1372,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 650,
+        "speed": 1029,
+        "cooldown": 10.4
+      }
+    },
+    "s1-arrow-i-missile": {
+      "name": "箭头 I 导弹",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 600,
+        "rpm": null,
+        "dps": null,
+        "speed": 1372,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 600,
+        "speed": 1029,
+        "cooldown": 10.4
+      }
+    },
+    "s2-tempest-ii-missile": {
+      "name": "暴风雨 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1700,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1700,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s2-strikeforce-ii-missile": {
+      "name": "致命打击 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1600,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1600,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s2-dominator-ii-missile": {
+      "name": "统治者 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1500,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1500,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s2-ignite-ii-missile": {
+      "name": "点火 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1440,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1440,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s2-rattler-ii-missile": {
+      "name": "响尾蛇 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1370,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1370,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s2-bullet-ii-missile": {
+      "name": "子弹 II 导弹",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 1300,
+        "rpm": null,
+        "dps": null,
+        "speed": 1029,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1300,
+        "speed": 771.75,
+        "cooldown": 11.466667
+      }
+    },
+    "s3-arrester-iii-missile": {
+      "name": "逮捕者 III 导弹",
+      "size": 3,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 3200,
+        "rpm": null,
+        "dps": null,
+        "speed": 858,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 3200,
+        "speed": 643.5,
+        "cooldown": 12.533333
+      }
+    },
+    "s3-thunderbolt-iii-missile": {
+      "name": "霹雳 III 导弹",
+      "size": 3,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 2900,
+        "rpm": null,
+        "dps": null,
+        "speed": 858,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 2900,
+        "speed": 643.5,
+        "cooldown": 12.533333
+      }
+    },
+    "s3-viper-iii-missile": {
+      "name": "毒蛇 III 导弹",
+      "size": 3,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 2650,
+        "rpm": null,
+        "dps": null,
+        "speed": 858,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 2650,
+        "speed": 643.5,
+        "cooldown": 12.533333
+      }
+    },
+    "s3-chaos-iii-missile": {
+      "name": "混乱 III 导弹",
+      "size": 3,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 2500,
+        "rpm": null,
+        "dps": null,
+        "speed": 858,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 2500,
+        "speed": 643.5,
+        "cooldown": 12.533333
+      }
+    },
+    "s4-assailant-iv-missile": {
+      "name": "攻击者 IV 导弹",
+      "size": 4,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 6500,
+        "rpm": null,
+        "dps": null,
+        "speed": 686,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 6500,
+        "speed": 514.5,
+        "cooldown": 13.6
+      }
+    },
+    "s4-raptor-iv-missile": {
+      "name": "猛禽 IV 导弹",
+      "size": 4,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 5750,
+        "rpm": null,
+        "dps": null,
+        "speed": 686,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 5750,
+        "speed": 514.5,
+        "cooldown": 13.6
+      }
+    },
+    "s4-pathfinder-iv-missile": {
+      "name": "寻路者 IV 导弹",
+      "size": 4,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 5300,
+        "rpm": null,
+        "dps": null,
+        "speed": 686,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 5300,
+        "speed": 514.5,
+        "cooldown": 13.6
+      }
+    },
+    "s4-dragon-iv-missile": {
+      "name": "飞龙 IV 导弹",
+      "size": 4,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 5000,
+        "rpm": null,
+        "dps": null,
+        "speed": 686,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 5000,
+        "speed": 514.5,
+        "cooldown": 13.6
+      }
+    },
+    "s5-stalker-v-missile": {
+      "name": "追猎者 V 导弹",
+      "size": 5,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 18000,
+        "rpm": null,
+        "dps": null,
+        "speed": 560,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 18000,
+        "speed": 420,
+        "cooldown": 16
+      }
+    },
+    "s5-reaper-v-missile": {
+      "name": "死神 V 导弹",
+      "size": 5,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 15500,
+        "rpm": null,
+        "dps": null,
+        "speed": 560,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 15500,
+        "speed": 420,
+        "cooldown": 16
+      }
+    },
+    "s5-scimitar-v-missile": {
+      "name": "弯刀 V 导弹",
+      "size": 5,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 14500,
+        "rpm": null,
+        "dps": null,
+        "speed": 560,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 14500,
+        "speed": 420,
+        "cooldown": 14.666667
+      }
+    },
+    "s5-valkyrie-v-missile": {
+      "name": "瓦尔基里 V 导弹",
+      "size": 5,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 12000,
+        "rpm": null,
+        "dps": null,
+        "speed": 560,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 12000,
+        "speed": 420,
+        "cooldown": 16
+      }
+    },
+    "s7-hellion-vii-missile": {
+      "name": "恶棍 VII 导弹",
+      "size": 7,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": 90000,
+        "rpm": null,
+        "dps": null,
+        "speed": 514,
+        "ammoCapacity": null,
+        "type": "导弹"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 90000,
+        "speed": 385.5,
+        "cooldown": 16.8
+      }
+    },
+    "s9-argos-ix-torpedo": {
+      "name": "阿尔格斯 IX 鱼雷",
+      "size": 9,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 400000,
+        "rpm": null,
+        "dps": null,
+        "speed": 514,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 400000,
+        "speed": 385.5,
+        "cooldown": 20.266667
+      }
+    },
+    "s9-seeker-ix-torpedo": {
+      "name": "追踪者 IX 鱼雷",
+      "size": 9,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 350000,
+        "rpm": null,
+        "dps": null,
+        "speed": 514,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 350000,
+        "speed": 385.5,
+        "cooldown": 20.266667
+      }
+    },
+    "s9-typhoon-ix-torpedo": {
+      "name": "台风 IX 鱼雷",
+      "size": 9,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 300000,
+        "rpm": null,
+        "dps": null,
+        "speed": 514,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 300000,
+        "speed": 385.5,
+        "cooldown": 20.266667
+      }
+    },
+    "s10-ex-t10-cs-executor-torpedo": {
+      "name": "EX-T10-CS “执行者” 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 805000,
+        "rpm": null,
+        "dps": null,
+        "speed": 375,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 805000,
+        "speed": 281.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-vanquisher-x-cs-torpedo": {
+      "name": "征服者 X-CS 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 805000,
+        "rpm": null,
+        "dps": null,
+        "speed": 255,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 805000,
+        "speed": 191.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-ex-t10-em-executor-torpedo": {
+      "name": "EX-T10-EM “执行者” 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 730000,
+        "rpm": null,
+        "dps": null,
+        "speed": 375,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 730000,
+        "speed": 281.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-vanquisher-x-em-torpedo": {
+      "name": "征服者 X-EM 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 720000,
+        "rpm": null,
+        "dps": null,
+        "speed": 255,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 720000,
+        "speed": 191.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-ex-t10-ir-executor-torpedo": {
+      "name": "EX-T10-IR “执行者” 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 670000,
+        "rpm": null,
+        "dps": null,
+        "speed": 375,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 670000,
+        "speed": 281.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-vt-t10-veritas-torpedo": {
+      "name": "VT-T10 “真理” 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": true,
+      "source": {
+        "damage": 650000,
+        "rpm": null,
+        "dps": null,
+        "speed": 270,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 650000,
+        "speed": 202.5,
+        "cooldown": 21.333333
+      }
+    },
+    "s10-vanquisher-x-ir-torpedo": {
+      "name": "征服者 X-IR 鱼雷",
+      "size": 10,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 630000,
+        "rpm": null,
+        "dps": null,
+        "speed": 255,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 630000,
+        "speed": 191.25,
+        "cooldown": 21.333333
+      }
+    },
+    "s12-ex-t12-cs-executor-torpedo": {
+      "name": "EX-T12-CS “执行者” 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 1230000,
+        "rpm": null,
+        "dps": null,
+        "speed": 350,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1230000,
+        "speed": 262.5,
+        "cooldown": 23.466667
+      }
+    },
+    "s12-calamity-xii-cs-torpedo": {
+      "name": "灾星 XII-CS 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 1150000,
+        "rpm": null,
+        "dps": null,
+        "speed": 230,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1150000,
+        "speed": 172.5,
+        "cooldown": 23.466667
+      }
+    },
+    "s12-ex-t12-em-executor-torpedo": {
+      "name": "EX-T12-EM “执行者” 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 1075000,
+        "rpm": null,
+        "dps": null,
+        "speed": 350,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1075000,
+        "speed": 262.5,
+        "cooldown": 23.466667
+      }
+    },
+    "s12-calamity-xii-em-torpedo": {
+      "name": "灾星 XII-EM 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 1050000,
+        "rpm": null,
+        "dps": null,
+        "speed": 230,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 1050000,
+        "speed": 172.5,
+        "cooldown": 23.466667
+      }
+    },
+    "s12-ex-t12-ir-executor-torpedo": {
+      "name": "EX-T12-IR “执行者” 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 950000,
+        "rpm": null,
+        "dps": null,
+        "speed": 350,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 950000,
+        "speed": 262.5,
+        "cooldown": 23.466667
+      }
+    },
+    "s12-calamity-xii-ir-torpedo": {
+      "name": "灾星 XII-IR 鱼雷",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": 910000,
+        "rpm": null,
+        "dps": null,
+        "speed": 230,
+        "ammoCapacity": null,
+        "type": "鱼雷"
+      },
+      "estimated": false,
+      "combat": {
+        "damage": 910000,
+        "speed": 172.5,
+        "cooldown": 23.466667
+      }
+    },
+    "reference-s9-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 9,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 4670.5,
+        "cooldown": 0.8,
+        "speed": 750
+      }
+    },
+    "reference-s8-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 8,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 3113.6,
+        "cooldown": 0.8,
+        "speed": 750
+      }
+    },
+    "reference-s5-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 5,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 567,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s4-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 4,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 327.9,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s1-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 1,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 101.2,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s3-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 3,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 218.7,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s2-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 2,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 152.8,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s7-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 7,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 5150,
+        "cooldown": 0.8,
+        "speed": 750
+      }
+    },
+    "reference-s5-weapon-repeater": {
+      "name": "武器（型号未公开）",
+      "size": 5,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "repeater"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 75,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 98.2,
+        "cooldown": 0.106667,
+        "speed": 750
+      }
+    },
+    "reference-s3-missile": {
+      "name": "导弹（型号未公开）",
+      "size": 3,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 650,
+        "ammoCapacity": null,
+        "type": "missile"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 3200,
+        "speed": 487.5,
+        "cooldown": 12.533333
+      }
+    },
+    "reference-s2-missile": {
+      "name": "导弹（型号未公开）",
+      "size": 2,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 650,
+        "ammoCapacity": null,
+        "type": "missile"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 1422.222222,
+        "speed": 487.5,
+        "cooldown": 11.466667
+      }
+    },
+    "reference-s1-missile": {
+      "name": "导弹（型号未公开）",
+      "size": 1,
+      "family": "missile",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 650,
+        "ammoCapacity": null,
+        "type": "missile"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 355.555556,
+        "speed": 487.5,
+        "cooldown": 10.4
+      }
+    },
+    "reference-s6-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 6,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 738.4,
+        "cooldown": 0.533333,
+        "speed": 750
+      }
+    },
+    "reference-s10-beam": {
+      "name": "主光束",
+      "size": 10,
+      "family": "beam",
+      "reviewed": true,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "beam"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 11250,
+        "cooldown": 6.222222,
+        "duration": 7.2,
+        "charge": 1
+      }
+    },
+    "reference-s12-beam": {
+      "name": "主光束",
+      "size": 12,
+      "family": "beam",
+      "reviewed": true,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "beam"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 16200,
+        "cooldown": 8,
+        "duration": 8,
+        "charge": 1.333333
+      }
+    },
+    "reference-s2-pdc": {
+      "name": "点防炮",
+      "size": 2,
+      "family": "repeater",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "repeater"
+      },
+      "estimated": true,
+      "combat": {
+        "interceptsOnly": true,
+        "cooldown": 0.8,
+        "range": 650,
+        "turnRate": 2.3
+      }
+    },
+    "reference-s12-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 12,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 7507.793031,
+        "cooldown": 0.884746,
+        "speed": 750
+      }
+    },
+    "reference-s10-weapon-energy-cannon": {
+      "name": "武器（型号未公开）",
+      "size": 10,
+      "family": "energy-cannon",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 1000,
+        "ammoCapacity": null,
+        "type": "energy-cannon"
+      },
+      "resources": {
+        "kind": "energy",
+        "capacityPerBarrel": 25,
+        "estimated": true
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 5557.292244,
+        "cooldown": 0.830052,
+        "speed": 750
+      }
+    },
+    "reference-s12-torpedo": {
+      "name": "鱼雷（型号未公开）",
+      "size": 12,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 270,
+        "ammoCapacity": null,
+        "type": "torpedo"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 1006811.916489,
+        "speed": 202.5,
+        "cooldown": 23.466667
+      }
+    },
+    "reference-s9-torpedo": {
+      "name": "鱼雷（型号未公开）",
+      "size": 9,
+      "family": "torpedo",
+      "reviewed": false,
+      "source": {
+        "damage": null,
+        "rpm": null,
+        "dps": null,
+        "speed": 270,
+        "ammoCapacity": null,
+        "type": "torpedo"
+      },
+      "estimated": true,
+      "combat": {
+        "damage": 504772.142918,
+        "speed": 202.5,
+        "cooldown": 20.266667
+      }
+    }
+  }
+}

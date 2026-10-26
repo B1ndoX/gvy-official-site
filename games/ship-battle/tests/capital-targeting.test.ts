@@ -20,6 +20,6 @@ test('a stalled capital finishes aiming instead of permanently steering 37 degre
  for(let i=0;i<120;i++)e.step();expect(e.shots).toBeGreaterThan(0);expect(Math.abs(boss.heading)).toBeLessThan(.03);
 });
 test('the fixed primary shares hull focus while a defensive turret remains independent',()=>{
- const e=scenario(),[boss,front,rear]=e.ships;boss.spec={...boss.spec,mounts:[...boss.spec.mounts,{...boss.spec.mounts[0],id:'defense',kind:'turret',role:'point-defense',arc:360,turnRate:10}]};boss.cooldowns.push(0);boss.turretAngles.push(0);boss.turretTargets.push(null);
+ const e=scenario(),[boss,front,rear]=e.ships;boss.spec={...boss.spec,mounts:[...boss.spec.mounts,{...boss.spec.mounts[0],id:'defense',kind:'turret',fireControl:'manned',role:'point-defense',arc:360,turnRate:10}]};boss.cooldowns.push(0);boss.turretAngles.push(0);boss.turretTargets.push(null);
  e.step();expect(boss.turretTargets[0]).toBe(front.id);expect(boss.turretTargets[1]).toBe(rear.id);
 });

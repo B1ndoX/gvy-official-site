@@ -1,37 +1,24 @@
-import {bossCoverageScale} from '../src/sim/weapons';
-import fs from 'node:fs';
-import rules from '../src/data/defense-balance.json';
-import {test,expect} from 'vitest';
-import {bossDefense} from '../src/sim/balance';
+import {expect,test} from 'vitest';
 import data from '../src/data/ships.json';
 import members from '../src/data/members.json';
 import {BattleEngine} from '../src/sim/engine';
-import {assignMemberShips,battleRoster} from '../src/sim/members';
+import {bossDefense} from '../src/sim/balance';
+import {assignMemberShips,battleRoster,BOSS_IDS} from '../src/sim/members';
 import type {ShipSpec} from '../src/sim/types';
-test.each([1,2,3,4,5,6,7,8,9,10,42,77])('bounty seed %i resolves without a kill-credit winner',seed=>{const e=new BattleEngine();e.reset(battleRoster(assignMemberShips(members.members,data as ShipSpec[],seed),'bounty',seed),data as ShipSpec[],seed,'bounty');e.start();for(let i=0;i<900*60&&e.phase==='running';i++)e.step();const s=e.snapshot();expect(e.phase).toBe('finished');expect(['players','boss']).toContain(s.outcome);if(s.outcome==='players'){expect(s.winner).toBeNull();expect(s.boss?.alive).toBe(false);}else expect(s.memberAlive).toBe(0);},30000);
-test('defense follows combat role and tier, including heavy fighters and noncombat transports',()=>{
-  const find=(id:string)=>data.find(s=>s.id===id)!;
-  expect(find('f8c-lightning').hull).toBeGreaterThan(find('gladius').hull);expect(find('f8c-lightning').shield).toBeGreaterThan(find('arrow').shield);
-  expect(find('hornet-mk2').hull).toBeGreaterThan(find('arrow').hull);expect(find('javelin').hull).toBeGreaterThan(find('hull-e').hull);
-  expect(data.every(s=>s.defenseTier&&s.defenseRole&&s.hull>0&&s.shield>0)).toBe(true);
+const specs=data as ShipSpec[];
+// Long production balance samples live in the frozen multi-batch study. These
+// tests verify the source/reference contract rather than asserting a win rate.
+test.each([1,2,3,4,5,6,7,8,9,10,42,77])('bounty seed %i starts its sourced boss without a hidden balance modifier',seed=>{
+ const e=new BattleEngine();e.reset(battleRoster(assignMemberShips(members.members,specs,seed),'bounty',seed),specs,seed,'bounty');e.start();
+ const boss=e.snapshot().boss!,base=specs.find(s=>s.id===boss.spec.id)!;
+ expect(e.phase).toBe('running');expect(boss.hull).toBe(base.hull);expect(boss.shield).toBe(base.shield);expect(boss.spec.mounts).toEqual(base.mounts);expect(e.snapshot().memberTotal).toBe(32);
 });
-test('challenge budget grows across waves, fixes defense at spawn and applies its own output coefficient',()=>{
-  const specs=data as ShipSpec[],e=new BattleEngine();e.reset(assignMemberShips(members.members,specs,42),specs,42);
-  const boss=specs.find(s=>s.id==='mauler')!,bounty=bossDefense(boss,'bounty',e.ships,32,1),first=bossDefense(boss,'challenge',e.ships,32,1),last=bossDefense(boss,'challenge',e.ships,32,5);
-  expect(first.hull).toBeGreaterThan(boss.hull*2);expect(last.hull).toBeGreaterThan(first.hull);
-  const small=bossDefense(boss,'bounty',e.ships.slice(0,10),10,1);expect(small.hull).toBeLessThan(bounty.hull);
-  e.reset(battleRoster(assignMemberShips(members.members,specs,42),'challenge',42),specs,42,'challenge');e.start();const incoming=e.snapshot().boss!;
-  incoming.spec.mounts.forEach((m,i)=>expect(m.damage).toBeCloseTo(boss.mounts[i].damage*bossCoverageScale(boss.mounts)*rules.challengeDamageMultiplier*rules.bossDamageMultiplier,6));const fixed=incoming.spec.hull;e.ships[0].alive=false;for(let i=0;i<60;i++)e.step();expect(incoming.spec.hull).toBe(fixed);
+test('every ship has finite physical stats and an explicit behavior role',()=>{
+ for(const s of specs){expect(s.defenseTier).toBeTruthy();expect(s.defenseRole).toBeTruthy();expect(s.hull).toBeGreaterThan(0);expect(s.shield).toBeGreaterThan(0);expect(Number.isFinite(s.hull+s.shield+s.speed)).toBe(true);}
 });
-test('challenge samples complete and first boss is not a three-second encounter',()=>{
-  const specs=data as ShipSpec[],results=[];
-  for(const count of [10,30,32])for(const seed of [1,5,21,42]){
-    const e=new BattleEngine();e.reset(battleRoster(assignMemberShips(members.members.slice(0,count),specs,seed),'challenge',seed),specs,seed,'challenge');e.start();
-    let firstKill:number|null=null,firstHit:number|null=null,topWave=1;const waves:{wave:number;time:number;members:number}[]=[];
-    for(let i=0;i<1200*60&&e.phase==='running';i++){e.step();const first=e.ships.find(s=>s.npc==='boss')!;if(first.lastHit>=0&&firstHit===null)firstHit=e.time;if(!first.alive&&firstKill===null)firstKill=e.time;topWave=Math.max(topWave,e.wave);const latest=e.ships.filter(s=>s.npc==='boss').at(-1)!;if(!latest.alive&&!waves.some(w=>w.wave===e.wave))waves.push({wave:e.wave,time:Number(e.time.toFixed(1)),members:e.living.filter(s=>!s.npc).length});}
-    expect(e.phase).toBe('finished');if(firstKill!==null)expect(firstKill-(firstHit??0)).toBeGreaterThan(25);
-    results.push({count,seed,outcome:e.outcome,time:Number(e.time.toFixed(1)),firstEngagement:firstKill===null?null:Number((firstKill-(firstHit??0)).toFixed(1)),topWave,waves});
-  }
-  if(process.env.GVY_BALANCE_REPORT)fs.writeFileSync(process.env.GVY_BALANCE_REPORT,JSON.stringify(results,null,2));
-  console.log('CHALLENGE_BALANCE',JSON.stringify(results));
-},120000);
+test('all reference bosses retain the same source base across modes, waves and populations',()=>{
+ for(const id of BOSS_IDS){const base=specs.find(s=>s.id===id)!;const original=JSON.stringify(base);
+  for(const count of [2,32,64])for(const mode of ['bounty','challenge'] as const)for(const wave of [1,5])expect(bossDefense(base,mode,[],count,wave)).toEqual({hull:base.hull,shield:base.shield,shieldRegen:base.shieldRegen});
+  expect(JSON.stringify(base)).toBe(original);
+ }
+});

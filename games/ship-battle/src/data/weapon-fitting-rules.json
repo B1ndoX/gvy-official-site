@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "ships": {
+    "idris-m": {
+      "combatVersion": 20,
+      "source": "User-authorized railgun behavior, 2026-10-26",
+      "note": "Upgrade stock cached railgun speed and maximum charge; weapon source damage/RPM/ammunition remain archived unchanged."
+    },
+    "perseus": {
+      "preset": "s8-gunners",
+      "combatVersion": 18,
+      "source": "User-confirmed final fitting, 2026-10-26: two pilot S3 and two twin-S8 manned stations",
+      "exclusions": [
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "whenStationAlsoHas": "s8-rsi-medusa-cannon",
+          "inactiveCount": 4
+        }
+      ],
+      "overrides": [
+        {
+          "weaponId": "s3-mantis-gt-220-gatling",
+          "activeCount": 2,
+          "control": "pilot",
+          "stationId": "user-confirmed-pilot-s3",
+          "anchorId": "model-weapon-7"
+        }
+      ],
+      "note": "Final user correction activates only two forward pilot S3 and two independently controlled twin-S8 manned turrets. All other S3 are inactive. Archived source inventory remains eight installed S3; this explicit fitting override does not rewrite source facts."
+    }
+  }
+}

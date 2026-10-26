@@ -46,3 +46,12 @@ test('camera carries fast subject motion exactly at any zoom while easing only c
  for(let i=0;i<300;i++){subject={id:1,x:subject.x+8,y:subject.y-5};center=trackedCenter(center,previous,subject,{x:subject.x+20,y:subject.y-10},.06);previous={...subject};expect(center.x-subject.x).toBeCloseTo(20);expect(center.y-subject.y).toBeCloseTo(-10);}
  const next=trackedCenter(center,previous,{id:2,x:-1000,y:300},{x:-1000,y:300},.1);expect(next.x).toBeCloseTo(center.x+(-1000-center.x)*.1);
 });
+
+test('switching from an overview or giant hull constrains automatic framing to keep the next member readable',async()=>{
+ const {spectatorSpan}=await import('../src/render/CombatDirector');
+ expect(spectatorSpan(100000,300,true)).toBeLessThanOrEqual(510);
+ expect(spectatorSpan(20,300,true)).toBeGreaterThanOrEqual(180);
+ expect(spectatorSpan(300,300,false)).toBe(300);
+ const e=setup(),d=new CombatDirector(),scene=d.update(e.ships,[],[],0,1/60)!;
+ expect(scene.subject.alive).toBe(true);expect(scene.active).toBe(false);expect(engagementFrame(scene.subject,scene.target,1200,700).span).toBeLessThan(1200);
+});

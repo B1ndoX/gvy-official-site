@@ -19,6 +19,24 @@
 
 桌面和手机可以采用不同的状态生产方式，但同一媒体条件中只能有一个生产者。消费者不得反向写入生产者状态。
 
+## 第二款游戏的统一数据职责（发布状态见 OPERATIONS）
+
+- `games/ship-battle/src/data/ship-reference-facts.json` 与武器目录/配装表只存带版本和来源的事实、缺项及冲突；离线读取机器人保留的公开资料，运行时不访问机器人或 NAS。
+- `simulation-profile.json`是实战档位唯一选择：当前本地reference先采用原作基础值，停用旧数值平衡覆盖；完整状态以OPERATIONS为准。`weapon-stations.json`只读安装记录区分舰首/载人/遥控炮台；不按船长推断。`weapon-fitting-rules.json`负责已确认的炮手互斥。
+- `ship-game-balance.json` / `scripts/ship-stat-model.mjs` 是全舰物理换算的唯一负责人；`weapon-size-balance.json` / 共享型号表负责单炮参数。`generate-defense.mjs` 同时生成成员与 BOSS 基础舰型，不按舰名另补血量或输出。
+- `boss-mode-balance.json` 只负责平衡档中基础数据生成后的遭遇难度；reference档不应用人数、额外血量/伤害/抗爆发倍率。引擎在出生时应用人数、赏金/挑战系数，不回写基础舰表。来源更新、统一换算与模式调参不可混为一层。
+- 挂点元数据以原模型校准基准生成，不能因真实尺寸跨越行为分类阈值而重排；源尺寸与模型冲突保留原值并标记估计。修改数据后必须验证整条导入/生成链幂等，使用独立种子采样，旧参数统计不挪用。
+
+第二款瞄准由 `aim-tracking-rules.json` 和 `sim/turret-tracking.ts.trackAim` 唯一负责观察、速度估计与角惯性。按fireControl区分主驾驶和载人/遥控炮台；所有成员、BOSS、僚机及profile共用炮台规则，无NPC绕过。持续光束沿实际船头，通过同一观察/角惯性驱动船体转向，保持80%原最大转速；普通舰首炮保持船头方向，PDC独立只拦截。紧急横移仍由原evasion map维护：<200米舰体≤10%一次，实际回到>10%再准备，不由UI/波次或回盾重置。结算排行复用冻结的Engine快照与原排行榜，默认收起、点击本局排行才展开；结算画面始终保留。
+
+龙骨炮适配由`weapon-behavior-rules.json`显式记录，生成层只对对应型号换算弹速/最大蓄力；原始武器事实不变。Engine的WeaponCycle独占蓄力、目标归属与单发预算，trackAim复用于舰体瞄准；WeaponEffects仅观察蓄力状态，满蓄力待发继续显示、失去/更换目标重新蓄力。低速短喷焰与高速长带在CombatVfx内连续混合，不更改飞行AI或另起时钟。
+
+第二款主喷口校准由 `engine-layouts.json` 维护：同系列同外观通过 `aliasOf` 共用一个canonical配置；官方/机器人提供的类型数量与当前PNG二维坐标分别记录。人工标注优先，当前布局版本4，49个人工canonical/39条共享别名；标枪8口/北极星4口，其他未确定的投影不叠加通用双喷焰；`engineLayoutVersion`负责独立升级默认缓存，保留用户自定义/手工校准。来源值、缺项同用途估计及游戏适配分层；开始难度/整体伤害平衡前必须先与用户讨论。
+
+VFX-R18由原BattleRenderer ticker唯一推进：CombatVfx负责共用烘焙图集/有限精灵池，TrailHistory维护8点弹体路径，ExhaustTrail最多20个样本维护真实喷口发射方向及速度继承，TrailRibbon按年龄重采样生成40顶点连续曲线，保留不可见端邻点避免换点闪烁。按实际速度与推力延伸、船口短光与路径焰带衔接；WeaponEffects只读取真实弹丸/光束/事件。无第二套动画或伤害时钟，不消费引擎PRNG或改写模拟；更换舰队/重置清空，销毁显式释放图集与MeshGeometry。屏外剔除/预算只影响视觉，不修改弹丸、火力和画质/帧率。CPU实测与局限见OPERATIONS顶部，不能宣称零开销。
+
+地形挡枪由sim/terrain-navigation.ts共用真实陨石交点与目标船体交点，Engine独占稳定绕行侧和射击门禁；已发弹丸/光束继续实际碰撞。停止发射的尾带在CombatVfx.end中脱离喷口、保留世界几何并按唯一模拟时间渐隐，有界分配/重置销毁；导弹鱼雷视觉长度是世界单位的美术适配，不写回来源物理或命中箱。
+
 ## 生命周期规则
 
 - `cinematic-homepage.js` 是唯一运行时入口，通过 `window.__gvyCinematicHomepage` 防止重复初始化。
@@ -119,3 +137,5 @@
 - 角色位置和头像转动/受击/挤压直接写入各自transform，避免逐帧CSS变量继承到名称、手、武器和血条。击杀/事件播报最多4条，显示3.2秒后随模拟时钟淡出1.8秒，设置/重赛清空；没有独立计时器。准备页的简短下拉名称与规则说明独立于对局配置，选项顺序、默认随机配装和玩法不变；桌面原生base-select渐进增强，触屏沿用系统选择器。
 
 - 用户最终取消帧数限制，render恢复每次浏览器RAF绘制；无按卡顿、人数或硬件的pacer、固定30/60档位、rendering状态字段或新设置。50Hz模拟仍独立于浏览器绘制刷新率，原单RAF、暂停/后台冻结和效果预算不变。
+
+R18.5补充：主推进启停由render/ExhaustTrail.mainExhaustActive按实际速度/前后向量及回差控制，不依赖UI/新时钟；按时间间隔的有限斜率Hermite负责尾迹曲线，避免过冲。weapon-fitting-rules可记录用户确认的activeCount/control/anchor及单舰combatVersion，生成器校验原安装排除数与活动数；当前仅Perseus2门pilot S3的明确覆盖，原source安装记录不重写，其他舰不跟随升级。
