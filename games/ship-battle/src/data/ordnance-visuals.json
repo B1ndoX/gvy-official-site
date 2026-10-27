@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "file": "assets/ordnance/ordnance-r21.webp",
   "width": 256,
   "height": 504,
@@ -1189,11 +1189,12 @@
       "botAssetPath": "weapon-image2/missile/61-Calamity_XII_IR_Torpedo.jpg",
       "frame": [
         84,
-        482,
+        491,
         89,
-        21
+        11
       ],
-      "originalSHA256": "fe95f4a2cdb38fbfea29e54401a43d927d8a99fc74261312787713429d383d9f"
+      "originalSHA256": "fe95f4a2cdb38fbfea29e54401a43d927d8a99fc74261312787713429d383d9f",
+      "note": "Display UV crop selects only the cylindrical torpedo body in original atlas rows491–501; overhead cast shadow/support fragments in rows482–490 are excluded. Atlas pixels and source image remain unchanged."
     }
   ]
 }
