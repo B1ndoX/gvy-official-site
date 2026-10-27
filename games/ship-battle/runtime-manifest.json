@@ -45,7 +45,7 @@
     "src/render/HullImpact.ts": "3c8c4395eb17dbf845b56a8884daeb0f860122659642b943ec290883725831c1",
     "src/render/TrailHistory.ts": "f8131ed4c4329bd22e33869a8541e0c529d731f4d83ca5c8d4b3974931513213",
     "src/render/TrailRibbon.ts": "06e285078faf7781cb0ef9c3c9e411e699c793074958e87a948772d9f4758ea7",
-    "src/render/WeaponEffects.ts": "0bce857fac2c7bf4c1e19a8b09edd44904b12ee63b2deca47130045f405eae31",
+    "src/render/WeaponEffects.ts": "7ad4f37de605071b7d97f4dceb181c1d9ff757ede6826819c94a221d0bb4b3ca",
     "src/render/ordnance-artwork.ts": "3bb490cd3330b8a4e0f6d3f7d95565301464158877d955f2d6c29d012d47527c",
     "src/sim/asteroids.ts": "4620d31324fa404b3590cdbd800567f70db846e98a1f90dfc2b6977660be4b9b",
     "src/sim/balance.ts": "38241e2ae3ab8b0e00dad0e9a0f75a969cf60b20b64cacd5c005aacb06152d7e",
@@ -346,12 +346,12 @@
     "assets/WebGLRenderer-BKRdmjdq.js": "dc376e2445f0c5dadc25c8b6c14fafdac0ea3d7155ebcf9d20217ec12e4c3d84",
     "assets/WebGPURenderer-C9rV5So4.js": "f7367bdc274de97c5bbd502f1e5bfc77108a0b271f40e145dca7718fad3878b4",
     "assets/browserAll-BKdtI4TK.js": "a7549628351496b53f2414a6ae697f459d4afaf9784e0d515a94d0fa1e0c8cb4",
-    "assets/index-C6eSluJ8.js": "c7af01f71b1eda6487f9caf6e71dc420a4c3079aa4d41f9e690cbb2a95f0ef85",
+    "assets/index-FDfHQqwB.js": "65b8a957d92329424b6ed5b23d17744c2fdbd9f4970db1d414553e6a614d5cd4",
     "assets/index-wxSGHrwM.css": "395bf544c71291d2741a2cdbd34bdf1b89cf6f709b66c447b15ec3444af61929",
     "assets/jsx-runtime-BRovdw5E.js": "1251e1248afad00e771283786a385f0f7aaf02617bf1760f8c93be0a01e807b9",
     "assets/pixi-BL7g8mWx.js": "0a77163fc99e10b660d75cb08f75dc772a6fa893541e82acd8e9f5e06c1d5e7b",
     "assets/rolldown-runtime-WkwZ5CU-.js": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
     "assets/webworkerAll-BKdtI4TK.js": "a7549628351496b53f2414a6ae697f459d4afaf9784e0d515a94d0fa1e0c8cb4",
-    "index.html": "5e9381447a9014c910382937241d98077e8a9eadb1ceac3249ea41d450e5f87c"
+    "index.html": "c90a6fc7ff13ad356cadebf1164335519700b76e1ac6fdda928bcee80a5c9207"
   }
 }

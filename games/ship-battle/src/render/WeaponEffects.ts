@@ -14,7 +14,7 @@ export function torpedoVisualScale(projectile:Pick<Projectile,'weaponSize'|'widt
 /** Game silhouettes in world metres, not fixed screen pixels. Not source dimensions. */
 export function ordnanceVisualLength(p:Pick<Projectile,'weaponSize'|'kind'>){
  const size=clamp(Math.round(p.weaponSize??(p.kind==='torpedo'?5:2)),1,12);
- return [.55,.8,1.2,1.8,2.4,3.6,4.8,6,8,10,12,14][size-1]*(p.kind==='torpedo'?1.6:1);
+ return [.55,.8,1.2,1.8,2.4,3.6,4.8,6,8,10,12,14][size-1]*(p.kind==='torpedo'?4:1);
 }
 
 /** Physical rays/casings remain geometry; soft light is batched in the shared atlas. */
@@ -43,8 +43,8 @@ export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:C
   for(const p of engine.projectiles){
     const dx=Math.cos(p.angle),dy=Math.sin(p.angle);
     if(p.kind==='torpedo'){
-      const length=ordnanceVisualLength(p)/2,width=length*.12;
-      vfx.wake(`p${p.id}`,p.x,p.y,engine.time,.85,Math.max(100,p.speed*.65),width*.5,0xf5ad68,.35);
+      const length=ordnanceVisualLength(p)/2,width=length*.12,exhaustWidth=width*1.8;
+      vfx.wake(`p${p.id}`,p.x,p.y,engine.time,.85,Math.max(100,p.speed*.65),exhaustWidth*.5,0xffc383,.48);
       const point=(x:number,y:number)=>({x:p.x+dx*x-dy*y,y:p.y+dy*x+dx*y});
       const polygon=(points:number[])=>points.flatMap((_,i)=>i%2?[]:Object.values(point(points[i],points[i+1])));
       if(!vfx.ordnance?.(p,length*2)){
@@ -55,8 +55,10 @@ export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:C
       const nose=point(length*.65,0),tip=point(length,0);e.moveTo(nose.x,nose.y).lineTo(tip.x,tip.y).stroke({color:0xf2f7fa,width:Math.min(.8*px,width*.4)});
       }
       const nozzle=point(-length,0);
-      vfx.plume(nozzle.x,nozzle.y,p.angle+Math.PI,length*(.85+.08*Math.sin(engine.time*37+p.id)),width*5,0xff9452,.6);
-      vfx.glow(nozzle.x,nozzle.y,width*1.8,0xffd4a0,.85);
+      const flame=length*(2.4+.16*Math.sin(engine.time*37+p.id));
+      vfx.plume(nozzle.x,nozzle.y,p.angle+Math.PI,flame,exhaustWidth*4.5,0xffad55,.9);
+      vfx.plume(nozzle.x,nozzle.y,p.angle+Math.PI,flame*.72,exhaustWidth*1.8,0xfff2ca,1);
+      vfx.glow(nozzle.x,nozzle.y,exhaustWidth*2.3,0xffe9bc,1);
     }else if(p.kind==='railgun'){
       const size=clamp((p.weaponSize??10)/10,.65,1.6),tail=Math.min(p.travel,65),width=4.2*px*size;
       vfx.streak(p.x-dx*tail,p.y-dy*tail,p.x,p.y,width*4,0x77beff,.24);
