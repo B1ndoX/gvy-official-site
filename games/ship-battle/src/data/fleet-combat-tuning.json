@@ -6,7 +6,7 @@
   "hullPower": 1,
   "shieldPower": 1,
   "bossHealth": 0.25,
-  "bossDamage": 1,
+  "bossDamage": 1.25,
   "populationReference": 32,
   "populationHealthPower": 1,
   "populationDamagePower": 0.5

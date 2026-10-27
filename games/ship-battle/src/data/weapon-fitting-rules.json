@@ -27,6 +27,30 @@
         }
       ],
       "note": "Final user correction activates only two forward pilot S3 and two independently controlled twin-S8 manned turrets. All other S3 are inactive. Archived source inventory remains eight installed S3; this explicit fitting override does not rewrite source facts."
+    },
+    "terrapin": {
+      "combatVersion": 21,
+      "source": "User-confirmed Terrapin family pilot muzzle correction, 2026-10-27",
+      "overrides": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "activeCount": 1,
+          "control": "pilot",
+          "stationId": "user-terrapin-pilot-left",
+          "anchorId": "laser-1"
+        },
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "activeCount": 1,
+          "control": "pilot",
+          "stationId": "user-terrapin-pilot-right",
+          "anchorId": "laser-2"
+        }
+      ],
+      "note": "Two existing S2 guns use separate left/right muzzles. The common 2D coordinates live only in the canonical Terrapin layout; sourced installed count and weapon statistics remain unchanged."
+    },
+    "terrapin-medic": {
+      "aliasOf": "terrapin"
     }
   }
 }

@@ -1,7 +1,24 @@
 import type {Ship,Vec} from './types';
-import {clamp,distance,randomGenerator} from './math';
+import {clamp,distance,randomGenerator,wrap} from './math';
 import {hullRadiusAt} from './collisions';
 export interface Asteroid extends Vec {id:number;radius:number;rotation:number}
+/** A hull cannot rotate through a rock. Resolve angular contact before the
+ * positional solver, which otherwise pushes a long hull between opposing rocks. */
+export function asteroidSafeHeading(ship:Pick<Ship,'x'|'y'|'heading'|'spec'>,heading:number,rocks:Asteroid[]){
+ const delta=wrap(heading-ship.heading);if(Math.abs(delta)<1e-9)return heading;
+ let fraction=1;
+ for(const rock of rocks){
+  const bound=Math.max(ship.spec.length,ship.spec.beam)*.48+3+rock.radius;
+  if((ship.x-rock.x)**2+(ship.y-rock.y)**2>=bound*bound)continue;
+  const depth=asteroidContact(ship,rock)?.depth??0;
+  const blocked=(t:number)=>(asteroidContact({...ship,heading:ship.heading+delta*t},rock)?.depth??0)>depth+1e-5;
+  if(!blocked(fraction))continue;
+  let lo=0,hi=fraction;
+  for(let i=0;i<12;i++){const mid=(lo+hi)/2;if(blocked(mid))hi=mid;else lo=mid;}
+  fraction=lo;
+ }
+ return wrap(ship.heading+delta*fraction);
+}
 /** Physical circle/ellipse contact; weapons separately use the artwork mask. */
 export function asteroidContact(ship:Pick<Ship,'x'|'y'|'heading'|'spec'>,rock:Asteroid,padding=0){
  const c=Math.cos(ship.heading),s=Math.sin(ship.heading),dx=rock.x-ship.x,dy=rock.y-ship.y;

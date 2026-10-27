@@ -75,7 +75,8 @@ export function attackNavigation(ship:Ship,target:Ship,time:number,prior:AttackR
  if(capital){
   // A persistent curved course, sampled at decisions rather than jittering each frame.
   const side=()=>{const cross=dx*(ship.vy-target.vy)-dy*(ship.vx-target.vx);return Math.abs(cross)>ship.spec.speed*dist*.12?Math.sign(cross):(random()<.5?-1:1);};
-  const plan=():AttackRun=>({target:target.id,phase:'approach',entry:bearing+(random()-.5)*.8,spacing:.82+random()*.28,retreat:90+random()*140,caution:.45+random()*.4,side:side(),curve:.65+random()*.7,motionAt:time});
+  // Re-entry must not give the same old hit a newly longer response window.
+  const plan=():AttackRun=>({target:target.id,phase:'approach',entry:bearing+(random()-.5)*.8,spacing:.82+random()*.28,retreat:90+random()*140,caution:state.caution??(.45+random()*.4),side:side(),curve:.65+random()*.7,motionAt:time});
   if(!prior||prior.target!==target.id)state=plan();
   const inward=Math.atan2(-dy,-dx),clearance=hullRadiusAt(target,bearing)+ship.radius+100;
   const standOff=Math.max(clearance+100,ship.spec.preferredRange*(state.spacing??.95));
@@ -108,9 +109,14 @@ export function attackNavigation(ship:Ship,target:Ship,time:number,prior:AttackR
   return course(clamp((standOff-dist)/Math.max(180,standOff*.6),-.85,.45),clamp(angular*.8,-.55,.55));
  }
  const closest=ship.radius+target.radius+Math.min(110,ship.spec.preferredRange*.2);
- if(state.phase==='approach'&&dist<Math.max(closest+120,ship.spec.preferredRange*.9))state={target:target.id,phase:'strike'};
- if(state.phase==='strike'&&(dist<closest||Math.cos(ship.heading)*(target.x-ship.x)+Math.sin(ship.heading)*(target.y-ship.y)<-30))state={target:target.id,phase:'extend',angle:Math.hypot(ship.vx,ship.vy)>ship.spec.speed*.2?Math.atan2(ship.vy,ship.vx):ship.heading,side:random()<.5?-1:1,motionAt:time};
- else if(state.phase==='extend'&&dist>closest+100&&time-(state.motionAt??time)>.7)state={target:target.id,phase:'approach'};
+ const ahead=Math.cos(ship.heading)*(target.x-ship.x)+Math.sin(ship.heading)*(target.y-ship.y);
+ // A pursuer behind us is not a completed firing pass. Turn to engage before
+ // allowing the pass to extend; otherwise re-entry immediately flees again.
+ if(state.phase==='approach'&&ahead>0&&dist<Math.max(closest+120,ship.spec.preferredRange*.9))state={target:target.id,phase:'strike'};
+ if(state.phase==='strike'&&(dist<closest||ahead<-30))state={target:target.id,phase:'extend',angle:Math.hypot(ship.vx,ship.vy)>ship.spec.speed*.2?Math.atan2(ship.vy,ship.vx):ship.heading,side:random()<.5?-1:1,motionAt:time};
+ // Finishing the existing escape turn is enough to rejoin. A faster pursuer
+ // can keep the gap small forever, so separation cannot be the only exit.
+ else if(state.phase==='extend'&&(dist>closest+100||Math.abs(wrap((state.angle??ship.heading)+(state.side??1)*1.1-ship.heading))<.15)&&time-(state.motionAt??time)>.7)state={target:target.id,phase:'approach'};
  if(state.phase==='strike'||state.phase==='approach')return {state,heading:Math.atan2(target.y+target.vy*.3-ship.y,target.x+target.vx*.3-ship.x),boost:state.phase==='strike'?(small?1.22:1.06):1,coast:false};
  if(state.phase==='extend')return {state,heading:(state.angle??ship.heading)+(state.side??1)*clamp((time-(state.motionAt??time))*.55,0,1.1),boost:small?1.18:1.05,coast:true};
  return {state,heading:Math.atan2(target.y-ship.y,target.x-ship.x),boost:1,coast:false};

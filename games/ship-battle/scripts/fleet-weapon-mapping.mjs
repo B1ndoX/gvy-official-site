@@ -12,7 +12,8 @@ const simulation=JSON.parse(await readFile(new URL('simulation-profile.json',roo
 export const referenceMode=simulation.mode==='reference';
 const PACE=.75;
 export const FLEET_WEAPON_VERSION=JSON.parse(await readFile(new URL('ship-game-balance.json',root),'utf8')).combatVersion;
-export const fittingVersion=id=>fittingRules[id]?.combatVersion??0;
+const fittingFor=id=>fittingRules[fittingRules[id]?.aliasOf??id];
+export const fittingVersion=id=>fittingFor(id)?.combatVersion??0;
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n)),round=n=>Number(n.toFixed(6));
 export const usesFleetWeapons=id=>['snapshot','reference','unarmed'].includes(loadouts[id]?.status);
 export function family(w){if(w.family)return w.family;const type=w.type+' '+w.name+' '+w.nameZh;
@@ -44,14 +45,14 @@ export function referenceGunParameters(w,type=family(w)){
 export function turretTurnRate(size){const r=simulation.turrets;return round(clamp(2*r.referenceTurnRate/(1+(size/r.referenceSize)**r.sizePower),r.minimumTurnRate,r.maximumTurnRate));}
 function activeStations(shipId,weaponId){
  const records=stations[shipId]?.systems[weaponId]?.stations??[];
- const exclusions=(fittingRules[shipId]?.exclusions??[]).filter(rule=>rule.weaponId===weaponId);
+ const exclusions=(fittingFor(shipId)?.exclusions??[]).filter(rule=>rule.weaponId===weaponId);
  const result=records.filter(st=>!exclusions.some(rule=>stations[shipId]?.systems[rule.whenStationAlsoHas]?.stations.some(other=>other.stationId===st.stationId)));
  if(exclusions.length&&records.reduce((n,s)=>n+s.count,0)-result.reduce((n,s)=>n+s.count,0)!==exclusions.reduce((n,r)=>n+r.inactiveCount,0))throw Error(`Gunner exclusion source changed; review ${shipId} ${weaponId} before generating`);
- const override=fittingRules[shipId]?.overrides?.find(rule=>rule.weaponId===weaponId);
- if(override){
+ const overrides=fittingFor(shipId)?.overrides?.filter(rule=>rule.weaponId===weaponId)??[];
+ if(overrides.length){
   const available=result.reduce((n,s)=>n+s.count,0);
-  if(!Number.isInteger(override.activeCount)||override.activeCount<1||override.activeCount>available)throw Error(`Invalid active fitting count: ${shipId} ${weaponId}`);
-  return [{count:override.activeCount,control:override.control,stationId:override.stationId,anchorId:override.anchorId,match:'user-confirmed-fitting'}];
+  if(overrides.some(override=>!Number.isInteger(override.activeCount)||override.activeCount<1)||overrides.reduce((n,override)=>n+override.activeCount,0)>available)throw Error(`Invalid active fitting count: ${shipId} ${weaponId}`);
+  return overrides.map(override=>({count:override.activeCount,control:override.control,stationId:override.stationId,anchorId:override.anchorId,match:'user-confirmed-fitting'}));
  }
  return result;
 }

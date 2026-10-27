@@ -46,3 +46,23 @@ test('impact damage changes smoothly with normal closing speed and mass ratio, w
 test('high-energy damage is not swallowed by the ordinary per-second scrape cap',()=>{
  const e=setup('idris-m','idris-m');contact(e,e.ships[0].spec.speed*2);e.step();expect(e.ships[0].alive||e.ships[1].alive).toBe(false);
 });
+test('a small ship outside a curved capital bow is not pushed by the five-axis projection envelope',()=>{
+ const [a,b]=setup().ships;a.spec={...a.spec,length:67.25,beam:57.297};b.spec={...b.spec,length:2789,beam:602.424};
+ for(const angle of [0,.6,2.1]){
+  Object.assign(b,{x:0,y:0,heading:1.0689886248100717+angle});
+  const x=-334.1920635529823,y=-1159.147203362114;
+  Object.assign(a,{x:x*Math.cos(angle)-y*Math.sin(angle),y:x*Math.sin(angle)+y*Math.cos(angle),heading:1.6575347961514626+angle});
+  expect(shipContact(a,b)).toBeNull();expect(shipContact(b,a)).toBeNull();
+ }
+});
+test('curved contacts return a finite separating translation for rotated unequal hulls',()=>{
+ const [a,b]=setup('arrow','javelin').ships;
+ for(const angle of [0,.3,1.7]){
+  Object.assign(a,{x:0,y:0,heading:angle+.4});Object.assign(b,{x:12,y:7,heading:angle});
+  const contact=shipContact(a,b)!;
+  expect(contact).not.toBeNull();expect([contact.nx,contact.ny,contact.depth].every(Number.isFinite)).toBe(true);
+  expect(Math.hypot(contact.nx,contact.ny)).toBeCloseTo(1,7);
+  a.x-=contact.nx*(contact.depth+.02);a.y-=contact.ny*(contact.depth+.02);
+  expect(shipContact(a,b)).toBeNull();
+ }
+});

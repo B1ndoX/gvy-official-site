@@ -5,6 +5,25 @@ import {BattleEngine} from '../src/sim/engine';
 import {battleRoster} from '../src/sim/members';
 import type {ShipSpec} from '../src/sim/types';
 const specs=(data as ShipSpec[]).map(s=>({...s,hull:s.hull*100,shield:s.shield*100,shieldRegen:0}));
+test('a small ship turns toward a pursuer behind it instead of treating it as a completed attack pass',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver');
+ const e=new BattleEngine();e.reset([{specId:'prowler',count:1},{specId:'herald',count:1}],data as ShipSpec[],77);const[s,t]=e.ships;
+ Object.assign(s,{x:120,y:0,heading:0,vx:s.spec.speed,vy:0});Object.assign(t,{x:0,y:0,heading:0,vx:t.spec.speed,vy:0});
+ const plan=attackNavigation(s,t,0,undefined);
+ expect(plan.state.phase).toBe('approach');expect(plan.coast).toBe(false);expect(Math.cos(plan.heading)).toBeLessThan(0);
+ s.heading=Math.PI;const facing=attackNavigation(s,t,1,plan.state);
+ expect(facing.state.phase).toBe('strike');expect(facing.coast).toBe(false);
+});
+test('an escape can rejoin after completing its turn even when a pursuer prevents separation',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver');
+ const e=new BattleEngine();e.reset([{specId:'prowler',count:1},{specId:'herald',count:1}],data as ShipSpec[],77);const[s,t]=e.ships;
+ Object.assign(s,{x:0,y:0,heading:1.1,vx:Math.cos(1.1)*s.spec.speed,vy:Math.sin(1.1)*s.spec.speed});Object.assign(t,{x:-120*Math.cos(1.1),y:-120*Math.sin(1.1)});
+ const prior={target:t.id,phase:'extend' as const,angle:0,side:1,motionAt:0};
+ expect(attackNavigation(s,t,.5,prior).state.phase).toBe('extend');
+ const rejoin=attackNavigation(s,t,2,prior);
+ expect(rejoin.state.phase).toBe('approach');expect(rejoin.coast).toBe(false);
+ expect(attackNavigation(s,t,2.1,rejoin.state).state.phase).toBe('approach');
+});
 test('engaged fighters keep moving laterally, change attack direction and still land shots',()=>{
  const e=new BattleEngine();e.reset([{specId:'gladius',count:2}],specs,21);e.ships.forEach((s,i)=>{s.x=i*700;s.y=0;s.heading=i?Math.PI:0;});e.start();
  let moving=0,forward=0,backward=0,samples=0;for(let i=0;i<45*60;i++){e.step();if(i>10*60){const a=e.ships[0],b=e.ships[1],dx=b.x-a.x,dy=b.y-a.y,cross=dx*a.vy-dy*a.vx;samples++;if(Math.hypot(a.vx,a.vy)>a.spec.speed*.08)moving++;if(cross>0)forward++;else backward++;}}
@@ -65,6 +84,17 @@ test('capital evasions keep a lateral component and curve back into range instea
 
 test('avoidance uses the narrow side of a long hull rather than its bounding circle',async()=>{
  const{hullRadiusAt}=await import('../src/sim/collisions');const e=new BattleEngine();e.reset([{specId:'retribution',count:1}],specs,42);const ship=e.ships[0];ship.heading=0;expect(hullRadiusAt(ship,Math.PI/2)).toBeLessThan(ship.radius*.4);expect(hullRadiusAt(ship,0)).toBeGreaterThan(ship.radius*.8);
+});
+test('re-entry cannot resample a longer reaction window and evade the same old hit again',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver'),{simulationSeconds}=await import('../src/sim/pacing');
+ const e=new BattleEngine();e.reset([{specId:'terrapin',count:1},{specId:'idris-p',count:1}],specs,42);const[s,boss]=e.ships;
+ Object.assign(s,{x:1000,y:0,lastHit:0});Object.assign(boss,{x:0,y:0,heading:0});
+ const prior={target:boss.id,phase:'extend' as const,caution:.45,side:1};
+ const rejoin=attackNavigation(s,boss,simulationSeconds(.6),prior,false,()=>1);
+ expect(rejoin.state.phase).toBe('strike');expect(rejoin.state.caution).toBe(.45);
+ const next=attackNavigation(s,boss,simulationSeconds(.62),rejoin.state,false,()=>1);
+ expect(next.state.phase).toBe('strike');
+ s.lastHit=simulationSeconds(.63);expect(attackNavigation(s,boss,s.lastHit,next.state,false,()=>1).state.phase).toBe('extend');
 });
 
 test('large ships approach range and sidestep fire without reversing from an already reachable small target',async()=>{

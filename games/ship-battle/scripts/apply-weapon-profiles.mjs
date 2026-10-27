@@ -4,22 +4,23 @@ import {applyFleetWeapons,applyFleetGunFirepower,usesFleetWeapons,FLEET_WEAPON_V
 const root=new URL('../',import.meta.url);
 const statRules=JSON.parse(await readFile(new URL('src/data/ship-game-balance.json',root),'utf8'));
 const layouts=JSON.parse(await readFile(new URL('src/data/turret-layouts.json',root),'utf8'));
+const layoutFor=id=>layouts.ships[layouts.ships[id]?.aliasOf??id];
 export function applyTurretLayouts(ships){
   for(const ship of ships){
-    const layout=layouts.ships[ship.id];if(!layout)continue;
+    const layout=layoutFor(ship.id);if(!layout)continue;
     const before=ship.mounts.filter(m=>m.kind==='turret'),budget=before.reduce((sum,m)=>sum+m.damage/m.cooldown,0);
     if(layout.turretCount){
       const template=before[0];if(!template)throw new Error(`Missing turret template ${ship.id}`);
       for(let i=1;i<=layout.turretCount;i++)if(!ship.mounts.some(m=>m.id===`turret-${i}`))ship.mounts.push({...template,id:`turret-${i}`});
     }
-    for(const mount of ship.mounts){const point=layout.mounts[mount.id];if(point&&mount.kind==='turret')Object.assign(mount,point);}
+    for(const mount of ship.mounts){const point=layout.mounts[mount.id];if(point)Object.assign(mount,point);}
     if(layout.preserveTurretDps){
       const turrets=ship.mounts.filter(m=>m.kind==='turret'),total=turrets.reduce((sum,m)=>sum+m.damage/m.cooldown,0);
       if(total>0)for(const mount of turrets)mount.damage=Number((mount.damage*budget/total).toFixed(6));
     }
   }return ships;
 }
-export function turretLayoutVersion(id){return Math.max(layouts.ships[id]?(layouts.ships[id].version??layouts.version):0,usesFleetWeapons(id)?4:0);}
+export function turretLayoutVersion(id){const layout=layoutFor(id);return Math.max(layout?(layout.version??layouts.version):0,usesFleetWeapons(id)?4:0);}
 const profiles=JSON.parse(await readFile(new URL('src/data/weapon-profiles.json',root),'utf8'));
 export function weaponProfileVersion(id,fallback){const p=profiles.ships.find(p=>p.id===id);return Math.max(statRules.combatVersion,p?(p.combatVersion??profiles.version):fallback,profiles.capitalCoverage?.ships[id]?profiles.capitalCoverage.version:0,usesFleetWeapons(id)?FLEET_WEAPON_VERSION:0,fittingVersion(id));}
 export function applyCapitalCoverage(ships){

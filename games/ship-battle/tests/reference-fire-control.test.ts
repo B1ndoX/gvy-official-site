@@ -63,6 +63,24 @@ test('turret world traverse stays bounded when the hull rotates beneath it',()=>
  for(let i=0;i<120;i++){e.step();const next=wrap(a.heading+a.turretAngles[0]);expect(Math.abs(wrap(next-previous))).toBeLessThanOrEqual(m.turnRate/60+1e-8);previous=next;}
  expect(Math.abs(wrap(a.heading+a.turretAngles[0]-Math.atan2(300,600)))).toBeGreaterThan(.05);
 });
+test.each([false,true])('a gunner continues firing through normal tracking lag without snapping rounds onto the target (boss=%s)',boss=>{
+ const m=find('scorpius').mounts.find(m=>m.fireControl==='remote')!,e=fixture(m),[gunner,target]=e.ships;
+ if(boss)gunner.npc='boss';
+ let lastShot=0,longestGap=0,offAimShots=0,previousShots=0;
+ for(let i=0;i<320;i++){
+  const angle=e.time*.12;Object.assign(target,{x:600*Math.cos(angle),y:600*Math.sin(angle),vx:-72*Math.sin(angle),vy:72*Math.cos(angle)});
+  e.step();
+  if(e.shots>previousShots){
+   if(lastShot)longestGap=Math.max(longestGap,e.time-lastShot);lastShot=e.time;
+   const goal=gunner.weaponCycles![0].aimAngle!,actual=gunner.heading+gunner.turretAngles[0];
+   if(Math.abs(wrap(goal-actual))>.03)offAimShots++;
+   const launched=e.projectiles.filter(p=>p.owner===gunner.id).at(-1);if(launched)expect(Math.abs(wrap(launched.angle-actual))).toBeLessThan(.04);
+  }
+  previousShots=e.shots;
+ }
+ expect(e.shots).toBeGreaterThan(30);expect(offAimShots).toBeGreaterThan(10);
+ expect(longestGap).toBeLessThan(.5);expect(e.time-lastShot).toBeLessThan(.5);
+});
 test('750 RPM is preserved within a charged burst across fractional fixed-step intervals',()=>{
  const m=find('scorpius').mounts.find(m=>m.fireControl==='pilot')!,e=fixture(m);
  for(let i=0;i<320;i++)e.step();expect(Math.abs(e.shots-50)).toBeLessThanOrEqual(1); // Four real seconds before capacitor depletion, source CF-337 is 750 RPM.
