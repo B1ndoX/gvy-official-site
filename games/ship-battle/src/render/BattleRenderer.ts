@@ -4,17 +4,21 @@ import 'pixi.js/unsafe-eval';
 import { Application, Container, Graphics, Sprite, Text, Texture, Assets, Rectangle } from 'pixi.js';
 import { BattleEngine, STEP } from '../sim/engine';
 import { simulationSeconds } from '../sim/pacing';
-import type { Ship, BattleSnapshot } from '../sim/types';
+import type { Ship, BattleSnapshot, BattleEvent, Vec } from '../sim/types';
 import { clamp, mountWorld } from '../sim/math';
 import { assetURL, type ShipAsset } from '../assets/library';
 import { CombatDirector, engagementFrame, shipFocusSpan, trackedCenter, spectatorSpan } from './CombatDirector';
 import { drawWeaponEffects } from './WeaponEffects';
 import { CombatVfx } from './CombatVfx';
+import { createHullMask, HullImpactAnchors, type HullMask } from './HullImpact';
+import type {WeaponHullProfile} from '../sim/weapon-hull';
 
 interface Visual { root:Container; annotation:Container; sprite:Sprite|null; marker:Graphics; label:Text; bars:Graphics; textureId:string }
 export class BattleRenderer {
   app=new Application(); world=new Container(); effects=new Graphics(); grid=new Graphics();terrain=new Graphics();terrainSprites=new Container();private rockTexture:Texture|null=null;private rockSprites=new Map<number,Sprite>(); labels=new Container();
   visuals=new Map<number,Visual>(); textures=new Map<string,Texture>();private outlines=new Map<string,{x:number;y:number}[]>();
+  private hullMasks=new Map<string,HullMask>();private impactAnchors=new HullImpactAnchors();
+  private weaponHulls=new Map<string,WeaponHullProfile>();
   selected:number|null=null; speed=1; zoom=1; scale=.3; center={x:0,y:0}; fps=60; onSnapshot:(s:BattleSnapshot)=>void=()=>{};
   private mounted=false;private disposed=false;private accumulator=0;private hud=0;private pointer:{x:number;y:number;startX:number;startY:number;centerX:number;centerY:number}|null=null;
   private resizeObserver:ResizeObserver|null=null;
@@ -31,6 +35,7 @@ export class BattleRenderer {
     if(this.disposed){this.app.destroy(true,{children:true,texture:false});return;}
     this.element.appendChild(this.app.canvas);this.app.canvas.setAttribute('aria-label','星际飞船自动战斗画面，双指或滚轮缩放，单指拖动，点击舰船查看状态');this.app.canvas.style.touchAction='none';
     this.vfx=new CombatVfx();
+    await this.vfx.loadOrdnance();if(this.disposed)return;
     this.app.stage.addChild(this.world);this.world.addChild(this.grid,this.terrain,this.terrainSprites,this.vfx.exhaust,this.effects,this.vfx.foreground,this.labels);
     this.app.canvas.addEventListener('wheel',this.wheel,{passive:false});
     this.app.canvas.addEventListener('pointerdown',this.down);this.app.canvas.addEventListener('pointermove',this.move);this.app.canvas.addEventListener('pointerup',this.up);this.app.canvas.addEventListener('pointercancel',this.cancel);this.app.canvas.addEventListener('lostpointercapture',this.cancel);
@@ -50,26 +55,36 @@ export class BattleRenderer {
   }
   get activeAssetURLs(){return [...this.loadedURLs];}
   async setAssets(assets:ShipAsset[],ids:string[],onProgress?:(loaded:number,total:number)=>void){
-    const request=++this.assetRequest,next=new Map<string,Texture>(),outlines=new Map<string,{x:number;y:number}[]>();
+    const request=++this.assetRequest,next=new Map<string,Texture>(),outlines=new Map<string,{x:number;y:number}[]>(),masks=new Map<string,HullMask>();
     const needed=new Set(ids),urls=new Set(assets.filter(a=>needed.has(a.shipId)).map(assetURL));
     const selected=assets.filter(a=>needed.has(a.shipId));let loaded=0;onProgress?.(0,selected.length);
-    await Promise.all(selected.map(async a=>{const texture=await Assets.load<Texture>(assetURL(a));next.set(a.shipId,texture);outlines.set(a.shipId,this.outline(texture));if(request===this.assetRequest&&!this.disposed)onProgress?.(++loaded,selected.length);}));
+    await Promise.all(selected.map(async a=>{const texture=await Assets.load<Texture>(assetURL(a));next.set(a.shipId,texture);const hull=this.outline(texture);outlines.set(a.shipId,hull.points);if(hull.mask)masks.set(a.shipId,hull.mask);if(request===this.assetRequest&&!this.disposed)onProgress?.(++loaded,selected.length);}));
     if(this.disposed||request!==this.assetRequest)return;
     const stale=[...this.loadedURLs].filter(url=>!urls.has(url));
-    this.assetMap=new Map(assets.map(a=>[a.shipId,a]));this.textures=next;this.outlines=outlines;
+    this.assetMap=new Map(assets.map(a=>[a.shipId,a]));this.textures=next;this.outlines=outlines;this.hullMasks=masks;
+    this.weaponHulls=new Map(selected.flatMap(asset=>{const mask=masks.get(asset.shipId);return mask?[[asset.shipId,{asset:{center:{...asset.center},noseDegrees:asset.noseDegrees},mask}] as const]:[];}));
+    this.engine.weaponHulls=this.weaponHulls;
     this.clearVisuals();
     this.loadedURLs=urls;await Promise.all(stale.map(url=>Assets.unload(url)));
   }
-  clearVisuals(){for(const v of this.visuals.values()){v.root.destroy({children:true,texture:false});v.annotation.destroy({children:true,texture:false});}this.visuals.clear();this.vfx?.reset();}
+  clearVisuals(){for(const v of this.visuals.values()){v.root.destroy({children:true,texture:false});v.annotation.destroy({children:true,texture:false});}this.visuals.clear();this.impactAnchors.reset();this.vfx?.reset();}
   get vfxStats(){return this.vfx?.stats??null;}
   private outline(texture:Texture){
     // Sample the real alpha silhouette once, so rotated transparent corners do not push names away.
     try{const canvas=document.createElement('canvas');canvas.width=texture.width;canvas.height=texture.height;const ctx=canvas.getContext('2d',{willReadFrequently:true})!;ctx.drawImage(texture.source.resource as CanvasImageSource,0,0);const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data,points:{x:number;y:number}[]=[];
       for(let y=0;y<canvas.height;y+=Math.max(1,Math.floor(canvas.height/100))){let left=0,right=canvas.width-1;while(left<canvas.width&&pixels[(y*canvas.width+left)*4+3]<32)left++;while(right>=left&&pixels[(y*canvas.width+right)*4+3]<32)right--;if(right>=left){points.push({x:left/canvas.width,y:y/canvas.height},{x:right/canvas.width,y:y/canvas.height});}}
-      if(points.length)return points;
+      if(points.length)return {points,mask:createHullMask(canvas.width,canvas.height,pixels)};
     }catch{/* A readable alpha mask is optional; imported textures still render. */}
-    return [{x:0,y:0},{x:1,y:0},{x:0,y:1},{x:1,y:1}];
+    return {points:[{x:0,y:0},{x:1,y:0},{x:0,y:1},{x:1,y:1}],mask:null};
   }
+  private hitImpact=(ev:BattleEvent)=>{
+    const ship=this.engine.ships.find(s=>s.id===ev.ship),asset=ship&&this.assetMap.get(ship.spec.id),mask=ship&&this.hullMasks.get(ship.spec.id);
+    return ship&&asset&&mask?this.impactAnchors.event(ev,ship,asset,mask):ev;
+  };
+  private beamImpact=(id:number|undefined,from:Vec,to:Vec)=>{
+    const ship=this.engine.ships.find(s=>s.id===id),asset=ship&&this.assetMap.get(ship.spec.id),mask=ship&&this.hullMasks.get(ship.spec.id);
+    return ship&&asset&&mask?this.impactAnchors.beam(from,to,ship,asset,mask):to;
+  };
   private bounds(){const ships=this.engine.phase==='ready'?this.engine.ships:this.engine.living;if(!ships.length)return {x:0,y:0,span:3000};const left=Math.min(...ships.map(s=>s.x-s.radius)),right=Math.max(...ships.map(s=>s.x+s.radius)),top=Math.min(...ships.map(s=>s.y-s.radius)),bottom=Math.max(...ships.map(s=>s.y+s.radius));return {x:(left+right)/2,y:(top+bottom)/2,span:Math.max(650,right-left+350,bottom-top+450)};}
   get focusEnabled(){return this.cameraMode==='combat';}
   get zoomPercent(){return this.scale*this.zoom*this.referenceSpan/Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))*100;}
@@ -182,9 +197,6 @@ export class BattleRenderer {
     const rockIds=new Set(this.engine.asteroids.map(r=>r.id));for(const [id,sprite] of this.rockSprites)if(!rockIds.has(id)){sprite.destroy();this.rockSprites.delete(id);}
     for(const rock of this.engine.asteroids){if(this.rockTexture){let sprite=this.rockSprites.get(rock.id);if(!sprite){sprite=new Sprite(this.rockTexture);sprite.anchor.set(.5);this.terrainSprites.addChild(sprite);this.rockSprites.set(rock.id,sprite);}sprite.position.set(rock.x,rock.y);sprite.rotation=rock.rotation;sprite.width=rock.radius*2;sprite.height=rock.radius*2*this.rockTexture.height/this.rockTexture.width;continue;}const points:number[]=[];for(let i=0;i<11;i++){const a=i*Math.PI*2/11+rock.rotation,rad=rock.radius*(.83+.17*Math.sin(i*2.39+rock.id)**2);points.push(rock.x+Math.cos(a)*rad,rock.y+Math.sin(a)*rad);}this.terrain.poly(points).fill({color:0x39434c,alpha:.95}).stroke({color:0x8d9caa,alpha:.55,width:1.2*px});this.terrain.circle(rock.x-rock.radius*.2,rock.y-rock.radius*.12,rock.radius*.3).fill({color:0x171f29,alpha:.6});this.terrain.circle(rock.x+rock.radius*.27,rock.y+rock.radius*.3,rock.radius*.17).fill({color:0x1e2731,alpha:.65});}
     const occupied:{left:number;right:number;top:number;bottom:number}[]=[];
-    const r=this.engine.arena;
-    for(let i=1;i<=4;i++)g.circle(0,0,r*i/4).stroke({color:0xc6a36b,alpha:.12,width:px});
-    g.moveTo(-r,0).lineTo(r,0).moveTo(0,-r).lineTo(0,r).stroke({color:0xc6a36b,alpha:.09,width:px});
     for(const s of this.engine.ships){
       let v=this.visuals.get(s.id);if(!v){v=this.makeVisual(s);this.visuals.set(s.id,v);}
       const {root,annotation,sprite,marker,label,bars}=v;root.visible=annotation.visible=s.alive;if(!s.alive)continue;
@@ -223,8 +235,8 @@ export class BattleRenderer {
         }
       }
     }
-    if(this.vfx){drawWeaponEffects(this.engine,e,px,this.vfx);this.vfx.events(this.engine);this.vfx.end();}
+    if(this.vfx){drawWeaponEffects(this.engine,e,px,this.vfx,this.beamImpact);this.vfx.events(this.engine,this.hitImpact);this.vfx.end();}
     // Wakes sit beneath hulls; weapon feedback sits above hulls and beneath labels.
   }
-  destroy(){this.disposed=true;this.resizeObserver?.disconnect();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.canvas.removeEventListener('lostpointercapture',this.cancel);this.pointers.clear();this.pointer=null;this.pinch=null;this.vfx?.destroy();this.vfx=null;this.app.destroy(true,{children:true,texture:false});}
+  destroy(){this.disposed=true;this.resizeObserver?.disconnect();this.impactAnchors.reset();if(this.engine.weaponHulls===this.weaponHulls)this.engine.weaponHulls=new Map();this.weaponHulls.clear();this.hullMasks.clear();this.outlines.clear();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.canvas.removeEventListener('lostpointercapture',this.cancel);this.pointers.clear();this.pointer=null;this.pinch=null;this.vfx?.destroy();this.vfx=null;this.app.destroy(true,{children:true,texture:false});}
 }

@@ -36,7 +36,7 @@ test('source armor modifies only weapon overflow into hull, never shield absorpt
  expect(impact('laser',50).shield).toBe(0);expect(impact('laser',50).hull).toBeCloseTo(9970);
  expect(impact('ballistic',50).shield).toBeCloseTo(25);expect(impact('ballistic',50).hull).toBeCloseTo(9943.75);expect(impact('laser',200).shield).toBeCloseTo(100);expect(impact('laser',200).hull).toBe(10000);
  const e=new BattleEngine();e.reset([{specId:'gladius',count:1},{specId:'polaris',count:1}],ships,42);const [a,b]=e.ships;
- expect(shipMass(a)).toBe(a.spec.mass);expect(shipMass(b)).toBe(b.spec.mass);expect(shipImpact(a,b,80,1,0).a).toBe(0);expect(shipImpact(a,b,200,1,0).a).toBeLessThanOrEqual(a.spec.hull*.05);
+ expect(shipMass(a)).toBe(a.spec.mass);expect(shipMass(b)).toBe(b.spec.mass);expect(shipImpact(a,b,(a.spec.speed+b.spec.speed)*.2).a).toBe(0);expect(shipImpact(a,b,200).ordinaryA).toBeLessThanOrEqual(a.spec.hull*.05);
 });
 test('stock cached length follows the new source version while calibrated or custom artwork keeps its geometry',()=>{
  const builtin=manifest.assets.find(s=>s.shipId==='polaris') as ShipAsset,old={...structuredClone(builtin),length:166,beam:83.498,combatVersion:13};

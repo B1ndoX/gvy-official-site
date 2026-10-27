@@ -1590,30 +1590,118 @@ html[data-motion-ready] :is(
 .recruit-actions {
   display: flex;
   margin-top: 45px;
+  scroll-margin-top: 135px;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   gap: 26px;
 }
 
-.recruit-actions a,
-.recruit-brawl-button {
-  padding: 13px 21px;
-  border: 1px solid rgba(216, 182, 106, 0.58);
-  color: var(--fleet-gold);
-  background: transparent;
+/* GVY-UI-B02: Lit up borders / Brutal, adapted from the inspected Aceternity examples. */
+.recruit-rsi-button {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 8px;
+  color: #f3f1ff;
+  background: linear-gradient(100deg, #635bff, #b33fff);
   font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+}
+.recruit-rsi-button > span {
+  padding: 13px 25px;
+  border-radius: 5px;
+  background: #06080e;
+  transition: background 180ms ease;
+}
+.recruit-rsi-button:is(:hover, :focus-visible) > span { background: #06080e66; }
+.game-command-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 13px 21px;
+  border: 1px solid #e5c57e;
+  border-radius: 2px;
+  color: #f1d79c;
+  background: #0c151f;
+  box-shadow: 4px 4px 0 #82704b;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   cursor: pointer;
-  transition: color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+  transition: color 160ms ease, background 160ms ease, transform 160ms ease, box-shadow 160ms ease;
 }
-
-.recruit-actions a:is(:hover, :focus-visible),
-.recruit-brawl-button:is(:hover, :focus-visible) {
-  color: var(--space-black);
-  background: var(--fleet-gold);
-  box-shadow: 0 0 24px rgba(216, 182, 106, 0.16);
+.game-command-button svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
+.game-command-button:is(:hover, :focus-visible) {
+  color: #0c151f;
+  background: #e5c57e;
+}
+.game-command-button:active { transform: translate(3px, 3px); box-shadow: 1px 1px 0 #82704b; }
+/* Aceternity Moving Border: a soft light follows the rounded perimeter in 3s.
+   Native motion-path replaces the reference's React/Motion frame callback. */
+.fleet-games-jump {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  min-height: 44px;
+  margin-left: 26px;
+  padding: 1px;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  color: #e2e8f0;
+  background: #1e293b;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.fleet-games-border { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
+.fleet-games-border::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(#0ea5e9 40%, transparent 60%);
+  opacity: 0.8;
+  content: "";
+  offset-path: inset(0 round 30%);
+  offset-anchor: 50% 50%;
+  offset-rotate: 0deg;
+  animation: fleet-games-border-orbit 3s linear infinite;
+}
+.fleet-games-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #1e293b;
+  border-radius: calc(1.75rem * 0.96);
+  background: #0f172a;
+  transition: background 180ms ease, color 180ms ease;
+}
+.fleet-games-label svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.fleet-games-jump:is(:hover, :focus-visible) .fleet-games-label { color: #f8fafc; background: #152034; }
+.fleet-games-jump:focus-visible { outline: 2px solid #7dd3fc; outline-offset: 3px; }
+@keyframes fleet-games-border-orbit { to { offset-distance: 100%; } }
 
 /* GVY-UI-A01: Aceternity Tailwind Connect capsule, with local copy feedback. */
 .recruit-contact {
@@ -1746,6 +1834,8 @@ html[data-motion-ready] :is(
 @media (prefers-reduced-motion: reduce) {
   .recruit-copy-button::before,
   .recruit-copy-button::after { transition: none; }
+  .fleet-games-border::before { animation: none; offset-distance: 20%; }
+  .fleet-games-label { transition: none; }
 }
 
 .recruit-actions strong {
@@ -2219,10 +2309,15 @@ noscript {
   }
 
   .fleet-brand {
+    grid-row: 1;
+    grid-column: 1;
     width: max-content;
     padding-inline: 17px;
     gap: 7px;
   }
+  .fleet-games-jump { grid-row: 1; grid-column: 1; justify-self: end; align-self: center; margin: 0 17px 0 0; font-size: 0.62rem; }
+  .fleet-games-label { padding: 10px 11px; gap: 6px; }
+  .fleet-games-jump svg { width: 18px; height: 18px; }
   .brand-sigil { width: 36px; height: 36px; }
   .brand-copy strong { font-size: 0.76rem; }
   .brand-copy small { font-size: 0.46rem; }
@@ -2429,6 +2524,7 @@ noscript {
   .featured-archive { margin-top: 7.2vh; gap: 58px; }
   .archive-feature,
   .archive-feature:nth-child(even) { display: block; }
+  .archive-feature button { width: 100%; }
   .archive-feature:nth-child(even) button,
   .archive-feature:nth-child(even) > div { grid-column: auto; grid-row: auto; }
   .archive-feature > div { padding-top: 21px; }

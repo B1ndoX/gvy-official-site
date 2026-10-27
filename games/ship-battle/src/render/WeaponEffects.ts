@@ -1,6 +1,6 @@
 import type { Graphics } from 'pixi.js';
 import type { BattleEngine } from '../sim/engine';
-import type { Projectile } from '../sim/types';
+import type { Projectile,Vec } from '../sim/types';
 import { clamp,mountWorld } from '../sim/math';
 import {simulationSeconds} from '../sim/pacing';
 import type {CombatVfx} from './CombatVfx';
@@ -14,11 +14,11 @@ export function torpedoVisualScale(projectile:Pick<Projectile,'weaponSize'|'widt
 /** Game silhouettes in world metres, not fixed screen pixels. Not source dimensions. */
 export function ordnanceVisualLength(p:Pick<Projectile,'weaponSize'|'kind'>){
  const size=clamp(Math.round(p.weaponSize??(p.kind==='torpedo'?5:2)),1,12);
- return [.55,.8,1.2,1.8,2.4,3.6,4.8,6,8,10,12,14][size-1];
+ return [.55,.8,1.2,1.8,2.4,3.6,4.8,6,8,10,12,14][size-1]*(p.kind==='torpedo'?1.6:1);
 }
 
 /** Physical rays/casings remain geometry; soft light is batched in the shared atlas. */
-export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:CombatVfx){
+export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:CombatVfx,impactPoint?:(ship:number|undefined,from:Vec,to:Vec)=>Vec){
   for(const s of engine.ships){
     if(!s.alive)continue;
     s.weaponCycles?.forEach((cycle,i)=>{
@@ -32,11 +32,12 @@ export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:C
     const owner=engine.ships.find(s=>s.id===b.owner),m=owner?.spec.mounts[b.mount];if(!owner?.alive||!m)continue;
     const color=m.color??0x6edbff,fade=Math.min(1,b.elapsed/.12,b.remaining/.16);
     const width=m.beamWidth??Math.max(1.2*px,Math.min(6*px,(m.width??3)*2));
-    for(const {from,to,hit} of b.segments){
-      vfx.streak(from.x,from.y,to.x,to.y,width*(m.beamWidth?2.1:6),color,.15*fade);
-      vfx.streak(from.x,from.y,to.x,to.y,width*(m.beamWidth?.65:1.1),0xe5f8ff,.9*fade);
+    for(const {from,to,hit,ship} of b.segments){
+      const end=hit?impactPoint?.(ship,from,to)??to:to;
+      vfx.streak(from.x,from.y,end.x,end.y,width*(m.beamWidth?2.1:6),color,.15*fade);
+      vfx.streak(from.x,from.y,end.x,end.y,width*(m.beamWidth?.65:1.1),0xe5f8ff,.9*fade);
       vfx.glow(from.x,from.y,width*2,color,.5*fade);
-      if(hit)vfx.glow(to.x,to.y,width*2,0xffe8b3,.7*fade);
+      if(hit)vfx.glow(end.x,end.y,width*2,0xffe8b3,.7*fade);
     }
   }
   for(const p of engine.projectiles){
@@ -46,11 +47,13 @@ export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:C
       vfx.wake(`p${p.id}`,p.x,p.y,engine.time,.85,Math.max(100,p.speed*.65),width*.5,0xf5ad68,.35);
       const point=(x:number,y:number)=>({x:p.x+dx*x-dy*y,y:p.y+dy*x+dx*y});
       const polygon=(points:number[])=>points.flatMap((_,i)=>i%2?[]:Object.values(point(points[i],points[i+1])));
-      // A faceted casing, tapered nose and swept tail fins stay readable at game scale.
+      if(!vfx.ordnance?.(p,length*2)){
+      // Fallback only: unverified models keep the prior world-scaled silhouette.
       e.poly(polygon([-length*.48,-width,-length*.83,-width*2.6,-length*1.02,-width*2.6,-length*.88,0,-length*1.02,width*2.6,-length*.83,width*2.6,-length*.48,width])).fill(0x8797a2);
       e.poly(polygon([length,0,length*.6,-width,-length*.83,-width,-length,-width*.55,-length,width*.55,-length*.83,width,length*.6,width])).fill(0xb9c7ce).stroke({color:0xe3edf2,width:Math.min(.55*px,width*.35),alpha:.8});
       e.poly(polygon([length*.48,-width*.55,-length*.73,-width*.55,-length*.84,width*.5,length*.57,width*.5])).fill(0x263642);
       const nose=point(length*.65,0),tip=point(length,0);e.moveTo(nose.x,nose.y).lineTo(tip.x,tip.y).stroke({color:0xf2f7fa,width:Math.min(.8*px,width*.4)});
+      }
       const nozzle=point(-length,0);
       vfx.plume(nozzle.x,nozzle.y,p.angle+Math.PI,length*(.85+.08*Math.sin(engine.time*37+p.id)),width*5,0xff9452,.6);
       vfx.glow(nozzle.x,nozzle.y,width*1.8,0xffd4a0,.85);
@@ -68,8 +71,10 @@ export function drawWeaponEffects(engine:BattleEngine,e:Graphics,px:number,vfx:C
         vfx.plume(p.x,p.y,p.angle+Math.PI,missileLength*.75,missileLength*.35,0xffbb79,.65);
       }
       const width=missile?missileLength*.12:ballistic?Math.min(2.4,p.width??1.2)*px:1.2*px;
-      vfx.streak(p.x-dx*tail,p.y-dy*tail,p.x,p.y,width*3,color,.22);
-      vfx.streak(p.x-dx*tail*.7,p.y-dy*tail*.7,p.x,p.y,width,color,.95);
+      if(!missile||!vfx.ordnance?.(p,missileLength)){
+        vfx.streak(p.x-dx*tail,p.y-dy*tail,p.x,p.y,width*3,color,.22);
+        vfx.streak(p.x-dx*tail*.7,p.y-dy*tail*.7,p.x,p.y,width,color,.95);
+      }
       if(p.impact==='heavy-cannon')vfx.glow(p.x,p.y,2.3*px,0xffe6bd,.6);
     }
   }

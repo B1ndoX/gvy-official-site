@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "enabled": true,
+  "weaponDamage": 2,
+  "collisionDamage": 1.2,
+  "torpedoSpeedAtS5": 420,
+  "torpedoSpeedPower": 1.2,
+  "hullStartLength": 40,
+  "hullFullLength": 400,
+  "hullMaxReduction": 0.4
+}

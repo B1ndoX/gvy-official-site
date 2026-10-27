@@ -1,15 +1,29 @@
 import {expect,test} from 'vitest';
 import data from '../src/data/ships.json';
 import config from '../src/data/fleet-combat-tuning.json';
-import {prepareCombatSpecs} from '../src/sim/combat-tuning';
+import {prepareCombatSpecs as prepareSpecs} from '../src/sim/combat-tuning';
+import fleetRules from '../src/data/fleet-gameplay-balance.json';
 import {BattleEngine} from '../src/sim/engine';
 import type {ShipSpec} from '../src/sim/types';
 const source=data as ShipSpec[],rules={...config,enabled:true};
+const prepareCombatSpecs=(specs:ShipSpec[],settings:typeof config)=>prepareSpecs(specs,settings,{...fleetRules,enabled:false});
 test('encounter tuning changes no member or base ship health, weapons, mobility or source data',()=>{
  const before=JSON.stringify(source),game=prepareCombatSpecs(source,rules),find=(rows:ShipSpec[],id:string)=>rows.find(s=>s.id===id)!;
  expect(find(game,'idris-p').hull).toBe(find(source,'idris-p').hull);
  for(const s of game){const original=find(source,s.id);expect(s.hull).toBe(original.hull);expect(s.shield).toBe(original.shield);expect(s.mounts).toBe(original.mounts);expect(s.speed).toBe(original.speed);expect(s.length).toBe(original.length);expect(s.mass).toBe(original.mass);expect(s.shieldRegen/s.shield).toBeCloseTo(original.shieldRegen/original.shield);}
  expect(JSON.stringify(source)).toBe(before);expect(prepareCombatSpecs(source,{...rules,enabled:false})).toBe(source);
+ for(const ship of game){const {encounterTuning,...base}=ship;expect(base).toEqual(find(source,ship.id));expect(encounterTuning).toBeDefined();}
+});
+test('each new challenge wave uses the same NPC-only curve and preserves every member resource',()=>{
+ const specs=prepareCombatSpecs(source,rules),e=new BattleEngine();e.reset([{specId:'gladius',count:2},{specId:'mauler',count:1,npc:'boss'}],specs,31,'challenge');e.start();
+ const ids=['mauler','odin','pegasus','bengal','retribution'];
+ for(let wave=0;wave<ids.length;wave++){
+  const boss=e.snapshot().boss!,base=source.find(s=>s.id===ids[wave])!,ratio=2/32;
+  expect(boss.spec.id).toBe(ids[wave]);expect(boss.spec.hull).toBe(Math.round(rules.referenceHull*(base.hull/rules.referenceHull)**rules.hullPower*rules.bossHealth*ratio));
+  boss.spec.mounts.forEach((m,i)=>{expect(m.damage).toBeCloseTo(base.mounts[i].damage*rules.bossDamage*Math.sqrt(ratio));expect(m.cooldown).toBe(base.mounts[i].cooldown);expect(m.ammo).toBe(base.mounts[i].ammo);expect(m.fireControl).toBe(base.mounts[i].fireControl);});
+  for(const member of e.ships.filter(s=>!s.npc)){expect(member.spec.mounts).toEqual(source.find(s=>s.id===member.spec.id)!.mounts);expect(member.spec.hull).toBe(source.find(s=>s.id===member.spec.id)!.hull);}
+  if(wave<ids.length-1){boss.alive=false;e.step();for(let i=0;i<1000&&e.wave===wave+1;i++)e.step();}
+ }
 });
 test('boss difficulty is applied only after the same base conversion, with continuous population scaling',()=>{
  const game=prepareCombatSpecs(source,rules),base=game.find(s=>s.id==='mauler')!;
