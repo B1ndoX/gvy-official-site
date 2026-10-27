@@ -1,0 +1,1199 @@
+{
+  "version": 2,
+  "file": "assets/ordnance/ordnance-r21.webp",
+  "width": 256,
+  "height": 504,
+  "sha256": "6ce055d62662d8e2308cf6625daf41629fef478f61bb57baac878ff12dca8563",
+  "note": "Eleven source-photo sprites plus ten bot-reviewed reference sprites. Bot reference images may be Image2 renditions, not official original pixels. Missing models share the same weapon size; artwork never changes physics.",
+  "assets": [
+    {
+      "weaponId": "s1-spark-i-missile",
+      "frame": [
+        69,
+        2,
+        118,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/0/0a/FSKI_Spark_S1.png?b13a1",
+      "mask": [
+        [
+          0.121,
+          0.68
+        ],
+        [
+          0.14,
+          0.64
+        ],
+        [
+          0.69,
+          0.37
+        ],
+        [
+          0.7,
+          0.328
+        ],
+        [
+          0.766,
+          0.292
+        ],
+        [
+          0.788,
+          0.3
+        ],
+        [
+          0.81,
+          0.33
+        ],
+        [
+          0.846,
+          0.316
+        ],
+        [
+          0.884,
+          0.33
+        ],
+        [
+          0.913,
+          0.37
+        ],
+        [
+          0.92,
+          0.41
+        ],
+        [
+          0.9,
+          0.448
+        ],
+        [
+          0.865,
+          0.47
+        ],
+        [
+          0.84,
+          0.49
+        ],
+        [
+          0.82,
+          0.51
+        ],
+        [
+          0.787,
+          0.525
+        ],
+        [
+          0.762,
+          0.513
+        ],
+        [
+          0.74,
+          0.522
+        ],
+        [
+          0.176,
+          0.8
+        ],
+        [
+          0.155,
+          0.8
+        ],
+        [
+          0.138,
+          0.775
+        ],
+        [
+          0.125,
+          0.738
+        ]
+      ],
+      "nose": [
+        0.14,
+        0.73
+      ],
+      "tail": [
+        0.88,
+        0.4
+      ],
+      "originalSHA256": "9cec1322f4129b683850265531852f08d8a9cdc5aaf2014dec10d5c6439ff7f6"
+    },
+    {
+      "weaponId": "s5-reaper-v-missile",
+      "frame": [
+        56,
+        26,
+        144,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/6/6e/TALN_Reaper_S5.png?rtoml",
+      "mask": [
+        [
+          0.13,
+          0.65
+        ],
+        [
+          0.145,
+          0.605
+        ],
+        [
+          0.818,
+          0.237
+        ],
+        [
+          0.88,
+          0.237
+        ],
+        [
+          0.893,
+          0.27
+        ],
+        [
+          0.89,
+          0.3
+        ],
+        [
+          0.907,
+          0.325
+        ],
+        [
+          0.902,
+          0.35
+        ],
+        [
+          0.86,
+          0.397
+        ],
+        [
+          0.2,
+          0.755
+        ],
+        [
+          0.155,
+          0.74
+        ]
+      ],
+      "nose": [
+        0.16,
+        0.69
+      ],
+      "tail": [
+        0.88,
+        0.31
+      ],
+      "originalSHA256": "851020824215e5bf0f81edd0222d56f4fbcd493b3db2d54f3396aa5684cc899c"
+    },
+    {
+      "weaponId": "s3-arrester-iii-missile",
+      "frame": [
+        67,
+        50,
+        123,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/6/6d/FSKI_Arrester_S3.png?5uc83",
+      "mask": [
+        [
+          0.13,
+          0.87
+        ],
+        [
+          0.19,
+          0.72
+        ],
+        [
+          0.58,
+          0.36
+        ],
+        [
+          0.67,
+          0.28
+        ],
+        [
+          0.72,
+          0.22
+        ],
+        [
+          0.72,
+          0.31
+        ],
+        [
+          0.81,
+          0.23
+        ],
+        [
+          0.82,
+          0.14
+        ],
+        [
+          0.845,
+          0.13
+        ],
+        [
+          0.846,
+          0.23
+        ],
+        [
+          0.865,
+          0.215
+        ],
+        [
+          0.888,
+          0.24
+        ],
+        [
+          0.897,
+          0.295
+        ],
+        [
+          0.89,
+          0.35
+        ],
+        [
+          0.875,
+          0.36
+        ],
+        [
+          0.87,
+          0.44
+        ],
+        [
+          0.845,
+          0.47
+        ],
+        [
+          0.83,
+          0.41
+        ],
+        [
+          0.79,
+          0.39
+        ],
+        [
+          0.72,
+          0.48
+        ],
+        [
+          0.7,
+          0.54
+        ],
+        [
+          0.66,
+          0.58
+        ],
+        [
+          0.62,
+          0.56
+        ],
+        [
+          0.19,
+          0.92
+        ],
+        [
+          0.135,
+          0.92
+        ]
+      ],
+      "nose": [
+        0.14,
+        0.88
+      ],
+      "tail": [
+        0.88,
+        0.29
+      ],
+      "originalSHA256": "30f1d41d0e45bf1005c007daf660787463521874114b9c3bd6f477a4e586f38e"
+    },
+    {
+      "weaponId": "s1-marksman-i-missile",
+      "frame": [
+        90,
+        74,
+        76,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/b/b4/BEHR_Marksman_S1.png?lhmhe",
+      "mask": [
+        [
+          0.275,
+          0.705
+        ],
+        [
+          0.27,
+          0.75
+        ],
+        [
+          0.29,
+          0.8
+        ],
+        [
+          0.34,
+          0.82
+        ],
+        [
+          0.66,
+          0.64
+        ],
+        [
+          0.72,
+          0.64
+        ],
+        [
+          0.72,
+          0.69
+        ],
+        [
+          0.74,
+          0.7
+        ],
+        [
+          0.79,
+          0.66
+        ],
+        [
+          0.79,
+          0.59
+        ],
+        [
+          0.86,
+          0.55
+        ],
+        [
+          0.875,
+          0.57
+        ],
+        [
+          0.9,
+          0.55
+        ],
+        [
+          0.91,
+          0.5
+        ],
+        [
+          0.9,
+          0.45
+        ],
+        [
+          0.88,
+          0.43
+        ],
+        [
+          0.84,
+          0.44
+        ],
+        [
+          0.82,
+          0.37
+        ],
+        [
+          0.8,
+          0.36
+        ],
+        [
+          0.78,
+          0.42
+        ],
+        [
+          0.72,
+          0.46
+        ],
+        [
+          0.66,
+          0.44
+        ],
+        [
+          0.64,
+          0.48
+        ],
+        [
+          0.64,
+          0.51
+        ],
+        [
+          0.32,
+          0.68
+        ]
+      ],
+      "nose": [
+        0.31,
+        0.76
+      ],
+      "tail": [
+        0.89,
+        0.48
+      ],
+      "originalSHA256": "48c41758a0ff9731935f67bdee0908e467b6133bb50f1567a484fd0b75829b44"
+    },
+    {
+      "weaponId": "s2-dominator-ii-missile",
+      "frame": [
+        79,
+        98,
+        98,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/9/93/TALN_Dominator_S2.png?blimd",
+      "mask": [
+        [
+          0.12,
+          0.75
+        ],
+        [
+          0.18,
+          0.69
+        ],
+        [
+          0.59,
+          0.47
+        ],
+        [
+          0.64,
+          0.41
+        ],
+        [
+          0.65,
+          0.35
+        ],
+        [
+          0.77,
+          0.31
+        ],
+        [
+          0.79,
+          0.33
+        ],
+        [
+          0.82,
+          0.3
+        ],
+        [
+          0.84,
+          0.35
+        ],
+        [
+          0.87,
+          0.34
+        ],
+        [
+          0.885,
+          0.37
+        ],
+        [
+          0.885,
+          0.4
+        ],
+        [
+          0.87,
+          0.43
+        ],
+        [
+          0.86,
+          0.45
+        ],
+        [
+          0.85,
+          0.54
+        ],
+        [
+          0.83,
+          0.55
+        ],
+        [
+          0.8,
+          0.51
+        ],
+        [
+          0.68,
+          0.61
+        ],
+        [
+          0.65,
+          0.6
+        ],
+        [
+          0.6,
+          0.61
+        ],
+        [
+          0.22,
+          0.81
+        ]
+      ],
+      "nose": [
+        0.14,
+        0.75
+      ],
+      "tail": [
+        0.87,
+        0.38
+      ],
+      "originalSHA256": "142dc74987ceb6028d9fbd6f02e01b285ca40b87f74819498a038afa01b36ad0"
+    },
+    {
+      "weaponId": "s2-tempest-ii-missile",
+      "frame": [
+        98,
+        122,
+        60,
+        21
+      ],
+      "source": "https://cdn.star-citizen.wiki/images/a/ac/Tempest_II_Missile.jpg",
+      "mask": [
+        [
+          0.12,
+          0.62
+        ],
+        [
+          0.27,
+          0.54
+        ],
+        [
+          0.27,
+          0.49
+        ],
+        [
+          0.3,
+          0.48
+        ],
+        [
+          0.33,
+          0.52
+        ],
+        [
+          0.72,
+          0.29
+        ],
+        [
+          0.74,
+          0.24
+        ],
+        [
+          0.78,
+          0.24
+        ],
+        [
+          0.8,
+          0.27
+        ],
+        [
+          0.88,
+          0.27
+        ],
+        [
+          0.91,
+          0.3
+        ],
+        [
+          0.9,
+          0.35
+        ],
+        [
+          0.87,
+          0.38
+        ],
+        [
+          0.87,
+          0.45
+        ],
+        [
+          0.85,
+          0.46
+        ],
+        [
+          0.79,
+          0.41
+        ],
+        [
+          0.38,
+          0.65
+        ],
+        [
+          0.36,
+          0.7
+        ],
+        [
+          0.32,
+          0.7
+        ],
+        [
+          0.3,
+          0.67
+        ],
+        [
+          0.2,
+          0.7
+        ],
+        [
+          0.15,
+          0.69
+        ]
+      ],
+      "nose": [
+        0.17,
+        0.65
+      ],
+      "tail": [
+        0.88,
+        0.36
+      ],
+      "originalSHA256": "4eb516185967ebcfcab305deb435669d11a793cdfc227054cd28767cf09a5335"
+    },
+    {
+      "weaponId": "s2-ignite-ii-missile",
+      "frame": [
+        91,
+        146,
+        74,
+        21
+      ],
+      "source": "https://cdn.star-citizen.wiki/images/e/e2/Ignite_II_Missile.jpg",
+      "mask": [
+        [
+          0.1,
+          0.66
+        ],
+        [
+          0.25,
+          0.53
+        ],
+        [
+          0.28,
+          0.5
+        ],
+        [
+          0.32,
+          0.51
+        ],
+        [
+          0.67,
+          0.35
+        ],
+        [
+          0.68,
+          0.3
+        ],
+        [
+          0.74,
+          0.29
+        ],
+        [
+          0.77,
+          0.33
+        ],
+        [
+          0.82,
+          0.33
+        ],
+        [
+          0.85,
+          0.36
+        ],
+        [
+          0.85,
+          0.4
+        ],
+        [
+          0.8,
+          0.44
+        ],
+        [
+          0.8,
+          0.48
+        ],
+        [
+          0.76,
+          0.5
+        ],
+        [
+          0.72,
+          0.46
+        ],
+        [
+          0.37,
+          0.62
+        ],
+        [
+          0.36,
+          0.66
+        ],
+        [
+          0.32,
+          0.67
+        ],
+        [
+          0.28,
+          0.64
+        ],
+        [
+          0.14,
+          0.68
+        ]
+      ],
+      "nose": [
+        0.15,
+        0.65
+      ],
+      "tail": [
+        0.82,
+        0.38
+      ],
+      "originalSHA256": "096a29881439d23dc3b1dcd4613d483d09c6189ef7b2b1f09ecd32988ba22a60"
+    },
+    {
+      "weaponId": "s2-strikeforce-ii-missile",
+      "frame": [
+        79,
+        170,
+        98,
+        21
+      ],
+      "source": "https://cdn.star-citizen.wiki/images/b/b2/StrikeForce_II_Missile.jpg",
+      "mask": [
+        [
+          0.11,
+          0.63
+        ],
+        [
+          0.25,
+          0.55
+        ],
+        [
+          0.37,
+          0.52
+        ],
+        [
+          0.38,
+          0.48
+        ],
+        [
+          0.43,
+          0.48
+        ],
+        [
+          0.66,
+          0.38
+        ],
+        [
+          0.68,
+          0.34
+        ],
+        [
+          0.77,
+          0.34
+        ],
+        [
+          0.84,
+          0.33
+        ],
+        [
+          0.9,
+          0.35
+        ],
+        [
+          0.91,
+          0.39
+        ],
+        [
+          0.87,
+          0.41
+        ],
+        [
+          0.85,
+          0.46
+        ],
+        [
+          0.79,
+          0.46
+        ],
+        [
+          0.74,
+          0.48
+        ],
+        [
+          0.43,
+          0.56
+        ],
+        [
+          0.4,
+          0.58
+        ],
+        [
+          0.35,
+          0.56
+        ],
+        [
+          0.17,
+          0.63
+        ]
+      ],
+      "nose": [
+        0.13,
+        0.62
+      ],
+      "tail": [
+        0.88,
+        0.38
+      ],
+      "originalSHA256": "d60558293baf7b00f99d4724999969ab62999fb0e90b63b5b339d2cf771d259f"
+    },
+    {
+      "weaponId": "s9-seeker-ix-torpedo",
+      "frame": [
+        60,
+        194,
+        137,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/a/a2/TALN_Seeker_S9.png?ctper",
+      "mask": [
+        [
+          0.1,
+          0.63
+        ],
+        [
+          0.14,
+          0.59
+        ],
+        [
+          0.82,
+          0.28
+        ],
+        [
+          0.86,
+          0.28
+        ],
+        [
+          0.87,
+          0.3
+        ],
+        [
+          0.89,
+          0.29
+        ],
+        [
+          0.91,
+          0.32
+        ],
+        [
+          0.91,
+          0.36
+        ],
+        [
+          0.89,
+          0.4
+        ],
+        [
+          0.85,
+          0.42
+        ],
+        [
+          0.2,
+          0.77
+        ],
+        [
+          0.145,
+          0.8
+        ],
+        [
+          0.12,
+          0.77
+        ]
+      ],
+      "nose": [
+        0.15,
+        0.7
+      ],
+      "tail": [
+        0.88,
+        0.35
+      ],
+      "originalSHA256": "c7d0a5e36b4241e41445b00ed797baf7b48500e330bff8ac4dedd12eb198fa12"
+    },
+    {
+      "weaponId": "s9-typhoon-ix-torpedo",
+      "frame": [
+        64,
+        218,
+        128,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/e/e8/TALN_Typhoon_S9.png?jnij4",
+      "mask": [
+        [
+          0.14,
+          0.61
+        ],
+        [
+          0.17,
+          0.58
+        ],
+        [
+          0.87,
+          0.26
+        ],
+        [
+          0.91,
+          0.26
+        ],
+        [
+          0.94,
+          0.29
+        ],
+        [
+          0.945,
+          0.33
+        ],
+        [
+          0.93,
+          0.38
+        ],
+        [
+          0.9,
+          0.4
+        ],
+        [
+          0.23,
+          0.78
+        ],
+        [
+          0.18,
+          0.78
+        ],
+        [
+          0.16,
+          0.73
+        ]
+      ],
+      "nose": [
+        0.18,
+        0.68
+      ],
+      "tail": [
+        0.91,
+        0.33
+      ],
+      "originalSHA256": "1f77b576bb880f8ae5ce755edf48c5800e72af8639fb2126266533eee8699382"
+    },
+    {
+      "weaponId": "s10-vt-t10-veritas-torpedo",
+      "frame": [
+        38,
+        242,
+        180,
+        21
+      ],
+      "source": "https://media.starcitizen.tools/2/2a/Invictus-2955-torpedoes-03.jpg?phchr",
+      "mask": [
+        [
+          0.275,
+          0.55
+        ],
+        [
+          0.295,
+          0.525
+        ],
+        [
+          0.335,
+          0.51
+        ],
+        [
+          0.72,
+          0.407
+        ],
+        [
+          0.736,
+          0.408
+        ],
+        [
+          0.746,
+          0.373
+        ],
+        [
+          0.755,
+          0.376
+        ],
+        [
+          0.753,
+          0.408
+        ],
+        [
+          0.767,
+          0.414
+        ],
+        [
+          0.77,
+          0.435
+        ],
+        [
+          0.758,
+          0.452
+        ],
+        [
+          0.758,
+          0.48
+        ],
+        [
+          0.74,
+          0.49
+        ],
+        [
+          0.729,
+          0.47
+        ],
+        [
+          0.67,
+          0.5
+        ],
+        [
+          0.4,
+          0.586
+        ],
+        [
+          0.35,
+          0.596
+        ],
+        [
+          0.31,
+          0.58
+        ]
+      ],
+      "nose": [
+        0.29,
+        0.55
+      ],
+      "tail": [
+        0.75,
+        0.43
+      ],
+      "originalSHA256": "b30b2c6da9f2cf681e923ae7d93f7141c90f0ff95bf6609c95bbaf1bcf741ed5"
+    },
+    {
+      "weaponId": "s3-thunderbolt-iii-missile",
+      "source": "https://media.starcitizen.tools/f/f5/FSKI_Thunderbolt_S3.png?azsup",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/24-Thunderbolt_III_Missile.jpg",
+      "frame": [
+        63,
+        266,
+        130,
+        21
+      ],
+      "originalSHA256": "c0e88209b457d3f0afe2de3de3fc2f66bf3b0a85615eda78f74cacc348d7ce97"
+    },
+    {
+      "weaponId": "s1-taskforce-i-missile",
+      "source": "https://media.starcitizen.tools/6/69/THCN_TaskForce_S1.png?t7woy",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/07-TaskForce_I_Missile.jpg",
+      "frame": [
+        74,
+        290,
+        109,
+        21
+      ],
+      "originalSHA256": "31924d47dde9fb091497ca3290a9197af2f26f279644c2359ad52892ac21e10a"
+    },
+    {
+      "weaponId": "s1-arrow-i-missile",
+      "source": "https://cdn.star-citizen.wiki/images/5/5d/Arrow_I_Missile.jpg",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/09-Arrow_I_Missile.jpg",
+      "frame": [
+        45,
+        314,
+        167,
+        21
+      ],
+      "originalSHA256": "a726ab3d38d8e6391a65761f247eb8a8359b630cf0a47ba7a13ea1a696612e6c"
+    },
+    {
+      "weaponId": "s5-stalker-v-missile",
+      "source": "https://media.starcitizen.tools/4/48/Stalker_V_Missile_4.8.png?7t3lq",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/36-Stalker_V_Missile.jpg",
+      "frame": [
+        60,
+        338,
+        137,
+        21
+      ],
+      "originalSHA256": "702adcca5309b91bd7af27aa0a070b801e51e01f6efe5c9ba0360170f54adeae"
+    },
+    {
+      "weaponId": "s2-bullet-ii-missile",
+      "source": "https://cdn.star-citizen.wiki/images/7/7d/Bullet_II_Missile.jpg",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/19-Bullet_II_Missile.jpg",
+      "frame": [
+        49,
+        362,
+        158,
+        21
+      ],
+      "originalSHA256": "8fed433eebb44bee4de077aa0cb578f75bbc74501bda90878ef10c546a655443"
+    },
+    {
+      "weaponId": "s3-viper-iii-missile",
+      "source": "https://media.starcitizen.tools/b/b1/NOVP_Viper_S3.png?6r9up",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/25-Viper_III_Missile.jpg",
+      "frame": [
+        66,
+        386,
+        125,
+        21
+      ],
+      "originalSHA256": "7d18f1bcb0df14776537ac53a4a97b5fba349360fcc81af9e5a13ce6e45178a0"
+    },
+    {
+      "weaponId": "s4-raptor-iv-missile",
+      "source": "https://media.starcitizen.tools/f/f4/TALN_Raptor_S4.png?t0y3h",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/30-Raptor_IV_Missile.jpg",
+      "frame": [
+        68,
+        410,
+        121,
+        21
+      ],
+      "originalSHA256": "18621d8dd3be474a5d2846015c22a8a681764254e4b5296f12227e1e3b4adf3d"
+    },
+    {
+      "weaponId": "s1-pioneer-i-missile",
+      "source": "https://media.starcitizen.tools/3/3a/BEHR_Pioneer_S1.png?aaqkj",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/06-Pioneer_I_Missile.jpg",
+      "frame": [
+        81,
+        434,
+        94,
+        21
+      ],
+      "originalSHA256": "b451ee7d0ff03ed31dff59ab69f5640dcb7fe65a2121b014b0efa74a1860402b"
+    },
+    {
+      "weaponId": "s2-rattler-ii-missile",
+      "source": "https://media.starcitizen.tools/9/92/NOVP_Rattler_S2.png?8o6tp",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/18-Rattler_II_Missile.jpg",
+      "frame": [
+        85,
+        458,
+        86,
+        21
+      ],
+      "originalSHA256": "ab9d6dfe49d323c1086a461ff7075490e9223228dbc6abfcbbeaf3d52bc16660"
+    },
+    {
+      "weaponId": "s12-calamity-xii-torpedo",
+      "source": "https://starcitizen.tools/File:Invictus-2955-torpedoes-02.jpg",
+      "referenceOrigin": "bot-reviewed-reference-image2",
+      "botAssetPath": "weapon-image2/missile/61-Calamity_XII_IR_Torpedo.jpg",
+      "frame": [
+        84,
+        482,
+        89,
+        21
+      ],
+      "originalSHA256": "fe95f4a2cdb38fbfea29e54401a43d927d8a99fc74261312787713429d383d9f"
+    }
+  ]
+}

@@ -10,17 +10,17 @@ test('engaged fighters keep moving laterally, change attack direction and still 
  let moving=0,forward=0,backward=0,samples=0;for(let i=0;i<45*60;i++){e.step();if(i>10*60){const a=e.ships[0],b=e.ships[1],dx=b.x-a.x,dy=b.y-a.y,cross=dx*a.vy-dy*a.vx;samples++;if(Math.hypot(a.vx,a.vy)>a.spec.speed*.08)moving++;if(cross>0)forward++;else backward++;}}
  expect(moving/samples).toBeGreaterThan(.8);expect(forward).toBeGreaterThan(60);expect(backward).toBeGreaterThan(60);expect(e.hits).toBeGreaterThan(0);
 });
-test('boss keeps advancing after its initial entrance without immobilising the member fleet',()=>{
- const e=new BattleEngine();e.reset(battleRoster([{specId:'gladius',count:10}],'challenge',21),specs,21,'challenge');e.start();const boss=e.snapshot().boss!;const start={x:boss.x,y:boss.y};let moving=0;
- for(let i=0;i<25*60;i++){e.step();if(i>5*60&&Math.hypot(boss.vx,boss.vy)>boss.spec.speed*.08)moving++;}
- expect(Math.hypot(boss.x-start.x,boss.y-start.y)).toBeGreaterThan(boss.spec.speed*3);expect(moving).toBeGreaterThan(10*60);expect(e.hits).toBeGreaterThan(0);
+test('boss keeps manoeuvring after its initial entrance without immobilising the member fleet',()=>{
+ const e=new BattleEngine();e.reset(battleRoster([{specId:'gladius',count:10}],'challenge',21),specs,21,'challenge');e.start();const boss=e.snapshot().boss!;let moving=0,travelled=0;
+ for(let i=0;i<25*60;i++){const x=boss.x,y=boss.y;e.step();travelled+=Math.hypot(boss.x-x,boss.y-y);if(i>5*60&&Math.hypot(boss.vx,boss.vy)>boss.spec.speed*.08)moving++;}
+ // A random curved course can return near its start while moving throughout.
+ expect(travelled).toBeGreaterThan(boss.spec.speed*3);expect(moving).toBeGreaterThan(10*60);expect(e.hits).toBeGreaterThan(0);
 });
 
-test('incoming hostile fire triggers a limited sideways burst; friendly fire and harmless misses do not',()=>{
- const e=new BattleEngine();e.reset([{specId:'arrow',count:2}],specs,21);const [s,other]=e.ships;s.x=0;s.y=0;s.vx=0;s.vy=0;s.heading=0;const ships=new Map(e.ships.map(s=>[s.id,s]));
- const idle={until:0,readyAt:0,scanAt:0,side:1},p={id:99,owner:other.id,target:s.id,kind:'laser' as const,x:500,y:0,vx:-1000,vy:0,angle:Math.PI,speed:1000,damage:10,ttl:1,travel:0,range:1000,color:0xffffff};
- const active=evasion(s,ships,[p],1,idle),move=evasionVelocity(s,0,active,1);expect(active.until).toBeGreaterThan(1);expect(Math.abs(move.y)).toBeGreaterThan(s.spec.speed*.6);expect(move.boost).toBeGreaterThan(1.4);expect(evasionVelocity(s,0,active,active.until+.1).boost).toBe(1);
- expect(evasion(s,ships,[p],active.until+.1,active)).toEqual(active);expect(evasion(s,ships,[{...p,y:500}],1,idle).until).toBe(0);s.team=other.team='members';expect(evasion(s,ships,[p],1,idle).until).toBe(0);
+test.each(['arrow','terrapin'])('%s keeps its combat course instead of automatically dodging each incoming volley',id=>{
+ const e=new BattleEngine();e.reset([{specId:id,count:1},{specId:'idris-p',count:1}],specs,21);const [s,other]=e.ships;s.x=0;s.y=0;s.vx=0;s.vy=0;s.heading=0;const ships=new Map(e.ships.map(s=>[s.id,s]));
+ const idle={until:0,scanAt:0,side:1},p={id:99,owner:other.id,target:s.id,kind:'laser' as const,x:500,y:0,vx:-1000,vy:0,angle:Math.PI,speed:1000,damage:10,ttl:1,travel:0,range:1000,color:0xffffff};
+ for(const time of [1,8,16,32]){s.lastHit=time;s.hull=s.spec.hull*.5;const active=evasion(s,ships,[p],time,idle);expect(active).toBe(idle);expect(evasionVelocity(s,0,active,time)).toEqual({x:0,y:0,boost:1});}
  const capital={...s,spec:specs.find(s=>s.id==='javelin')!};expect(handling(capital).lateral).toBeLessThan(handling(s).lateral);expect(handling(capital).boost).toBeLessThan(handling(s).boost);
 });
 
@@ -65,4 +65,23 @@ test('capital evasions keep a lateral component and curve back into range instea
 
 test('avoidance uses the narrow side of a long hull rather than its bounding circle',async()=>{
  const{hullRadiusAt}=await import('../src/sim/collisions');const e=new BattleEngine();e.reset([{specId:'retribution',count:1}],specs,42);const ship=e.ships[0];ship.heading=0;expect(hullRadiusAt(ship,Math.PI/2)).toBeLessThan(ship.radius*.4);expect(hullRadiusAt(ship,0)).toBeGreaterThan(ship.radius*.8);
+});
+
+test('large ships approach range and sidestep fire without reversing from an already reachable small target',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver'),{randomGenerator}=await import('../src/sim/math');
+ for(const id of ['hammerhead','reclaimer','idris-m','kraken-privateer','javelin','bengal']){
+  const e=new BattleEngine();e.reset([{specId:id,count:1},{specId:'asgard',count:1}],data as ShipSpec[],42);const[s,t]=e.ships;
+  s.x=s.y=t.y=s.vx=s.vy=t.vx=t.vy=0;s.heading=0;t.heading=Math.PI;s.lastHit=-100;t.x=(s.spec.length+t.spec.length)*.48+191;
+  const quiet=attackNavigation(s,t,10,undefined,false,randomGenerator(42)),hit=attackNavigation(s,t,10,undefined,true,randomGenerator(42));
+  expect(hit.state.phase).not.toBe('extend');expect(hit.velocity!.x).toBeGreaterThanOrEqual(-1e-6);expect(Math.abs(hit.velocity!.y)).toBeGreaterThan(s.spec.speed*.2);
+  t.x=3000;const far=attackNavigation(s,t,10,undefined,false,randomGenerator(42));expect(far.velocity!.x).toBeGreaterThan(s.spec.speed*.5);
+  t.x=800;t.vx=1000;const moving=attackNavigation(s,t,10,undefined,false,randomGenerator(42));t.vx=0;const idle=attackNavigation(s,t,10,undefined,false,randomGenerator(42));expect(moving.velocity!.x).toBeCloseTo(idle.velocity!.x);
+  expect(quiet.boost).toBe(1);
+ }
+});
+test('close large ships retain gun aim without a duplicate retreat or speed boost',async()=>{
+ const{attackNavigation}=await import('../src/sim/maneuver'),{randomGenerator}=await import('../src/sim/math');
+ const e=new BattleEngine();e.reset([{specId:'idris-m',count:1},{specId:'asgard',count:1}],data as ShipSpec[],42);const[s,t]=e.ships;
+ s.x=s.y=t.y=s.vx=s.vy=t.vx=t.vy=0;s.heading=0;s.lastHit=-100;t.x=180;
+ const plan=attackNavigation(s,t,10,undefined,false,randomGenerator(42));expect(plan.state.phase).toBe('strike');expect(plan.velocity!.x).toBeGreaterThanOrEqual(0);expect(Math.abs(plan.velocity!.y)).toBeGreaterThan(s.spec.speed*.05);expect(plan.coast).toBe(false);expect(plan.boost).toBe(1);expect(plan.heading).toBeCloseTo(0);
 });

@@ -30,3 +30,21 @@ test('a high-speed small ship can still die on a genuine frontal asteroid impact
  const e=setup('arrow'),s=e.ships[0];e.asteroids=[{id:1,x:0,y:0,radius:60,rotation:0}];
  s.x=-(s.spec.length*.48+60)+1;s.vx=400;e.step();expect(s.alive).toBe(false);expect(e.killLog[0].cause).toBe('asteroid');expect(e.collisionDeaths).toBe(1);
 });
+test('an interior rock uses the nearest capital surface instead of ejecting the ship along its long axis',()=>{
+ for(const heading of [0,.6,1.8]){
+  const e=setup('retribution'),s=e.ships[0];s.heading=heading;
+  const x=(s.spec.length*.48+3)*.55,rock={id:1,x:Math.cos(heading)*x,y:Math.sin(heading)*x,radius:70,rotation:0};
+  const hit=asteroidContact(s,rock)!;
+  expect(hit.depth).toBeLessThan(s.spec.beam*.48+3+rock.radius);
+  expect(Math.abs(-Math.sin(heading)*hit.nx+Math.cos(heading)*hit.ny)).toBeGreaterThan(.98);
+  s.x-=hit.nx*(hit.depth+2);s.y-=hit.ny*(hit.depth+2);expect(asteroidContact(s,rock)).toBeNull();
+ }
+});
+test('interior centre, boundary and broad hull contacts remain finite',()=>{
+ const e=setup(),s=e.ships[0];
+ for(const dimensions of [[480,220],[20,80],[100,100]])for(const fraction of [0,.55,1]){
+  s.spec={...s.spec,length:dimensions[0],beam:dimensions[1]};
+  const rock={id:1,x:(s.spec.length*.48+3)*fraction,y:0,radius:40,rotation:0},hit=asteroidContact(s,rock)!;
+  expect([hit.nx,hit.ny,hit.depth].every(Number.isFinite)).toBe(true);expect(Math.hypot(hit.nx,hit.ny)).toBeCloseTo(1,8);
+ }
+});

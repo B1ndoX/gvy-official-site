@@ -1,5 +1,33 @@
 import {expect,test} from '@playwright/test';
 
+test.describe('mobile fleet-game navigation',()=>{
+ test.use({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ test('the top game link lands on the launch button before and after lazy photos load',async({page})=>{
+  let releasePhotos;const photosReady=new Promise(resolve=>{releasePhotos=resolve;});
+  await page.route(/\/assets\/gallery\/(?:optimized\/)?team-(?:13|15|26)(?:-|\.)/,async route=>{await photosReady;await route.continue();});
+  try{
+   await page.goto('/',{waitUntil:'domcontentloaded'});
+   await page.waitForFunction(()=>window.__gvyCinematicHomepage);
+   await page.evaluate(()=>document.fonts.ready);
+   await page.locator('#fleet-signal').evaluate(el=>window.scrollTo({top:el.offsetTop,behavior:'instant'}));
+   const before=await page.locator('.archive-feature button').evaluateAll(buttons=>buttons.map(button=>({width:button.getBoundingClientRect().width,height:button.getBoundingClientRect().height})));
+   expect(before.every(box=>box.width>0&&box.height>0)).toBe(true);
+   await page.locator('.fleet-games-jump').click();
+   const launch=page.locator('[data-member-brawl-open]');
+   await expect(launch).toBeInViewport({ratio:1});
+   await expect(page.locator('[data-member-brawl-frame]')).not.toHaveAttribute('src',/.+/);
+   releasePhotos();
+   await expect.poll(()=>page.locator('.archive-feature img').evaluateAll(images=>images.every(image=>image.complete&&image.naturalWidth>0))).toBe(true);
+   const after=await page.locator('.archive-feature button').evaluateAll(buttons=>buttons.map(button=>({width:button.getBoundingClientRect().width,height:button.getBoundingClientRect().height})));
+   expect(after).toEqual(before);
+   await expect(launch).toBeInViewport({ratio:1});
+   await launch.click();
+   await expect(page.locator('[data-game-select]')).toHaveCount(2);
+   await expect(page.locator('[data-member-brawl-frame]')).not.toHaveAttribute('src',/.+/);
+  }finally{releasePhotos();}
+ });
+});
+
 test('one fleet window selects either game, supplies the current roster and unloads on switching',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/',{waitUntil:'domcontentloaded'});

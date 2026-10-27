@@ -5,7 +5,7 @@ const SHIP_IMPACT_GAIN=1.38;
 export const shipMass=(s:Ship)=>Math.max(1,s.spec.mass??s.spec.length*s.spec.beam*s.spec.beam);
 
 /** Distance to the hull along a world bearing; long hulls do not repel everything in their bounding circle. */
-export const hullRadiusAt=(ship:Ship,bearing:number)=>1/Math.hypot(Math.cos(bearing-ship.heading)/(ship.spec.length*.48+3),Math.sin(bearing-ship.heading)/(ship.spec.beam*.48+3));
+export const hullRadiusAt=(ship:Pick<Ship,'heading'|'spec'>,bearing:number)=>1/Math.hypot(Math.cos(bearing-ship.heading)/(ship.spec.length*.48+3),Math.sin(bearing-ship.heading)/(ship.spec.beam*.48+3));
 
 /** Narrow-phase hull approximation, using oriented ellipse projections rather than bounding circles. */
 export function shipContact(a:Ship,b:Ship,padding=0){
@@ -22,10 +22,18 @@ export function shipContact(a:Ship,b:Ship,padding=0){
   return{nx,ny,depth};
 }
 
-export function shipImpact(a:Ship,b:Ship,closing:number,nx:number,ny:number){
-  const intensity=.035*SHIP_IMPACT_GAIN*(Math.max(0,closing-80)/200)**2,am=shipMass(a),bm=shipMass(b);
-  const fatal=(ship:Ship,otherMass:number,ownMass:number,toward:number)=>ship.spec.length<35&&otherMass/ownMass>=25&&closing>=Math.max(340,ship.spec.speed*1.4)&&toward>=Math.max(280,ship.spec.speed*1.25)&&toward/Math.max(1,Math.hypot(ship.vx,ship.vy))>=.85;
-  const fatalA=fatal(a,bm,am,a.vx*nx+a.vy*ny),fatalB=fatal(b,am,bm,-b.vx*nx-b.vy*ny);
-  const amount=(ship:Ship,share:number)=>ship.spec.hull*Math.min(SHIP_IMPACT_LIMIT,intensity*share);
-  return{fatalA,fatalB,a:fatalA?a.hull:amount(a,2*bm/(am+bm)),b:fatalB?b.hull:amount(b,2*am/(am+bm))};
+export function shipImpact(a:Ship,b:Ship,closing:number){
+  const cruise=Math.max(40,a.spec.speed+b.spec.speed),safe=Math.min(80,cruise*.25);
+  const intensity=.035*SHIP_IMPACT_GAIN*(Math.max(0,closing-safe)/200)**2;
+  // Full opposing flight speed is dangerous even for slow, massive hulls.
+  // Normal closing speed (not tangential speed) and reduced-mass share make
+  // grazing/low-speed contacts safe and small-to-large asymmetry continuous.
+  const severe=.8*SHIP_IMPACT_GAIN*(Math.max(0,closing-cruise*.5)/(cruise*.5))**2,am=shipMass(a),bm=shipMass(b);
+  const amount=(ship:Ship,share:number)=>{
+    const gain=share*(ship.spec.collisionDamageMultiplier??1);
+    const ordinary=ship.spec.hull*Math.min(SHIP_IMPACT_LIMIT,intensity*gain),energy=ship.spec.hull*severe*gain;
+    return {ordinary,energy,total:ordinary+energy};
+  };
+  const first=amount(a,2*bm/(am+bm)),second=amount(b,2*am/(am+bm));
+  return{fatalA:first.total>=a.hull&&a.hull>0,fatalB:second.total>=b.hull&&b.hull>0,a:first.total,b:second.total,ordinaryA:first.ordinary,ordinaryB:second.ordinary,severeA:first.energy,severeB:second.energy};
 }

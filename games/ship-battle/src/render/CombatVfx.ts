@@ -1,13 +1,15 @@
 import { Container, Rectangle, Sprite, Texture, Mesh, MeshGeometry } from 'pixi.js';
 import type { BattleEngine } from '../sim/engine';
-import type { BattleEvent } from '../sim/types';
+import type { BattleEvent,Projectile,Vec } from '../sim/types';
 import { clamp, mountWorld } from '../sim/math';
 import { battleSeconds } from '../sim/pacing';
 import { TrailHistory, vfxNoise } from './TrailHistory';
 import {fillTrailRibbon} from './TrailRibbon';
 import {ExhaustTrail,mainExhaustActive,exhaustRibbonBlend} from './ExhaustTrail';
+import ordnanceArtwork from '../data/ordnance-visuals.json';
+import {ordnanceArtworkID} from './ordnance-artwork';
 
-type Tile='glow'|'line'|'plume'|'ring'|'ribbon'|`fire${number}`;
+type Tile='glow'|'line'|'plume'|'ring'|'ribbon'|`fire${number}`|`ordnance${number}`;
 const LIMIT=2048,TRAIL_LIMIT=1024;
 
 /** One baked atlas, two bounded sprite batches; no filters or secondary clock. */
@@ -15,6 +17,9 @@ export class CombatVfx {
   readonly exhaust=new Container();
   readonly foreground=new Container();
   private atlas:Texture;
+  private atlasCanvas!:HTMLCanvasElement;
+  private ordnanceTiles=new Map<string,{tile:Tile;aspect:number}>();
+  private disposed=false;
   private tiles=new Map<Tile,Texture>();
   private back:Sprite[]=[];private front:Sprite[]=[];private backUsed=0;private frontUsed=0;
   private trails=new Map<string,TrailHistory>();
@@ -63,11 +68,25 @@ export class CombatVfx {
       }
       c.putImageData(fire,ox,oy);
     }
-    this.atlas=Texture.from(canvas);
+    this.atlasCanvas=canvas;this.atlas=Texture.from(canvas);
     const add=(key:Tile,x:number,y:number,width:number,height:number)=>this.tiles.set(key,new Texture({source:this.atlas.source,frame:new Rectangle(x,y,width,height)}));
     add('glow',0,0,96,96);add('plume',96,0,192,96);add('line',0,96,192,32);add('ring',0,128,128,128);add('ribbon',0,256,256,128);
     for(let i=0;i<16;i++)add(`fire${i}`,384+i%4*96,Math.floor(i/4)*96,96,96);
     this.exhaust.label='engine-wakes';this.foreground.label='weapon-feedback';
+  }
+  async loadOrdnance(){
+    try{
+      const image=new Image();image.src=new URL(ordnanceArtwork.file,document.baseURI).href;await image.decode();if(this.disposed)return;
+      const context=this.atlasCanvas.getContext('2d')!;context.drawImage(image,768,0);this.atlas.source.update();
+      ordnanceArtwork.assets.forEach((asset,index)=>{
+        const [x,y,width,height]=asset.frame,tile:Tile=`ordnance${index}`;
+        this.tiles.set(tile,new Texture({source:this.atlas.source,frame:new Rectangle(768+x,y,width,height)}));this.ordnanceTiles.set(asset.weaponId,{tile,aspect:height/width});
+      });
+    }catch{/* Existing geometry remains usable when optional artwork cannot decode. */}
+  }
+  ordnance(p:Pick<Projectile,'weaponId'|'weaponSize'|'kind'|'x'|'y'|'angle'>,length:number){
+    const art=this.ordnanceTiles.get(ordnanceArtworkID(p)??'');if(!art)return false;
+    this.sprite(art.tile,p.x,p.y,length,length*art.aspect,p.angle,0xffffff,1);return true;
   }
   get stats(){return {sprites:this.backUsed+this.frontUsed,allocated:this.back.length+this.front.length,ribbons:this.ribbons.size+this.fading.length,trails:this.trails.size+this.exhausts.size+this.fading.length,points:[...this.trails.values(),...this.exhausts.values()].reduce((sum,t)=>sum+t.points.length,0),spriteLimit:LIMIT,trailLimit:TRAIL_LIMIT,atlasBytes:1024*512*4};}
   private sprite(tile:Tile,x:number,y:number,width:number,height:number,rotation:number,tint:number,alpha:number,under=false,anchorX=.5){
@@ -83,7 +102,7 @@ export class CombatVfx {
       }else{s=new Sprite();s.blendMode='add';}
       pool.push(s);container.addChild(s);
     }
-    s.visible=true;s.texture=this.tiles.get(tile)!;s.anchor.set(anchorX,.5);s.position.set(x,y);s.width=width;s.height=height;s.rotation=rotation;s.tint=tint;s.alpha=alpha;
+    s.visible=true;s.blendMode=tile.startsWith('ordnance')?'normal':'add';s.texture=this.tiles.get(tile)!;s.anchor.set(anchorX,.5);s.position.set(x,y);s.width=width;s.height=height;s.rotation=rotation;s.tint=tint;s.alpha=alpha;
   }
   glow(x:number,y:number,radius:number,color:number,alpha:number,under=false){this.sprite('glow',x,y,radius*2,radius*2,0,color,alpha,under);}
   streak(x1:number,y1:number,x2:number,y2:number,width:number,color:number,alpha:number,under=false){
@@ -141,16 +160,16 @@ export class CombatVfx {
       this.streak(a.x,a.y,b.x,b.y,width*(.4+fade*.6)*3,color,alpha*fade*fade,under);
     }
   }
-  events(engine:BattleEngine){
+  events(engine:BattleEngine,impactPoint?:(event:BattleEvent)=>Vec){
     this.reserve=0;
     for(const ev of engine.events){
       const age=battleSeconds(engine.time-ev.time);if(age<0)continue;
       if(ev.kind==='destroy')this.explosion(ev,age);
       else if((ev.kind==='hit'||ev.kind==='shield')&&age<.22){
-        const f=age/.22,color=ev.kind==='shield'?0x78bcff:0xffb46f;
-        this.glow(ev.x,ev.y,(3+f*5)*this.px,color,(1-f)*.75);
-        if(ev.kind==='shield')this.sprite('ring',ev.x,ev.y,(7+f*15)*this.px,(7+f*15)*this.px,0,color,(1-f)*.4);
-        else for(let i=0;i<3;i++){const a=vfxNoise(ev.id*11+i)*Math.PI*2,d=(3+f*12)*this.px;this.streak(ev.x+Math.cos(a)*d*.5,ev.y+Math.sin(a)*d*.5,ev.x+Math.cos(a)*d,ev.y+Math.sin(a)*d,this.px*1.2,color,(1-f)*.65);}
+        const f=age/.22,color=ev.kind==='shield'?0x78bcff:0xffb46f,p=impactPoint?.(ev)??ev;
+        this.glow(p.x,p.y,(3+f*5)*this.px,color,(1-f)*.75);
+        if(ev.kind==='shield')this.sprite('ring',p.x,p.y,(7+f*15)*this.px,(7+f*15)*this.px,0,color,(1-f)*.4);
+        else for(let i=0;i<3;i++){const a=vfxNoise(ev.id*11+i)*Math.PI*2,d=(3+f*12)*this.px;this.streak(p.x+Math.cos(a)*d*.5,p.y+Math.sin(a)*d*.5,p.x+Math.cos(a)*d,p.y+Math.sin(a)*d,this.px*1.2,color,(1-f)*.65);}
       }
     }
   }
@@ -188,5 +207,5 @@ export class CombatVfx {
     }
   }
   reset(){this.trails.clear();this.exhausts.clear();this.thrusting.clear();for(const r of [...this.ribbons.values(),...this.fading.map(f=>f.mesh)]){r.geometry.destroy();r.destroy({texture:false});}this.ribbons.clear();this.ribbonLife.clear();this.fading=[];this.ships=null;this.lastTime=-1;this.backUsed=this.frontUsed=0;for(const s of this.back)s.visible=false;for(const s of this.front)s.visible=false;}
-  destroy(){this.reset();this.exhaust.destroy({children:true,texture:false});this.foreground.destroy({children:true,texture:false});for(const tile of this.tiles.values())tile.destroy(false);this.tiles.clear();this.atlas.destroy(true);this.back=[];this.front=[];}
+  destroy(){this.disposed=true;this.reset();this.exhaust.destroy({children:true,texture:false});this.foreground.destroy({children:true,texture:false});for(const tile of this.tiles.values())tile.destroy(false);this.tiles.clear();this.ordnanceTiles.clear();this.atlas.destroy(true);this.back=[];this.front=[];}
 }

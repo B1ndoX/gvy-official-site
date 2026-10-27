@@ -8,7 +8,7 @@ import {createAsteroids,avoidAsteroids,asteroidContact,segmentRock,type Asteroid
 import {battleSeconds,simulationSeconds} from './pacing';
 import {evasion,evasionVelocity,attackNavigation,type AttackRun,type Evasion} from './maneuver';
 import {fixedWeapon,turretControlled,guidedWeapon,projectileDamage} from './weapons';
-import {hullRadiusAt,shipContact,shipImpact,shipMass,SHIP_IMPACT_PER_SECOND} from './collisions';
+import {shipContact,shipImpact,shipMass,SHIP_IMPACT_PER_SECOND} from './collisions';
 import {WeaponCollisionGrid} from './weapon-collision-grid';
 import simulationProfile from '../data/simulation-profile.json';
 import {trackAim} from './turret-tracking';
@@ -17,11 +17,17 @@ import {weaponCycle,rechargeWeapons,energyReady,spendEnergy,kineticGun} from './
 import {chargedWeapon,chargeDamageMultiplier,chooseChargeGoal} from './charged-weapon';
 import resourceRules from '../data/weapon-resource-rules.json';
 import {firingObstacle,terrainCourse,type TerrainLane} from './terrain-navigation';
+import {trafficVelocity} from './traffic-avoidance';
+import {naturalShieldRecovery} from './shield-recovery';
+import {weaponHullIntersection,type WeaponHullProfile} from './weapon-hull';
 
 export const STEP = 1 / 60;
 export const MAX_SHIPS = 100;
 export class BattleEngine {
   constructor(readonly referenceMode=simulationProfile.mode==='reference'){}
+  // Immutable asset geometry is installed with the artwork. Headless/custom
+  // fleets without readable artwork retain the existing geometric fallback.
+  weaponHulls:ReadonlyMap<string,WeaponHullProfile>=new Map();
   asteroids:Asteroid[]=[];collisionDeaths=0;private collisions=new Map<string,[number,number]>();
   ships: Ship[]=[]; projectiles: Projectile[]=[]; beams:ActiveBeam[]=[]; events: BattleEvent[]=[]; killLog: KillRecord[]=[];
   phase: BattlePhase='ready'; mode:BattleMode='brawl'; outcome:BattleOutcome=null; wave=1; nextWaveIn=0; private specMap=new Map<string,ShipSpec>(); private pendingBossId:string|null=null; private escortQueue:string[]=[];private nextEscortAt=0; time=0; shots=0; hits=0; defenseShots=0;interceptions=0; arena=2400; seed=2956;
@@ -101,7 +107,6 @@ export class BattleEngine {
     for(const id of this.terrainLanes.keys())if(!byId.has(id))this.terrainLanes.delete(id);
     if(this.checkOutcome())return;
     for(const s of living){
-      if(s.enterUntil&&this.time<s.enterUntil){s.x+=s.vx*dt;s.y+=s.vy*dt;continue;}
       const committedHull=s.npc==='boss'||s.spec.length>=100;
       const busy=committedHull&&(this.beams.some(b=>b.owner===s.id)||s.weaponCycles?.some((c,i)=>fixedWeapon(s.spec.mounts[i])&&(c.chargeLeft>0||chargedWeapon(s.spec.mounts[i])&&c.chargeLeft===0)));
       if(this.time>=s.searchAt&&!busy||!byId.has(s.targetId??-1)) {
@@ -112,35 +117,25 @@ export class BattleEngine {
       const target=byId.get(s.targetId??-1);
       if(!target){this.terrainLanes.delete(s.id);continue;}
       // Continuous rays do not need projectile lead; tracking has physical response time.
-      const mainWeapon=s.spec.mounts.find(m=>!m.interceptsOnly);
-      const lead=beamFiring.has(s.id)?target:intercept(s,target,Math.max(450,mainWeapon?.speed??900));
-      const dist=distance(s,target),optimum=Math.max(s.spec.preferredRange,s.radius+target.radius+50);
+      const usable=(m:Mount,i:number)=>!m.interceptsOnly&&(m.ammo===undefined||m.ammoReload||(s.weaponCycles?.[i]?.ammoLeft??m.ammo)>0);
+      const mainWeapon=s.spec.mounts.find((m,i)=>fixedWeapon(m)&&usable(m,i))??s.spec.mounts.find(usable);
+      const lead=beamFiring.has(s.id)||mainWeapon&&(mainWeapon.kind==='beam'||guidedWeapon(mainWeapon))?target:intercept(s,target,mainWeapon?.speed??900);
       const bearing=Math.atan2(target.y-s.y,target.x-s.x);
-      const dodge=evasion(s,allById,this.projectiles,this.time,this.evasions.get(s.id)??{until:0,readyAt:0,scanAt:0,side:s.id%2?1:-1},this.random);this.evasions.set(s.id,dodge);
+      const dodge=evasion(s,allById,this.projectiles,this.time,this.evasions.get(s.id)??{until:0,scanAt:0,side:s.id%2?1:-1},this.random);this.evasions.set(s.id,dodge);
       const attack=attackNavigation(s,target,this.time,this.attackRuns.get(s.id),this.time<dodge.until,this.random);
-      if(attack)this.attackRuns.set(s.id,attack.state);else this.attackRuns.delete(s.id);
-      const terrain=mainWeapon?terrainCourse(s,target,mountWorld(s,mainWeapon),this.asteroids,this.terrainLanes.get(s.id),this.random):null;
+      this.attackRuns.set(s.id,attack.state);
+      // Movement uses a stable hull origin. A turning muzzle must not alternate
+      // the flight plan each tick; actual firing still tests each real muzzle.
+      const terrain=mainWeapon?terrainCourse(s,target,s,this.asteroids,this.terrainLanes.get(s.id),this.random,this.seed):null;
       if(terrain)this.terrainLanes.set(s.id,terrain.state);else this.terrainLanes.delete(s.id);
-      let desired=terrain?.heading??attack?.heading??Math.atan2(lead.y-s.y,lead.x-s.x);
-      const stalled=this.time-s.lastDealt>12;
-      if(stalled&&!attack&&!committedHull){const angle=Math.atan2(target.y-s.y,target.x-s.x);desired=angle+(s.id%2?1:-1)*.65;}
-
-      // Stable per-ship attack lanes and alternating passes prevent a stationary firing ball.
-      const fighter=s.spec.class==='fighter',capital=s.spec.class==='capital';
-      const phase=this.time/(fighter?6.5:11)+s.id*1.618;
-      const lane=Math.sin(phase*Math.PI)>0?1:-1;
-      const inCombat=dist<optimum*1.7;
-      const radial=clamp((dist-optimum*.9)/(optimum*.55),-.3,1);
-      let speed=s.spec.speed*radial;
-      if(inCombat){
-        if(fighter)speed+=Math.sin(phase*1.7)*s.spec.speed*.18;
-        // Heavy hulls and bosses keep advancing rather than braking to zero at optimum range.
-        else if(s.npc==='boss'||dist>optimum*.75)speed=Math.max(speed,s.spec.speed*(s.npc==='boss'?.24:capital?.16:.2));
-      }
-      let avoidX=0,avoidY=0;
-      for(const other of living){if(other===s)continue;const d=distance(s,other),angle=Math.atan2(other.y-s.y,other.x-s.x),safe=hullRadiusAt(s,angle)+hullRadiusAt(other,angle+Math.PI)+(fighter?75:65);if(d<safe&&d>.001){const weight=(safe-d)/safe*Math.min(1,other.radius/s.radius);avoidX+=(s.x-other.x)/d*weight;avoidY+=(s.y-other.y)/d*weight;}}
-      const obstacle=avoidAsteroids(s,this.asteroids);avoidX+=obstacle.x;avoidY+=obstacle.y;
-      if(Math.hypot(avoidX,avoidY)>.7&&dist>optimum*.8)desired=Math.atan2(Math.sin(desired)+avoidY*1.3,Math.cos(desired)+avoidX*1.3);
+      // One flight plan: obstruction route, otherwise combat course. Fixed
+      // guns use their real lead during a firing pass, not a second .3s guess.
+      let desired=terrain?.heading??(mainWeapon&&fixedWeapon(mainWeapon)&&!attack.coast?Math.atan2(lead.y-s.y,lead.x-s.x):attack.heading);
+      const fighter=s.spec.class==='fighter';
+      let speed=s.spec.speed*attack.boost;
+      // The route already clears its own rock; only other rocks may amend it.
+      const obstacle=avoidAsteroids(s,terrain?this.asteroids.filter(r=>r.id!==terrain.state.rock):this.asteroids),avoidX=obstacle.x,avoidY=obstacle.y;
+      if(Math.hypot(avoidX,avoidY)>.7)desired=Math.atan2(Math.sin(desired)+avoidY*1.3,Math.cos(desired)+avoidX*1.3);
       const delta=wrap(desired-s.heading),previousHeading=s.heading;
       if(beamFiring.has(s.id)){
         // The ray stays hull-fixed. Every hull uses the same sampled bearing and
@@ -156,35 +151,38 @@ export class BattleEngine {
       // Turrets retain world orientation while the hull turns. Hull yaw cannot
       // bypass their traverse limit or drag every gun straight onto a new target.
       for(let i=0;i<s.spec.mounts.length;i++)if(turretControlled(s.spec.mounts[i]))s.turretAngles[i]=wrap(s.turretAngles[i]-wrap(s.heading-previousHeading));
-      if(attack)speed=s.spec.speed*attack.boost;else if(stalled)speed=Math.max(speed,s.spec.speed*.65);
-      else if(Math.abs(delta)>1)speed*=.65;
-      // Brief aiming windows retain fixed-gun accuracy; no permanent stopped/aiming state.
-      const aimWindow=stalled&&Math.sin(phase*2)>.3;
-      const strafe=!terrain&&!attack&&inCombat?lane*s.spec.speed*(fighter?.34:capital?.1:.22)*(aimWindow?.3:1):0;
-      const defensive=evasionVelocity(s,bearing,dodge,this.time),dodging=defensive.boost>1;
-      let vx=(terrain?.velocity.x??attack?.velocity?.x??Math.cos(s.heading)*speed)-Math.sin(bearing)*(dodging?0:strafe)+defensive.x+avoidX*s.spec.speed*.9;
-      let vy=(terrain?.velocity.y??attack?.velocity?.y??Math.sin(s.heading)*speed)+Math.cos(bearing)*(dodging?0:strafe)+defensive.y+avoidY*s.spec.speed*.9;
+      if(!attack.velocity&&Math.abs(delta)>1)speed*=.65;
+      const defensive=evasionVelocity(s,bearing,dodge,this.time),dodging=!terrain&&defensive.boost>1;
+      // Curved combat courses already react to danger. Do not add a second
+      // sideways escape on top of that route (or on top of terrain bypass).
+      const evade=!terrain&&!attack.velocity;
+      let vx=(terrain?.velocity.x??attack.velocity?.x??Math.cos(s.heading)*speed)+(evade?defensive.x:0)+avoidX*s.spec.speed*.9;
+      let vy=(terrain?.velocity.y??attack.velocity?.y??Math.sin(s.heading)*speed)+(evade?defensive.y:0)+avoidY*s.spec.speed*.9;
       // A boost is a short lateral burst, not a permanent change to the ship's base stats.
-      if(dodging&&fighter){vx+=Math.cos(s.heading)*s.spec.speed*.18;vy+=Math.sin(s.heading)*s.spec.speed*.18;}
+      if(evade&&dodging&&fighter){vx+=Math.cos(s.heading)*s.spec.speed*.18;vy+=Math.sin(s.heading)*s.spec.speed*.18;}
+      const traffic=trafficVelocity(s,living,{x:vx,y:vy});vx=traffic.x;vy=traffic.y;
       const maxSpeed=s.spec.speed*(dodging?defensive.boost:attack?.boost??1),velocity=Math.hypot(vx,vy);
       if(velocity>maxSpeed&&velocity>0){vx*=maxSpeed/velocity;vy*=maxSpeed/velocity;}
-      if(Math.hypot(s.x,s.y)>this.arena*.88){vx-=s.x/this.arena*s.spec.speed;vy-=s.y/this.arena*s.spec.speed;}
       const dvx=vx-s.vx,dvy=vy-s.vy,dv=Math.hypot(dvx,dvy),factor=dv?Math.min(1,s.spec.acceleration*(dodging?(fighter?2.2:this.time<(dodge.emergencyUntil??0)&&s.spec.length<200?1.35:1):1)*dt/dv):0;
       s.vx+=dvx*factor;s.vy+=dvy*factor;s.x+=s.vx*dt;s.y+=s.vy*dt;
-      const shieldDelay=this.referenceMode?(s.shield<=0?s.spec.shieldDownDelay:s.spec.shieldRecoveryDelay)??defenseRules.shieldRecoveryDelay:defenseRules.shieldRecoveryDelay;
-      if(this.time-s.lastHit>shieldDelay)s.shield=Math.min(s.spec.shield,s.shield+s.spec.shieldRegen*dt);
-      this.fire(s,living,dt,incoming,allById);
+      const recovery=naturalShieldRecovery(s.spec);
+      if(this.time-s.lastHit>recovery.delay+1e-8)s.shield=Math.min(s.spec.shield,s.shield+recovery.perSecond*dt);
+      // Arrival keeps its original weapon delay, while normal navigation and
+      // obstacle avoidance stay active instead of forcing a straight rail.
+      if(!s.enterUntil||this.time>=s.enterUntil)this.fire(s,living,dt,incoming,allById);
     }
     // Damage once per contact; separation hysteresis prevents grazing from grinding hulls.
     for(let iteration=0;iteration<3;iteration++)for(let a=0;a<living.length;a++)for(let b=a+1;b<living.length;b++){
       const s=living[a],o=living[b];if(!s.alive||!o.alive)continue;
       const contact=shipContact(s,o);if(!contact)continue;
       const {nx,ny,depth}=contact,key=`${s.id}:${o.id}`,mass=shipMass(s),otherMass=shipMass(o),share=otherMass/(mass+otherMass),closing=(s.vx-o.vx)*nx+(s.vy-o.vy)*ny;
-      const impact=shipImpact(s,o,Math.max(0,closing),nx,ny);
+      const impact=shipImpact(s,o,Math.max(0,closing));
       const push=depth+1;s.x-=nx*push*share;s.y-=ny*push*share;o.x+=nx*push*(1-share);o.y+=ny*push*(1-share);
       if(closing>0){const impulse=closing*1.05/(1/mass+1/otherMass);s.vx-=nx*impulse/mass;s.vy-=ny*impulse/mass;o.vx+=nx*impulse/otherMass;o.vy+=ny*impulse/otherMass;}
       if(this.shipContacts.has(key))continue;this.shipContacts.set(key,[s.id,o.id]);
-      const first=impact.fatalA?impact.a:this.limitShipImpact(s,impact.a),second=impact.fatalB?impact.b:this.limitShipImpact(o,impact.b),point={x:(s.x+o.x)/2,y:(s.y+o.y)/2};
+      // The existing cap protects ordinary scrapes; it must not turn a
+      // high-energy ram into a 5%/8% tap. Contact deduplication still applies.
+      const first=this.limitShipImpact(s,impact.ordinaryA)+impact.severeA,second=this.limitShipImpact(o,impact.ordinaryB)+impact.severeB,point={x:(s.x+o.x)/2,y:(s.y+o.y)/2};
       // Resolve both hulls before checking the winner; a destroyed ship can still inflict its impact.
       if(first>0)this.damage(s,first,o.id,point,true,undefined,0,'collision');
       if(second>0)this.damage(o,second,s.id,point,true,undefined,0,'collision');
@@ -201,7 +199,7 @@ export class BattleEngine {
       // Resting contact, separation correction and tangential flight do no damage.
       if(closing<=80)continue;
       const fatal=s.spec.length<35&&closing>Math.max(185,s.spec.speed*.78),total=s.spec.hull+s.spec.shield;
-      const amount=fatal?total:this.limitShipImpact(s,total*Math.min(.05,.035*((closing-80)/200)**2));
+      const amount=fatal?total:this.limitShipImpact(s,total*Math.min(.05,.035*((closing-80)/200)**2*(s.spec.collisionDamageMultiplier??1)));
       if(amount>0)this.damage(s,amount,0,{x:rock.x-nx*rock.radius,y:rock.y-ny*rock.radius},true);
     }
     const rocksById=new Map(this.asteroids.map(r=>[r.id,r]));
@@ -327,17 +325,18 @@ export class BattleEngine {
         let nearest=1,victim:Ship|null=null;
         for(const s of byId.values()){
           if(!s.alive||s.id===owner.id||(owner.team&&s.team===owner.team))continue;
-          const hit=hullIntersection(from,end,s);if(hit!==null&&hit<nearest){nearest=hit;victim=s;}
+          const profile=this.weaponHulls.size?this.weaponHulls.get(s.spec.id):undefined;
+          const hit=profile?weaponHullIntersection(from,end,s,profile):hullIntersection(from,end,s);if(hit!==null&&hit<nearest){nearest=hit;victim=s;}
         }
         for(const rock of this.asteroids){const hit=segmentRock(from,end,rock);if(hit!==null&&hit<=nearest){nearest=hit;victim=null;}}
         const to={x:from.x+dx*m.range*nearest,y:from.y+dy*m.range*nearest};
         if(m.beamWidth){if(nearest<broadDistance){broadDistance=nearest;broadVictim=victim;}continue;}
-        b.segments.push({from,to,hit:!!victim});
+        b.segments.push({from,to,hit:!!victim,...(victim?{ship:victim.id}:{})});
         if(victim&&seconds){const current=damage.get(victim.id)??{ship:victim,amount:0,point:to};current.amount+=m.damage*seconds/emitters.length;damage.set(victim.id,current);}
       }
       if(m.beamWidth){
         const from=mountWorld(owner,m),to={x:from.x+dx*m.range*broadDistance,y:from.y+dy*m.range*broadDistance};
-        b.segments=[{from,to,hit:!!broadVictim}];
+        b.segments=[{from,to,hit:!!broadVictim,...(broadVictim?{ship:broadVictim.id}:{})}];
         if(broadVictim&&seconds)damage.set(broadVictim.id,{ship:broadVictim,amount:m.damage*seconds,point:to});
       }
       for(const hit of damage.values()){
@@ -354,17 +353,22 @@ export class BattleEngine {
     for(const p of this.projectiles){
       if(guidedWeapon(p)) { const target=byId.get(p.target);if(target?.alive){const aim=Math.atan2(target.y-p.y,target.x-p.x);p.angle=wrap(p.angle+clamp(wrap(aim-p.angle),-(p.turnRate??(p.role==='anti-capital'?.72:2.3))*dt,(p.turnRate??(p.role==='anti-capital'?.72:2.3))*dt));p.vx=Math.cos(p.angle)*p.speed;p.vy=Math.sin(p.angle)*p.speed;}}
       const next={x:p.x+p.vx*dt,y:p.y+p.vy*dt};
-      let victim:Ship|null=null,impact=Infinity;
+      let victim:Ship|null=null,impact=Infinity,contact:Vec|null=null;
       const owner=owners.get(p.owner);
       for(const s of grid?grid.query(p,next):byId.values()){
         if(s.id===p.owner||!s.alive||(owner?.team&&owner.team===s.team))continue;
         if(Math.abs(s.x-p.x)>s.radius+p.speed*dt+5||Math.abs(s.y-p.y)>s.radius+p.speed*dt+5)continue;
         // Relative motion compensates for the target advancing during the same fixed step.
-        const hit=hullIntersection({x:p.x+s.vx*dt,y:p.y+s.vy*dt},next,s);
-        if(hit!==null&&(hit<impact||hit===impact&&s.id<(victim?.id??Infinity))){impact=hit;victim=s;}
+        const from={x:p.x+s.vx*dt,y:p.y+s.vy*dt},profile=this.weaponHulls.size?this.weaponHulls.get(s.spec.id):undefined;
+        const hit=profile?weaponHullIntersection(from,next,s,profile):hullIntersection(from,next,s);
+        if(hit!==null&&(hit<impact||hit===impact&&s.id<(victim?.id??Infinity))){impact=hit;victim=s;
+          // The relative-motion ray lives in the target's current pose. Keep
+          // its actual alpha contact there for local impact metadata as well.
+          contact=profile?{x:from.x+(next.x-from.x)*hit,y:from.y+(next.y-from.y)*hit}:null;
+        }
       }
       let terrain=Infinity;for(const rock of this.asteroids){const hit=segmentRock(p,next,rock);if(hit!==null&&hit<terrain)terrain=hit;}if(Number.isFinite(terrain)&&terrain<=impact)continue;
-      if(victim){this.damage(victim,(this.referenceMode?p.damage:projectileDamage(p.kind,p.damage,p.travel+p.speed*dt*impact))*(!this.referenceMode&&p.role==='anti-capital'&&!p.impact&&!p.referenceWeapon?clamp((victim.spec.length/40)**1.65,.12,24):1),p.owner,{x:p.x+(next.x-p.x)*impact,y:p.y+(next.y-p.y)*impact},false,p.kind,0,'weapon',p.impact,p.damageType);
+      if(victim){this.damage(victim,(this.referenceMode?p.damage:projectileDamage(p.kind,p.damage,p.travel+p.speed*dt*impact))*(!this.referenceMode&&p.role==='anti-capital'&&!p.impact&&!p.referenceWeapon?clamp((victim.spec.length/40)**1.65,.12,24):1),p.owner,contact??{x:p.x+(next.x-p.x)*impact,y:p.y+(next.y-p.y)*impact},false,p.kind,0,'weapon',p.impact,p.damageType);
         // Settle at the first last-survivor event, before later projectiles in this step.
         if(this.checkOutcome()){this.projectiles=[];return;}continue;}
       p.x=next.x;p.y=next.y;p.ttl-=dt;p.travel+=p.speed*dt;
@@ -405,7 +409,8 @@ export class BattleEngine {
     s.hull=Math.max(0,s.hull-(amount-absorbed)*armor*(damageType==='distortion'?(this.referenceMode?0:.15):1));if(s.hull<1e-8)s.hull=0;s.lastHit=this.time;this.hits++;
     if(!environment&&cause==='weapon'&&s.hull<previousHull){const old=s.hitStreak;s.hitStreak=old&&this.time-old.last<simulationSeconds(.7)?{since:old.since,last:this.time,count:Math.min(20,old.count+1)}:{since:this.time,last:this.time,count:1};}
     if(attacker&&cause!=='collision')attacker.lastDealt=this.time;
-    this.events.push({id:++this.sequence,kind:absorbed>0?'shield':'hit',...point,time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});
+    const dx=point.x-s.x,dy=point.y-s.y,c=Math.cos(s.heading),n=Math.sin(s.heading);
+    this.events.push({id:++this.sequence,kind:absorbed>0?'shield':'hit',...point,localImpact:{x:(-dx*n+dy*c)/s.spec.beam,y:-(dx*c+dy*n)/s.spec.length},time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});
     if(s.hull<=0){const friendly=cause==='collision'&&Boolean(attacker?.team&&attacker.team===s.team),credited=attacker&&!friendly;if(environment&&!credited)this.collisionDeaths++;s.alive=false;s.shield=0;if(credited)attacker.kills++;const id=++this.sequence;this.events.push({id,kind:'destroy',x:s.x,y:s.y,time:this.time,radius:s.radius,ship:s.id,by:owner,label:s.label});this.killLog.push({id,time:this.time,victimId:s.id,victimName:s.label,killerId:owner,killerName:cause==='asteroid'?'陨石撞击':attacker?.label??'未知成员',cause,...(friendly?{friendly:true}:{})});this.killLog=this.killLog.slice(-12);}
   }
   private finish(outcome:BattleOutcome){this.phase='finished';this.outcome=outcome;this.projectiles=[];this.beams=[];}
@@ -451,7 +456,7 @@ export class BattleEngine {
     for(let attempt=0;attempt<300;attempt++){
       const range=field+radius+100+attempt*12;
       x=center.x+Math.cos(angle)*range;y=center.y+Math.sin(angle)*range;
-      if(this.living.every(s=>distance(s,{x,y})>s.radius+radius+12))break;
+      if(this.living.every(s=>distance(s,{x,y})>s.radius+radius+12)&&this.asteroids.every(rock=>!asteroidContact({x,y,heading:angle+Math.PI,spec},rock,30)))break;
     }
     const heading=Math.atan2(center.y-y,center.x-x);
     const id=Math.max(0,...this.ships.map(s=>s.id))+1,number=this.ships.filter(s=>s.npc==='escort').length+1;

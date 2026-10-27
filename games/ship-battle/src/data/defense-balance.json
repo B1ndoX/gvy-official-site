@@ -66,8 +66,16 @@
     "torpedo": 0.7,
     "ballistic": 0.85
   },
-  "shieldRecoveryDelay": 7,
-  "shieldRecoveryPerSecond": 0.002,
+  "naturalShieldRecovery": {
+    "smallLength": 25,
+    "mediumLength": 100,
+    "smallDelaySeconds": 6,
+    "mediumDelaySeconds": 10,
+    "maximumDelaySeconds": 14,
+    "smallRechargeSeconds": 3,
+    "mediumRechargeSeconds": 10,
+    "maximumRechargeSeconds": 20
+  },
   "intermission": {
     "seconds": 6,
     "hullRecovery": 0.15,

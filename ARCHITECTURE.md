@@ -21,6 +21,24 @@
 
 ## 第二款游戏的统一数据职责（发布状态见 OPERATIONS）
 
+R24试玩反馈追加：arena只保留出生/素材场景/镜头尺度职责，不从最终速度扣除边界回推，避免与追击路线抵消。asteroidContact负责真正最近椭圆表面的物理接触，BOSS/僚机出生需净空，enterUntil只限制原入场武器延迟、不得跳过现有导航/避障。陨石由原createAsteroids一次生成20块、扩大范围与间距；Renderer不再画中心靶环。预览海报取最终视频t=0原生帧无损保存，不能另截近似画面；仍由原预览控制器独占播放。
+
+R24追加：普通来弹精准evasion及其冷却已删除。现有AttackRun独占随机交火/近身或受击应变，低于200m、≤10%舰体的一次紧急脱离沿原Engine时钟保留；不得重新叠每发来弹必躲、固定节奏闪避或第二条位移。原有限转速/惯性负责火控，普通弹体出膛后不跟靶。两款卡片仅播放各9秒离线实战集锦，状态仍由game-card-previews单独拥有，不能在卡片里启动模拟或预载视频。
+
+R24最终职责：地形规划原点是稳定船体中心；真实射击另从各炮口做遮挡。不得再把随船头转动的炮口当作移动路线起点。naturalShieldRecovery为自然回盾唯一规则，defense-balance中的连续尺寸曲线独占等待/恢复时长，使用原Engine时间、每次有效受击重置；源数据不回写、换波补给仍只由spawnNextBoss负责。collisions独占船间法向速度/质量损伤，普通擦碰沿用原窗口限额，高能部分一次接触结算、不被擦碰上限吞掉；不另加伤害时钟或死亡分支。
+
+R24覆盖旧R23的资本舰近身extend/coast要求：capitalNavigation只选接近/随机交火航线，不额外按近距离改船头或后退；near安全由原terrain/traffic及实体碰撞负责。已证实额外near/coast与地形放行逐帧交替可抵消速度，不能再加超时强推/瞬移或第二套位移。随机lane属于原AttackRun，按模拟时间持有并平滑换向，不增加动画时钟/逐帧PRNG。
+
+R24追加后，render加载纹理时生成≤256边长CPU alpha mask，并将同一只读mask及center/nose作为weaponHulls交给Engine；sim/weapon-hull独占图像/世界变换和有界网格射线接触，普通弹体及光束真实触及不透明船体才命中，不能在椭圆提前删弹后只挪火花。模拟不读取纹理或采样GPU；无图headless/不可读alpha才回退原几何。换图替换整张只读表，销毁时仅清理自己的表。render/HullImpact独占WeakMap命中锚点与随船变换；船间物理碰撞/导航仍由原负责人负责。CombatVfx与WeaponEffects共用实际投影点、原图集/预算与单ticker。重置/纹理替换/销毁清理锚点和mask；素材不可读时沿用原坐标回退。
+
+R23的地形导航与实际武器判定分离：绕行放行使用带余量的几何通路并保留未完成路径，避免船头/炮口转动引发逐帧换路；实际弹丸/光束仍只碰原陨石。≥100m大船的理想射程是接近上限，普通受击只改变侧向分量，只有实际近身风险才脱离；不继承小目标速度。导航不写伤害或护盾，不加计时判胜/新循环。
+
+R22单一控制顺序：Engine选地形固定世界绕行点或combat course，之后只作一次traffic安全修正，原加速度/实体碰撞执行。绕行不叠同石排斥，已有曲线躲避不叠第二次横移；不保留第二套旧分离/正弦/计时攻击。驾驶炮用实际可用固定武器的弹速提前量；炮台/光束仍属统一观察惯性，不混进移动控制。
+
+R21.1的traffic-avoidance只在原Engine固定步计算预测交会速度，原加速度负责执行；不写伤害、不增加计时器或每帧随机。共同gameplay层另负责按Size统一鱼雷速度，原始武器/舰表不改。导弹外观通过ordnance-artwork优先型号、再同Size查找，共用原图集与精灵池；原图和机器人参考素材分别标明来源。
+
+R21本地新增`fleet-gameplay-balance.json`独占共同武器/碰撞倍率与船长连续舰体折算；`prepareCombatSpecs`只从未折算的BASE生成，先共同层，再登记`fleet-combat-tuning.json`供挑战NPC出生使用。原始事实/安装/喷口/机动保持，普通碰撞倍率在原限额前应用。旧boss-mode-balance仍只属历史平衡profile，不与reference下R21候选叠加；当前参数以OPERATIONS顶部为准。
+
 - `games/ship-battle/src/data/ship-reference-facts.json` 与武器目录/配装表只存带版本和来源的事实、缺项及冲突；离线读取机器人保留的公开资料，运行时不访问机器人或 NAS。
 - `simulation-profile.json`是实战档位唯一选择：当前本地reference先采用原作基础值，停用旧数值平衡覆盖；完整状态以OPERATIONS为准。`weapon-stations.json`只读安装记录区分舰首/载人/遥控炮台；不按船长推断。`weapon-fitting-rules.json`负责已确认的炮手互斥。
 - `ship-game-balance.json` / `scripts/ship-stat-model.mjs` 是全舰物理换算的唯一负责人；`weapon-size-balance.json` / 共享型号表负责单炮参数。`generate-defense.mjs` 同时生成成员与 BOSS 基础舰型，不按舰名另补血量或输出。

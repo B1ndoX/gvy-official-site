@@ -5,8 +5,8 @@ import {evasion,evasionVelocity,type Evasion} from '../src/sim/maneuver';
 import {randomGenerator} from '../src/sim/math';
 import type {ShipSpec} from '../src/sim/types';
 function setup(id:string){const e=new BattleEngine();e.reset([{specId:id,count:1},{specId:'gladius',count:1}],data as ShipSpec[],31);const s=e.ships[0];s.hull=s.spec.hull*.05;s.lastHit=1;s.hitStreak={since:.8,last:1,count:3};return s;}
-const waiting:Evasion={until:0,readyAt:100,scanAt:100,side:1};
-test.each(['gladius','vanguard-warden','perseus','polaris'])('%s can react to critical sustained hits before the normal evasion cooldown',id=>{
+const waiting:Evasion={until:0,scanAt:100,side:1};
+test.each(['gladius','vanguard-warden','perseus','polaris'])('%s can trigger its single critical escape even before the next scan',id=>{
  const s=setup(id),state=evasion(s,new Map(),[],1.1,waiting,randomGenerator(31)),velocity=evasionVelocity(s,0,state,1.1);
  expect(state.emergencyUntil).toBeGreaterThan(1.1);expect(velocity.boost).toBeGreaterThanOrEqual(s.spec.length<35?1.7:s.spec.length<100?1.4:1.22);expect(Math.hypot(velocity.x,velocity.y)).toBeGreaterThan(s.spec.speed*.3);expect(Math.abs(velocity.x*Math.cos(state.angle!)+velocity.y*Math.sin(state.angle!))).toBeLessThan(1e-8);
  const continuing=evasion(s,new Map(),[],1.2,state,randomGenerator(31));expect(continuing.until).toBe(state.until);expect(s.spec.speed).toBe((data as ShipSpec[]).find(x=>x.id===id)!.speed);
