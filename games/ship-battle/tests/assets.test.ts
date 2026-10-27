@@ -40,3 +40,26 @@ test.each(['hammerhead','hammerhead-2949-best-in-show'])('%s uses six user-marke
  const old={...base,turretLayoutVersion:1,mounts:base.mounts.filter(m=>!['turret-5','turret-6'].includes(m.id)).map(m=>m.kind==='turret'?{...m,x:.1,y:.1,facing:0}:m)};
  expect(upgradeCombat(old,base).mounts).toEqual(base.mounts);expect(upgradeCombat(old,base).turretLayoutVersion).toBe(4);
 });
+test('all Terrapin variants share the marked two pilot muzzles and upgrade the old merged pair without adding firepower',()=>{
+ const variants=manifest.assets.filter(a=>a.shipId.startsWith('terrapin')) as ShipAsset[];
+ expect(variants.length).toBeGreaterThanOrEqual(2);
+ for(const base of variants){
+  expect(base.mounts).toHaveLength(2);expect(base.mounts.map(m=>({x:m.x,y:m.y}))).toEqual([{x:-.21,y:-.37},{x:.21,y:-.37}]);
+  expect(base.mounts.every(m=>m.fireControl==='pilot'&&m.weaponSize===2&&(m.barrels??1)===1)).toBe(true);
+  expect(base.mounts.reduce((n,m)=>n+(m.capacitor??0),0)).toBe(150);
+  const first=base.mounts[0],legacy={...base,combatVersion:17,turretLayoutVersion:4,mounts:[{...first,x:-.22,y:-.26,weaponCount:2,barrels:2,capacitor:150}]};
+  expect(upgradeCombat(legacy,base).mounts).toEqual(base.mounts);
+  const gun=gameValues.weapons['s2-cf-227-badger-repeater'].combat;
+  expect(base.mounts.reduce((n,m)=>n+weaponDps(m),0)).toBeCloseTo(2*gun.damage/gun.cooldown,3);
+ }
+});
+test('Polaris assigned platforms match the user-marked S3/S4/S6 locations and migrate cached coordinates',()=>{
+ const base=manifest.assets.find(a=>a.shipId==='polaris') as ShipAsset,guns=base.mounts.filter(m=>m.kind==='turret'&&!m.interceptsOnly);
+ const small=guns.filter(m=>m.weaponSize===3),medium=guns.filter(m=>m.weaponSize===4),bow=guns.find(m=>m.weaponSize===6)!;
+ expect(small).toHaveLength(3);expect(small.every(m=>m.barrels===4)).toBe(true);
+ expect(small.some(m=>m.x===0&&m.y>.4)).toBe(true);expect(small.filter(m=>Math.abs(m.x)>.25&&m.y<0)).toHaveLength(2);
+ expect(medium).toHaveLength(2);expect(medium.every(m=>m.barrels===4&&m.y<-.16&&Math.abs(m.x)<.12)).toBe(true);
+ expect(bow.x).toBe(0);expect(bow.y).toBe(-.35);expect(bow.barrels).toBe(2);
+ const stale={...base,turretLayoutVersion:4,mounts:base.mounts.map(m=>({...m,x:.42,y:.42}))};
+ expect(upgradeCombat(stale,base).mounts).toEqual(base.mounts);
+});

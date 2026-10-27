@@ -8,6 +8,7 @@ import type { Ship, BattleSnapshot, BattleEvent, Vec } from '../sim/types';
 import { clamp, mountWorld } from '../sim/math';
 import { assetURL, type ShipAsset } from '../assets/library';
 import { CombatDirector, engagementFrame, shipFocusSpan, trackedCenter, spectatorSpan } from './CombatDirector';
+import {CameraHandoff} from './CameraHandoff';
 import { drawWeaponEffects } from './WeaponEffects';
 import { CombatVfx } from './CombatVfx';
 import { createHullMask, HullImpactAnchors, type HullMask } from './HullImpact';
@@ -26,6 +27,7 @@ export class BattleRenderer {
   private pointers=new Map<number,{x:number;y:number}>();private pinching=false;private pinch:{distance:number;zoom:number;world:{x:number;y:number}}|null=null;
   private assetMap=new Map<string,ShipAsset>();private fittedSpan=3000;private referenceSpan=3000;private cameraMode:'overview'|'combat'|'follow'|'free'='combat';private followed:number|null=null;private tracking:{id:number;x:number;y:number}|null=null;private director=new CombatDirector();private engagement:{subject:Ship;target:Ship|null;active:boolean}|null=null;private frameSeconds=1/60;private loadedURLs=new Set<string>();private assetRequest=0;
   constructor(public element:HTMLDivElement,public engine:BattleEngine){}
+  private handoff=new CameraHandoff();
   async init(){
     // Native asynchronous ImageBitmap decoding works under the site's CSP;
     // Pixi's generated blob worker would be blocked by that same policy.
@@ -89,10 +91,10 @@ export class BattleRenderer {
   get focusEnabled(){return this.cameraMode==='combat';}
   get zoomPercent(){return this.scale*this.zoom*this.referenceSpan/Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))*100;}
   get cameraInfo(){return {mode:this.cameraMode,subject:this.cameraMode==='follow'?this.engine.ships.find(s=>s.id===this.followed)?.label??'':this.engagement?.subject.label??'',target:this.cameraMode==='combat'?this.engagement?.target?.label??'':'',active:this.engagement?.active??false};}
-  fit(){const box=this.bounds();this.center={x:box.x,y:box.y};this.fittedSpan=this.referenceSpan=box.span;this.scale=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))/box.span;this.zoom=1;this.cameraMode='overview';this.selected=null;this.followed=null;this.tracking=null;this.engagement=null;this.director.reset();this.camera();this.onSnapshot(this.engine.snapshot(this.selected));}
+  fit(){this.handoff.reset();const box=this.bounds();this.center={x:box.x,y:box.y};this.fittedSpan=this.referenceSpan=box.span;this.scale=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))/box.span;this.zoom=1;this.cameraMode='overview';this.selected=null;this.followed=null;this.tracking=null;this.engagement=null;this.director.reset();this.camera();this.onSnapshot(this.engine.snapshot(this.selected));}
   resetCamera(){this.fit();this.toggleFocus();}
-  toggleFocus(){this.selected=null;if(this.focusEnabled)this.freeCamera();else{this.cameraMode='combat';this.followed=null;this.tracking=null;this.fittedSpan/=this.zoom;this.scale*=this.zoom;this.zoom=1;this.director.reset();this.engagement=null;}this.onSnapshot(this.engine.snapshot(this.selected));}
-  private freeCamera(){this.cameraMode='free';this.followed=null;this.tracking=null;this.engagement=null;}
+  toggleFocus(){this.handoff.reset();this.selected=null;if(this.focusEnabled)this.freeCamera();else{this.cameraMode='combat';this.followed=null;this.tracking=null;this.fittedSpan/=this.zoom;this.scale*=this.zoom;this.zoom=1;this.director.reset();this.engagement=null;}this.onSnapshot(this.engine.snapshot(this.selected));}
+  private freeCamera(){this.handoff.reset();this.cameraMode='free';this.followed=null;this.tracking=null;this.engagement=null;}
   private cameraArea(combat=true){
     const width=this.element.clientWidth,height=this.element.clientHeight,ui=parseFloat(getComputedStyle(this.element).fontSize)/14;
     if(!combat)return {width,height,x:width/2,y:height/2,ui};
@@ -109,7 +111,7 @@ export class BattleRenderer {
     const span=frame.span*side/Math.max(1,Math.min(area.width,area.height)),k=side/span*this.zoom;
     return {x:ship.x+(frame.x-ship.x)/this.zoom+(this.element.clientWidth/2-area.x)/k,y:ship.y+(frame.y-ship.y)/this.zoom+(this.element.clientHeight/2-area.y)/k,span};
   }
-  focusShip(id:number,frame=true){const ship=this.engine.ships.find(s=>s.id===id);if(!ship)return;this.selected=id;this.cameraMode='follow';this.followed=id;this.tracking={id:ship.id,x:ship.x,y:ship.y};this.engagement=null;const box=this.cameraFrame(ship,null,false);this.center={x:box.x,y:box.y};if(frame){this.fittedSpan=box.span;this.scale=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))/this.fittedSpan;this.zoom=1;}this.camera();this.onSnapshot(this.engine.snapshot(id));}
+  focusShip(id:number,frame=true){this.handoff.reset();const ship=this.engine.ships.find(s=>s.id===id);if(!ship)return;this.selected=id;this.cameraMode='follow';this.followed=id;this.tracking={id:ship.id,x:ship.x,y:ship.y};this.engagement=null;const box=this.cameraFrame(ship,null,false);this.center={x:box.x,y:box.y};if(frame){this.fittedSpan=box.span;this.scale=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight))/this.fittedSpan;this.zoom=1;}this.camera();this.onSnapshot(this.engine.snapshot(id));}
   camera(){if(!this.mounted)return;this.world.scale.set(this.scale*this.zoom);this.world.position.set(this.element.clientWidth/2-this.center.x*this.scale*this.zoom,this.element.clientHeight/2-this.center.y*this.scale*this.zoom);}
   private boundedZoom(value:number){const ui=parseFloat(getComputedStyle(this.element).fontSize)/14,side=Math.max(1,Math.min(this.element.clientWidth,this.element.clientHeight)),minimum=side/(Math.max(this.bounds().span,this.engine.arena*2)*4);return clamp(this.scale*value,minimum,32*ui)/this.scale;}
   zoomBy(factor:number){if(!['follow','combat'].includes(this.cameraMode))this.freeCamera();this.zoom=this.boundedZoom(this.zoom*factor);this.camera();this.onSnapshot(this.engine.snapshot(this.selected));}
@@ -171,22 +173,30 @@ export class BattleRenderer {
       if(this.cameraMode==='overview'&&this.engine.phase==='running')box=this.bounds();
       if(this.cameraMode==='combat'&&this.engine.phase!=='ready'){
         const dt=this.engine.phase==='running'?this.frameSeconds:0;
-        if(!this.engagement||this.engine.phase==='running')this.engagement=this.director.update(this.engine.ships,this.engine.projectiles,this.engine.events,this.engine.time,dt);
-        if(this.engagement){subject=this.engagement.subject;box=this.cameraFrame(subject,this.engagement.target,true);}
+        const previous=this.engagement;
+        if(!this.engagement||this.engine.phase==='running')this.engagement=this.director.update(this.engine.ships,this.engine.projectiles,this.engine.events,this.engine.time,dt,this.handoff.active);
+        if(this.engagement){
+          subject=this.engagement.subject;box=this.cameraFrame(subject,this.engagement.target,true);
+          if(previous&&(previous.subject.id!==subject.id||previous.target?.id!==this.engagement.target?.id))this.handoff.begin({...this.center,span:this.fittedSpan},box);
+        }
       }
       if(this.cameraMode==='follow'){const ship=this.engine.ships.find(s=>s.id===this.followed);if(ship){subject=ship;box=this.cameraFrame(ship,null,false);}else this.freeCamera();}
       if(box){
-        const follow=1-Math.exp(-this.frameSeconds*(this.cameraMode==='overview'?1.5:4));
-        this.fittedSpan=spectatorSpan(this.fittedSpan,box.span,this.cameraMode==='combat'&&subject!==null&&this.tracking?.id!==subject.id);
-        this.fittedSpan=Math.exp(Math.log(this.fittedSpan)+(Math.log(box.span)-Math.log(this.fittedSpan))*follow);
+        const follow=1-Math.exp(-this.frameSeconds*(this.cameraMode==='overview'?1.5:this.cameraMode==='combat'?1:4));
+        const transfer=this.cameraMode==='combat'?this.handoff.step({...this.center,span:this.fittedSpan},box,this.engine.phase==='running'?this.frameSeconds:0,subject?.alive):null;
+        this.fittedSpan=transfer?.span??(this.cameraMode==='combat'?spectatorSpan(this.fittedSpan,box.span,this.frameSeconds):Math.exp(Math.log(this.fittedSpan)+(Math.log(box.span)-Math.log(this.fittedSpan))*follow));
         this.scale=Math.min(this.element.clientWidth,this.element.clientHeight)/this.fittedSpan;
-        if(subject){
+        if(transfer){this.center={x:transfer.x,y:transfer.y};this.tracking=subject?{id:subject.id,x:subject.x,y:subject.y}:null;}
+        else if(subject){
           this.center=trackedCenter(this.center,this.tracking,subject,box,follow);this.tracking={id:subject.id,x:subject.x,y:subject.y};
-          // While changing subjects/zoom, keep the new subject inside the unobscured viewport.
-          const area=this.cameraArea(this.cameraMode==='combat'),k=this.scale*this.zoom,screenX=this.element.clientWidth/2+(subject.x-this.center.x)*k,screenY=this.element.clientHeight/2+(subject.y-this.center.y)*k;
-          const marginX=Math.min(area.width*.22,90*area.ui),marginY=Math.min(area.height*.22,90*area.ui);
-          const left=area.x-area.width/2+marginX,right=area.x+area.width/2-marginX,top=area.y-area.height/2+marginY,bottom=area.y+area.height/2-marginY;
-          this.center.x+=(screenX-clamp(screenX,left,right))/k;this.center.y+=(screenY-clamp(screenY,top,bottom))/k;
+          // Automatic composition already fits both ships. A subject-only
+          // correction here would push the opponent back outside the shot.
+          if(this.cameraMode==='follow'){
+            const area=this.cameraArea(false),k=this.scale*this.zoom,screenX=this.element.clientWidth/2+(subject.x-this.center.x)*k,screenY=this.element.clientHeight/2+(subject.y-this.center.y)*k;
+            const marginX=Math.min(area.width*.22,90*area.ui),marginY=Math.min(area.height*.22,90*area.ui);
+            const left=area.x-area.width/2+marginX,right=area.x+area.width/2-marginX,top=area.y-area.height/2+marginY,bottom=area.y+area.height/2-marginY;
+            this.center.x+=(screenX-clamp(screenX,left,right))/k;this.center.y+=(screenY-clamp(screenY,top,bottom))/k;
+          }
         }else{this.tracking=null;this.center.x+=(box.x-this.center.x)*follow;this.center.y+=(box.y-this.center.y)*follow;}
         this.camera();
       }
@@ -238,5 +248,5 @@ export class BattleRenderer {
     if(this.vfx){drawWeaponEffects(this.engine,e,px,this.vfx,this.beamImpact);this.vfx.events(this.engine,this.hitImpact);this.vfx.end();}
     // Wakes sit beneath hulls; weapon feedback sits above hulls and beneath labels.
   }
-  destroy(){this.disposed=true;this.resizeObserver?.disconnect();this.impactAnchors.reset();if(this.engine.weaponHulls===this.weaponHulls)this.engine.weaponHulls=new Map();this.weaponHulls.clear();this.hullMasks.clear();this.outlines.clear();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.canvas.removeEventListener('lostpointercapture',this.cancel);this.pointers.clear();this.pointer=null;this.pinch=null;this.vfx?.destroy();this.vfx=null;this.app.destroy(true,{children:true,texture:false});}
+  destroy(){this.handoff.reset();this.disposed=true;this.resizeObserver?.disconnect();this.impactAnchors.reset();if(this.engine.weaponHulls===this.weaponHulls)this.engine.weaponHulls=new Map();this.weaponHulls.clear();this.hullMasks.clear();this.outlines.clear();if(!this.mounted)return;this.app.canvas.removeEventListener('wheel',this.wheel);this.app.canvas.removeEventListener('pointerdown',this.down);this.app.canvas.removeEventListener('pointermove',this.move);this.app.canvas.removeEventListener('pointerup',this.up);this.app.canvas.removeEventListener('pointercancel',this.cancel);this.app.canvas.removeEventListener('lostpointercapture',this.cancel);this.pointers.clear();this.pointer=null;this.pinch=null;this.vfx?.destroy();this.vfx=null;this.app.destroy(true,{children:true,texture:false});}
 }

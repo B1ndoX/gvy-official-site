@@ -27,3 +27,13 @@ test('the twenty asteroids occupy a wider field with larger gaps, without a cent
  expect(rocks).toHaveLength(20);expect(rocks.filter(r=>Math.hypot(r.x,r.y)>e.arena)).toHaveLength(8);
  for(const r of rocks){expect(Math.hypot(r.x,r.y)).toBeGreaterThan(e.arena*.12);for(const other of rocks)if(other!==r)expect(Math.hypot(r.x-other.x,r.y-other.y)-r.radius-other.radius).toBeGreaterThanOrEqual(Math.max(210,e.arena*.055));}
 });
+test('a blocked arrival lane cannot exhaust a fixed search budget and spawn a boss inside terrain',()=>{
+ const e=new BattleEngine();e.reset([{specId:'gladius',count:2},{specId:'retribution',count:1,npc:'boss',team:'vanduul'}],specs,31,'bounty');
+ e.ships.forEach((s,i)=>Object.assign(s,{x:i?100:-100,y:0,vx:0,vy:0}));
+ (e as unknown as {random:()=>number}).random=()=>0;
+ e.asteroids=Array.from({length:8},(_,i)=>({id:i+1,x:2200+i*600,y:0,radius:60,rotation:0}));
+ e.start();const boss=e.snapshot().boss!;
+ expect(boss.x).toBeGreaterThan(600+boss.radius+100+299*12);
+ expect(e.asteroids.every(r=>!asteroidContact(boss,r,29))).toBe(true);
+ const x=boss.x,y=boss.y;e.step();expect(Math.hypot(boss.x-x,boss.y-y)).toBeLessThan(20);
+});

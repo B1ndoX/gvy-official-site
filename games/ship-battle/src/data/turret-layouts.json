@@ -35,33 +35,48 @@
     },
     "polaris": {
       "url": "assets/ships/polaris.png",
-      "basis": "render-platforms",
+      "basis": "user-marked-3-quad-S3-2-quad-S4-bow-S6-2026-10-27",
       "mounts": {
         "turret-1": {
           "x": 0.109562,
           "y": -0.166667
         },
         "turret-2": {
-          "x": -0.109562,
-          "y": -0.166667
+          "x": 0,
+          "y": 0.412913,
+          "facing": 180
         },
         "turret-3": {
-          "x": 0.290837,
-          "y": 0.18969
+          "x": 0.27,
+          "y": -0.03,
+          "facing": 90
         },
         "turret-4": {
-          "x": -0.290837,
-          "y": 0.18969
+          "x": -0.27,
+          "y": -0.03,
+          "facing": -90
         },
         "turret-5": {
-          "x": 0.0,
-          "y": 0.412913
+          "x": -0.109562,
+          "y": -0.166667,
+          "facing": 0
         },
         "turret-6": {
           "x": 0,
           "y": -0.30981
+        },
+        "model-weapon-1": {
+          "x": 0.109562,
+          "y": -0.166667,
+          "facing": 0
+        },
+        "model-weapon-2": {
+          "x": 0,
+          "y": -0.35,
+          "facing": 0
         }
-      }
+      },
+      "version": 5
     },
     "idris-p": {
       "url": "assets/ships/idris-p.png",
@@ -948,6 +963,28 @@
           "arc": 300
         }
       }
+    },
+    "terrapin": {
+      "url": "assets/ships/terrapin.png",
+      "basis": "user-marked-both-pilot-muzzles-2026-10-27",
+      "version": 5,
+      "mounts": {
+        "laser-1": {
+          "x": -0.21,
+          "y": -0.37,
+          "facing": 0
+        },
+        "laser-2": {
+          "x": 0.21,
+          "y": -0.37,
+          "facing": 0
+        }
+      }
+    },
+    "terrapin-medic": {
+      "url": "assets/ships/terrapin-medic.png",
+      "aliasOf": "terrapin",
+      "basis": "user-confirmed-shared-terrapin-family-muzzles"
     }
   }
 }

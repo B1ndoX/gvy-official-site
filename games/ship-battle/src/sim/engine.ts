@@ -4,7 +4,7 @@ import { rankMembers, BOSS_IDS } from './members';
 import { bossDefense, bossPopulation } from './balance';
 import bossRules from '../data/boss-mode-balance.json';
 import defenseRules from '../data/defense-balance.json';
-import {createAsteroids,avoidAsteroids,asteroidContact,segmentRock,type Asteroid} from './asteroids';
+import {createAsteroids,avoidAsteroids,asteroidContact,asteroidSafeHeading,segmentRock,type Asteroid} from './asteroids';
 import {battleSeconds,simulationSeconds} from './pacing';
 import {evasion,evasionVelocity,attackNavigation,type AttackRun,type Evasion} from './maneuver';
 import {fixedWeapon,turretControlled,guidedWeapon,projectileDamage} from './weapons';
@@ -148,6 +148,7 @@ export class BattleEngine {
         const aimed=trackAim(tracking,s.heading,desired,target.id,this.time,dt,s.spec.turnRate,this.random,{origin:mountWorld(s,mainWeapon),target,speed:mainWeapon.speed});
         this.beamTurns.set(s.id,tracking);s.heading=aimed.angle;
       }else s.heading=wrap(s.heading+clamp(delta,-s.spec.turnRate*dt,s.spec.turnRate*dt));
+      s.heading=asteroidSafeHeading({...s,heading:previousHeading},s.heading,this.asteroids);
       // Turrets retain world orientation while the hull turns. Hull yaw cannot
       // bypass their traverse limit or drag every gun straight onto a new target.
       for(let i=0;i<s.spec.mounts.length;i++)if(turretControlled(s.spec.mounts[i]))s.turretAngles[i]=wrap(s.turretAngles[i]-wrap(s.heading-previousHeading));
@@ -267,7 +268,10 @@ export class BattleEngine {
         s.turretAngles[i]=wrap(tracked.angle-s.heading);relative=wrap(tracked.goal-s.heading);trackingReady=tracked.ready;
       }else s.turretAngles[i]=fixedWeapon(m)?facing:wrap(s.turretAngles[i]+clamp(wrap(desired-s.turretAngles[i]),-m.turnRate*dt,m.turnRate*dt));
       const error=Math.abs(wrap(relative-s.turretAngles[i]));
-      const tolerance=guidedWeapon(m)?.3:Math.max(.012,Math.atan2(Math.min(target.spec.beam,target.spec.length)*.28+2,distance(origin,target)));
+      // Gunners may fire while settling on a solution. Rounds still leave the
+      // actual barrel direction; requiring near-perfect aim made slow turrets
+      // repeatedly withhold cooled volleys against moving small ships.
+      const tolerance=guidedWeapon(m)?.3:Math.max(turretControlled(m)?aimRules.turretFiringToleranceDegrees*Math.PI/180:.012,Math.atan2(Math.min(target.spec.beam,target.spec.length)*.28+2,distance(origin,target)));
       if(!trackingReady||s.cooldowns[i]>0||error>tolerance||this.projectiles.length+(m.barrels??1)*(m.pellets??1)>3500)return;
       const direction=s.heading+s.turretAngles[i],reach=distance(origin,point),end={x:origin.x+Math.cos(direction)*reach,y:origin.y+Math.sin(direction)*reach};
       if(firingObstacle(origin,end,target,this.asteroids))return;
@@ -444,7 +448,8 @@ export class BattleEngine {
     const tuned=npc==='boss'&&this.mode==='challenge'?original.encounterTuning:undefined,ratio=Math.max(1,this.initialFleet.length)/(tuned?.populationReference??32),tunedHealth=tuned?tuned.health*ratio**tuned.healthPower:1;
     const tunedShield=tuned?tuned.shieldReference*(original.shield/tuned.shieldReference)**tuned.shieldPower*tunedHealth:original.shield;
     const defense=tuned?{hull:Math.round(tuned.hullReference*(original.hull/tuned.hullReference)**tuned.hullPower*tunedHealth),shield:Math.round(tunedShield),shieldRegen:original.shieldRegen*tunedShield/Math.max(1,original.shield)}:npc==='boss'?bossDefense(original,this.mode,this.initialFleet,this.initialFleet.length,this.wave,this.referenceMode):{hull:Math.round(original.hull*escortScale),shield:Math.round(original.shield*escortScale),shieldRegen:original.shieldRegen*escortScale};
-    const damageFactor=tuned?tuned.damage*ratio**tuned.damagePower:this.referenceMode?1:npc==='boss'?bossPopulation(this.initialFleet.length).damage*bossRules.damageMultiplier*(this.mode==='challenge'?bossRules.challengeDamageMultiplier:1):defenseRules.escortDamageMultiplier*crowd;
+    const bossDamage=npc==='boss'&&(this.mode==='challenge'||this.mode==='bounty')?(original.encounterTuning?.damage??1):1;
+    const damageFactor=tuned?bossDamage*ratio**tuned.damagePower:this.referenceMode?bossDamage:npc==='boss'?bossDamage*bossPopulation(this.initialFleet.length).damage*bossRules.damageMultiplier*(this.mode==='challenge'?bossRules.challengeDamageMultiplier:1):defenseRules.escortDamageMultiplier*crowd;
     const mounts=damageFactor===1?original.mounts:original.mounts.map(m=>({...m,damage:m.damage*damageFactor}));
     const spec={...original,mounts,hull:defense.hull,shield:defense.shield,shieldRegen:defense.shieldRegen};
     const members=this.living.filter(s=>!s.npc),radius=Math.max(9,Math.max(spec.length,spec.beam)*.5);
@@ -453,7 +458,11 @@ export class BattleEngine {
     // Every arrival gets an independent seeded bearing; ships fly inward from the perimeter.
     const angle=this.random()*TAU;
     let x=0,y=0;
-    for(let attempt=0;attempt<300;attempt++){
+    // The final candidate lies beyond every obstacle's bounding circle.
+    // A fixed attempt cap could exhaust inside a long blocked arrival lane.
+    const extent=Math.max(field,...this.living.map(s=>distance(s,center)+s.radius+12),...this.asteroids.map(rock=>distance(rock,center)+rock.radius+30));
+    const attempts=Math.ceil((extent-field)/12)+1;
+    for(let attempt=0;attempt<attempts;attempt++){
       const range=field+radius+100+attempt*12;
       x=center.x+Math.cos(angle)*range;y=center.y+Math.sin(angle)*range;
       if(this.living.every(s=>distance(s,{x,y})>s.radius+radius+12)&&this.asteroids.every(rock=>!asteroidContact({x,y,heading:angle+Math.PI,spec},rock,30)))break;

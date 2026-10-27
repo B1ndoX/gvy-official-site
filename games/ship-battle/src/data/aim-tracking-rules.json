@@ -1,10 +1,11 @@
 {
-  "version": 1,
+  "version": 2,
   "description": "Shared gameplay aiming response for every member and NPC, including bosses. Does not replace sourced weapon damage/RPM or hull yaw. Pilot guns remain hull-fixed; point defense keeps its interception controller.",
   "observationIntervalSeconds": [0.28, 0.42],
   "acquisitionDelaySeconds": [0.22, 0.38],
   "velocityResponseSeconds": 0.55,
   "angleResponseSeconds": 0.4,
   "angularAccelerationSeconds": 0.6,
+  "turretFiringToleranceDegrees": 8,
   "beamHullTurnFraction": 0.8
 }

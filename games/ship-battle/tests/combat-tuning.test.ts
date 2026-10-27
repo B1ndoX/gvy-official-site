@@ -31,10 +31,19 @@ test('boss difficulty is applied only after the same base conversion, with conti
  expect(boss.spec.hull).toBe(Math.round(rules.referenceHull*(base.hull/rules.referenceHull)**rules.hullPower*rules.bossHealth*ratio));expect(boss.spec.mounts[0].damage).toBeCloseTo(base.mounts[0].damage*rules.bossDamage*Math.sqrt(ratio));expect(e.ships[0].spec.hull).toBe(game.find(s=>s.id==='gladius')!.hull);
  }
 });
-test('enabling the challenge layer leaves seeded PVP trajectories and bounty boss stats unchanged',()=>{
- for(const mode of ['brawl','teams','bounty'] as const){
+test('enabling the NPC layer leaves seeded PVP trajectories unchanged',()=>{
+ for(const mode of ['brawl','teams'] as const){
   const engines=[source,prepareCombatSpecs(source,rules)].map(specs=>{const e=new BattleEngine();e.reset([{specId:'scorpius',count:1,team:'red'},{specId:'gladius',count:1,team:'blue'},{specId:'mauler',count:1,npc:'boss'}],specs,31,mode);e.start();for(let i=0;i<600;i++)e.step();return e;});
   const state=(e:BattleEngine)=>({phase:e.phase,shots:e.shots,hits:e.hits,ships:e.ships.map(s=>({id:s.id,x:s.x,y:s.y,hull:s.hull,shield:s.shield,alive:s.alive,mounts:s.spec.mounts}))});
   expect(state(engines[1])).toEqual(state(engines[0]));
+ }
+});
+test('challenge and bounty share one boss output multiplier while health and member weapons retain their rules',()=>{
+ for(const mode of ['challenge','bounty'] as const)for(const count of [2,32]){
+  const engines=[1,1.25].map(bossDamage=>{const game=prepareCombatSpecs(source,{...rules,bossDamage}),e=new BattleEngine();e.reset([{specId:'gladius',count},{specId:'mauler',count:1,npc:'boss'}],game,31,mode);e.start();return e;});
+  const [before,after]=engines.map(e=>e.snapshot().boss!);
+  expect(after.spec.hull).toBe(before.spec.hull);expect(after.spec.shield).toBe(before.spec.shield);expect(after.spec.speed).toBe(before.spec.speed);
+  after.spec.mounts.forEach((m,i)=>expect(m).toEqual({...before.spec.mounts[i],damage:before.spec.mounts[i].damage*1.25}));
+  expect(engines[1].ships.filter(s=>!s.npc).map(s=>s.spec.mounts)).toEqual(engines[0].ships.filter(s=>!s.npc).map(s=>s.spec.mounts));
  }
 });

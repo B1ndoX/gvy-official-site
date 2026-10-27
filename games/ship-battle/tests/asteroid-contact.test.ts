@@ -1,7 +1,7 @@
 import {expect,test} from 'vitest';
 import data from '../src/data/ships.json';
 import {BattleEngine} from '../src/sim/engine';
-import {asteroidContact} from '../src/sim/asteroids';
+import {asteroidContact,asteroidSafeHeading} from '../src/sim/asteroids';
 import type {ShipSpec} from '../src/sim/types';
 function setup(id='javelin'){
  const specs=(data as ShipSpec[]).map(s=>({...s,mounts:[],speed:0,turnRate:0,acceleration:0,shieldRegen:0}));
@@ -47,4 +47,15 @@ test('interior centre, boundary and broad hull contacts remain finite',()=>{
   const rock={id:1,x:(s.spec.length*.48+3)*fraction,y:0,radius:40,rotation:0},hit=asteroidContact(s,rock)!;
   expect([hit.nx,hit.ny,hit.depth].every(Number.isFinite)).toBe(true);expect(Math.hypot(hit.nx,hit.ny)).toBeCloseTo(1,8);
  }
+});
+test('rotation cannot wedge a long hull between opposing rocks, while clear rotation remains free',()=>{
+ const e=setup('retribution'),s=e.ships[0];s.spec={...s.spec,length:2789,beam:602.424};
+ const rocks=[{id:1,x:700,y:320,radius:60,rotation:0},{id:2,x:-700,y:-320,radius:60,rotation:0}];
+ expect(rocks.every(r=>!asteroidContact(s,r))).toBe(true);
+ expect(rocks.some(r=>asteroidContact({...s,heading:.06},r))).toBe(true);
+ const heading=asteroidSafeHeading(s,.06,rocks);
+ expect(heading).toBeGreaterThan(0);expect(heading).toBeLessThan(.06);
+ expect(rocks.every(r=>(asteroidContact({...s,heading},r)?.depth??0)<.001)).toBe(true);
+ expect(asteroidSafeHeading(s,-.01,rocks)).toBeCloseTo(-.01,8);
+ expect(asteroidSafeHeading(s,.06,[])).toBeCloseTo(.06,8);
 });
