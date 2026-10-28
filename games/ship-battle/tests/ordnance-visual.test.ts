@@ -27,14 +27,17 @@ test('verified artwork is one bounded transparent atlas with traceable original 
 });
 test('a verified torpedo uses its raster casing while preserving projectile state and the existing propulsion effect',()=>{
  const p={id:1,kind:'torpedo',weaponId:'s10-vt-t10-veritas-torpedo',weaponSize:10,x:0,y:0,angle:0,speed:100,damage:650000,color:0xffffff} as Projectile,original=JSON.stringify(p),calls:string[]=[];
- const engine={ships:[],beams:[],projectiles:[p],events:[],time:1} as unknown as BattleEngine;
- drawWeaponEffects(engine,{} as Graphics,1,{ordnance(){calls.push('body');return true;},wake(){calls.push('wake');},plume(){calls.push('plume');},glow(){}} as unknown as CombatVfx);
- expect(calls).toEqual(['wake','body','plume']);expect(JSON.stringify(p)).toBe(original);
+ const engine={ships:[],beams:[],projectiles:[p],events:[],time:1} as unknown as BattleEngine,plumes:number[][]=[],body:number[]=[];
+ drawWeaponEffects(engine,{} as Graphics,1,{ordnance(_p:Projectile,length:number){calls.push('body');body.push(length);return true;},wake(){calls.push('wake');},plume(...args:number[]){calls.push('plume');plumes.push(args);},glow(){}} as unknown as CombatVfx);
+ expect(calls).toEqual(['wake','body','plume','plume']);expect(JSON.stringify(p)).toBe(original);
+ expect(plumes[0][3]).toBeGreaterThan(body[0]);
+ expect(plumes[0][6]).toBeGreaterThanOrEqual(.9);expect(plumes[1][6]).toBe(1);
 });
 
-test('S2/S5/S9/S10 silhouettes use distinct world lengths; even S10 stays much smaller than its Polaris launcher',()=>{
+test('S2/S5/S9/S10 torpedoes retain their size hierarchy while their casings become easier to see',()=>{
  const sizes=[2,5,9,10].map(weaponSize=>ordnanceVisualLength({weaponSize,kind:'torpedo'}));
- expect(sizes).toEqual([.8,2.4,8,10].map(n=>n*1.6));expect(sizes[3]/181).toBeLessThan(.1);
+ expect(sizes).toEqual([.8,2.4,8,10].map(n=>n*4));expect(sizes[3]/181).toBeLessThan(.25);
+ expect([2,5,9,10].map(weaponSize=>ordnanceVisualLength({weaponSize,kind:'missile'}))).toEqual([.8,2.4,8,10]);
 });
 test('zoom changes the screen projection of a torpedo, never its size relative to a ship',()=>{
  const spans=[];
@@ -45,5 +48,5 @@ test('zoom changes the screen projection of a torpedo, never its size relative t
   drawWeaponEffects(engine,g as unknown as Graphics,px,{wake(){},plume(){},glow(){}} as unknown as CombatVfx);
   const x=polygons.flatMap(p=>p.filter((_,i)=>i%2===0));spans.push(Math.max(...x)-Math.min(...x));
  }
- expect(spans[0]).toBeCloseTo(spans[1]);expect(spans[1]).toBeCloseTo(spans[2]);expect(spans[0]).toBeLessThan(18);
+ expect(spans[0]).toBeCloseTo(spans[1]);expect(spans[1]).toBeCloseTo(spans[2]);expect(spans[0]).toBeLessThan(45);
 });

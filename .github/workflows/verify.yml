@@ -27,7 +27,14 @@ jobs:
       - name: Install production dependencies
         run: npm ci --ignore-scripts --omit=dev
       - name: Ensure ffmpeg is available
-        run: command -v ffmpeg || (sudo apt-get update && sudo apt-get install -y ffmpeg)
+        run: |
+          if ! command -v ffmpeg >/dev/null; then
+            # The Azure mirror repeatedly stalled package downloads until the job timed out.
+            # Keep the runner's signed Ubuntu archive/security mirrors as the download sources.
+            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
       - name: Verify deployable website
         run: npm run verify:site
 
