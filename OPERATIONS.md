@@ -2,6 +2,10 @@
 
 本手册供没有历史上下文的新维护者执行验证、发布、监控、故障定位和回滚。架构与首次安装见 `README.md`。
 
+## 发布阻塞修复：Ubuntu 下载镜像（2026-10-28）
+
+PR28候选7466c68的Node24完整检查和浏览器检查已成功，但Node22站点任务两次都在从azure.archive.ubuntu.com安装FFmpeg时耗尽20分钟，尚未开始站点验证（运行40564161715；两次原始日志存证）。已先说明必要联动原因，仅在原FFmpeg安装步骤从runner现有apt-mirrors.txt移除失速Azure条目，保留原Ubuntu官方archive/security源和签名验证；Node22/24、runner、测试命令、检查名、时限和分支保护均不变。依据GitHub actions/runner-images的configure-apt-sources.sh确认镜像格式，shell语法和官方镜像样本替换验证通过，最终以新候选真实CI为准。没有实施Node统一或测试路径分流；产品/DO2FTLKL包保持不变，当前仍未上线。日志与该源配置证据在gvy-torpedo-natural-width-release-20261028目录。
+
 ## 最新发布候选：取消鱼雷额外加粗，保留放大与明亮长尾焰（2026-10-28，用户已授权部署）
 
 - 用户最新明确“取消加粗”，随后要求“弄好以后部署”。已恢复弹体原图长宽比例，删除CombatVfx.ordnance的额外厚度参数；该文件与当前正式PR27完全一致。保留鱼雷显示倍率4，S5/S9/S10/S12长度9.6/32/40/56；S10实际厚4.6667，前一加粗候选8.4已取消。所有船型/NPC共用，普通导弹原比例保持。
