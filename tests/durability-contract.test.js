@@ -25,12 +25,12 @@ const publisherRunner = await read("tools/gallery-publisher/run-server-macos.zsh
 const publisherProcess = await read("tools/gallery-publisher/lib/process.mjs");
 
 test("development and cloud builds use the same exact Node version", async () => {
-  assert.equal((await read(".node-version")).trim(), "24.19.0");
-  assert.equal((await read(".nvmrc")).trim(), "24.19.0");
-  assert.equal(packageJson.engines.node, "24.19.0");
-  assert.equal(JSON.parse(await read("package-lock.json")).packages[""].engines.node, "24.19.0");
-  assert.equal(edgeone.nodeVersion, undefined);
-  assert.equal(edgeone.installCommand, "node scripts/check-node.mjs && npm ci --ignore-scripts --omit=dev");
+  assert.equal((await read(".node-version")).trim(), "24.18.0");
+  assert.equal((await read(".nvmrc")).trim(), "24.18.0");
+  assert.equal(packageJson.engines.node, "24.18.0");
+  assert.equal(JSON.parse(await read("package-lock.json")).packages[""].engines.node, "24.18.0");
+  assert.equal(edgeone.nodeVersion, "24.18.0");
+  assert.equal(edgeone.installCommand, "node scripts/check-node.mjs && npm --version && npm ci --ignore-scripts --omit=dev");
   assert.equal(edgeone.buildCommand, "npm run verify:edgeone");
   assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
   assert.match(packageJson.scripts["verify:edgeone"], /GVY_SKIP_MEDIA_METADATA=1/);

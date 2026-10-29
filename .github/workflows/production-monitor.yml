@@ -25,6 +25,7 @@ jobs:
           sparse-checkout: |
             /.node-version
             /.nvmrc
+            /edgeone.json
             /scripts/
             /config/
             /package.json
