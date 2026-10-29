@@ -88,11 +88,61 @@ jobs:
       - name: Verify deployable output without unrelated media metadata work
         run: node scripts/run-verification.mjs site
 
+  game:
+    name: Ship simulation checks
+    needs: plan
+    if: needs.plan.outputs.ship == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            games/ship-battle/package-lock.json
+      - name: Verify Node and install game test dependencies
+        run: |
+          node scripts/check-node.mjs
+          npm --prefix games/ship-battle ci --ignore-scripts
+      - name: Run simulation checks on an independent worker
+        run: node scripts/run-verification.mjs game
+
   publisher:
     name: Affected tools and browser checks on Node 24
-    needs: plan
+    needs: [plan, game, tools]
     if: ${{ always() }}
-    runs-on: ${{ needs.plan.outputs.tools == 'true' && 'macos-14' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
+      GVY_PLAN_RESULT: ${{ needs.plan.result }}
+      GVY_GAME_RESULT: ${{ needs.game.result }}
+      GVY_TOOLS_RESULT: ${{ needs.tools.result }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - name: Require every selected job to have actually succeeded
+        run: |
+          node scripts/check-node.mjs
+          node scripts/run-verification.mjs gate
+
+  tools:
+    name: Selected tools and browser suites
+    needs: plan
+    if: needs.plan.outputs.tools == 'true'
+    runs-on: macos-14
     timeout-minutes: 30
     env:
       GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
@@ -136,7 +186,7 @@ jobs:
         run: node scripts/run-verification.mjs tools
       - name: Keep browser proof and failure traces outside the source tree
         if: always() && needs.plan.outputs.browser == 'true'
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: browser-proof-${{ github.run_id }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/gvy-browser-results

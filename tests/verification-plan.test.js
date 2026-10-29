@@ -4,7 +4,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {mkdtemp,writeFile,readFile,rm,chmod} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
-import {verificationPlan,validatePlan,hasPassedVerification,REQUIRED_CHECKS} from '../scripts/lib/verification-plan.mjs';
+import {verificationPlan,validatePlan,hasPassedVerification,validateGateResults,REQUIRED_CHECKS} from '../scripts/lib/verification-plan.mjs';
 
 const root=resolve(new URL('..',import.meta.url).pathname);
 test('ship changes select game checks and entries, without unrelated media or arena suites',()=>{
@@ -60,11 +60,18 @@ test('git comparison includes a deleted source when it is renamed to documentati
   assert.equal(JSON.parse(await readFile(join(dir,'verification-plan.json'),'utf8')).mode,'full');
  }finally{await rm(dir,{recursive:true,force:true});}
 });
-test('a failed selected check fails the tools process rather than reporting a successful gate',async()=>{
+test('required gates reject failed, cancelled, missing and skipped selected jobs',()=>{
+ const ship=verificationPlan(['games/ship-battle/src/App.tsx']);
+ validateGateResults(ship,{plan:'success',game:'success',tools:'success'});
+ for(const changed of [{plan:'failure'},{game:'failure'},{game:'cancelled'},{game:'skipped'},{tools:undefined},{tools:'failure'},{tools:'skipped'}])assert.throws(()=>validateGateResults(ship,{plan:'success',game:'success',tools:'success',...changed}));
+ const docs=verificationPlan(['README.md']);validateGateResults(docs,{plan:'success',game:'skipped',tools:'skipped'});
+ assert.throws(()=>validateGateResults(docs,{plan:'success',game:'failure',tools:'skipped'}));
+});
+test('a failed selected check fails the game process rather than reporting a successful gate',async()=>{
  const dir=await mkdtemp(join(tmpdir(),'gvy-verification-failure-'));
  try{
   const fake=join(dir,'npm');await writeFile(fake,'#!/bin/sh\nexit 23\n');await chmod(fake,0o755);
-  const result=spawnSync(process.execPath,[resolve(root,'scripts/run-verification.mjs'),'tools'],{cwd:root,encoding:'utf8',env:{...process.env,PATH:dir+':'+process.env.PATH,GVY_VERIFICATION_PLAN:JSON.stringify(verificationPlan(['games/ship-battle/src/App.tsx']))}});
+  const result=spawnSync(process.execPath,[resolve(root,'scripts/run-verification.mjs'),'game'],{cwd:root,encoding:'utf8',env:{...process.env,PATH:dir+':'+process.env.PATH,GVY_VERIFICATION_PLAN:JSON.stringify(verificationPlan(['games/ship-battle/src/App.tsx']))}});
   assert.notEqual(result.status,0);assert.match(result.stderr,/status: 23/);
  }finally{await rm(dir,{recursive:true,force:true});}
 });

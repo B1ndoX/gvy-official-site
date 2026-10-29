@@ -64,3 +64,12 @@ export function hasPassedVerification({ candidate, sourceTree, targetTree, run, 
     REQUIRED_CHECKS.every((name) => checks?.some((check) => check.name === name && check.head_sha === candidate &&
       check.app?.id === 15368 && check.check_suite?.id === run.check_suite_id && check.status === "completed" && check.conclusion === "success"));
 }
+
+export function validateGateResults(plan, results) {
+  validatePlan(plan);
+  assert.equal(results.plan, "success", "Scope calculation did not succeed");
+  for (const [job, required] of [["game", plan.ship], ["tools", plan.tools]]) {
+    assert.ok(["success", "skipped"].includes(results[job]), `${job} failed, was cancelled, or has no result`);
+    if (required) assert.equal(results[job], "success", `Required ${job} checks were not executed successfully`);
+  }
+}

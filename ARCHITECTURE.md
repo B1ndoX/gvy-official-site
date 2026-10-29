@@ -1,5 +1,7 @@
 # GVY 官网维护架构
 
+CI职责追加：纯模拟由独立Ubuntu单worker执行，macOS负责运行包复现、发布器、媒体与浏览器；必需工具门禁只聚合真实任务结果，选中的任务跳过/失败/取消/缺失都会失败。作用范围和检查名仍由verification-plan唯一拥有。
+
 2026-10-29实现候选：verification-plan独占影响分类、检查名称与准确树/候选验证契约；run-verification只执行已校验计划。Node按用户最终要求以.node-version的24.18.0为主，.nvmrc/edgeone.json/package引擎同值并检查实际进程版本。原游戏运行包继续预编译校验/复制，新增流程不写入模拟或前端状态。远端/云端验收未完成，正式仍PR28，详细状态见OPERATIONS顶部。
 
 当前正式发布为PR28/main 119c519（2026-10-28），运行包index-DO2FTLKL；原职责边界保留，完整上线/清理与回滚记录见OPERATIONS/上下文顶部。8个未发布试录已核验后删除，不属于长期兼容媒体。
