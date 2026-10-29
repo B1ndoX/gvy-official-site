@@ -3,7 +3,8 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { hash, ROSTER_PATH } from "./rsi-members.mjs";
 
-export const REQUIRED_CHECKS = ["Site on EdgeOne Node 22.11", "Full runtime and publisher on Node 24 LTS"];
+export { REQUIRED_CHECKS } from "./verification-plan.mjs";
+import { REQUIRED_CHECKS } from "./verification-plan.mjs";
 export function assertReadyToPromote({ base, currentMain, candidate, run, checks, paths }) {
   assert.equal(currentMain, base, "main changed during refresh; do not overwrite it");
   assert.match(candidate, /^[a-f0-9]{40}$/);
@@ -29,7 +30,7 @@ export function verifiedStatusReports(gate) {
     assert.match(check.html_url, /^https:\/\/github\.com\/B1ndoX\/gvy-official-site\/actions\/runs\/\d+\/job\/\d+$/);
     assert.ok(check.html_url.includes(`/actions/runs/${gate.run.id}/job/`), "job link does not belong to verified run");
     return { context, state: "success", target_url: check.html_url,
-      description: "Full original CI passed on this exact commit; open the original job for evidence." };
+      description: "Required verification passed on this exact commit; open the original job for scope and evidence." };
   });
 }
 export async function assertPublished({ root, roster, fetchImpl = fetch }) {

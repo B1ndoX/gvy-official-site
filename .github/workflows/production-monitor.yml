@@ -24,6 +24,8 @@ jobs:
         with:
           sparse-checkout: |
             /.node-version
+            /.nvmrc
+            /edgeone.json
             /scripts/
             /config/
             /package.json
@@ -35,7 +37,9 @@ jobs:
       - name: Check official site and observe independent child services
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/monitor-production.mjs
+        run: |
+          node scripts/check-node.mjs
+          node scripts/monitor-production.mjs
       - name: Check all active EdgeOne media
         if: ${{ always() }}
         run: node scripts/check-edgeone-media.mjs

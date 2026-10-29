@@ -1,8 +1,8 @@
 {
   "buildCommand": "npm run verify:edgeone",
-  "installCommand": "npm ci --ignore-scripts --omit=dev",
+  "installCommand": "node scripts/check-node.mjs && npm --version && npm ci --ignore-scripts --omit=dev",
   "outputDirectory": "./dist",
-  "nodeVersion": "22.11.0",
+  "nodeVersion": "24.18.0",
   "rewrites": [],
   "headers": [
     {

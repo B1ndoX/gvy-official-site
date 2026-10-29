@@ -49,7 +49,7 @@ try {
     await git(["commit", "-m", "chore: synchronize public RSI fleet members"]);
     candidate = await git(["rev-parse", "HEAD"]);
     await git(["push", "origin", `HEAD:refs/heads/${branch}`]); branchPushed = true;
-    await command("gh", ["workflow", "run", "verify.yml", "--ref", branch]);
+    await command("gh", ["workflow", "run", "verify.yml", "--ref", branch, "-f", "coverage=auto", "-f", `base_sha=${base}`]);
     const deadline = Date.now() + 25 * 60000;
     let run;
     while (Date.now() < deadline) {

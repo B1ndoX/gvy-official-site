@@ -5,64 +5,190 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      coverage:
+        description: Verification coverage
+        type: choice
+        options: [full, auto]
+        default: full
+      base_sha:
+        description: Exact base commit for an automatic comparison
+        type: string
+        required: false
+  schedule:
+    # Weekly full regression; routine PRs select affected suites.
+    - cron: "13 20 * * 0"
 
 permissions:
   contents: read
+  actions: read
+  checks: read
+  pull-requests: read
 
 concurrency:
-  group: verify-${{ github.ref }}
+  group: verify-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
-  site:
-    name: Site on EdgeOne Node 22.11
+  plan:
+    name: Select verification scope
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 5
+    outputs:
+      plan: ${{ steps.scope.outputs.plan }}
+      tools: ${{ steps.scope.outputs.tools }}
+      ship: ${{ steps.scope.outputs.ship }}
+      publisher: ${{ steps.scope.outputs.publisher }}
+      media: ${{ steps.scope.outputs.media }}
+      browser: ${{ steps.scope.outputs.browser }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v6
         with:
-          node-version: 22.11.0
-          cache: npm
-      - name: Install production dependencies
-        run: npm ci --ignore-scripts --omit=dev
-      - name: Ensure ffmpeg is available
-        run: |
-          if ! command -v ffmpeg >/dev/null; then
-            # The Azure mirror repeatedly stalled package downloads until the job timed out.
-            # Keep the runner's signed Ubuntu archive/security mirrors as the download sources.
-            sudo sed -i '/azure\.archive\.ubuntu\.com/d' /etc/apt/apt-mirrors.txt
-            sudo apt-get update
-            sudo apt-get install -y ffmpeg
-          fi
-      - name: Verify deployable website
-        run: npm run verify:site
+          node-version-file: .node-version
+          package-manager-cache: false
+      - name: Select checks from the exact candidate and base
+        id: scope
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/plan-verification.mjs
 
-  publisher:
-    name: Full runtime and publisher on Node 24 LTS
-    runs-on: macos-14
-    timeout-minutes: 30
+  site:
+    name: Deployable site on Node 24
+    needs: plan
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
     steps:
+      - name: Require a successful scope calculation
+        env:
+          PLAN_RESULT: ${{ needs.plan.result }}
+        run: test "$PLAN_RESULT" = success
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: npm
-      - name: Install all dependencies
-        run: npm ci --ignore-scripts
-      - name: Verify the embedded ship game and reproduce its runtime
+          cache-dependency-path: |
+            package-lock.json
+            games/ship-battle/package-lock.json
+      - name: Check the selected scope and exact Node version
         run: |
+          node scripts/check-node.mjs
+          npm --version
+          node scripts/run-verification.mjs validate
+      - name: Install production dependencies
+        run: npm ci --ignore-scripts --omit=dev
+      - name: Verify deployable output without unrelated media metadata work
+        run: node scripts/run-verification.mjs site
+
+  game:
+    name: Ship simulation checks
+    needs: plan
+    if: needs.plan.outputs.ship == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            games/ship-battle/package-lock.json
+      - name: Verify Node and install game test dependencies
+        run: |
+          node scripts/check-node.mjs
           npm --prefix games/ship-battle ci --ignore-scripts
-          node scripts/build-ship-battle.mjs --check
-      - name: Ensure ffmpeg has WebP support
+      - name: Run simulation checks on an independent worker
+        run: node scripts/run-verification.mjs game
+
+  publisher:
+    name: Affected tools and browser checks on Node 24
+    needs: [plan, game, tools]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
+      GVY_PLAN_RESULT: ${{ needs.plan.result }}
+      GVY_GAME_RESULT: ${{ needs.game.result }}
+      GVY_TOOLS_RESULT: ${{ needs.tools.result }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          package-manager-cache: false
+      - name: Require every selected job to have actually succeeded
+        run: |
+          node scripts/check-node.mjs
+          node scripts/run-verification.mjs gate
+
+  tools:
+    name: Selected tools and browser suites
+    needs: plan
+    if: needs.plan.outputs.tools == 'true'
+    runs-on: macos-14
+    timeout-minutes: 30
+    env:
+      GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}
+    steps:
+      - name: Require a successful scope calculation
+        env:
+          PLAN_RESULT: ${{ needs.plan.result }}
+        run: test "$PLAN_RESULT" = success
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            games/ship-battle/package-lock.json
+      - name: Validate scope even when no tools are affected
+        run: |
+          node scripts/check-node.mjs
+          npm --version
+          node scripts/run-verification.mjs validate
+      - name: Install test and build dependencies
+        if: needs.plan.outputs.tools == 'true'
+        run: npm ci --ignore-scripts
+      - name: Install embedded game dependencies
+        if: needs.plan.outputs.ship == 'true'
+        run: npm --prefix games/ship-battle ci --ignore-scripts
+      - name: Ensure ffmpeg has WebP support when media or publisher checks need it
+        if: needs.plan.outputs.media == 'true' || needs.plan.outputs.publisher == 'true'
         run: |
           if ! command -v ffmpeg >/dev/null || ! ffmpeg -hide_banner -encoders 2>/dev/null | grep -q libwebp; then
             brew install ffmpeg@7
             echo "$(brew --prefix ffmpeg@7)/bin" >> "$GITHUB_PATH"
           fi
-      - name: Verify website and macOS publisher
-        run: npm run verify
-      - name: Install Chromium
+      - name: Install Chromium only for selected browser suites
+        if: needs.plan.outputs.browser == 'true'
         run: npx playwright install chromium
-      - name: Run browser smoke tests
-        run: npm run test:e2e
+      - name: Run the selected real checks
+        run: node scripts/run-verification.mjs tools
+      - name: Keep browser proof and failure traces outside the source tree
+        if: always() && needs.plan.outputs.browser == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: browser-proof-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/gvy-browser-results
+          if-no-files-found: ignore
+          retention-days: 7

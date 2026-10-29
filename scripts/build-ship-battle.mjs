@@ -4,6 +4,7 @@ import { cp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acceptedCommit, digests, gameSources } from "./lib/ship-battle-release.mjs";
+import "./check-node.mjs";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const game = resolve(root, "games/ship-battle");

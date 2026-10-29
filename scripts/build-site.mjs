@@ -59,7 +59,7 @@ await copyFile(
   resolve(output, "assets/vendor/ScrollTrigger.min.js"),
 );
 
-// Vite's Node 24 build is reproducible in CI. EdgeOne Node 22.11 copies the
+// Vite's Node 24 build is reproducible in CI. The cloud build copies the
 // verified runtime and original public assets without installing a second app.
 await validateShipRelease(root);
 const shipOutput = resolve(output, "games/ship-battle");
