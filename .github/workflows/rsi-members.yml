@@ -9,6 +9,7 @@ on:
 permissions:
   contents: write
   actions: write
+  checks: read
   statuses: write
 
 concurrency:
@@ -28,8 +29,13 @@ jobs:
         with:
           node-version-file: .node-version
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            games/ship-battle/package-lock.json
       - name: Install build dependencies without scripts
-        run: npm ci --ignore-scripts --omit=dev
+        run: |
+          node scripts/check-node.mjs
+          npm ci --ignore-scripts --omit=dev
       - name: Configure repository bot identity
         run: |
           git config user.name 'github-actions[bot]'

@@ -24,19 +24,25 @@ const outputAudit = await read("scripts/check-production-output.mjs");
 const publisherRunner = await read("tools/gallery-publisher/run-server-macos.zsh");
 const publisherProcess = await read("tools/gallery-publisher/lib/process.mjs");
 
-test("development and EdgeOne runtimes are explicit and independently verified", async () => {
+test("development and cloud builds use the same exact Node version", async () => {
   assert.equal((await read(".node-version")).trim(), "24.19.0");
-  assert.equal(edgeone.nodeVersion, "22.11.0");
-  assert.equal(edgeone.installCommand, "npm ci --ignore-scripts --omit=dev");
+  assert.equal((await read(".nvmrc")).trim(), "24.19.0");
+  assert.equal(packageJson.engines.node, "24.19.0");
+  assert.equal(JSON.parse(await read("package-lock.json")).packages[""].engines.node, "24.19.0");
+  assert.equal(edgeone.nodeVersion, undefined);
+  assert.equal(edgeone.installCommand, "node scripts/check-node.mjs && npm ci --ignore-scripts --omit=dev");
   assert.equal(edgeone.buildCommand, "npm run verify:edgeone");
   assert.equal(packageJson.scripts["test:site"], "node --test tests/*.test.js");
   assert.match(packageJson.scripts["verify:edgeone"], /GVY_SKIP_MEDIA_METADATA=1/);
   assert.match(packageJson.scripts["verify:edgeone"], /npm run test:site && npm run check:js && npm run build && npm run check:dist/);
   assert.match(packageJson.scripts["verify:site"], /npm run test:site && npm run check:js && npm run build && npm run check:dist/);
   assert.match(packageJson.scripts.verify, /gallery:publisher:test/);
-  assert.match(verifyWorkflow, /node-version:\s*22\.11\.0/);
+  assert.doesNotMatch(verifyWorkflow, /node-version:\s*22\.11\.0/);
+  assert.match(verifyWorkflow, /Select verification scope/);
+  assert.match(verifyWorkflow, /if: \$\{\{ always\(\) \}\}/);
   assert.match(verifyWorkflow, /node-version-file:\s*\.node-version/);
-  assert.match(verifyWorkflow, /Node 24 LTS/);
+  assert.ok(verifyWorkflow.includes("name: Deployable site on Node 24"));
+  assert.ok(verifyWorkflow.includes("name: Affected tools and browser checks on Node 24"));
   assert.match(verifyWorkflow, /ffmpeg@7/);
   assert.match(verifyWorkflow, /libwebp/);
 });
