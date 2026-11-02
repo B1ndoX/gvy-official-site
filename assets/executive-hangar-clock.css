@@ -1,0 +1,96 @@
+/* Compact native tooltip card, inspired by Aceternity Tooltip Card.
+   The card stays anchored for readable timing; the homepage is unchanged. */
+.fleet-tools { display: flex; align-items: center; gap: 10px; margin-left: 26px; flex-shrink: 0; }
+.fleet-tools .fleet-games-jump { margin: 0; }
+.hangar-clock-trigger { --hangar-accent: #7db9dc; position: relative; display: grid; gap: 4px; width: 128px; min-height: 49px; padding: 6px 10px; border: 1px solid #dceef938; border-radius: 12px; background: linear-gradient(135deg, #ffffff12, #ffffff03 52%, #ffffff08), rgb(5 12 20 / .12); -webkit-backdrop-filter: blur(14px) saturate(1.25); backdrop-filter: blur(14px) saturate(1.25); box-shadow: inset 0 1px #ffffff24, inset 0 -1px #ffffff08; cursor: pointer; transition: background .2s, border-color .2s, box-shadow .2s; }
+.hangar-clock-trigger:is(:hover,:focus-visible,[aria-expanded="true"]) { border-color: var(--hangar-accent); background: linear-gradient(135deg, #ffffff1a, #ffffff05 52%, #ffffff0d), rgb(5 12 20 / .16); box-shadow: 0 0 10px color-mix(in srgb, var(--hangar-accent) 14%, transparent), inset 0 1px #ffffff30; }
+.hangar-compact-heading { display: flex; justify-content: space-between; gap: 5px; font-size: 10px; line-height: 1.2; font-weight: 500; letter-spacing: .06em; white-space: nowrap; color: #b7c6cf; text-shadow: 0 1px 2px #000c; }
+.hangar-compact-heading > :last-child { color: color-mix(in srgb, var(--hangar-accent) 70%, #7d8d98); }
+[data-phase="available"] { --hangar-accent: #8bc7b0; }
+[data-phase="resetting"] { --hangar-accent: #d8b66a; }
+[data-phase="unavailable"] { --hangar-accent: #8293a0; }
+.hangar-panel { --hangar-accent: #7db9dc; --hangar-left: 12px; --hangar-top: 88px; position: fixed; inset: var(--hangar-top) auto auto var(--hangar-left); width: min(380px, calc(100vw - 24px)); max-height: calc(100dvh - var(--hangar-top) - 12px); margin: 0; padding: 18px; overflow: auto; overscroll-behavior: contain; color: #edf3f7; background: radial-gradient(ellipse at 50% 0, #111b25, #080d14 75%); border: 1px solid #293b48; border-radius: 18px; box-shadow: 0 18px 60px #000b, inset 0 1px #e7f4ff08; }
+.hangar-panel::backdrop { background: transparent; pointer-events: none; }
+.hangar-panel:not(:popover-open),.hangar-panel [hidden] { display: none !important; }
+.hangar-panel[data-phase="available"] { --hangar-accent: #8bc7b0; }
+.hangar-panel[data-phase="resetting"] { --hangar-accent: #d8b66a; }
+.hangar-panel[data-phase="unavailable"] { --hangar-accent: #8293a0; }
+/* Glowing Effect adaptation: an angular highlight masked to the edge. Pointer
+   events update the angle; CSS interpolates it without a permanent RAF loop. */
+@property --hangar-edge-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+.hangar-edge-glow { display: none; }
+@supports (mask-composite: exclude) or (-webkit-mask-composite: xor) {
+  .hangar-edge-glow { display: block; position: absolute; inset: 0; z-index: 3; padding: 1.25px; border-radius: inherit; pointer-events: none; opacity: 0; background: conic-gradient(from var(--hangar-edge-angle), transparent 0deg 275deg, color-mix(in srgb, var(--hangar-accent) 55%, transparent) 310deg, var(--hangar-accent) 335deg, #e8eff3 347deg, var(--hangar-accent) 355deg, transparent 360deg); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask-composite: exclude; transition: --hangar-edge-angle .45s ease-out, opacity .18s ease; }
+  .hangar-clock-trigger:is(:hover,:focus-visible,[aria-expanded="true"]) > .hangar-edge-glow { opacity: 1; }
+  .hangar-panel:popover-open > .hangar-edge-glow { opacity: .65; }
+  .hangar-panel:is(:hover,:focus-within) > .hangar-edge-glow { opacity: 1; }
+}
+.hangar-panel-heading { display: flex; align-items: center; gap: 12px; }
+.hangar-panel-heading h2 { flex: 1; margin: 0; font-size: 16px; font-weight: 600; letter-spacing: .06em; }
+.hangar-timezone { color: #819cae; font-size: 10px; white-space: nowrap; }
+.hangar-close { display: grid; place-items: center; width: 32px; height: 32px; padding: 7px; border: 1px solid #344451; border-radius: 8px; color: #afc3d0; background: #0c151e; cursor: pointer; }
+.hangar-close svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.hangar-dashboard { margin: 8px 0 12px; }
+.hangar-dial { position: relative; width: min(264px, 100%); aspect-ratio: 1; margin: 0 auto; container-type: inline-size; }
+/* CountdownCircleTimer's rounded SVG trail/progress, adapted to the existing
+   wall-clock state. The remaining arc drains; no React or second timer loop. */
+.hangar-ring { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke-width: 10; }
+.hangar-ring-track { stroke: #1e2e39; }
+.hangar-ring-progress { stroke: var(--hangar-accent); stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+.hangar-dial-content { position: absolute; inset: 12%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.hangar-dial .hangar-flip { --rotor-width: clamp(18px, 9.5cqi, 25px); gap: 3px; }
+.hangar-dial .hangar-rotor-pair { gap: 2px; }
+.hangar-phase { color: var(--hangar-accent); font-size: 16px; font-weight: 500; letter-spacing: .14em; }
+.hangar-target { margin: 5px 0 13px; font-size: 10px; color: #95acbb; letter-spacing: .08em; }
+.hangar-flip { --rotor-width: 30px; --rotor-height: calc(var(--rotor-width) * 1.5); display: flex; justify-content: center; align-items: center; gap: 4px; font: 600 calc(var(--rotor-width) * 1.22)/1 ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; }
+.hangar-rotor-pair { display: flex; gap: 3px; }
+.hangar-rotor { position: relative; display: block; width: var(--rotor-width); height: var(--rotor-height); perspective: 250px; border-radius: 4px; box-shadow: 0 2px 4px #0008; }
+.hangar-rotor .rotor-top,.hangar-rotor .rotor-bottom,.hangar-rotor .rotor-leaf-front,.hangar-rotor .rotor-leaf-rear { position: absolute; left: 0; width: 100%; height: 50%; overflow: hidden; text-align: center; background: #151515; color: #fff; border-radius: 4px 4px 0 0; }
+.hangar-rotor .rotor-top,.hangar-rotor .rotor-leaf-front { top: 0; line-height: var(--rotor-height); }
+.hangar-rotor .rotor-bottom,.hangar-rotor .rotor-leaf-rear { bottom: 0; line-height: 0; background: #202020; color: #efefef; border-radius: 0 0 4px 4px; }
+.hangar-rotor .rotor-leaf { position: absolute; inset: 0; display: block; transform-style: preserve-3d; z-index: 1; }
+.hangar-rotor .rotor-leaf-front,.hangar-rotor .rotor-leaf-rear { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.hangar-rotor .rotor-leaf-rear { top: 0; bottom: auto; transform: rotateX(180deg); }
+.hangar-rotor::after { position: absolute; z-index: 3; top: 50%; left: 0; width: 100%; content: ''; border-top: 1px solid #080808; pointer-events: none; }
+.hangar-rotor.is-flipping .rotor-leaf { animation: hangar-flip .55s ease-in-out both; }
+@keyframes hangar-flip { from { transform: rotateX(0); } to { transform: rotateX(-180deg); } }
+.hangar-colon { color: #90a7b8; font-size: .75em; }
+.hangar-flip-compact { --rotor-width: 13px; gap: 2px; font-size: 16px; }
+.hangar-flip-compact .hangar-rotor-pair { gap: 2px; }
+.hangar-flip-compact .hangar-rotor { border-radius: 2px; box-shadow: none; }
+.hangar-lights { display: flex; gap: 9px; margin-top: 16px; }
+.hangar-lights i { display: block; width: 7px; height: 7px; border: 1px solid #3a4c58; border-radius: 50%; background: #172530; }
+.hangar-lights i[data-color="green"] { background: #8bc7b0; border-color: #a9d8c6; box-shadow: 0 0 9px #8bc7b038; }
+.hangar-lights i[data-color="red"] { background: #b76c66; border-color: #d49b94; }
+.hangar-forecast { margin-top: 4px; }
+.hangar-time-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid #1d2c36; }
+.hangar-time-row:last-child { border-bottom: 0; }
+.hangar-time-row > span { color: #94aab9; font-size: 11px; }
+.hangar-time-row time { color: #e2ebf1; font: 500 13px ui-monospace, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hangar-data { padding-top: 11px; border-top: 1px solid #263744; color: #8ba2b3; font-size: 10px; }
+.hangar-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px 10px; }
+.hangar-freshness { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; margin-top: 7px; }
+.hangar-freshness time { font-variant-numeric: tabular-nums; }
+.hangar-sync-row { display: grid; gap: 3px; margin: 9px 0 0; color: #d6ae92; font-size: 10px; }
+.hangar-disclaimer { margin: 9px 0 0; color: #768d9f; font-size: 10px; line-height: 1.65; }
+.hangar-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+@media (max-width: 760px) {
+  .fleet-tools { grid-row: 1; grid-column: 1; justify-self: end; align-self: center; gap: 6px; margin: 0 12px 0 0; }
+  .fleet-tools .fleet-games-jump { min-height: 40px; font-size: .6rem; }
+  .fleet-tools .fleet-games-label { padding: 8px; gap: 5px; }
+  .fleet-tools .fleet-games-label svg { width: 15px; height: 15px; }
+  .hangar-clock-trigger { width: 113px; min-height: 40px; padding: 4px 7px; gap: 3px; border-radius: 9px; }
+  .hangar-compact-heading { font-size: 9px; }
+  .hangar-flip-compact { --rotor-width: 12px; font-size: 15px; }
+}
+@media (max-width: 480px) {
+  .command-nav .brand-copy small { display: none; }
+  .command-nav .fleet-brand { padding-inline: 12px; gap: 6px; }
+  .command-nav .brand-sigil { width: 30px; height: 30px; }
+  .hangar-panel { padding: 16px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hangar-clock-trigger,.hangar-edge-glow { transition: none; }
+  .hangar-rotor.is-flipping .rotor-leaf { animation: none; }
+  .hangar-ring-progress { transition: none; }
+}
