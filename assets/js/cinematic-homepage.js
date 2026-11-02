@@ -6,6 +6,7 @@ import { initMemberBrawlDialog } from "./member-brawl-dialog.js";
 import { initOperationMotion } from "./operation-motion.js";
 import { initSectionNavigation } from "./section-navigation.js";
 import { initRecruitActions } from "./recruit-actions.js";
+import { initExecutiveHangar } from "./executive-hangar-clock.js";
 
 const LIFECYCLE_KEY = "__gvyCinematicHomepage";
 const MOBILE_BREAKPOINT = 760;
@@ -123,6 +124,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
   const operationMotion = initOperationMotion({ root, view });
   const sectionNavigation = initSectionNavigation({ root, view });
   const recruitActions = initRecruitActions({ root, view });
+  const hangarClock = initExecutiveHangar({ root, view });
   const timelines = initCinematicTimelines({ root, gsap: view.gsap, ScrollTrigger: view.ScrollTrigger });
   const startupRefresh = initStartupTimelineRefresh({ root, view, timelines });
   root.documentElement?.setAttribute("data-motion-initialized", "true");
@@ -136,6 +138,7 @@ export function initCinematicHomepage({ root = globalThis.document, view = globa
     operationMotion,
     sectionNavigation,
     recruitActions,
+    hangarClock,
     timelines,
     startupRefresh,
   ]

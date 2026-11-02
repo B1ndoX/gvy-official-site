@@ -120,6 +120,7 @@
     <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png?v=17f28ec0f59c" />
     <link rel="manifest" href="./site.webmanifest?v=17f28ec0f59c" />
     <link rel="stylesheet" href="./assets/cinematic-homepage.css" />
+    <link rel="stylesheet" href="./assets/executive-hangar-clock.css" />
   </head>
 
   <body id="pageTop">
@@ -136,10 +137,18 @@
         </span>
       </a>
 
+      <div class="fleet-tools">
       <a class="fleet-games-jump" href="#fleet-games" data-scroll-link>
         <span class="fleet-games-border" aria-hidden="true"></span>
         <span class="fleet-games-label"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 6h9a4 4 0 0 1 3.9 3.1l1.2 6a2.8 2.8 0 0 1-4.7 2.5L14.5 15h-5l-2.4 2.6a2.8 2.8 0 0 1-4.7-2.5l1.2-6A4 4 0 0 1 7.5 6Z"/><path d="M7 9v5m-2.5-2.5h5M16 10h.01M18 12h.01"/></svg><span>舰队小游戏</span></span>
       </a>
+      <button class="hangar-clock-trigger" type="button" data-hangar-open popovertarget="executive-hangar-panel" popovertargetaction="show" aria-label="行政机库时钟，展开完整信息" aria-controls="executive-hangar-panel" aria-expanded="false">
+        <span class="hangar-edge-glow" aria-hidden="true"></span>
+        <span class="hangar-compact-heading"><span>行政机库</span><span data-hangar-compact-phase>同步中</span></span>
+        <span class="hangar-flip hangar-flip-compact" data-hangar-flip aria-hidden="true"></span>
+        <span class="hangar-sr-only" data-hangar-countdown role="timer" aria-live="off">暂不可用</span>
+      </button>
+      </div>
 
       <nav class="nav-links" aria-label="页面导航">
         <a class="nav-item" href="#fleet-signal" data-scroll-link>
@@ -583,7 +592,38 @@
       </div>
     </dialog>
 
-    <noscript>此页面需要启用 JavaScript 才能播放主视觉影像；全部文字与图册仍可直接浏览。</noscript>
+    <section class="hangar-panel" id="executive-hangar-panel" data-hangar-panel popover="auto" role="dialog" aria-labelledby="hangar-heading" aria-describedby="hangar-disclaimer">
+      <span class="hangar-edge-glow" aria-hidden="true"></span>
+      <header class="hangar-panel-heading">
+        <h2 id="hangar-heading">行政机库</h2>
+        <span class="hangar-timezone">北京时间</span>
+        <button class="hangar-close" data-hangar-close type="button" aria-label="关闭行政机库详情"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
+      </header>
+      <div class="hangar-dashboard">
+        <div class="hangar-dial">
+          <svg viewBox="0 0 264 264" class="hangar-ring" aria-hidden="true"><path class="hangar-ring-track" d="m132,5 a127,127 0 1,0 0,254 a127,127 0 1,0 0,-254"/><path class="hangar-ring-progress" data-hangar-progress d="m132,5 a127,127 0 1,0 0,254 a127,127 0 1,0 0,-254" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/></svg>
+          <div class="hangar-dial-content">
+            <strong class="hangar-phase" data-hangar-phase role="status" aria-live="polite">暂不可用</strong>
+            <span class="hangar-target" data-hangar-target>等待有效计时数据</span>
+            <div class="hangar-flip" data-hangar-flip aria-hidden="true"></div>
+            <output class="hangar-sr-only" data-hangar-countdown role="timer" aria-live="off">暂不可用</output>
+            <div class="hangar-lights" data-hangar-lights role="img" aria-label="状态灯暂无数据"><i data-hangar-light></i><i data-hangar-light></i><i data-hangar-light></i><i data-hangar-light></i><i data-hangar-light></i></div>
+          </div>
+        </div>
+        <div class="hangar-forecast">
+          <div class="hangar-time-row"><span>下一次可开启</span><time data-hangar-next>—</time></div>
+          <div class="hangar-time-row"><span data-hangar-window-label>窗口结束（含重置）</span><time data-hangar-end>—</time></div>
+        </div>
+      </div>
+      <footer class="hangar-data">
+        <div class="hangar-meta"><span data-hangar-version>暂无有效版本</span><span>来源：Arkanis</span></div>
+        <div class="hangar-freshness"><span>计时基准 <time data-hangar-calibration>—</time></span><span data-hangar-updated-row hidden>配置同步 <time data-hangar-updated>—</time></span></div>
+        <p class="hangar-sync-row" data-hangar-sync-row hidden><span data-hangar-sync role="status">正在同步公开配置…</span></p>
+        <p class="hangar-disclaimer" id="hangar-disclaimer">社区计时预测，以游戏内状态为准。仅预测时间，不确认大门或领取状态。</p>
+      </footer>
+    </section>
+
+    <noscript>此页面需要启用 JavaScript 才能播放主视觉影像和行政机库时钟；全部文字与图册仍可直接浏览。</noscript>
     <script src="./assets/vendor/gsap.min.js"></script>
     <script src="./assets/vendor/ScrollTrigger.min.js"></script>
     <script type="module" src="./assets/js/cinematic-homepage.js"></script>

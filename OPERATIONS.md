@@ -1,5 +1,30 @@
 # GVY 官网生产运行手册
 
+部署进行中（2026-11-02）：用户已明确授权部署，发布候选来自feat/executive-hangar-clock-20261102；当前正式仍PR29/main7302cc4，等待受保护CI、合并及EdgeOne正式核验。下方预览限制为授权之前状态；最终上线状态会在现有交接顶部补齐。
+
+## 行政机库时钟：仅本地预览，等待用户确认（2026-11-02）
+
+- 用户要求先预览确认。分支feat/executive-hangar-clock-20261102，只改工作区，未提交/推送/创建PR或部署；正式仍PR29/main7302cc4、DO2FTLKL。本地预览http://127.0.0.1:8001/?preview=hangar-mac-glow-20261102#fleet-signal，8001服务保留供验收。原3份游戏状态文档和.DS_Store保留未动。
+- 顶部小游戏右侧为macOS参考的通透玻璃时钟：12%深色底（交互时16%）叠浅反光，14px backdrop blur与1.25饱和度，仅背景模糊；标题500字重/桌面10px/手机9px，名称#b7c6cf、状态用70%阶段色混合灰，保持柔和可读，黑色翻牌承托白字。常态为中性细边；悬停/键盘聚焦/展开时才显示阶段色边框与光晕，取消误加的常态着色。悬停临时预览，点击固定，移出仍显示；再次点击、外部点击、关闭按钮或ESC收起并清除固定状态。手机点按固定，无手动同步按钮。用户取消的是Focus Cards整页/弹窗模糊聚焦；最新明确要求按钮具有背景模糊玻璃感。
+- 顶部按钮和弹窗均增加Aceternity Glowing Effect式边缘高光：CSS圆角遮罩只保留边缘、锥形渐变随指针方向平滑移动，白色光芯搭配当前阶段色，不使用原示例整圈多色以免混淆状态。只绑定两个表面的pointerenter/pointermove，不监听全局鼠标、不新增RAF/interval/网络请求；角度取最短路径避免转一整圈，cleanup由原控制器清理。触摸使用静态光位，reduced-motion取消过渡，旧浏览器不支持遮罩时退回原细边。REA独立Chrome被动检查与截图确认目标和局部方向光，Playwright负责滚动/悬停/DOM样式采样；未声称反编译全部React源码。证据ev_b777f10b0f2bac887667a7953a7faf4dd7321fc677f27ba963d8cfe47605556e、截图ev_6d6bf434d9fe695b1fff5d150b6adf322ec6869edd61014f3ad03f47ad3a22e3及glowing-runtime.json保留于source-reference。REA检查浏览器已关闭，8001预览服务保留。
+- 详情380px窄卡参考Aceternity Tooltip Card；中央圆环按vydimitrov/react-countdown-circle-timer的SVG轨道/圆头弧线与已用时间dash-offset机制原生适配，当前阶段剩余弧线逐渐缩短。可开启绿#8bc7b0、充能蓝#7db9dc、重置琥珀#d8b66a，无数据灰且隐藏进度；换阶段/恢复/打开时定位当前真实进度，不反向扫完整圈。翻牌按264px圆盘容器缩放（单页最高25px），四角距离圆环内缘>4px，320/390/桌面均不越界；保留原黑色上下页。
+- 页脚来源仅纯文字“来源：Arkanis”，没有外部链接。分别标注“计时基准”和“配置同步”：前者为公开配置epoch，后者为本机最近成功校验时间，失败时保留原同步时间并显示缓存提示，不把今天读取成功冒充今天重新校准。两行关键窗口、版本、五灯和社区预测/不能确认大门及领取状态提示保留，时间均北京时间，title/aria-label/datetime保留完整毫秒。
+- 2026-11-02再次真实HTTP200核对，来源仍https://raw.githubusercontent.com/ArkanisCorporation/Exec-Hangar/main/config.json，4.10.2-LIVE/Server12974691，配置提交6638838d2079811c06bd94fd01a9ed0b954ae994、SHA256 b060909075e3638f93698307fe5778e2e496a56f92156ed27d2e0f15f9a924bb。基准2026-10-29T22:01:09.073000Z，即北京时间10/30 06:01:09.073。open=3900123ms、close=7200227ms、周期11100350ms；可开启首3600000ms/重置尾段300123ms，五灯沿原12分钟模型。严格epoch+k×period，不混入README/default的699ms。社区基准可能滞后，设备时间及服务器状态也影响与游戏的一致性，不能保证每台服务器实时准确。
+- executive-hangar-rules独占校验/纯时间/五灯，executive-hangar-clock独占一个秒级显示调度、15分钟公开JSON同步及最后有效缓存，翻牌和SVG仅消费同一绝对时间状态，无React/Motion/第二计时器或新依赖。后台暂停显示调度，返回/刷新重算；缓存完整校验后替换，失败保留、无数据暂不可用。只读公开约1KB配置，不请求官网后台、无机器人/NapCat耦合；CSP仅放行raw.githubusercontent.com连接，不加载远端JS。MIT许可含Arkanis/FlipDown/CircleTimer，保留assets/licenses/executive-hangar.txt。
+- 验证：完整基础站点230项（含8项计时/缓存/校验）及60个JS语法在site-glowing.log通过；最新材质CSS重建517文件305引用389611826字节审计通过。9项相关Chrome浏览器用例24.8秒通过，含方向高光两表面响应/收起后消失、三阶段交互边框同色/常态中性、圆环/五灯、刷新/后台/15分钟同步、失效缓存与无数据恢复、点击固定与关闭/外部/ESC，以及390/320手机布局和翻牌圆内无溢出。实际公开源桌面1440×1000/手机390×844 HTTP200、0页面错误/警告/横溢；仅背景滤镜，文本无模糊。Browser skill缺席，按前端测试技能沿项目Playwright Chrome；不是实体机/Safari/FPS或游戏服务器实际校准验证。构建核验游戏336源SHA/13runtime保持，未重跑对局统计。
+- 原始来源/许可/备份/日志/截图见/Users/bindox/Documents/Codex/Previews/gvy-exec-hangar-clock-20261102/，最新site-glowing.log、build-mac-glow.log、browser-mac-glow/、real-source-browser、source-reference/circle-timer及hangar-config-check-now、preview-header/panel/390、local-state/report。下一步等待用户预览确认，不擅自推送部署；正式回滚点及PR29环境不变。
+
+## 已部署：Node24.18统一与关联验证 / PR29（2026-10-29）
+
+- [PR29](https://github.com/B1ndoX/gvy-official-site/pull/29)已正常合并；准确候选ef18614ce981c9404d91daff690e8e10aa74c7bd，正式main=7302cc4299814638d4cf1eead196e3c21ede14b0，合并北京时间23:34:03。EdgeOne生产部署dpef5egpdgd3（23:34:08开始、面板99秒）成功，实际日志Node24.18.0/npm11.16.0。本地main/origin/main同步，候选与合并提交全Git树一致。下方实施中、候选、Node22/24.19记录均为历史，不覆盖本节。
+- 本地node/npm/npx/corepack和项目版本配置统一24.18.0，安装/构建/CI/监控/RSI/发布器入口核验实际版本；旧24.19安装保留。原相册后端仍驻留24.19，确认idle且无会话后用原launcher优雅重启，已核验24.18健康，不改照片或会话。未替换其他应用内置Node或改控制台设置。
+- 验证按准确base/head选择游戏、相册、第一款、媒体的真实关联套件，每次保留站点构建/运行包/引用审计；共享基础、CI/依赖、未知路径、手动full和每周回归仍全量。按需安装FFmpeg/Chromium，npm缓存覆盖两份lock。模拟独立Ubuntu单worker，macOS负责运行包复现、发布器/sips、媒体与浏览器；600秒压力test逐字移到独立文件，原36000步/fixture/断言/30秒限制保持，全套48文件335项。
+- 必需检查为Deployable site on Node 24与Affected tools and browser checks on Node 24；strict=true、App15368和其余保护设置保留，只原子替换名称。所选任务失败/取消/缺失/跳过均失败。最终完整Verify [40873800464](https://github.com/B1ndoX/gvy-official-site/actions/runs/40873800464)真实成功：222项站点、335项游戏、35项发布器、23项媒体验证、73项浏览器（14.2分钟）及运行包复现，全流程16分45秒。本地58项关联契约与两视口6入口亦通过。
+- 飞船局部受控CI40872499426全流程3:08、5项相关浏览器59.3秒，同时执行335项模拟；全局改动不承诺3分钟。main运行[40902874293](https://github.com/B1ndoX/gvy-official-site/actions/runs/40902874293)实际证明准确候选/相同全Git树/指定Verify及Actions成功检查，选择verified-merge，60秒通过，省去重复长测；无法证明则全量。临时探测分支已清理，准确提交/日志/截图保留；不把探测状态贴到正式候选。
+- 正式云部署后双域36项资源SHA全部匹配，初轮35/36中裸域CSS连接中断，定向重试1次成功，原始异常保留。正式Chrome桌面1440×1000、手机390×844，PVP/挑战/赏金共6入口开始、时间推进、暂停/继续通过，0页面错误/警告/横溢。336产品源SHA/13runtime保持DO2FTLKL，依赖版本、游戏源/素材/模拟均不变；产物仍513文件302引用389578632字节。Browser skill缺席沿项目Playwright Chrome；不是Safari/实体机/FPS或自然对局成功率测试，不重跑50局、不挪用旧统计。
+- 24.19云端切换失败、旧候选取消和原压力项超时均留档，不冒充最终通过；最终压力项28.826秒，云主机墙钟仍会波动，未放宽门槛或自动重试放行。回滚标签backup-production-before-ci-node24-20261029在origin，指向119c519；回退走普通revert/PR/必需检查，不reset或强推。8个旧试录保持删除。
+- 完整开发日志/证据：/Users/bindox/Documents/Codex/Previews/gvy-ci-node-unification-20261029/（report、release-state、candidate-proof/source、product-scope、保护前后、CI/main原始日志、cloud-production、live-fingerprints/smoke、正式截图及publisher-restart）。最终状态只同步既有本地7份文档和外部交接，不为状态文字另触发部署；.DS_Store为本地未跟踪文件，未加入候选。
+
 ## 压力用例独立 worker 修正（2026-10-29，待最终候选）
 
 独立Ubuntu整套首次仍在600秒压力用例35.356秒超时；同规则受控局部验证26.287秒通过，说明仅更换runner不足以稳定该门槛。本地同文件25.066秒、单独运行20.01秒；将原压力test逐字移到engine-stress.test.ts（单独文件的全新worker），不改36000步、fixture、任一断言或30000ms限制。受控云端运行40873379038：48文件335项71.42秒通过，该项16.202秒。保留全部失败证据，不复用探测分支为正式候选检查；新准确PR候选会重新完整回归。GC nursery实验20.01→19.67秒无足够收益，未采用任何GC参数。产品336源/13runtime不变；仅测试文件拆分。
@@ -585,9 +610,9 @@ PR28候选7466c68的Node24完整检查和浏览器检查已成功，但Node22站
 
 ## 1. 运行时边界
 
-- EdgeOne 固定 Node `22.11.0`：`npm ci --ignore-scripts --omit=dev` → `npm run verify:edgeone` → 发布 `dist/`。此链路不运行 Vite 发布器，也不要求 EdgeOne 容器具有 `ffmpeg` 元数据能力。
-- 本机、完整 GitHub CI、监控和相册发布器固定 `.node-version` 的 Node `24.19.0`：`npm ci --ignore-scripts` → `npm run verify`。
-- CI 的 Linux 站点任务完整检查官网；macOS 任务检查官网、`sips`/WebP 相册处理、发布器和 Chromium 交互。不得把两套 Node 版本混成故障，也不得让 EdgeOne 安装全部开发依赖。
+- EdgeOne固定Node `24.18.0` / npm `11.16.0`，由同值`.node-version`、`.nvmrc`、`edgeone.json`、package引擎及实际进程守卫校验：`node scripts/check-node.mjs && npm --version && npm ci --ignore-scripts --omit=dev` → `npm run verify:edgeone` → 只发布`dist/`。不要求EdgeOne运行Vite发布器或FFmpeg元数据验证。
+- 本机、CI、监控、相册发布器同为24.18.0；初装`npm ci --ignore-scripts`，后续按实际影响验证，不默认本地重复全站长测。发布器仍需要macOS/sips，通过原launcher启动。
+- Linux独立站点和所选游戏模拟，macOS执行所选运行包复现/发布器/媒体/Chromium；两项必需门禁始终校验真实结果。main仅在准确候选全Git树及真实成功检查可证明时省去重复长测，否则全量。按需安装FFmpeg/Chromium，EdgeOne不安装全部开发依赖。
 
 ## 2. 修改前门禁
 
@@ -616,7 +641,7 @@ git diff --check
 1. 为当前生产提交建立带日期的回滚标签。
 2. 在独立分支完成修改和验证；确认差异只含授权文件。
 3. 使用普通提交合入或推送 `main`，禁止强推。
-4. 遵守当前必需GitHub检查，不强行跳过保护。现有工作流尚未按路径分流，自动触发的范围过宽问题应独立优化；本机不要再重复启动无关整站长测。
+4. 必须通过Deployable site on Node 24和Affected tools and browser checks on Node 24两项Actions必需检查；strict=true，不绕过保护。CI按准确base/head选择关联套件，共享/CI/依赖/未知路径、手动full和每周回归仍全量，本机不重复无关长测。
 5. 等待 EdgeOne 完成异步部署，不要因短暂 502/Cache Miss 连续重复推送。
 6. 上线核对只覆盖本次资源与必要关联入口。只改游戏时核对游戏运行包/配置的正式SHA和游戏交互；视频或媒体缓存发生变化才运行`npm run check:edgeone`，域名/监控/路由相关变化才使用对应生产监控。
 
@@ -932,7 +957,7 @@ git diff --check
 1. 为当前生产提交建立带日期的回滚标签。
 2. 在独立分支完成修改和验证；确认差异只含授权文件。
 3. 使用普通提交合入或推送 `main`，禁止强推。
-4. 遵守当前必需GitHub检查，不强行跳过保护。现有工作流尚未按路径分流，自动触发的范围过宽问题应独立优化；本机不要再重复启动无关整站长测。
+4. 必须通过Deployable site on Node 24和Affected tools and browser checks on Node 24两项Actions必需检查；strict=true，不绕过保护。CI按准确base/head选择关联套件，共享/CI/依赖/未知路径、手动full和每周回归仍全量，本机不重复无关长测。
 5. 等待 EdgeOne 完成异步部署，不要因短暂 502/Cache Miss 连续重复推送。
 6. 上线核对只覆盖本次资源与必要关联入口。只改游戏时核对游戏运行包/配置的正式SHA和游戏交互；视频或媒体缓存发生变化才运行`npm run check:edgeone`，域名/监控/路由相关变化才使用对应生产监控。
 

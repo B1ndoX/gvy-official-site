@@ -1,5 +1,11 @@
 # GVY 官网维护架构
 
+部署进行中（2026-11-02）：用户已明确授权部署，发布候选来自feat/executive-hangar-clock-20261102；当前正式仍PR29/main7302cc4，等待受保护CI、合并及EdgeOne正式核验。下方预览限制为授权之前状态；最终上线状态会在现有交接顶部补齐。
+
+2026-11-02本地行政机库时钟：rules只负责配置校验/毫秒绝对时间，clock独占秒级显示/15分钟同步/最后有效缓存，接入原主页生命周期；FlipDown翻牌及CircleTimer式SVG只消费同一状态，不另设减秒/RAF时钟。原生Popover负责外部/ESC关闭，控制器只补充悬停临时展开与点击固定，关闭清空固定状态。表盘容器缩放翻牌，阶段颜色同步文字，不只靠颜色传意；计时基准与最近有效同步分离，来源纯文字。按钮按最新要求使用低透明底/浅反光和背景模糊，名称/状态文字柔和、黑底数字清楚；常态中性边，仅交互按阶段着色。两个表面共用原clock生命周期的指针方向高光，CSS边缘遮罩/角度最短路径过渡，无全局鼠标/新RAF/计时器；cleanup移除监听，触摸静态、reduced-motion关闭过渡。不使用Focus Cards整页/弹窗模糊聚焦。无React/新依赖/手动同步/默认epoch/机器人或服务器写入。仅本地待验收，完整状态见OPERATIONS顶部。
+
+PR29/main7302cc4已正式部署（2026-10-29）。开发/CI/云端/发布器统一24.18.0，.node-version为版本权威，其余配置及实际进程必须同值。verification-plan独占范围、检查名与准确树证明，门禁拒绝缺失或跳过所选任务；Ubuntu模拟独立worker，macOS原生工具，按需安装。main真实verified-merge60秒通过，产品职责与DO2FTLKL保持。以下迁移候选/旧环境为历史，最终验收见OPERATIONS顶部。
+
 CI职责追加：纯模拟由独立Ubuntu单worker执行，macOS负责运行包复现、发布器、媒体与浏览器；必需工具门禁只聚合真实任务结果，选中的任务跳过/失败/取消/缺失都会失败。作用范围和检查名仍由verification-plan唯一拥有。
 
 2026-10-29实现候选：verification-plan独占影响分类、检查名称与准确树/候选验证契约；run-verification只执行已校验计划。Node按用户最终要求以.node-version的24.18.0为主，.nvmrc/edgeone.json/package引擎同值并检查实际进程版本。原游戏运行包继续预编译校验/复制，新增流程不写入模拟或前端状态。远端/云端验收未完成，正式仍PR28，详细状态见OPERATIONS顶部。
@@ -14,6 +20,7 @@ CI职责追加：纯模拟由独立Ubuntu单worker执行，macOS负责运行包�
 
 | 状态 | 唯一写入者 | 只读消费者 | 禁止事项 |
 | --- | --- | --- | --- |
+| 行政机库预测/缓存/显示 | executive-hangar-clock.js；纯规则executive-hangar-rules.js | 顶部翻牌与详情共用同一状态 | 每秒HTTP、虚构默认时间、双计时器、机器人耦合 |
 | 首屏视频选片 | `index.html` 头部同步脚本 | `hero-video-controller.js` | 控制器再次随机选片或加载后更换已选片源 |
 | 首屏播放状态 | `hero-video-controller.js` | 首屏 DOM/CSS | 新增第二个播放恢复定时器 |
 | 行动阶段 | 桌面 `cinematic-timelines.js`；手机 `operation-motion.js` 可见性分支 | `operation-motion.js` 视频层 | 同一断点下两个生产者同时写 `data-operation-active` |
