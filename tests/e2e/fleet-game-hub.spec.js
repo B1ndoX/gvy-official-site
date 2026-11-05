@@ -28,6 +28,50 @@ test.describe('mobile fleet-game navigation',()=>{
  });
 });
 
+test('the docked chooser fits both game previews as the page changes size', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await page.locator('[data-member-brawl-open]').evaluate(button => button.click());
+  await expect(page.locator('[data-ship-cache-label]')).toHaveText('飞船资源已缓存', { timeout: 30_000 });
+  await page.locator('[data-member-brawl-minimize]').click();
+
+  const dialog = page.locator('[data-member-brawl-dialog]');
+  for (const [width, height, minDock, maxDock] of [
+    [601, 720, 320, 360], [844, 390, 320, 360], [768, 1024, 320, 360],
+    [1512, 900, 320, 370], [2560, 1440, 510, 620], [3840, 2160, 770, 920],
+  ]) {
+    await page.setViewportSize({ width, height });
+    await expect.poll(() => dialog.evaluate((el, { minDock, maxDock }) => {
+      const box = el.getBoundingClientRect();
+      const viewport = el.querySelector('[data-member-brawl-viewport]');
+      const area = viewport.getBoundingClientRect();
+      const previews = [...el.querySelectorAll('.fleet-game-card strong, .fleet-game-media')];
+      return box.width >= minDock && box.width <= maxDock
+        && box.left >= 0 && box.top >= 0 && box.right <= innerWidth && box.bottom <= innerHeight
+        && viewport.scrollHeight <= viewport.clientHeight + 1
+        && previews.every(preview => {
+          const r = preview.getBoundingClientRect();
+          return r.height > 0 && r.width > 0 && r.top >= area.top && r.bottom <= area.bottom
+            && r.left >= area.left && r.right <= area.right;
+        });
+    }, { minDock, maxDock })).toBe(true);
+    await expect(page.locator('[data-ship-cache]')).toBeHidden();
+  }
+  await expect(page.locator('[data-member-brawl-frame]')).not.toHaveAttribute('src', /.+/);
+  await page.locator('.member-brawl-dock-preview').click();
+  await expect(dialog).toHaveAttribute('data-window-state', 'expanded');
+  await expect(page.locator('[data-game-select]')).toHaveCount(2);
+  await expect(page.locator('[data-ship-cache]')).toBeVisible();
+  for (const viewport of [{ width: 3840, height: 2160 }, { width: 7680, height: 4320 }]) {
+    await page.setViewportSize(viewport);
+    await expect.poll(() => dialog.evaluate(el => {
+      const subtitle = el.querySelector('.fleet-game-heading p').getBoundingClientRect();
+      const minimize = el.querySelector('[data-member-brawl-minimize]').getBoundingClientRect();
+      return minimize.left - subtitle.right;
+    })).toBeGreaterThanOrEqual(8);
+  }
+});
+
 test('one fleet window selects either game, supplies the current roster and unloads on switching',async({page})=>{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  await page.goto('/',{waitUntil:'domcontentloaded'});
