@@ -14,6 +14,7 @@ export function initMemberBrawlDialog({
   const fullscreenButton = dialog?.querySelector?.("[data-member-brawl-fullscreen]");
   const minimizeButton = dialog?.querySelector?.("[data-member-brawl-minimize]");
   const endButton = dialog?.querySelector?.("[data-member-brawl-end]");
+  const dockHint = dialog?.querySelector?.("[data-game-dock-hint]");
   const restorers = Array.from(dialog?.querySelectorAll?.("[data-member-brawl-restore]") || []);
   const openers = Array.from(root?.querySelectorAll?.("[data-member-brawl-open]") || []);
   const hub = dialog?.querySelector?.("[data-game-hub]");
@@ -32,6 +33,8 @@ export function initMemberBrawlDialog({
 
   const cardPreviews=initGameCardPreviews({root:dialog,view});
   const body = root.body;
+  const smallScreen = view?.matchMedia?.("(max-width: 600px), (max-height: 440px) and (pointer: coarse)");
+  const canDock = () => !smallScreen?.matches;
   let state = "closed", restoreFocus = null, previousBodyOverflow = "", scrollLocked = false;
   let fitFrame = 0, expandedWidth = 960, expandedHeight = 600;
   let activeGame = "", generation = 0, membersSent = false, shipMembers = null;
@@ -43,6 +46,14 @@ export function initMemberBrawlDialog({
     if(cacheNote){cacheNote.hidden=data.type==='complete';cacheNote.textContent=data.firstLoad?'首次准备较久，之后优先读取本机缓存。':'正在补齐未缓存资源，已有资源直接读取。';}
   }});
   let windowMaximized=false, ownsFullscreen=false;
+  const updateDismissControls = () => {
+    const dockable = canDock();
+    if (minimizeButton) minimizeButton.hidden = !dockable;
+    if (dockHint) dockHint.hidden = !dockable;
+    closeButton?.setAttribute("aria-label", dockable ? "收起战斗窗口" : "关闭游戏窗口");
+    const closeTitle = activeGame ? "关闭窗口并结束对局" : "关闭游戏选择";
+    closeButton?.setAttribute("title", dockable ? "收起到右下角，战斗继续" : closeTitle);
+  };
   const updateGame = (game) => {
     cardPreviews.stop(true);
     activeGame = game;
@@ -55,6 +66,7 @@ export function initMemberBrawlDialog({
     if (title) title.textContent = names[game] || "舰队大乱斗";
     if (dockTitle) dockTitle.textContent = names[game] || "舰队大乱斗 · 选择游戏";
     dialog.setAttribute("aria-label", names[game] || "舰队大乱斗 · 选择游戏");
+    updateDismissControls();
   };
   const unloadGame = () => {
     generation++;
@@ -79,30 +91,37 @@ export function initMemberBrawlDialog({
     if (scrollLocked && body?.style) body.style.overflow = previousBodyOverflow;
     scrollLocked = false;
   };
+  const preserveFrameSize = () => {
+    frame.style.width = expandedWidth + "px";
+    frame.style.height = expandedHeight + "px";
+  };
   const applyFit = () => {
     fitFrame = 0;
     if (state === "docked" && activeGame) {
       // A thumbnail keeps the existing game viewport. Docking must not resize
       // bodies, rebuild terrain or restart a match merely to show a small view.
+      preserveFrameSize();
       const previewWidth = Math.max(1, viewport.clientWidth);
-      const previewHeight = Math.min(210, previewWidth * 0.62);
+      const previewHeight = Math.max(1, viewport.clientHeight);
       let crop = { x: 0, y: 0, width: expandedWidth, height: expandedHeight };
       try {
         const stage = frame.contentDocument?.querySelector(".arena-stage")?.getBoundingClientRect();
         if (stage?.width && stage?.height) crop = stage;
       } catch { /* A loading document uses its existing whole-frame bounds. */ }
-      const scale = Math.max(previewWidth / crop.width, previewHeight / crop.height);
+      // Fit the entire battlefield. Clip the iframe chrome before scaling so
+      // the empty margins never reveal controls from the embedded game.
+      const scale = Math.min(previewWidth / crop.width, previewHeight / crop.height);
       const x = (previewWidth - crop.width * scale) / 2 - crop.x * scale;
-      const y = (previewHeight - crop.height * scale) * 0.8 - crop.y * scale;
-      dialog.style.setProperty("--member-brawl-preview-height", previewHeight + "px");
-      frame.style.width = expandedWidth + "px";
-      frame.style.height = expandedHeight + "px";
+      const y = (previewHeight - crop.height * scale) / 2 - crop.y * scale;
+      const bottom = Math.max(0, expandedHeight - crop.y - crop.height);
+      const right = Math.max(0, expandedWidth - crop.x - crop.width);
+      frame.style.clipPath = `inset(${crop.y}px ${right}px ${bottom}px ${crop.x}px)`;
       frame.style.transform = "translate(" + x + "px," + y + "px) scale(" + scale + ")";
     } else {
       frame.style.width = "100%";
       frame.style.height = "calc(100% - var(--game-window-toolbar-height))";
       frame.style.transform = "none";
-      dialog.style.removeProperty("--member-brawl-preview-height");
+      frame.style.clipPath = "";
       if (state === "expanded" && viewport.clientWidth && viewport.clientHeight) {
         expandedWidth = frame.clientWidth || viewport.clientWidth;
         expandedHeight = frame.clientHeight || viewport.clientHeight;
@@ -145,10 +164,12 @@ export function initMemberBrawlDialog({
     requestFit();
   };
   const minimize = () => {
-    if (state !== "expanded") return;
+    if (state !== "expanded" || !canDock()) return;
     leaveFullscreen();
     expandedWidth = frame.clientWidth || viewport.clientWidth || expandedWidth;
     expandedHeight = frame.clientHeight || viewport.clientHeight || expandedHeight;
+    // show() can flush layout before applyFit; freeze the live iframe first.
+    if (activeGame) preserveFrameSize();
     setState("docked");
     dialog.close();
     dialog.show();
@@ -169,6 +190,7 @@ export function initMemberBrawlDialog({
     restoreFocus?.focus?.({ preventScroll: true });
     restoreFocus = null;
   };
+  const dismiss = () => { if (canDock()) minimize(); else close(); };
   const open = (event) => {
     if (state === "expanded") return;
     if (state === "closed") restoreFocus = event?.currentTarget || root.activeElement || null;
@@ -231,12 +253,16 @@ export function initMemberBrawlDialog({
     membersSent = true;
     frame.contentWindow.postMessage({ source: "gvy.ship-battle", version: 1, type: "command", command: "set-members", members: shipMembers, firstLoad:shipCache.isFirstLoad() }, view.location.origin);
   };
-  const onBackdropClick = (event) => { if (event.target === dialog && state === "expanded") minimize(); };
-  const onCancel = (event) => { event.preventDefault(); minimize(); };
+  const onViewportResize = () => {
+    updateDismissControls();
+    if (state === "docked" && !canDock()) open();
+    else requestFit();
+  };
+  const onBackdropClick = (event) => { if (event.target === dialog && state === "expanded" && canDock()) minimize(); };
+  const onCancel = (event) => { event.preventDefault(); dismiss(); };
   const onNativeClose = () => {
-    // External native close also means "put away", unless the user ended the
-    // lower-right window. Internal close/show transitions remain open here.
-    if (!dialog.open && state === "expanded") minimize();
+    // Internal close/show transitions still have an open dialog at this point.
+    if (!dialog.open && state === "expanded") dismiss();
   };
   const observer = ResizeObserverClass ? new ResizeObserverClass(requestFit) : null;
   observer?.observe(viewport);
@@ -244,7 +270,7 @@ export function initMemberBrawlDialog({
   for (const button of restorers) button.addEventListener("click", open);
   for (const button of choices) button.addEventListener("click", chooseGame);
   backButton?.addEventListener("click", backToHub);
-  closeButton?.addEventListener("click", minimize);
+  closeButton?.addEventListener("click", dismiss);
   minimizeButton?.addEventListener("click", minimize);
   fullscreenButton?.addEventListener("click", toggleFullscreen);
   root.addEventListener?.("fullscreenchange",onFullscreenChange);
@@ -253,7 +279,7 @@ export function initMemberBrawlDialog({
   dialog.addEventListener("click", onBackdropClick);
   dialog.addEventListener("cancel", onCancel);
   dialog.addEventListener("close", onNativeClose);
-  view?.addEventListener?.("resize", requestFit, { passive: true });
+  view?.addEventListener?.("resize", onViewportResize, { passive: true });
   view?.addEventListener?.("message", onMessage);
   updateGame("");
   setState("closed");
@@ -267,7 +293,7 @@ export function initMemberBrawlDialog({
       for (const button of restorers) button.removeEventListener("click", open);
       for (const button of choices) button.removeEventListener("click", chooseGame);
       backButton?.removeEventListener("click", backToHub);
-      closeButton?.removeEventListener("click", minimize);
+      closeButton?.removeEventListener("click", dismiss);
       minimizeButton?.removeEventListener("click", minimize);
       fullscreenButton?.removeEventListener("click", toggleFullscreen);
       root.removeEventListener?.("fullscreenchange",onFullscreenChange);
@@ -276,7 +302,7 @@ export function initMemberBrawlDialog({
       dialog.removeEventListener("click", onBackdropClick);
       dialog.removeEventListener("cancel", onCancel);
       dialog.removeEventListener("close", onNativeClose);
-      view?.removeEventListener?.("resize", requestFit);
+      view?.removeEventListener?.("resize", onViewportResize);
       view?.removeEventListener?.("message", onMessage);
       close();
       shipCache.cleanup();

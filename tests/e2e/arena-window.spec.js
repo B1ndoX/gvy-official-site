@@ -1,6 +1,6 @@
 import {expect,test} from '@playwright/test';
 
-for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
+for(const viewport of [{width:1440,height:900}]) {
   test(`${viewport.width}px fleet window docks on scroll, retains one battle and ends only from the dock`,async({page})=>{
     await page.setViewportSize(viewport);
     const errors=[],documents=[];
@@ -61,7 +61,9 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await expect(dialog).toHaveAttribute('data-window-state','docked');
     expect(await dialog.evaluate(e=>e.matches(':modal'))).toBe(false);
     expect(await page.locator('body').evaluate(e=>e.style.overflow)).not.toBe('hidden');
-    const dock=await dialog.boundingBox();expect(dock.width).toBeLessThanOrEqual(342);expect(dock.height).toBeLessThan(270);
+    const dock=await dialog.boundingBox();
+    expect(dock.width).toBeLessThanOrEqual(342);
+    expect(dock.height).toBeLessThan(viewport.height * .36);
     expect(viewport.width-dock.x-dock.width).toBeGreaterThanOrEqual(14);
     expect(viewport.height-dock.y-dock.height).toBeGreaterThanOrEqual(14);
     const after=await frame.evaluate(()=>({width:innerWidth,height:innerHeight,identity:window.__windowIdentity}));
@@ -76,6 +78,13 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await expect(iframe).toHaveCSS('transform','none');
     await page.locator('[data-member-brawl-minimize]').click();
     await expect(dialog).toHaveAttribute('data-window-state','docked');
+    await page.setViewportSize({width:390,height:844});
+    await expect(dialog).toHaveAttribute('data-window-state','expanded');
+    await expect(page.locator('[data-member-brawl-minimize]')).toBeHidden();
+    expect(await frame.evaluate(()=>window.__windowIdentity)).toBe('retained');
+    await page.setViewportSize(viewport);
+    await page.locator('[data-member-brawl-minimize]').click();
+    await expect(dialog).toHaveAttribute('data-window-state','docked');
     await page.locator('[data-member-brawl-end]').click();
     await expect(dialog).not.toHaveAttribute('open','');
     await expect(iframe).not.toHaveAttribute('src',/.+/);
@@ -88,5 +97,39 @@ for(const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     expect(documents).toHaveLength(2);
     await page.locator('[data-member-brawl-minimize]').click();await page.locator('[data-member-brawl-end]').click();
     expect(errors).toEqual([]);
+  });
+}
+
+for (const viewport of [{ width: 390, height: 844 }, { width: 844, height: 390 }]) {
+  test.describe(`phone at ${viewport.width}×${viewport.height}`, () => {
+    test.use({ viewport, isMobile: true, hasTouch: true });
+    test('the chooser and both games close from the full window without leaving a dock', async ({ page }) => {
+      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      const open = () => page.locator('[data-member-brawl-open]').evaluate(button => button.click());
+      const dialog = page.locator('[data-member-brawl-dialog]');
+      const minimize = page.locator('[data-member-brawl-minimize]');
+      const frame = page.locator('[data-member-brawl-frame]');
+      const arena = page.frameLocator('[data-member-brawl-frame]');
+      const close = dialog.getByRole('button', { name: '关闭游戏窗口' });
+      await open();
+      await expect(minimize).toBeHidden();
+      await expect(dialog.locator('[data-game-dock-hint]')).toBeHidden();
+      await close.click();
+      await expect(dialog).toHaveAttribute('data-window-state', 'closed');
+
+      for (const game of ['members', 'ships']) {
+        await open();
+        await page.locator(`[data-game-select="${game}"]`).click();
+        const start = game === 'members'
+          ? arena.locator('[data-brawl-start]')
+          : arena.getByRole('button', { name: '开始战斗', exact: true });
+        await start.click();
+        await expect(minimize).toBeHidden();
+        await close.click();
+        await expect(dialog).not.toHaveAttribute('open', '');
+        await expect(dialog).toHaveAttribute('data-window-state', 'closed');
+        await expect(frame).not.toHaveAttribute('src', /.+/);
+      }
+    });
   });
 }

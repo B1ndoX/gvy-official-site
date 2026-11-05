@@ -32,7 +32,20 @@ for(const viewport of [{width:2560,height:1440},{width:3840,height:2160}])test(`
  expect(m.diameter/m.unit).toBeCloseTo(1.12,5);
  const dialog=page.locator('[data-member-brawl-dialog]'),frame=game(page);await frame.evaluate(()=>window.__scaleIdentity='same');const size=await frame.evaluate(()=>({w:innerWidth,h:innerHeight}));
  await page.locator('[data-member-brawl-minimize]').click();expect(await dialog.getAttribute('data-window-state')).toBe('docked');
- expect(await frame.evaluate(()=>({w:innerWidth,h:innerHeight}))).toEqual(size);expect((await dialog.boundingBox()).width).toBeLessThanOrEqual(342);
+ expect(await frame.evaluate(()=>({w:innerWidth,h:innerHeight}))).toEqual(size);
+ await expect.poll(async()=>(await dialog.boundingBox()).width/viewport.width).toBeGreaterThan(.20);
+ expect((await dialog.boundingBox()).width/viewport.width).toBeLessThan(.24);
+ await expect.poll(() => page.locator('[data-member-brawl-frame]').evaluate(iframe => {
+   const { left, top, right, bottom } = iframe.contentDocument.querySelector('.arena-stage').getBoundingClientRect();
+   const style = getComputedStyle(iframe);
+   const matrix = new DOMMatrixReadOnly(style.transform);
+   const viewport = iframe.parentElement;
+   return style.clipPath.startsWith('inset(')
+     && left * matrix.a + matrix.e >= -1 && top * matrix.d + matrix.f >= -1
+     && right * matrix.a + matrix.e <= viewport.clientWidth + 1
+     && bottom * matrix.d + matrix.f <= viewport.clientHeight + 1
+     && (right - left) * matrix.a >= viewport.clientWidth * .85;
+ })).toBe(true);
  await page.locator('.member-brawl-dock-preview').click({position:{x:30,y:30}});expect(await frame.evaluate(()=>window.__scaleIdentity)).toBe('same');
  expect((await metrics(page)).state).toEqual(m.state);await page.locator('[data-member-brawl-minimize]').click();await page.locator('[data-member-brawl-end]').click();expect(errors).toEqual([]);
 });
