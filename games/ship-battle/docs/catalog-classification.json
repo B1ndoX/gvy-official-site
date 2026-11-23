@@ -223,7 +223,10 @@
     "s-65-stingray",
     "odin",
     "sabre-raven-ex",
-    "constellation-mkv-centaurus"
+    "constellation-mkv-centaurus",
+    "skylark",
+    "marauder",
+    "hyun"
   ],
   "excluded": [
     {
@@ -604,5 +607,8 @@
       "id": "zeus",
       "reason": "Unverified concept/historical artwork tagged catalogFake in source catalog; not Zeus Mk II. No verified combat fitting."
     }
-  ]
+  ],
+  "aliases": {
+    "maruader": "marauder"
+  }
 }

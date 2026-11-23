@@ -102,13 +102,13 @@ export class BattleEngine {
     if(this.escortQueue.length&&this.time>=this.nextEscortAt){const boss=this.ships.filter(s=>s.npc==='boss').at(-1);if(boss?.alive){this.spawnEnemy(this.escortQueue.shift()!,'escort');this.nextEscortAt=this.time+.28;}else this.escortQueue=[];}
     const living=this.living, byId=new Map(living.map(s=>[s.id,s])),allById=new Map(this.ships.map(s=>[s.id,s]));
     const incoming=this.projectiles.filter(p=>guidedWeapon(p)&&!p.intercepted);
-    const beamFiring=new Set(this.beams.filter(b=>b.remaining>0).map(b=>b.owner));
+    const beamFiring=new Set(this.beams.filter(b=>{const m=allById.get(b.owner)?.spec.mounts[b.mount];return b.remaining>0&&m&&fixedWeapon(m);}).map(b=>b.owner));
     for(const id of this.beamTurns.keys())if(!byId.has(id)||!beamFiring.has(id)&&!byId.get(id)!.spec.mounts.some(m=>chargedWeapon(m)))this.beamTurns.delete(id);
     for(const id of this.terrainLanes.keys())if(!byId.has(id))this.terrainLanes.delete(id);
     if(this.checkOutcome())return;
     for(const s of living){
       const committedHull=s.npc==='boss'||s.spec.length>=100;
-      const busy=committedHull&&(this.beams.some(b=>b.owner===s.id)||s.weaponCycles?.some((c,i)=>fixedWeapon(s.spec.mounts[i])&&(c.chargeLeft>0||chargedWeapon(s.spec.mounts[i])&&c.chargeLeft===0)));
+      const busy=committedHull&&(beamFiring.has(s.id)||s.weaponCycles?.some((c,i)=>fixedWeapon(s.spec.mounts[i])&&(c.chargeLeft>0||chargedWeapon(s.spec.mounts[i])&&c.chargeLeft===0)));
       if(this.time>=s.searchAt&&!busy||!byId.has(s.targetId??-1)) {
         const next=this.target(s,living);s.targetId=next?.id??null;
         const turn=next?Math.abs(wrap(Math.atan2(next.y-s.y,next.x-s.x)-s.heading))/Math.max(.01,s.spec.turnRate):0;
@@ -249,7 +249,8 @@ export class BattleEngine {
         if(cycle.reloadLeft>0)return;
         cycle.ammoLeft=m.ammo;cycle.reloadLeft=undefined;
       }
-      if(m.kind==='beam'&&this.beams.some(b=>b.owner===s.id&&b.mount===i))return;
+      const activeBeam=m.kind==='beam'&&this.beams.some(b=>b.owner===s.id&&b.mount===i);
+      if(activeBeam&&!turretControlled(m))return;
       const origin=mountWorld(s,m),target=this.target(s,living,origin,m,s.turretTargets[i]);s.turretTargets[i]=target?.id??null;
       if(!target){cycle.chargeLeft=-1;cycle.chargeGoal=undefined;cycle.chargeTarget=undefined;return;}
       if(chargeRule&&cycle.chargeLeft>=0&&cycle.chargeTarget!==target.id){
@@ -264,9 +265,12 @@ export class BattleEngine {
       if(Math.abs(wrap(relative-facing))>m.arc*Math.PI/360)return;
       const desired=fixedWeapon(m)?facing:relative;
       if(turretControlled(m)){
-        const tracked=trackAim(cycle,wrap(s.heading+s.turretAngles[i]),aimed,target.id,this.time,dt,m.turnRate,this.random,{origin,target,speed:m.speed});
+        const tracked=trackAim(cycle,wrap(s.heading+s.turretAngles[i]),aimed,target.id,this.time,dt,m.turnRate,this.random,m.kind==='beam'?undefined:{origin,target,speed:m.speed});
         s.turretAngles[i]=wrap(tracked.angle-s.heading);relative=wrap(tracked.goal-s.heading);trackingReady=tracked.ready;
       }else s.turretAngles[i]=fixedWeapon(m)?facing:wrap(s.turretAngles[i]+clamp(wrap(desired-s.turretAngles[i]),-m.turnRate*dt,m.turnRate*dt));
+      // An active gimballed beam must keep traversing through the same sampled
+      // gunner state. Only its trigger/cycle is held, never its aim update.
+      if(activeBeam)return;
       const error=Math.abs(wrap(relative-s.turretAngles[i]));
       // Gunners may fire while settling on a solution. Rounds still leave the
       // actual barrel direction; requiring near-perfect aim made slow turrets
@@ -322,7 +326,7 @@ export class BattleEngine {
       // Five damage ticks per 1× real second; elapsed time preserves the volley budget.
       const tick=b.pending>=simulationSeconds(.2)-1e-8||b.remaining<1e-8,seconds=tick?b.pending:0;
       if(tick)b.pending=0;
-      const emitters=m.beamWidth?Array.from({length:9},(_,i)=>m.x+(i/8-.5)*m.beamWidth!/owner.spec.beam):m.emitters??[m.x],angle=owner.heading+m.facing*Math.PI/180,dx=Math.cos(angle),dy=Math.sin(angle);
+      const emitters=m.beamWidth?Array.from({length:9},(_,i)=>m.x+(i/8-.5)*m.beamWidth!/owner.spec.beam):m.emitters??[m.x],angle=owner.heading+(turretControlled(m)?owner.turretAngles[b.mount]:m.facing*Math.PI/180),dx=Math.cos(angle),dy=Math.sin(angle);
       b.segments=[];const damage=new Map<number,{ship:Ship;amount:number;point:Vec}>();let broadDistance=1,broadVictim:Ship|null=null;
       for(const x of emitters){
         const from=mountWorld(owner,{x,y:m.y}),end={x:from.x+dx*m.range,y:from.y+dy*m.range};

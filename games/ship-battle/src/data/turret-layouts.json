@@ -773,7 +773,7 @@
     },
     "mauler": {
       "url": "assets/ships/mauler.png",
-      "basis": "render-platforms",
+      "basis": "user-marked-nose-and-dorsal-beam-2026-11-23",
       "mounts": {
         "turret-1": {
           "x": -0.18018,
@@ -838,8 +838,18 @@
         "coverage-turret-4": {
           "x": 0.256757,
           "y": 0.205411
+        },
+        "spinal-beam": {
+          "x": 0,
+          "y": -0.46
+        },
+        "dorsal-beam": {
+          "x": 0.0067,
+          "y": -0.05,
+          "facing": 0
         }
-      }
+      },
+      "version": 6
     },
     "odin": {
       "url": "assets/ships/odin.png",
@@ -985,6 +995,100 @@
       "url": "assets/ships/terrapin-medic.png",
       "aliasOf": "terrapin",
       "basis": "user-confirmed-shared-terrapin-family-muzzles"
+    },
+    "skylark": {
+      "version": 6,
+      "url": "assets/ships/skylark.png",
+      "basis": "user-marked-2026-11-23-third-ventral-gun-user-confirmed",
+      "mounts": {
+        "laser-1": {
+          "x": 0.389888,
+          "y": 0.01,
+          "facing": 0
+        },
+        "laser-2": {
+          "x": -0.392135,
+          "y": 0.01,
+          "facing": 0
+        },
+        "laser-3": {
+          "x": 0.001124,
+          "y": -0.15,
+          "facing": 0
+        }
+      },
+      "note": "User-marked 2D projection; weapon identities and total counts come from the fleet bot. Hyun has two guns per marked side; Skylark third muzzle is ventral and projected at centre."
+    },
+    "marauder": {
+      "version": 6,
+      "url": "assets/ships/marauder.png",
+      "basis": "user-marked-2026-11-23",
+      "mounts": {
+        "laser-1": {
+          "x": 0.36031,
+          "y": 0.03,
+          "facing": 0
+        },
+        "laser-2": {
+          "x": 0.291574,
+          "y": 0.0,
+          "facing": 0
+        },
+        "laser-3": {
+          "x": 0.138581,
+          "y": -0.12,
+          "facing": 0
+        },
+        "laser-4": {
+          "x": 0.021064,
+          "y": -0.476,
+          "facing": 0
+        },
+        "laser-5": {
+          "x": -0.136364,
+          "y": -0.12,
+          "facing": 0
+        },
+        "laser-6": {
+          "x": -0.298226,
+          "y": 0.0,
+          "facing": 0
+        },
+        "laser-7": {
+          "x": -0.364745,
+          "y": 0.03,
+          "facing": 0
+        }
+      },
+      "note": "User-marked 2D projection; weapon identities and total counts come from the fleet bot. Hyun has two guns per marked side; Skylark third muzzle is ventral and projected at centre."
+    },
+    "hyun": {
+      "version": 6,
+      "url": "assets/ships/hyun.png",
+      "basis": "user-marked-2026-11-23",
+      "mounts": {
+        "laser-1": {
+          "x": 0.372964,
+          "y": -0.25,
+          "facing": 0
+        },
+        "laser-2": {
+          "x": 0.372964,
+          "y": -0.25,
+          "facing": 0
+        },
+        "laser-3": {
+          "x": -0.389251,
+          "y": -0.25,
+          "facing": 0
+        },
+        "laser-4": {
+          "x": -0.389251,
+          "y": -0.25,
+          "facing": 0
+        }
+      },
+      "note": "User-marked 2D projection; weapon identities and total counts come from the fleet bot. Hyun has two guns per marked side; Skylark third muzzle is ventral and projected at centre."
     }
   }
 }

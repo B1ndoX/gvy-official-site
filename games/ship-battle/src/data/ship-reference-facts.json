@@ -11733,6 +11733,201 @@
         }
       ],
       "unknownShields": []
+    },
+    "skylark": {
+      "sourceName": "RSI Skylark",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/skylark/Skylark",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "snapshotDate": "2026-11-23T03:06:41Z",
+      "inputs": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      },
+      "facts": {
+        "length": 7,
+        "beam": 6.5,
+        "height": 3.5,
+        "mass": 14868.5,
+        "scm": 227,
+        "yawDegrees": 58,
+        "hullTotal": 6230.0,
+        "armorHealth": 1800.0,
+        "physicalDamageMultiplier": 0.75,
+        "energyDamageMultiplier": 0.95,
+        "shieldCapacity": 6000.0,
+        "shieldRegen": 1140.0,
+        "shieldDelay": 5.0,
+        "shieldDownDelay": 10.0
+      },
+      "provenance": {
+        "length": "bot-erkul-snapshot",
+        "beam": "bot-erkul-snapshot",
+        "height": "bot-erkul-snapshot",
+        "mass": "bot-erkul-snapshot",
+        "scm": "bot-erkul-snapshot",
+        "yawDegrees": "bot-rsi-matrix",
+        "hullTotal": "bot-erkul-snapshot",
+        "armorHealth": "bot-erkul-snapshot",
+        "physicalDamageMultiplier": "bot-erkul-snapshot",
+        "energyDamageMultiplier": "bot-erkul-snapshot",
+        "shieldCapacity": "component-model",
+        "shieldRegen": "component-model",
+        "shieldDelay": "component-model",
+        "shieldDownDelay": "component-model"
+      },
+      "missing": [],
+      "shields": [
+        {
+          "count": 2,
+          "size": 1,
+          "model": "5SA 'Rhada'",
+          "capacity": 3000.0,
+          "capacityRange": [
+            3000.0,
+            3000.0
+          ],
+          "regen": 570.0,
+          "delay": 5.0,
+          "downDelay": 10.0,
+          "status": "model",
+          "origin": "bot-component-model:4.10.3-LIVE.13220821"
+        }
+      ],
+      "unknownShields": [],
+      "note": "Read-only snapshot of the fleet bot public card inputs; existing shared conversion/generation and spawn balance apply unchanged."
+    },
+    "marauder": {
+      "sourceName": "Drake Marauder",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/marauder/Marauder",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "snapshotDate": "2026-11-23T03:06:41Z",
+      "inputs": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      },
+      "facts": {
+        "length": 20,
+        "beam": 19,
+        "height": 6,
+        "mass": 75649,
+        "scm": 223,
+        "yawDegrees": 40,
+        "hullTotal": 7100.0,
+        "armorHealth": 4100.0,
+        "physicalDamageMultiplier": 0.75,
+        "energyDamageMultiplier": 0.6,
+        "shieldCapacity": 6000.0,
+        "shieldRegen": 1140.0,
+        "shieldDelay": 5.0,
+        "shieldDownDelay": 10.0
+      },
+      "provenance": {
+        "length": "bot-erkul-snapshot",
+        "beam": "bot-erkul-snapshot",
+        "height": "bot-erkul-snapshot",
+        "mass": "bot-erkul-snapshot",
+        "scm": "bot-erkul-snapshot",
+        "yawDegrees": "bot-rsi-matrix",
+        "hullTotal": "bot-erkul-snapshot",
+        "armorHealth": "bot-erkul-snapshot",
+        "physicalDamageMultiplier": "bot-erkul-snapshot",
+        "energyDamageMultiplier": "bot-erkul-snapshot",
+        "shieldCapacity": "component-model",
+        "shieldRegen": "component-model",
+        "shieldDelay": "component-model",
+        "shieldDownDelay": "component-model"
+      },
+      "missing": [],
+      "shields": [
+        {
+          "count": 2,
+          "size": 1,
+          "model": "5SA 'Rhada'",
+          "capacity": 3000.0,
+          "capacityRange": [
+            3000.0,
+            3000.0
+          ],
+          "regen": 570.0,
+          "delay": 5.0,
+          "downDelay": 10.0,
+          "status": "model",
+          "origin": "bot-component-model:4.10.3-LIVE.13220821"
+        }
+      ],
+      "unknownShields": [],
+      "note": "Read-only snapshot of the fleet bot public card inputs; existing shared conversion/generation and spawn balance apply unchanged."
+    },
+    "hyun": {
+      "sourceName": "Gatac Hyun",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/hyun/Hy-n",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "snapshotDate": "2026-11-23T03:06:41Z",
+      "inputs": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      },
+      "facts": {
+        "length": 36.8,
+        "beam": 22.6,
+        "height": 31.9,
+        "mass": 743959,
+        "scm": 160,
+        "yawDegrees": 27,
+        "hullTotal": 71764.0,
+        "armorHealth": 8500.0,
+        "physicalDamageMultiplier": 0.75,
+        "energyDamageMultiplier": 0.6,
+        "shieldCapacity": 14400.0,
+        "shieldRegen": 2736.0,
+        "shieldDelay": 5.5,
+        "shieldDownDelay": 11.0
+      },
+      "provenance": {
+        "length": "bot-erkul-snapshot",
+        "beam": "bot-erkul-snapshot",
+        "height": "bot-erkul-snapshot",
+        "mass": "bot-erkul-snapshot",
+        "scm": "bot-erkul-snapshot",
+        "yawDegrees": "bot-rsi-matrix",
+        "hullTotal": "bot-erkul-snapshot",
+        "armorHealth": "bot-erkul-snapshot",
+        "physicalDamageMultiplier": "bot-erkul-snapshot",
+        "energyDamageMultiplier": "bot-erkul-snapshot",
+        "shieldCapacity": "component-model",
+        "shieldRegen": "component-model",
+        "shieldDelay": "component-model",
+        "shieldDownDelay": "component-model"
+      },
+      "missing": [],
+      "shields": [
+        {
+          "count": 2,
+          "size": 2,
+          "model": "Aspis",
+          "capacity": 7200.0,
+          "capacityRange": [
+            7200.0,
+            7200.0
+          ],
+          "regen": 1368.0,
+          "delay": 5.5,
+          "downDelay": 11.0,
+          "status": "model",
+          "origin": "bot-component-model:4.10.3-LIVE.13220821"
+        }
+      ],
+      "unknownShields": [],
+      "note": "Read-only snapshot of the fleet bot public card inputs; existing shared conversion/generation and spawn balance apply unchanged."
     }
   }
 }

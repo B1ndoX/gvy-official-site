@@ -81,7 +81,7 @@ export function applyFleetWeapons(ships){
  for(const ship of ships){
   const record=loadouts[ship.id];if(!usesFleetWeapons(ship.id))continue;
   if(record.status==='unarmed'){ship.mounts=[];continue;}
-  const protectedIds={perseus:['turret-2','turret-3'],polaris:['missile-rack'],'idris-p':['spinal-beam'],'idris-m':['s10-railgun'],tiburon:['spinal-beam'],mauler:['spinal-beam'],odin:['spinal-beam'],'ares-inferno':['sf7b-gatling'],'retaliator-base':['missile-1'],'retaliator-bomber':['missile-1']};
+  const protectedIds={perseus:['turret-2','turret-3'],polaris:['missile-rack'],'idris-p':['spinal-beam'],'idris-m':['s10-railgun'],tiburon:['spinal-beam'],mauler:['spinal-beam','dorsal-beam'],odin:['spinal-beam'],'ares-inferno':['sf7b-gatling'],'retaliator-base':['missile-1'],'retaliator-bomber':['missile-1']};
   const points=anchors[ship.id].filter(p=>!p.id.startsWith('coverage-turret-')),reserved=new Set(protectedIds[ship.id]??[]),used=new Set(),result=[];
   const missileOnly=record.systems.every(system=>catalog[system.weaponId].category==='ordnance');
   const pick=(kind,role)=>{
@@ -139,10 +139,19 @@ export function applyFleetGunFirepower(ships,profiles){
   if(!usesFleetWeapons(ship.id)||loadouts[ship.id].status==='unarmed')continue;
   const profile=profiles.find(p=>p.id===ship.id),protectedIds=new Set(ship.id==='eclipse'?[]:(profile?.mounts??[]).filter(m=>!['missile','torpedo'].includes(m.kind)&&m.id!=='sf7b-gatling').map(m=>m.id));
   const guns=ship.mounts.filter(m=>!m.interceptsOnly&&(referenceMode||!['missile','torpedo'].includes(m.kind)&&!protectedIds.has(m.id))&&catalog[m.weaponId]);
+  // Multiple independently aimed ports can share one reviewed source beam.
+  // Split its raw budget once here; runtime/global balance still applies once.
+  const beamGroups=fittingFor(ship.id)?.beamEmitterGroups??[];
+  for(const group of beamGroups){
+   const ports=ship.mounts.filter(m=>group.mountIds.includes(m.id));
+   if(new Set(group.mountIds).size!==group.mountIds.length||ports.length!==group.mountIds.length||ports.some(m=>m.kind!=='beam'||m.weaponId!==group.weaponId))throw Error(`Invalid shared beam emitters: ${ship.id}`);
+  }
   for(const m of guns){
    const parameters=gameWeaponValues[m.weaponId].combat;
    if(referenceMode&&catalog[m.weaponId].category==='gun'&&m.kind!=='beam'){delete m.burstCount;delete m.burstCooldown;delete m.cooldownJitter;}
    Object.assign(m,parameters);m.damage=round(parameters.damage);m.cooldown=round(m.cooldown);
+   const beamGroup=beamGroups.find(group=>group.mountIds.includes(m.id));
+   if(beamGroup)m.damage=round(parameters.damage/beamGroup.mountIds.length);
    const behavior=behaviorRules[m.weaponId];
    if(behavior&&m.kind==='railgun'){
     m.speed=round(m.speed*behavior.projectileSpeedMultiplier);

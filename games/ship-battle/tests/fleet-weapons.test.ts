@@ -3,6 +3,7 @@ import ships from '../src/data/ships.json';
 import data from '../src/data/fleet-weapon-loadouts.json';
 import weapons from '../src/data/weapon-catalog.json';
 import gameValues from '../src/data/weapon-game-values.json';
+import fittingRules from '../src/data/weapon-fitting-rules.json';
 import {BattleEngine} from '../src/sim/engine';
 import {isMemberShip} from '../src/sim/members';
 import {weaponDps} from '../src/sim/weapons';
@@ -14,8 +15,8 @@ import {hullIntersection,randomGenerator} from '../src/sim/math';
 const specs=ships as ShipSpec[],loadouts=data.ships as Record<string,{status:string;systems:{weaponId:string;count:number}[];variantOf?:string}>;
 
 test('every ship has an explicit matching-version weapon source or declared fallback',()=>{
- expect(data.gameVersion).toBe(weapons.gameVersion);expect(Object.keys(loadouts)).toHaveLength(224);
- expect(Object.values(loadouts).filter(s=>s.status==='snapshot')).toHaveLength(189);
+ expect(data.gameVersion).toBe(weapons.gameVersion);expect(Object.keys(loadouts)).toHaveLength(227);
+ expect(Object.values(loadouts).filter(s=>s.status==='snapshot')).toHaveLength(192);
  expect(Object.values(loadouts).filter(s=>s.status==='reference')).toHaveLength(25);
  expect(Object.values(loadouts).filter(s=>s.status==='fallback')).toHaveLength(4);
  expect(Object.values(loadouts).filter(s=>s.status==='unarmed')).toHaveLength(6);
@@ -26,14 +27,18 @@ test('all snapshot guns and finite ordnance match exact source quantities, not t
   for(const system of loadout.systems){
    const mounts=s.mounts.filter(m=>m.weaponId===system.weaponId),weapon=(weapons.weapons as Record<string,{category:string}>)[system.weaponId];
    expect(mounts.length,`${s.id} ${system.weaponId}`).toBeGreaterThan(0);
-   expect(mounts.reduce((n,m)=>n+(weapon.category==='ordnance'?(m.ammo??0):(m.weaponCount??m.barrels??1)),0),`${s.id} ${system.weaponId}`).toBe(s.id==='perseus'&&system.weaponId==='s3-mantis-gt-220-gatling'?2:system.count);
+   const emitterGroup=(fittingRules.ships as Record<string,{beamEmitterGroups?:{weaponId:string;mountIds:string[]}[]}>)[s.id]?.beamEmitterGroups?.find(group=>group.weaponId===system.weaponId);
+   // A user-reviewed pair of beam ports shares the archived single-system
+   // inventory and power budget. It is not two newly equipped full weapons.
+   const installed=emitterGroup?mounts.length/emitterGroup.mountIds.length:mounts.reduce((n,m)=>n+(weapon.category==='ordnance'?(m.ammo??0):(m.weaponCount??m.barrels??1)),0);
+   expect(installed,`${s.id} ${system.weaponId}`).toBe(s.id==='perseus'&&system.weaponId==='s3-mantis-gt-220-gatling'?2:system.count);
   }
  }
 });
 test('known unarmed ships stay in the original library and are excluded from combat draws',()=>{
  const unarmed=specs.filter(s=>loadouts[s.id].status==='unarmed');expect(unarmed).toHaveLength(6);
  for(const s of unarmed){expect(s.mounts).toHaveLength(0);expect(isMemberShip(s)).toBe(false);const a=manifest.assets.find(a=>a.shipId===s.id) as ShipAsset;expect(()=>validateAsset(a,new Set(specs.map(s=>s.id)))).not.toThrow();}
- expect(specs.filter(isMemberShip)).toHaveLength(210);
+ expect(specs.filter(isMemberShip)).toHaveLength(213);
 });
 test('every installed ordinary barrel uses the shared model damage and cadence without ship-DPS normalisation or count compression',()=>{
  const values=gameValues.weapons as Record<string,{combat:{damage?:number;cooldown:number}}>;

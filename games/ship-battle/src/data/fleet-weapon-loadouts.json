@@ -4392,6 +4392,75 @@
         }
       ],
       "sourceShip": "RSI Constellation Mk V Centaurus"
+    },
+    "skylark": {
+      "status": "snapshot",
+      "match": "exact-bot-current-card-name",
+      "systems": [
+        {
+          "weaponId": "s2-cf-227-badger-repeater",
+          "count": 3
+        },
+        {
+          "weaponId": "s1-marksman-i-missile",
+          "count": 10
+        }
+      ],
+      "sourceShip": "RSI Skylark",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      }
+    },
+    "marauder": {
+      "status": "snapshot",
+      "match": "exact-bot-current-card-name",
+      "systems": [
+        {
+          "weaponId": "s3-cf-337-panther-repeater",
+          "count": 7
+        },
+        {
+          "weaponId": "s1-pioneer-i-missile",
+          "count": 4
+        }
+      ],
+      "sourceShip": "Drake Marauder",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      }
+    },
+    "hyun": {
+      "status": "snapshot",
+      "match": "exact-bot-current-card-name",
+      "systems": [
+        {
+          "weaponId": "s3-yeng-tu-repeater",
+          "count": 4
+        },
+        {
+          "weaponId": "s2-tempest-ii-missile",
+          "count": 8
+        }
+      ],
+      "sourceShip": "Gatac Hyun",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      }
     }
   },
   "referenceInputs": {

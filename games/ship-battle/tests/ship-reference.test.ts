@@ -11,7 +11,7 @@ import {upgradeCombat,type ShipAsset} from '../src/assets/library';
 import type {ShipSpec,WeaponKind} from '../src/sim/types';
 const ships=data as ShipSpec[],find=(id:string)=>ships.find(s=>s.id===id)!;
 test('physical facts and game conversions cover every model, without inventing missing capital shield sizes',()=>{
- expect(Object.keys(facts.ships)).toHaveLength(224);expect(Object.keys(values.ships)).toHaveLength(224);
+ expect(Object.keys(facts.ships)).toHaveLength(227);expect(Object.keys(values.ships)).toHaveLength(227);
  expect(facts.snapshotVersion).toBe('4.10.2-LIVE.12913470');
  expect(facts.ships.polaris.facts.length).toBe(181);expect(facts.ships.polaris.facts.mass).toBe(10427000);
  expect(facts.ships.caterpillar.facts.length).toBe(111.5);expect(find('caterpillar').length).toBe(111.5);expect(values.ships.caterpillar.estimated).not.toContain('length:source-conflict');

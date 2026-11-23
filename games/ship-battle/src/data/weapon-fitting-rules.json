@@ -51,6 +51,20 @@
     },
     "terrapin-medic": {
       "aliasOf": "terrapin"
+    },
+    "mauler": {
+      "combatVersion": 22,
+      "source": "User-marked two beam ports, 2026-11-23",
+      "beamEmitterGroups": [
+        {
+          "weaponId": "reference-s10-beam",
+          "mountIds": [
+            "spinal-beam",
+            "dorsal-beam"
+          ]
+        }
+      ],
+      "note": "One archived S10 reference beam budget, split equally between nose-fixed and independently gimballed dorsal emitters. Two visual emitters do not double source inventory or damage; mount weaponCount is per emitter. No claim of a verified official 3D fitting."
     }
   }
 }

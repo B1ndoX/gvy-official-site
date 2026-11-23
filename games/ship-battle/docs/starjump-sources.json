@@ -3466,7 +3466,82 @@
       "bytes": 181670,
       "evidence_id": "ev_1bbb30517df6002135598ddda9a2c293b923cc3e09be1c12f0dee3a1e7023455",
       "request_id": "request-153"
+    },
+    {
+      "shipId": "skylark",
+      "slug": "skylark",
+      "name": "Skylark",
+      "url": "https://cdn1.fleetviewer.link/skylark__top_xs_661181606ac7ed6ee328ab556848998833252434d4e4d053c019d5f493f15bce.png",
+      "length": 7.0,
+      "sha256": "661181606ac7ed6ee328ab556848998833252434d4e4d053c019d5f493f15bce",
+      "bytes": 304879,
+      "width": 500,
+      "height": 445,
+      "snapshotId": "043c4246-877b-4ac0-ba9e-e68d43946bd3",
+      "manifestSha256": "4e3dee4474ae56ec411c39e6754fca2b91431e35432c33b27775a5a7f609c528",
+      "capturedAt": "2026-11-23",
+      "captureMethod": "public-https-get",
+      "httpStatus": 200
+    },
+    {
+      "shipId": "marauder",
+      "slug": "marauder",
+      "name": "Marauder",
+      "url": "https://cdn1.fleetviewer.link/marauder__top_xs_3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78.png",
+      "length": 20.5,
+      "sha256": "3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78",
+      "bytes": 238063,
+      "width": 500,
+      "height": 451,
+      "snapshotId": "043c4246-877b-4ac0-ba9e-e68d43946bd3",
+      "manifestSha256": "4e3dee4474ae56ec411c39e6754fca2b91431e35432c33b27775a5a7f609c528",
+      "capturedAt": "2026-11-23",
+      "captureMethod": "public-https-get",
+      "httpStatus": 200
+    },
+    {
+      "shipId": "hyun",
+      "slug": "hyun",
+      "name": "Hyun",
+      "url": "https://cdn1.fleetviewer.link/hyun__top_xs_d2a6688ea44422c2be7113f412a72a507bdecc53edc7b72f6884e79f43c5fede.png",
+      "length": 35.0,
+      "sha256": "d2a6688ea44422c2be7113f412a72a507bdecc53edc7b72f6884e79f43c5fede",
+      "bytes": 188907,
+      "width": 500,
+      "height": 307,
+      "snapshotId": "043c4246-877b-4ac0-ba9e-e68d43946bd3",
+      "manifestSha256": "4e3dee4474ae56ec411c39e6754fca2b91431e35432c33b27775a5a7f609c528",
+      "capturedAt": "2026-11-23",
+      "captureMethod": "public-https-get",
+      "httpStatus": 200
     }
   ],
-  "expandedCaptureEvidence": "ev_1ae512babb9885bd7b7ad2bdf4c02826ebd3c5d45f659bf8a10d23522ed7c3cb"
+  "expandedCaptureEvidence": "ev_1ae512babb9885bd7b7ad2bdf4c02826ebd3c5d45f659bf8a10d23522ed7c3cb",
+  "refreshes": [
+    {
+      "date": "2026-11-23",
+      "snapshotId": "043c4246-877b-4ac0-ba9e-e68d43946bd3",
+      "createdAt": "2026-11-23T00:05:23.769Z",
+      "manifestSha256": "4e3dee4474ae56ec411c39e6754fca2b91431e35432c33b27775a5a7f609c528",
+      "catalogGroups": 319,
+      "addedShipIds": [
+        "skylark",
+        "marauder",
+        "hyun"
+      ],
+      "ignoredDuplicate": {
+        "slug": "maruader",
+        "canonical": "marauder",
+        "reason": "Same manufacturer, fleetview and image hashes; retain correctly spelled official entry."
+      },
+      "botVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": {
+        "assets/ship-loadouts-erkul.json": "95714ef0f31ace11e3d6b65f331ecb763a0919d605b6cdd302884e705af5e43c",
+        "assets/component-matrix-erkul.json": "9379f85c5fe3d73612c39f18a259fc099072f8424ba22f4235e0a4abc4bd6ec3",
+        "data/shipmatrix-index.json": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+        "assets/localization/starcitizen/bot/ship-names.json": "d13f05cf81f49c936c841982d1b2a811677643de0f992a806316375fefe3f020",
+        "assets/ship-name-zh.json": "e566945a378c5da5b9e78e6c0859b425b65bb0cf7816509d10d03dacf94f178f"
+      }
+    }
+  ]
 }

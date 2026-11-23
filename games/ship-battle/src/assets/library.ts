@@ -68,7 +68,9 @@ export async function readLibrary(specs:ShipSpec[]):Promise<{assets:ShipAsset[];
   if(manifest.version!==1||!Array.isArray(manifest.assets))throw new Error('素材清单版本不支持');
   const combined=new Map<string,ShipAsset>();for(const a of manifest.assets){validateAsset(a,ids);combined.set(a.shipId,a);}
   let warning:string|null=null;
-  try{for(const a of await localAssets()){validateAsset(a,ids);const builtin=combined.get(a.shipId)!;combined.set(a.shipId,upgradeCombat(a,builtin));}}catch{warning='浏览器本地图库不可用；内置素材仍可使用。';}
+  // Public games use the reviewed built-in configuration. Existing local
+  // calibration records remain intact, and are consumed only by local Vite dev.
+  if(import.meta.env.DEV)try{for(const a of await localAssets()){validateAsset(a,ids);const builtin=combined.get(a.shipId)!;combined.set(a.shipId,upgradeCombat(a,builtin));}}catch{warning='浏览器本地图库不可用；内置素材仍可使用。';}
   return {assets:[...combined.values()],warning};
 }
 export function downloadJSON(name:string,value:unknown){const url=URL.createObjectURL(new Blob([JSON.stringify(value,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}

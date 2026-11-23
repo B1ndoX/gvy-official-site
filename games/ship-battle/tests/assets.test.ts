@@ -1,4 +1,4 @@
-import { describe,expect,test } from 'vitest';
+import { describe,expect,test,vi } from 'vitest';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import manifest from '../public/assets/ships/manifest.json';
@@ -7,11 +7,16 @@ import data from '../src/data/ships.json';
 import fleet from '../src/data/fleet-weapon-loadouts.json';
 import {weaponDps} from '../src/sim/weapons';
 import gameValues from '../src/data/weapon-game-values.json';
-import {validateAsset,withAssets,upgradeCombat,type ShipAsset} from '../src/assets/library';
+import {validateAsset,withAssets,upgradeCombat,readLibrary,type ShipAsset} from '../src/assets/library';
 import type {ShipSpec} from '../src/sim/types';
 const ids=new Set(data.map(s=>s.id));
-describe('REA-captured original ship assets',()=>{
- test('224 PNG files match captured SHA-256, dimensions, names and manifest',()=>{expect(manifest.assets).toHaveLength(224);expect(new Set(manifest.assets.map(a=>a.shipId)).size).toBe(224);for(const a of manifest.assets){expect(()=>validateAsset(a,ids)).not.toThrow();const entry=sources.assets.find(s=>s.shipId===a.shipId)!;const file=fs.readFileSync(new URL('../public/'+a.url,import.meta.url));expect(crypto.createHash('sha256').update(file).digest('hex')).toBe(entry.sha256);expect(file.readUInt32BE(16)).toBe(entry.width);expect(file.readUInt32BE(20)).toBe(entry.height);expect(a.noseDegrees).toBe(-90);expect(a.beam/a.length).toBeCloseTo(entry.height/entry.width,3);}});
+test('public builds ignore browser calibration storage and use the reviewed built-in library',async()=>{
+ const open=vi.fn(()=>{throw Error('Production must not open the editable calibration database');});
+ vi.stubEnv('DEV',false);vi.stubGlobal('indexedDB',{open});vi.stubGlobal('fetch',vi.fn(async()=>({ok:true,json:async()=>structuredClone(manifest)})));
+ try{const result=await readLibrary(data as ShipSpec[]);expect(result.assets).toEqual(manifest.assets);expect(result.warning).toBeNull();expect(open).not.toHaveBeenCalled();}finally{vi.unstubAllGlobals();vi.unstubAllEnvs();}
+});
+describe('Source-verified original ship assets',()=>{
+ test('227 PNG files match captured SHA-256, dimensions, names and manifest',()=>{expect(manifest.assets).toHaveLength(227);expect(new Set(manifest.assets.map(a=>a.shipId)).size).toBe(227);for(const a of manifest.assets){expect(()=>validateAsset(a,ids)).not.toThrow();const entry=sources.assets.find(s=>s.shipId===a.shipId)!;const file=fs.readFileSync(new URL('../public/'+a.url,import.meta.url));expect(crypto.createHash('sha256').update(file).digest('hex')).toBe(entry.sha256);expect(file.readUInt32BE(16)).toBe(entry.width);expect(file.readUInt32BE(20)).toBe(entry.height);expect(a.noseDegrees).toBe(-90);expect(a.beam/a.length).toBeCloseTo(entry.height/entry.width,3);}});
  test('every ship has source, engines, weapon data and explicit calibration status',()=>{for(const s of withAssets(data as ShipSpec[],manifest.assets as ShipAsset[])){expect(Array.isArray(s.engines)).toBe(true);expect(s.engines.length).toBeLessThanOrEqual(32);expect(s.mounts.length).toBeGreaterThanOrEqual((fleet.ships as Record<string,{status:string}>)[s.id].status==='unarmed'?0:1);expect(s.calibration).toBe('draft');if((fleet.ships as Record<string,{status:string}>)[s.id].status==='unarmed')expect(s.mounts).toHaveLength(0);}});
  test('malformed import data cannot introduce remote scripts, NaNs or invalid mounts',()=>{const base=manifest.assets[0];for(const patch of [{url:'javascript:alert(1)'},{length:Number.NaN},{noseDegrees:Infinity},{mounts:[]},{author:''},{center:{x:5,y:0}},{url:'assets/ships/../../bad.png'}])expect(()=>validateAsset({...base,...patch},ids)).toThrow();});
  test('combat upgrades preserve imported artwork and mount calibration while updating old weapon balance',()=>{const base=manifest.assets[0] as ShipAsset,local={...base,combatVersion:0,url:'data:image/png;base64,original',length:30,mounts:base.mounts.map(m=>({...m,x:.2,damage:9999,cooldown:.1}))};const upgraded=upgradeCombat(local,base);expect(upgraded.url).toBe(local.url);expect(upgraded.length).toBe(30);expect(upgraded.mounts[0].x).toBe(.2);expect(upgraded.mounts[0].damage).toBe(base.mounts[0].damage);expect(upgradeCombat(upgraded,base)).toBe(upgraded);});

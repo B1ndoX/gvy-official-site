@@ -39,6 +39,13 @@ export async function validateShipRelease(root) {
   assert.equal(manifest.acceptedCommit, acceptedCommit);
   assert.deepEqual(await gameSources(game), manifest.sources, "Ship game source changed: rebuild with npm run game:ship:build on Node 24 before publishing");
   assert.deepEqual(await digests(resolve(game, "runtime")), manifest.runtime, "Ship game runtime differs from its verified build");
+  // Developer calibration tools and editable IndexedDB parameters must never
+  // enter the public game. Guard the actual executable output, not CSS names.
+  for (const file of Object.keys(manifest.runtime).filter(file => file.endsWith('.js'))) {
+    assert.ok(!/AssetManager/.test(file), "Development calibration chunk entered the public runtime");
+    const script = await readFile(resolve(game, "runtime", file), "utf8");
+    assert.ok(!script.includes('舰船素材库') && !script.includes('gvy-ship-battle-assets-v1'), "Public runtime must not expose calibration or read editable local ship parameters");
+  }
   return manifest;
 }
 
@@ -54,7 +61,7 @@ export async function validatePublishedShipGame(root, output) {
   expected['cache-worker.js']=sha256(await shipGameCacheWorker(expected));
   assert.deepEqual(await digests(published), expected, "Published ship game must be the complete verified runtime, without source or demos");
   const library = JSON.parse(await readFile(resolve(published, "assets/ships/manifest.json"), "utf8"));
-  assert.equal(library.assets.length, 224);
+  assert.equal(library.assets.length, 227);
   for (const asset of library.assets) {
     assert.match(asset.url, /^assets\/ships\/[a-z0-9-]+\.png$/);
     assert.ok(publicFiles[asset.url], `Missing ship: ${asset.shipId}`);
