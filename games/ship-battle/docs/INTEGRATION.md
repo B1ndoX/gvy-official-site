@@ -83,7 +83,7 @@ phase 为 `ready` / `running` / `paused` / `finished`。时间、速度、生命
 
 ## 素材与数据交接
 
-`public/assets/ships/manifest.json` 是公开图库，`src/data/ships.json` 是舰船及战斗参数。所有图片加载使用 Vite BASE_URL，对同源子路径有效。用户导入的图片和校准值仅存在当前浏览器 IndexedDB，**不会自动进入部署包**；需要在素材管理器导出 JSON 素材包，或将审核后的图和配置写入公开清单后重新构建。
+`public/assets/ships/manifest.json` 是公开只读图库，`src/data/ships.json` 是舰船及战斗参数。所有图片加载使用 Vite BASE_URL，对同源子路径有效。素材导入/参数校准仅在本地Vite开发环境启用；开发时导入的图片和校准值存在当前浏览器 IndexedDB，**不会自动进入部署包**。核对后将默认图和配置写回原源文件、生成器和公开清单并重建；生产运行包不带编辑器，`?assets=1`不能打开设置，正式对局不读取历史浏览器自定义参数，也不清除这些本地数据。
 
 来源记录保留在 README、`docs/STARJUMP.md` 与 `docs/starjump-sources.json`。2026-10-23 按用户要求移除游戏底部的来源文字和素材说明入口，不要自行恢复到游戏画面。非商业使用要求和第三方授权现状见 `STARJUMP.md`；精确挂点核对仍是待办，不应在官网宣称已做到实机级数据复原。
 
@@ -125,7 +125,7 @@ frame.contentWindow.postMessage({
 
 `popup-preview.html` 在本模块自己的 public 目录中模拟这些约定；不替换官网组件。收起可继续本局，恢复不重置；若官网希望暂停，使用已有 pause/resume 命令。切换游戏或关闭时应 pause 或卸载 iframe。
 
-通信仍为 v1。`state.time`、`result.duration` 和击杀时间是当前 1×显示秒数；引擎内部秒数乘 0.75 得到显示秒数。约 5 秒导播使用现实时间。素材管理普通入口已删除，开发校准地址为 `/games/ship-battle/?assets=1`。
+通信仍为 v1。`state.time`、`result.duration` 和击杀时间是当前 1×显示秒数；引擎内部秒数乘 0.75 得到显示秒数。约 5 秒导播使用现实时间。素材管理普通入口已删除；2026-11-23进一步限制为本地Vite开发专用，生产地址加`?assets=1`也不提供编辑器。
 
 
 ## 团队与环境结果

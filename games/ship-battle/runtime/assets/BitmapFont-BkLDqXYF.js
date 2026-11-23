@@ -1,1 +1,0 @@
-export{t as BitmapFont}from"./pixi-BL7g8mWx.js";

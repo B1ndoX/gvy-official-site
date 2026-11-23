@@ -902,6 +902,26 @@
       "name": "RSI 星座 Mk V 半人马座",
       "key": "vehicle_NameRSI_Constellation_Mk5_Andromeda",
       "note": "Centaurus 中文天文名称；源条目此词仍为英文"
+    },
+    "skylark": {
+      "name": "RSI 云雀",
+      "key": null,
+      "source": "fleet-bot-reviewed-name",
+      "snapshotDate": "2026-11-23"
+    },
+    "marauder": {
+      "name": "德雷克 劫掠者",
+      "key": null,
+      "source": "fleet-bot-reviewed-name",
+      "snapshotDate": "2026-11-23"
+    },
+    "hyun": {
+      "name": "盖塔克 混元",
+      "key": null,
+      "source": "community-reviewed-name",
+      "snapshotDate": "2026-11-23",
+      "note": "Hyūn has no translated bot entry in the frozen localization; temporary community name 混元, not claimed official.",
+      "sourceURL": "https://support.citizenwiki.cn/d/1062-4103-hyun-fei-chuan-hun-cny"
     }
   }
 }

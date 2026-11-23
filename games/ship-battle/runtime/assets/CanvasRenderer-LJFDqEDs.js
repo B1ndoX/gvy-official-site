@@ -1,0 +1,1 @@
+export{i as CanvasRenderer}from"./pixi-DL8B6zcD.js";

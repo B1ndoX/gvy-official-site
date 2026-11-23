@@ -1,11 +1,11 @@
 {
-  "snapshotId": "21221c52-be9d-4ffc-ac64-3a830df6ba70",
-  "name": "Ships284",
+  "snapshotId": "043c4246-877b-4ac0-ba9e-e68d43946bd3",
+  "name": "Ships295",
   "description": "",
-  "createdAt": "2026-10-17T18:28:39.480Z",
+  "createdAt": "2026-11-23T00:05:23.769Z",
   "createdBy": "",
   "defaultBackgroundUrl": "https://cdn3.fleetviewer.link/starjump-spacescape.png",
-  "sourceSnapshotId": "9e11f5b6-7c6b-4c00-8d77-e45fab69ae05",
+  "sourceSnapshotId": "5469984f-c81a-460d-bf8e-5e04eb23281a",
   "decals": [
     {
       "slug": "aegis-logo",
@@ -2728,62 +2728,62 @@
           "supporter": true,
           "official": false,
           "front_l": {
-            "hash": "c765de00271ccf6ac02b2e25282393574cf9d72f17b8c6f3d2b6cac807c6bf86",
+            "hash": "702cf024638d13f15cbfd3fd90789ca7df37efd9331b0eaf0e8160b9fec26af4",
             "h": 2160,
             "w": 2451
           },
           "front_s": {
-            "hash": "234662cca4d7d001b812bb6741f1fef11fad373d911308e93532cda0a3bf6f81",
+            "hash": "32c3e092d29d42392323f3aae4cb620d199c1038c4f2abdd324f046c8f9fe274",
             "h": 881,
             "w": 1000
           },
           "front_xs": {
-            "hash": "2c9ab35094a6b1273593732e42b3ebda537b08ce453ac606a9ee523673b2c78c",
+            "hash": "4d23a601667f8d69e0d432cf24f3b6c4c24c82d5bf1698016979534c6299285f",
             "h": 441,
             "w": 500
           },
           "iso_l": {
-            "hash": "0c9f49d71573a22ea2b783638f96e3b90943ddc3e33a1539724574740722fe65",
+            "hash": "3f61774d8d6d9b803eab1c21eed57e9602a85355829a9270d59cc693b5655771",
             "h": 2029,
             "w": 3785
           },
           "iso_s": {
-            "hash": "7f6cbad64785342b0fba32b4cbf863a9595f98c7cd2828785ebfc5744d2a2503",
+            "hash": "7434ef00f93d5c6d2401a09ba612d38affbe411e743740daf35ee555ddecf59a",
             "h": 536,
             "w": 1000
           },
           "iso_xs": {
-            "hash": "f79bac418f7529c0ffbf7bbe5123fd5a4d81d344f711bd7231cba4f522ec80c4",
+            "hash": "262b17c002c468b3f3b2999770831b063c3c3e4d6d057e32bc25c08f680c8885",
             "h": 268,
             "w": 500
           },
           "profile_l": {
-            "hash": "f3842be4c683b54661749beb3f7bc37740d2bc34b2be70e631c4e1fdcc86694f",
+            "hash": "b13e79fab0740b31b8caa54efb970aa7936dc6a180f333091618cdd089a5838e",
             "h": 865,
             "w": 3803
           },
           "profile_s": {
-            "hash": "0877dec7ee177e05d0271c9d07191e3abe22c282f853b87b1414fb96d0d0f5f2",
+            "hash": "54b7a11590570ee909af2961fb932c755e09e530899775ae1f266e79f561c853",
             "h": 227,
             "w": 1000
           },
           "profile_xs": {
-            "hash": "4c4fc7e2f9dc25e94f920468b58e31083bc5fca47f8e0665d766e9fbaccfbd59",
+            "hash": "cb9b7384e0bd5721ca7179b7c0dddb663f1696930c51d1898e784770fede4c6e",
             "h": 114,
             "w": 500
           },
           "top_l": {
-            "hash": "44246e809ae45c05377aaf9f596a5ae28b45a7c1ad239f6617435aeb2e2da8c6",
+            "hash": "8bf0678af068522d0b32d9ebfc6595211ab4442acbb9f34cb391ca251e9b1c5c",
             "h": 2160,
             "w": 2531
           },
           "top_s": {
-            "hash": "ecbd0d94fd3b510aa43e32e2362da47f5d5a62ebabe185a32870959ac36af44c",
+            "hash": "f2b5099548a6b72f340fc48474d42a7bff00a9a2aa7994ffde36945925d8910f",
             "h": 853,
             "w": 1000
           },
           "top_xs": {
-            "hash": "d10d71376100eb725442dfcbab443adb8eb689fa43dbc8be26ccd7c1d7d252e9",
+            "hash": "598331bb9e525efc0cbaa1b02d12cfd891fc75f83bff274b72c15a509f1c1c39",
             "h": 427,
             "w": 500
           },
@@ -3004,7 +3004,7 @@
       "manufacturerCode": "BANU",
       "manufacturerName": "Banu",
       "manufacturerId": 21,
-      "msrp": "650.0",
+      "msrp": "650.00",
       "role": "Heavy Freight",
       "limited": "time",
       "production": "production",
@@ -3105,7 +3105,7 @@
           "scaleProfile": "239.0",
           "scaleTop": "239.0",
           "scaleFront": "209.6832",
-          "statCargo": "3584",
+          "statCargo": "2880",
           "statCrew": "8",
           "statManufacturer": "Banu",
           "statRole": "Heavy Freight",
@@ -4591,7 +4591,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "90.0",
+      "msrp": "90.00",
       "role": "Light Fighter",
       "limited": "none",
       "production": "flightready",
@@ -4664,10 +4664,10 @@
             "w": 500
           },
           "displayLength": "20.0",
-          "scaleIso": "16.0000",
-          "scaleProfile": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.5",
           "scaleTop": "20.0",
-          "scaleFront": "16.3265",
+          "scaleFront": "18.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
@@ -8584,7 +8584,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "60.0",
+      "msrp": "60.00",
       "role": "Light Freight",
       "limited": "none",
       "production": "flightready",
@@ -8656,16 +8656,16 @@
             "h": 351,
             "w": 500
           },
-          "displayLength": "22.5",
-          "scaleIso": "18.0000",
-          "scaleProfile": "22.5",
-          "scaleTop": "22.5",
-          "scaleFront": "15.9188",
+          "displayLength": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.0",
+          "scaleTop": "20.0",
+          "scaleFront": "15.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
           "statRole": "Light Freight",
-          "statLength": "22.5"
+          "statLength": "20.0"
         }
       ]
     },
@@ -8680,7 +8680,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "85.0",
+      "msrp": "85.00",
       "role": "Interdiction",
       "limited": "time",
       "production": "flightready",
@@ -8752,16 +8752,16 @@
             "h": 351,
             "w": 500
           },
-          "displayLength": "22.5",
-          "scaleIso": "18.0000",
-          "scaleProfile": "22.5",
-          "scaleTop": "22.5",
-          "scaleFront": "15.9188",
+          "displayLength": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.0",
+          "scaleTop": "20.0",
+          "scaleFront": "15.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
           "statRole": "Interdiction",
-          "statLength": "22.5"
+          "statLength": "20.0"
         }
       ]
     },
@@ -8776,7 +8776,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "55.0",
+      "msrp": "55.00",
       "role": "Light Freight",
       "limited": "none",
       "production": "flightready",
@@ -8848,16 +8848,16 @@
             "h": 351,
             "w": 500
           },
-          "displayLength": "22.5",
-          "scaleIso": "18.0000",
-          "scaleProfile": "22.5",
-          "scaleTop": "22.5",
-          "scaleFront": "15.9188",
+          "displayLength": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.0",
+          "scaleTop": "20.0",
+          "scaleFront": "15.0",
           "statCargo": "8",
           "statCrew": "1",
           "statManufacturer": "Aegis",
           "statRole": "Light Freight",
-          "statLength": "22.5"
+          "statLength": "20.0"
         }
       ]
     },
@@ -9918,7 +9918,7 @@
       "manufacturerCode": "MISC",
       "manufacturerName": "M.I.S.C",
       "manufacturerId": 4,
-      "msrp": "155.0",
+      "msrp": "175.00",
       "role": "Mining",
       "limited": "none",
       "production": "flightready",
@@ -11203,7 +11203,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "110.0",
+      "msrp": "110.00",
       "role": "Light Fighter",
       "limited": "none",
       "production": "flightready",
@@ -11276,10 +11276,10 @@
             "w": 500
           },
           "displayLength": "20.0",
-          "scaleIso": "16.0000",
-          "scaleProfile": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.5",
           "scaleTop": "20.0",
-          "scaleFront": "16.2896",
+          "scaleFront": "18.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
@@ -11491,7 +11491,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "75.0",
+      "msrp": "75.00",
       "role": "Light Freight",
       "limited": "none",
       "production": "flightready",
@@ -11563,16 +11563,16 @@
             "h": 351,
             "w": 500
           },
-          "displayLength": "22.5",
-          "scaleIso": "18.0000",
-          "scaleProfile": "22.5",
-          "scaleTop": "22.5",
-          "scaleFront": "15.9188",
+          "displayLength": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.0",
+          "scaleTop": "20.0",
+          "scaleFront": "15.0",
           "statCargo": "8",
           "statCrew": "1",
           "statManufacturer": "Aegis",
           "statRole": "Light Freight",
-          "statLength": "22.5"
+          "statLength": "20.0"
         }
       ]
     },
@@ -17770,7 +17770,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "110.0",
+      "msrp": "110.00",
       "role": "Light Fighter",
       "limited": "none",
       "production": "flightready",
@@ -17843,10 +17843,10 @@
             "w": 500
           },
           "displayLength": "20.0",
-          "scaleIso": "16.0000",
-          "scaleProfile": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.5",
           "scaleTop": "20.0",
-          "scaleFront": "16.3327",
+          "scaleFront": "18.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
@@ -20972,75 +20972,75 @@
           "supporter": false,
           "official": true,
           "front_l": {
-            "hash": "43ea79c2ce54432c12e86b9f10eb6cfc",
+            "hash": "b51c8a1565bb88d96dbd6cc5237eb177a61d1392b0143d00dc02464ad2aeadd8",
             "h": 2160,
-            "w": 2246
+            "w": 2418
           },
           "front_s": {
-            "hash": "017c9a212472bb100aa9f411c93a446e",
-            "h": 962,
+            "hash": "55207ef7b192aaa8014fb3e00767ada9b6e841e6bb3355a5af92bfb012c2a2b0",
+            "h": 893,
             "w": 1000
           },
           "front_xs": {
-            "hash": "1117325a0a0da9c9abbfd1a86c91423e",
-            "h": 481,
+            "hash": "9b4d043aab8f34bca5801601525a8ebc4815c88027c62c9ad5d76d6cc0c4722a",
+            "h": 447,
             "w": 500
           },
           "iso_l": {
-            "hash": "b6be6a00f341fa3f5a6e89294aedc744",
+            "hash": "231d1d208b00a0b4a022334ecd3d64c6871e052775815c1db1d1182a9c48b97c",
             "h": 2160,
-            "w": 3122
+            "w": 3202
           },
           "iso_s": {
-            "hash": "92be73907a6dd8a69cd4ee88bd6685c8",
-            "h": 692,
+            "hash": "4a74f5770bebad058ff4ab28cd174524f18f794eb10935f978b738a52b3d2a9b",
+            "h": 675,
             "w": 1000
           },
           "iso_xs": {
-            "hash": "32f1a4ce5f9dcf4de2b4ed03649e3a0b",
-            "h": 346,
+            "hash": "766f75002847beb67fcca7a56c462839ca113b7994e63432d747218041e68f22",
+            "h": 338,
             "w": 500
           },
           "profile_l": {
-            "hash": "8af2fea47d10114fbdad065b7313a48a",
-            "h": 778,
+            "hash": "8fb360e0c39e69ea05d05a32adee02a3ed68b9e2f0f4ca50986264bc823d5d59",
+            "h": 767,
             "w": 3840
           },
           "profile_s": {
-            "hash": "73ed590570f4d6eedba3bf1df94d0643",
-            "h": 203,
+            "hash": "c982bf5ef32bdbf2fdc9cede8d3d4a7a708c106844f1301f5682f55cb386d1fe",
+            "h": 200,
             "w": 1000
           },
           "profile_xs": {
-            "hash": "c32e8c8005135b1cdad29c665309cfc5",
-            "h": 101,
+            "hash": "23e6879f5a8ae6d936b78ef3f2c409d0b26b49b5d2b114c40f7ebfab1171ab31",
+            "h": 100,
             "w": 500
           },
           "top_l": {
-            "hash": "1e46a2c0ba09930006663630189258f9",
+            "hash": "3a077a01149fb29ebfed3c6a3d9176433ab284323c29a593001dc92ecd6e8860",
             "h": 2160,
             "w": 3840
           },
           "top_s": {
-            "hash": "75226e1b0075208ab54524d694452aaf",
+            "hash": "e4c7a9caf13d04e088b1c3dff8188da2640fde1340483000eb0662e14ac3783c",
             "h": 563,
             "w": 1000
           },
           "top_xs": {
-            "hash": "663089b33bc8316c1f2aeb2234d38056",
-            "h": 281,
+            "hash": "6416280dac60f7d3576784914707994f8d731119e757d0f7c07175ab44bca0b8",
+            "h": 282,
             "w": 500
           },
-          "displayLength": "119.0",
-          "scaleIso": "107.0",
-          "scaleProfile": "119.0",
-          "scaleTop": "119.0",
-          "scaleFront": "66.9375",
+          "displayLength": "123.4",
+          "scaleIso": "109.5",
+          "scaleProfile": "123.4",
+          "scaleTop": "123.4",
+          "scaleFront": "68.8",
           "statCargo": "400",
           "statCrew": "2",
           "statManufacturer": "Anvil",
           "statRole": "Light Carrier",
-          "statLength": "119.0"
+          "statLength": "123.4"
         }
       ]
     },
@@ -22951,13 +22951,11 @@
       "manufacturerCode": "RSI",
       "manufacturerName": "Roberts Space Industries",
       "manufacturerId": 1,
-      "msrp": "380.0",
+      "msrp": "400.00",
       "role": "Multi-Role",
       "limited": "time",
       "production": "concept",
-      "loaner": [
-        "carrack"
-      ],
+      "loaner": [],
       "pledgeItemTitle": [],
       "variants": [
         {
@@ -22966,75 +22964,75 @@
           "supporter": false,
           "official": true,
           "front_l": {
-            "hash": "e25b9b02c6c2d270e6b922110f5118dd",
+            "hash": "d449c4d846f62436cbed7be9dd121610f0fecf96cf0cb82b03082ae755969636",
             "h": 2160,
-            "w": 1939
+            "w": 1876
           },
           "front_s": {
-            "hash": "b7c455d3ec5c646f33a859034e80fde9",
-            "h": 1114,
-            "w": 1000
+            "hash": "044c57130e6e5de5c9c2202526f0d271cf01d617f78a311aeb02c7fc2bcf83c1",
+            "h": 1000,
+            "w": 869
           },
           "front_xs": {
-            "hash": "21894ae045d9fc1ad981a601898d3220",
-            "h": 557,
-            "w": 500
+            "hash": "06356b2a4709eb9b4da0907e2bcc1192fad770cbef7bef49eb47fcd5f1d7ade5",
+            "h": 500,
+            "w": 435
           },
           "iso_l": {
-            "hash": "31adfeee645934271df52f6c3a58b988",
+            "hash": "ac38cae37f44357fae4af3b6cae41d1e879a971cf1ec883cb533d5875656464f",
             "h": 2160,
-            "w": 3454
+            "w": 3380
           },
           "iso_s": {
-            "hash": "c7d3cb1197842bb733935a227917efe1",
-            "h": 625,
+            "hash": "e25419d3a90443e179c7764ad738a05144f546168f6808e0b6661e483107720b",
+            "h": 639,
             "w": 1000
           },
           "iso_xs": {
-            "hash": "8ede3aa964149a175b304c6a282b3a9f",
-            "h": 313,
+            "hash": "e1159efc698108b062ad0ef110032dbee4a9a4f9d3e3871c3712bc71a5e61dd2",
+            "h": 320,
             "w": 500
           },
           "profile_l": {
-            "hash": "4315b33535f0eb95a1fb41609fec49bb",
-            "h": 704,
+            "hash": "89e4d540ee04d858aa9f2e0bff21cca754f0c1944ca0cecd06c6ebb2d86ee1d1",
+            "h": 676,
             "w": 3840
           },
           "profile_s": {
-            "hash": "f806d8228ee91793dee1144a0572a2ed",
-            "h": 183,
+            "hash": "460a1ad80e5ee8bbe47b14bf089bf5dd5222a8d76fc3e8ead83e6ffcc81ed4e7",
+            "h": 176,
             "w": 1000
           },
           "profile_xs": {
-            "hash": "0d0e6fba5eaf2ab96f14cbd78c168f6a",
-            "h": 92,
+            "hash": "1f0b380bb52e394b3a3b5524b15b44ace54601091aa7d3722b6de3e1f3cb0d6c",
+            "h": 88,
             "w": 500
           },
           "top_l": {
-            "hash": "911b6337a8a256aa355efe7191e44068",
-            "h": 2025,
+            "hash": "63dd71aab98c07d3b3cdb6d31fdac1f6c4f0fe1f2f33968833584850fd02d3df",
+            "h": 2015,
             "w": 3840
           },
           "top_s": {
-            "hash": "5338ff72df7cf00ab965838d38094227",
-            "h": 527,
+            "hash": "9046f509f14955f92af320952b7cc650168f427eab6b7a7624b3ddc242d47068",
+            "h": 525,
             "w": 1000
           },
           "top_xs": {
-            "hash": "ee1a4eb3e4adf4513934213346711a36",
-            "h": 264,
+            "hash": "b350cf00a5fb5cd68320a61c2da6a207ebb9ab27df8a94780b28dfe851a5da10",
+            "h": 263,
             "w": 500
           },
-          "displayLength": "110.0",
-          "scaleIso": "88.0000",
-          "scaleProfile": "110.0",
-          "scaleTop": "110.0",
-          "scaleFront": "57.8646",
-          "statCargo": "64",
+          "displayLength": "120.0",
+          "scaleIso": "95.0",
+          "scaleProfile": "120.0",
+          "scaleTop": "120.0",
+          "scaleFront": "62.0",
+          "statCargo": "64.0",
           "statCrew": "6",
           "statManufacturer": "RSI",
           "statRole": "Multi-Role",
-          "statLength": "110.0"
+          "statLength": "120.0"
         },
         {
           "slug": "galaxy-protector",
@@ -27788,7 +27786,7 @@
       "manufacturerCode": "KRIN",
       "manufacturerName": "Kruger Intergalactic",
       "manufacturerId": 19,
-      "msrp": "100.0",
+      "msrp": "100.00",
       "role": "Light Fighter",
       "limited": "time",
       "production": "flightready",
@@ -27861,10 +27859,10 @@
             "w": 500
           },
           "displayLength": "21.5",
-          "scaleIso": "17.2000",
+          "scaleIso": "16.5",
           "scaleProfile": "21.5",
           "scaleTop": "21.5",
-          "scaleFront": "10.5540",
+          "scaleFront": "15.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Kruger",
@@ -28076,7 +28074,7 @@
       "manufacturerCode": "KRIN",
       "manufacturerName": "Kruger Intergalactic",
       "manufacturerId": 19,
-      "msrp": "120.0",
+      "msrp": "120.00",
       "role": "Light Fighter",
       "limited": "time",
       "production": "flightready",
@@ -28149,10 +28147,10 @@
             "w": 500
           },
           "displayLength": "21.5",
-          "scaleIso": "17.2000",
+          "scaleIso": "16.5",
           "scaleProfile": "21.5",
           "scaleTop": "21.5",
-          "scaleFront": "10.5876",
+          "scaleFront": "15.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Kruger",
@@ -29844,7 +29842,7 @@
       "manufacturerCode": "AEGI",
       "manufacturerName": "Aegis Dynamics",
       "manufacturerId": 12,
-      "msrp": "90.0",
+      "msrp": "90.00",
       "role": "Light Fighter",
       "limited": "none",
       "production": "flightready",
@@ -29917,10 +29915,10 @@
             "w": 500
           },
           "displayLength": "20.0",
-          "scaleIso": "16.0000",
-          "scaleProfile": "20.0",
+          "scaleIso": "18.0",
+          "scaleProfile": "20.5",
           "scaleTop": "20.0",
-          "scaleFront": "16.1254",
+          "scaleFront": "18.0",
           "statCargo": "0",
           "statCrew": "1",
           "statManufacturer": "Aegis",
@@ -37370,7 +37368,10 @@
       "limited": "time",
       "production": "flightready",
       "loaner": [],
-      "pledgeItemTitle": [],
+      "pledgeItemTitle": [
+        "constellation-mk-v-centarus",
+        "Constellation Mk V Centaurus"
+      ],
       "variants": [
         {
           "slug": "",
@@ -37447,6 +37448,390 @@
           "statManufacturer": "RSI",
           "statRole": "Multi-Role",
           "statLength": "82.5"
+        }
+      ]
+    },
+    {
+      "slug": "skylark",
+      "name": "Skylark",
+      "short": "Skylark",
+      "fleetview": "skylark",
+      "canCcuTo": true,
+      "canCcuFrom": true,
+      "fake": false,
+      "manufacturerCode": "RSI",
+      "manufacturerName": "Roberts Space Industries",
+      "manufacturerId": 1,
+      "msrp": "45.00",
+      "role": "Snub",
+      "limited": "none",
+      "production": "flightready",
+      "loaner": [],
+      "pledgeItemTitle": [],
+      "variants": [
+        {
+          "slug": "",
+          "name": "",
+          "supporter": false,
+          "official": true,
+          "front_l": {
+            "hash": "cde25a67eff3b77c4f7579aef6ee571011f74e7901d7cd2546a886a418f9921a",
+            "h": 2160,
+            "w": 2347
+          },
+          "front_s": {
+            "hash": "115523ca144e3ba17f2b94c20d90c248d239660388b03509ba731220a9409fe1",
+            "h": 920,
+            "w": 1000
+          },
+          "front_xs": {
+            "hash": "cc327f0e5d946d36910bd3cbefe7c72bbf5ef08fe8b093599a2210ab7c6ed151",
+            "h": 460,
+            "w": 500
+          },
+          "iso_l": {
+            "hash": "9feb1a260a6a7f08075bb0d543d3579d8dd1bd8690845b7254afe80ef88491fc",
+            "h": 2160,
+            "w": 3276
+          },
+          "iso_s": {
+            "hash": "b2ecf47b57108f11c67c787f2d9ea8bba9f81d8fbb0233a9848c57f05f7900e8",
+            "h": 659,
+            "w": 1000
+          },
+          "iso_xs": {
+            "hash": "d80c23d2b88a01b220cbf490a217f3521a8eb4820a95543dee561af636833413",
+            "h": 330,
+            "w": 500
+          },
+          "profile_l": {
+            "hash": "10bfcca96efbab530d7d1d223ec442eb4ede8c3911e8fbea07a50ee861d05a5a",
+            "h": 1536,
+            "w": 3840
+          },
+          "profile_s": {
+            "hash": "eb27230e7a1daff674793ed841a784cf39c2d3e3c6d4485971817de3ac7011a5",
+            "h": 400,
+            "w": 1000
+          },
+          "profile_xs": {
+            "hash": "5c55516a2a2acccd6699ab643fc1cb65bff33d67d96b28be409a828995cd0e81",
+            "h": 200,
+            "w": 500
+          },
+          "top_l": {
+            "hash": "8e366bb7a8ac521205cc4df45397e92425ed3be3105790bf06f57f9884be9f38",
+            "h": 2160,
+            "w": 2429
+          },
+          "top_s": {
+            "hash": "2ced9646c2042a60c8859ed5fc368b058d2df79eb378a66b11feb9b84a3af042",
+            "h": 889,
+            "w": 1000
+          },
+          "top_xs": {
+            "hash": "661181606ac7ed6ee328ab556848998833252434d4e4d053c019d5f493f15bce",
+            "h": 445,
+            "w": 500
+          },
+          "displayLength": "7.0",
+          "scaleIso": "7.0",
+          "scaleProfile": "7.0",
+          "scaleTop": "7.0",
+          "scaleFront": "7.0",
+          "statCargo": "0",
+          "statCrew": "1",
+          "statManufacturer": "RSI",
+          "statRole": "Snub Fighter",
+          "statLength": "7.0"
+        }
+      ]
+    },
+    {
+      "slug": "maruader",
+      "name": "Maruader",
+      "short": "Marauder",
+      "fleetview": "marauder",
+      "canCcuTo": true,
+      "canCcuFrom": true,
+      "fake": false,
+      "manufacturerCode": "DRAK",
+      "manufacturerName": "Drake Interplanetary",
+      "manufacturerId": 5,
+      "msrp": "150.00",
+      "role": "Medium Fighter",
+      "limited": "time",
+      "production": "flightready",
+      "loaner": [],
+      "pledgeItemTitle": [],
+      "variants": [
+        {
+          "slug": "",
+          "name": "",
+          "supporter": false,
+          "official": false,
+          "front_l": {
+            "hash": "7aa8fa773bcb2a0b28d6b7aca4b7f4c622bfc3c43e3c701de3e10e0a03667841",
+            "h": 2160,
+            "w": 2521
+          },
+          "front_s": {
+            "hash": "8af2360641f78852c59fca6029ad37ad6896a4627536ec1f350a57e04eec608c",
+            "h": 857,
+            "w": 1000
+          },
+          "front_xs": {
+            "hash": "1472b6d79a5c9509a5434871a604b293ca5f2b3028c369b5f8ba1e97beae7c22",
+            "h": 429,
+            "w": 500
+          },
+          "iso_l": {
+            "hash": "ebe51a2b085c362675f51f18d4f614159e814b4ede297653c88d0afecf73c754",
+            "h": 2160,
+            "w": 2954
+          },
+          "iso_s": {
+            "hash": "8681a83eb3731b676f877995800db9ecd0077ce707f1077a60af068d2fd73ba0",
+            "h": 731,
+            "w": 1000
+          },
+          "iso_xs": {
+            "hash": "7daf4fcda09c2da92029b97db8c334aa53c2c4cb61ccea4c0e0015d97e18ba4f",
+            "h": 366,
+            "w": 500
+          },
+          "profile_l": {
+            "hash": "843a463c66ca3a1d4e578b66e6669a9fcae1e9e3966ab898205b9e7f6ce2d8c9",
+            "h": 997,
+            "w": 3840
+          },
+          "profile_s": {
+            "hash": "4fd0fc73257c17c2bacc143739347f36af0fe66354b23512280016f28723ec7f",
+            "h": 260,
+            "w": 1000
+          },
+          "profile_xs": {
+            "hash": "5e17a17265cea908099b76e9963628d8384b52fa5c5d491f3fcb8bede59022b4",
+            "h": 130,
+            "w": 500
+          },
+          "top_l": {
+            "hash": "8d7f95a1540ad86969116e5ba0450321c0dc402add0ef32a9dd75b29371c47ce",
+            "h": 2160,
+            "w": 2395
+          },
+          "top_s": {
+            "hash": "c6e74fed930cb7818cf3c3cc957a3dbaf872acc2b26420a30b6df2fdb655728b",
+            "h": 902,
+            "w": 1000
+          },
+          "top_xs": {
+            "hash": "3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78",
+            "h": 451,
+            "w": 500
+          },
+          "displayLength": "20.2",
+          "scaleIso": "20.2",
+          "scaleProfile": "20.2",
+          "scaleTop": "20.2",
+          "scaleFront": "20.2",
+          "statCargo": "0",
+          "statCrew": "1",
+          "statManufacturer": "Drake",
+          "statRole": "Medium Fighter",
+          "statLength": "20.2"
+        }
+      ]
+    },
+    {
+      "slug": "marauder",
+      "name": "Marauder",
+      "short": "Marauder",
+      "fleetview": "marauder",
+      "canCcuTo": true,
+      "canCcuFrom": true,
+      "fake": false,
+      "manufacturerCode": "DRAK",
+      "manufacturerName": "Drake Interplanetary",
+      "manufacturerId": 5,
+      "msrp": "150.00",
+      "role": "Medium Fighter",
+      "limited": "none",
+      "production": "flightready",
+      "loaner": [],
+      "pledgeItemTitle": [],
+      "variants": [
+        {
+          "slug": "",
+          "name": "",
+          "supporter": false,
+          "official": true,
+          "front_l": {
+            "hash": "7aa8fa773bcb2a0b28d6b7aca4b7f4c622bfc3c43e3c701de3e10e0a03667841",
+            "h": 2160,
+            "w": 2521
+          },
+          "front_s": {
+            "hash": "8af2360641f78852c59fca6029ad37ad6896a4627536ec1f350a57e04eec608c",
+            "h": 857,
+            "w": 1000
+          },
+          "front_xs": {
+            "hash": "1472b6d79a5c9509a5434871a604b293ca5f2b3028c369b5f8ba1e97beae7c22",
+            "h": 429,
+            "w": 500
+          },
+          "iso_l": {
+            "hash": "ebe51a2b085c362675f51f18d4f614159e814b4ede297653c88d0afecf73c754",
+            "h": 2160,
+            "w": 2954
+          },
+          "iso_s": {
+            "hash": "8681a83eb3731b676f877995800db9ecd0077ce707f1077a60af068d2fd73ba0",
+            "h": 731,
+            "w": 1000
+          },
+          "iso_xs": {
+            "hash": "7daf4fcda09c2da92029b97db8c334aa53c2c4cb61ccea4c0e0015d97e18ba4f",
+            "h": 366,
+            "w": 500
+          },
+          "profile_l": {
+            "hash": "843a463c66ca3a1d4e578b66e6669a9fcae1e9e3966ab898205b9e7f6ce2d8c9",
+            "h": 997,
+            "w": 3840
+          },
+          "profile_s": {
+            "hash": "4fd0fc73257c17c2bacc143739347f36af0fe66354b23512280016f28723ec7f",
+            "h": 260,
+            "w": 1000
+          },
+          "profile_xs": {
+            "hash": "5e17a17265cea908099b76e9963628d8384b52fa5c5d491f3fcb8bede59022b4",
+            "h": 130,
+            "w": 500
+          },
+          "top_l": {
+            "hash": "8d7f95a1540ad86969116e5ba0450321c0dc402add0ef32a9dd75b29371c47ce",
+            "h": 2160,
+            "w": 2395
+          },
+          "top_s": {
+            "hash": "c6e74fed930cb7818cf3c3cc957a3dbaf872acc2b26420a30b6df2fdb655728b",
+            "h": 902,
+            "w": 1000
+          },
+          "top_xs": {
+            "hash": "3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78",
+            "h": 451,
+            "w": 500
+          },
+          "displayLength": "20.5",
+          "scaleIso": "20.5",
+          "scaleProfile": "20.5",
+          "scaleTop": "20.5",
+          "scaleFront": "20.5",
+          "statCargo": "0",
+          "statCrew": "1",
+          "statManufacturer": "Drake",
+          "statRole": "Medium Fighter",
+          "statLength": "20.5"
+        }
+      ]
+    },
+    {
+      "slug": "hyun",
+      "name": "Hyun",
+      "short": "Hyun",
+      "fleetview": "hyun",
+      "canCcuTo": true,
+      "canCcuFrom": true,
+      "fake": false,
+      "manufacturerCode": "Gatac",
+      "manufacturerName": "Gatac Manufacture",
+      "manufacturerId": 93,
+      "msrp": "220.00",
+      "role": "Generalist",
+      "limited": "none",
+      "production": "flightready",
+      "loaner": [],
+      "pledgeItemTitle": [],
+      "variants": [
+        {
+          "slug": "",
+          "name": "",
+          "supporter": false,
+          "official": true,
+          "front_l": {
+            "hash": "897c018d5d6319579bf805d2cac1ec8afbbd5ab4f2fc1401c5b4c9f76d463579",
+            "h": 2160,
+            "w": 1404
+          },
+          "front_s": {
+            "hash": "8e4c9fa4fb52d32133b162a1cd8fdb19f95e623f3046c9b29427a1795c5f4160",
+            "h": 1000,
+            "w": 650
+          },
+          "front_xs": {
+            "hash": "691b007aff8eda5beb61a73990e25221d4a218641b0ba6655df7da22e5baf7a2",
+            "h": 500,
+            "w": 325
+          },
+          "iso_l": {
+            "hash": "2dd78626e556a64e8c3ccea6a9501f7e88809926956ca64228a6322d1c54f300",
+            "h": 2160,
+            "w": 2077
+          },
+          "iso_s": {
+            "hash": "37254eeaaa509e768b3cb199273a9def6d102583c7f7e07882f096dfdd89da8d",
+            "h": 1000,
+            "w": 962
+          },
+          "iso_xs": {
+            "hash": "a68279507031fe1f8c2f42530c49b3b41b766b70b8ea98b36d4aa1e47316796d",
+            "h": 500,
+            "w": 481
+          },
+          "profile_l": {
+            "hash": "c59ac8a98b1753cf72426ad2bb9a15a8a9313768e977340d1a91d997b49ef13e",
+            "h": 2160,
+            "w": 3074
+          },
+          "profile_s": {
+            "hash": "133ab171f58d8c17e0d0b87aeba17307b92f06b2dd8812940835bd67e02d6367",
+            "h": 703,
+            "w": 1000
+          },
+          "profile_xs": {
+            "hash": "341dffab6852287cc276e3dd4229d294450de0635154c76c0b311b029164597e",
+            "h": 352,
+            "w": 500
+          },
+          "top_l": {
+            "hash": "10492e3dfc5f35bea1757d01d28bbe81c1ee26f3b5552aa16bd6c33558cdc71e",
+            "h": 2160,
+            "w": 3521
+          },
+          "top_s": {
+            "hash": "f1a8ca6e2d5230ca97c63ed3dda6266c0786b3c3ad49226b996f4957bd9bc221",
+            "h": 613,
+            "w": 1000
+          },
+          "top_xs": {
+            "hash": "d2a6688ea44422c2be7113f412a72a507bdecc53edc7b72f6884e79f43c5fede",
+            "h": 307,
+            "w": 500
+          },
+          "displayLength": "35.0",
+          "scaleIso": "19.0",
+          "scaleProfile": "35.0",
+          "scaleTop": "35.0",
+          "scaleFront": "20.0",
+          "statCargo": "32",
+          "statCrew": "1",
+          "statManufacturer": "Gatac",
+          "statRole": "Generalist",
+          "statLength": "35.0"
         }
       ]
     }

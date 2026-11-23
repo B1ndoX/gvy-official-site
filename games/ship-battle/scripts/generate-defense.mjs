@@ -29,7 +29,7 @@ for(const ship of ships){
  ship.defenseRole=mission(ship).functional?'civilian':combatRole(ship.role);
  if(ship.id==='zeus'){ship.battleReady=false;ship.assetIssue='Unverified historical/concept artwork; source catalogFake=true. Use Zeus Mk II variants for combat.';}
  ship.preferredRange=ship.doctrine==='bomber'?Math.min(1100,850+ship.length*.3):ship.doctrine==='escort'?590:ship.class==='capital'?850:ship.class==='heavy'?500:380;
- audit.ships[ship.id]={sourceName:reference.sourceName,measured:Object.keys(reference.facts),estimated,estimation,shieldCapacityEstimated:reference.provenance.shieldCapacity!=='component-model',values:{...stats,projectionBeam:ship.beam,physicalBeam:ship.physicalBeam,height:ship.height}};
+ audit.ships[ship.id]={sourceName:reference.sourceName,...(reference.snapshotVersion?{sourceVersion:reference.snapshotVersion}:{}),measured:Object.keys(reference.facts),estimated,estimation,shieldCapacityEstimated:reference.provenance.shieldCapacity!=='component-model',values:{...stats,projectionBeam:ship.beam,physicalBeam:ship.physicalBeam,height:ship.height}};
 }
 applyWeaponProfiles(ships);applyEstimatedWeapons(ships);const conceptWeapons=applyConceptWeapons(ships);applyWeaponResources(ships);
 await writeFile(new URL('src/data/concept-weapon-estimates.json',root),JSON.stringify(conceptWeapons,null,2)+'\n');

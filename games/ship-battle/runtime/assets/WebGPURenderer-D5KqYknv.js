@@ -1,0 +1,1 @@
+export{n as WebGPURenderer}from"./pixi-DL8B6zcD.js";

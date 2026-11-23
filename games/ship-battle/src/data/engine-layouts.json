@@ -3499,6 +3499,27 @@
         "file": "40_constellation-mkv-centaurus.png",
         "sha256": "a3fdd236e5e2a69a9de888b3cb933459deefa5e6909f6e735d4e6da461b5a3b1"
       }
+    },
+    "skylark": {
+      "status": "projection-estimate",
+      "imageSHA256": "661181606ac7ed6ee328ab556848998833252434d4e4d053c019d5f493f15bce",
+      "sourceURL": "https://cdn1.fleetviewer.link/skylark__top_xs_661181606ac7ed6ee328ab556848998833252434d4e4d053c019d5f493f15bce.png",
+      "nozzles": [],
+      "note": "New model nozzle exits not confirmed in top artwork; no generic hull flames invented. Pending visual calibration."
+    },
+    "marauder": {
+      "status": "projection-estimate",
+      "imageSHA256": "3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78",
+      "sourceURL": "https://cdn1.fleetviewer.link/marauder__top_xs_3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78.png",
+      "nozzles": [],
+      "note": "New model nozzle exits not confirmed in top artwork; no generic hull flames invented. Pending visual calibration."
+    },
+    "hyun": {
+      "status": "projection-estimate",
+      "imageSHA256": "d2a6688ea44422c2be7113f412a72a507bdecc53edc7b72f6884e79f43c5fede",
+      "sourceURL": "https://cdn1.fleetviewer.link/hyun__top_xs_d2a6688ea44422c2be7113f412a72a507bdecc53edc7b72f6884e79f43c5fede.png",
+      "nozzles": [],
+      "note": "New model nozzle exits not confirmed in top artwork; no generic hull flames invented. Pending visual calibration."
     }
   },
   "sharedExteriorGroups": {

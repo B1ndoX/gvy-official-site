@@ -12059,6 +12059,146 @@
         }
       },
       "unknown": []
+    },
+    "skylark": {
+      "sourceName": "RSI Skylark",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/skylark/Skylark",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+      "systems": {
+        "s2-cf-227-badger-repeater": {
+          "stations": [
+            {
+              "stationId": "bot-skylark-pilot-1",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-1"
+            },
+            {
+              "stationId": "bot-skylark-pilot-2",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-2"
+            },
+            {
+              "stationId": "bot-skylark-pilot-3",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-3"
+            }
+          ],
+          "unclassified": 0
+        }
+      },
+      "unknown": []
+    },
+    "marauder": {
+      "sourceName": "Drake Marauder",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/marauder/Marauder",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+      "systems": {
+        "s3-cf-337-panther-repeater": {
+          "stations": [
+            {
+              "stationId": "bot-marauder-pilot-1",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-1"
+            },
+            {
+              "stationId": "bot-marauder-pilot-2",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-2"
+            },
+            {
+              "stationId": "bot-marauder-pilot-3",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-3"
+            },
+            {
+              "stationId": "bot-marauder-pilot-4",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-4"
+            },
+            {
+              "stationId": "bot-marauder-pilot-5",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-5"
+            },
+            {
+              "stationId": "bot-marauder-pilot-6",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-6"
+            },
+            {
+              "stationId": "bot-marauder-pilot-7",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-7"
+            }
+          ],
+          "unclassified": 0
+        }
+      },
+      "unknown": []
+    },
+    "hyun": {
+      "sourceName": "Gatac Hyun",
+      "sourceURL": "https://robertsspaceindustries.com/pledge/ships/hyun/Hy-n",
+      "snapshotVersion": "4.10.3-LIVE.13220821",
+      "inputSHA256": "160796c0bc577e655f42ad550e3bd4e5c6de968f42f657a19f844f1418f4399d",
+      "systems": {
+        "s3-yeng-tu-repeater": {
+          "stations": [
+            {
+              "stationId": "bot-hyun-pilot-1",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-1"
+            },
+            {
+              "stationId": "bot-hyun-pilot-2",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-2"
+            },
+            {
+              "stationId": "bot-hyun-pilot-3",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-3"
+            },
+            {
+              "stationId": "bot-hyun-pilot-4",
+              "control": "pilot",
+              "count": 1,
+              "match": "bot-current-rsi-pilot-installation",
+              "anchorId": "laser-4"
+            }
+          ],
+          "unclassified": 0
+        }
+      },
+      "unknown": []
     }
   }
 }

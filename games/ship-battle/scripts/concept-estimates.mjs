@@ -1,7 +1,7 @@
 import {readFile} from 'node:fs/promises';
 const root=new URL('../src/data/',import.meta.url);
 export const conceptRules=JSON.parse(await readFile(new URL('concept-estimation-rules.json',root),'utf8'));
-const source=JSON.parse(await readFile(new URL('ship-reference-facts.json',root),'utf8')).ships;
+const snapshot=JSON.parse(await readFile(new URL('ship-reference-facts.json',root),'utf8')),source=snapshot.ships;
 const metadata=JSON.parse(await readFile(new URL('ships.json',root),'utf8'));
 const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
 export function mission(ship){
@@ -22,7 +22,8 @@ const industrial=new Set(['mining','salvage','construction','refinery','service'
 export function analogue(ship,key='hullTotal'){
  const purpose=mission(ship),length=ship.facts?.length??source[ship.id]?.facts.length??ship.fallbackGeometry?.length??ship.length??21;
  const series=conceptRules.families.find(f=>new RegExp(f.pattern).test(ship.id??''));
- const candidates=metadata.filter(s=>s.id!==ship.id&&source[s.id]?.facts[key]>0&&source[s.id]?.facts.length>0&&mission(s).functional===purpose.functional);
+ const version=ship.snapshotVersion??source[ship.id]?.snapshotVersion??snapshot.snapshotVersion;
+ const candidates=metadata.filter(s=>s.id!==ship.id&&(source[s.id]?.snapshotVersion??snapshot.snapshotVersion)===version&&source[s.id]?.facts[key]>0&&source[s.id]?.facts.length>0&&mission(s).functional===purpose.functional);
  const score=s=>{
   const group=mission(s),type=group.category===purpose.category?0:industrial.has(group.category)&&industrial.has(purpose.category)?1:3;
   return (s.id===series?.reference?-100:0)+type*5+Math.abs(Math.log(length/source[s.id].facts.length))*2+(s.manufacturer===ship.manufacturer?-.2:0);

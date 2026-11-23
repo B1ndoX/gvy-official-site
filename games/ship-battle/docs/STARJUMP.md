@@ -2,7 +2,7 @@
 
 2026-10-21，按用户要求使用 REA 处理 STARJUMP 图片；在用户后续明确允许非商业打包后，将公开 PNG 接入独立本地工程。未登录、绕过认证或获取账号内容，未修改官网。
 
-## 实际取得
+## 首次取得（2026-10-21历史快照）
 
 - 入口 https://www.starjumpfleetviewer.com/ 当前跳转至 https://hangar.link/ 。
 - 已发布 Flutter Web 客户端：`/releases/20260929083919-746fcbb/main.dart.js`，SHA-256 `56fa4bf7ba5d81bbdbd5c1a86af6a4d0d32e64e91cf38e4e6d930f9322224c91`。
@@ -57,3 +57,13 @@
 已从完整目录的默认图副本接入 `asteroid`，500×406 透明 PNG，原始 SHA-256 `bf56e718a5ed45a5b29e85e5f5c0d8dcf0eabb303dc3c8bde75204544eeed201`。来源、哈希与证据保存在 `public/assets/environment/manifest.json`，使用上述完整目录的 `ev_1bbb30517df6002135598ddda9a2c293b923cc3e09be1c12f0dee3a1e7023455`。该图不加入舰船 224 条计数。`asteroid-field` 是多物体场景图，未拿来做单体碰撞；`meteor` 是战斗机名称，不是陨石。
 
 按用户要求再次用 REA 捕获 Battle Starfleet 移动源码（证据 `ev_ee674363575eb197efdc743ef4b97b578c95e5e5269031c9aa925a580eeee4ec`）、Star Wars Simulator 公开源码（`ev_8b83e60db669ee7e36e18293ea4b1963163d2bbbd77c8812fbd8eded96b17f68`）及本地只读副本运行（`ev_d4312bd9b650c9091ca38e547eb96444a8f5c6d7de290092b02830bca1c64010`）。研究结论是固定步长、分离模拟与渲染、前向推进/转向惯性、预测弹道和避障适合网页；Unity 引擎代码不移植，未明确授权的网页源码只参考思路，不直接复制。
+
+## 2026-11-23 增量核对（仅本地，尚未发布）
+
+- 最新公开清单快照为 `043c4246-877b-4ac0-ba9e-e68d43946bd3`，创建于 `2026-11-23T00:05:23.769Z`，实际319个分组、395个变体。原始响应SHA-256为 `4e3dee4474ae56ec411c39e6754fca2b91431e35432c33b27775a5a7f609c528`；`starjump-full-catalog.json`保留该响应原字节，新增图的哈希/尺寸/来源见`starjump-sources.json`逐项记录及refreshes。旧REA证据只对应旧捕获，不冒充本次HTTPS请求。
+- 比较旧315分组，新增`skylark`、`marauder`、`maruader`、`hyun`。`maruader`与`marauder`的厂商、fleetview及原图哈希一致，是拼写重复，只导入正式拼写`marauder`。新增三张原生透明top_xs PNG，共731849字节；没有AI重绘、裁剪或替换旧图。半人马座已有原图及游戏条目，没有重复新增。
+- 本地图库共227条；213条可参与成员抽签，5型BOSS、6条无武装以及3条暂缓/未核实条目保持原规则。三张新图沿用原非商业用户指示及许可边界，不将公开下载标作已获作者授权。
+- 新船基础字段只读取得舰队机器人正式共享数据，配装/组件同为`4.10.3-LIVE.13220821`。原有224船保持原版本，新船按记录标注snapshotVersion及输入SHA；没有全舰数据升级。统一生成器和全舰共同换算/出生规则继续适用。
+- 云雀、劫掠者使用机器人现有中文名；Hyūn在冻结机器人汉化中缺完整译名，暂采用社区讨论的“混元”，明确不是已确认官方汉化，后续有正式词条时可替换。
+- 用户标注新船炮口：云雀两侧＋中间机腹共3门S2，劫掠者7门S3，混元两侧各2门S3；位置落入原turret-layouts/weapon-anchor-layouts，保留资料卡数量，不将二维标注冒称官方三维挂点。新图喷口尚未确认，暂不编造船体火焰。
+- 机器人/NAS只在开发时只读取源；游戏运行仍全为本站静态文件，访客不连接机器人或NAS。原始输入、标注和截图保存在 `/Users/bindox/Documents/Codex/Previews/ship-mauler-starjump-20261123/`。

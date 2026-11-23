@@ -11,7 +11,11 @@ function duel(id:string,kind:WeaponKind,target='hammerhead',neutralArmor=true,re
  const a=structuredClone(ships.find(s=>s.id===id)!) as ShipSpec,b=structuredClone(ships.find(s=>s.id===target)!) as ShipSpec;
  a.mounts=a.mounts.filter(m=>m.kind===kind).map(m=>({...m,charge:0}));b.mounts=[];
  const e=new BattleEngine(reference);e.reset([{specId:id,count:1},{specId:target,count:1}],[a,b].map(s=>({...s,speed:0,acceleration:0,turnRate:0,shieldRegen:0,armorPhysicalMultiplier:neutralArmor?1:s.armorPhysicalMultiplier,armorEnergyMultiplier:neutralArmor?1:s.armorEnergyMultiplier})),42);
- e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i*1300;s.y=0;s.heading=i?Math.PI:0;s.cooldowns.fill(0);});e.start();return e;
+ e.asteroids=[];e.ships.forEach((s,i)=>{s.x=i*1300;s.y=0;s.heading=i?Math.PI:0;s.cooldowns.fill(0);});
+ // Budget fixtures begin with an acquired target. Natural acquisition and
+ // independent dorsal traversal are covered in mauler-beams.test.ts.
+ e.ships[0].weaponCycles=a.mounts.map(()=>({chargeLeft:-1,burstLeft:0,aimTarget:e.ships[1].id,acquireUntil:0,aimAt:0}));
+ e.start();return e;
 }
 const step=(e:BattleEngine,n:number)=>{for(let i=0;i<n;i++)e.step();};
 test('finite nose beam uses actual collision, then cools down and resets cleanly',()=>{
@@ -84,7 +88,8 @@ test('broad beam can hit a hull overlapping its edge, while still using one tota
 test.each([['idris-p',112500,4.5,14/3],['tiburon',62400,3.9,11/3],['mauler',288000,5.4,14/3],['odin',1400000,6,6]] as const)('%s stronger beam retains its duration, cooldown and single volley budget', (id,total,seconds,cooldown)=>{
  const e=duel(id,'beam'),t=e.ships[1],m=e.ships[0].spec.mounts[0];t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  expect(m.duration!*.75).toBeCloseTo(seconds);expect(m.cooldown*.75).toBeCloseTo(cooldown);
- step(e,Math.ceil(m.duration!*60)+2);expect(e.shots).toBe(1);expect(1e8-t.hull).toBeCloseTo(m.damage*m.duration!,3);
+ const beams=e.ships[0].spec.mounts.filter(m=>m.kind==='beam');
+ step(e,Math.ceil(m.duration!*60)+2);expect(e.shots).toBe(beams.length);expect(1e8-t.hull).toBeCloseTo(beams.reduce((sum,m)=>sum+m.damage*m.duration!,0),3);
 });
 test('Polaris raw torpedo damage is the same against NPC and member hulls',()=>{
  for(const boss of [false,true]){
@@ -95,13 +100,14 @@ test('Polaris raw torpedo damage is the same against NPC and member hulls',()=>{
 
 test.each(['idris-p','tiburon','mauler','odin'])('%s beam settles five times per 1× second with unchanged DPS',id=>{
  const e=duel(id,'beam'),t=e.ships[1],m=e.ships[0].spec.mounts[0];
+ const beams=e.ships[0].spec.mounts.filter(m=>m.kind==='beam'),damage=beams.reduce((sum,m)=>sum+m.damage,0);
  t.spec={...t.spec,hull:1e8,shield:0,beam:1000};t.hull=1e8;t.shield=0;
  step(e,15);expect(e.hits).toBe(0);
  for(let tick=1;tick<=5;tick++){
-  step(e,1);expect(e.hits).toBe(tick);expect(1e8-t.hull).toBeCloseTo(m.damage*4/15*tick,3);
-  if(tick<5){step(e,15);expect(e.hits).toBe(tick);}
+  step(e,1);expect(e.hits).toBe(tick*beams.length);expect(1e8-t.hull).toBeCloseTo(damage*4/15*tick,3);
+  if(tick<5){step(e,15);expect(e.hits).toBe(tick*beams.length);}
  }
- expect(1e8-t.hull).toBeCloseTo(m.damage*4/3,3);
+ expect(1e8-t.hull).toBeCloseTo(damage*4/3,3);
 });
 
 test.each(['brawl','bounty','challenge'] as const)('five-tick beams retain %s boss burst protection',mode=>{
