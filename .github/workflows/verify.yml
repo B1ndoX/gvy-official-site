@@ -142,7 +142,7 @@ jobs:
     name: Selected tools and browser suites
     needs: plan
     if: needs.plan.outputs.tools == 'true'
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 30
     env:
       GVY_VERIFICATION_PLAN: ${{ needs.plan.outputs.plan }}

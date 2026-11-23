@@ -4,6 +4,7 @@
 
 ## 2026-11-23 · 重拳双光束、新舰入库与校准工具隔离（开发完成，已授权发布）
 
+- 发布联动：PR32初始候选84cdce1的Verify运行45203412745中，工具/浏览器任务尚未执行即被GitHub拒绝，注释为`The configuration 'macos-14-arm64-us-default' is not supported`。核对GitHub官方退役公告（https://github.blog/changelog/2026-10-01-github-actions-macos-14-runner-image-retirement/）确认macOS14于11月2日退役；只将该任务运行器标签改为受支持的`macos-15`，不改Node、测试、超时、范围计算或必需门禁。该失败保留证据，不算测试通过；修复后以新候选真实CI为准。
 - 用户要求重拳船头/背部分离：原`spinal-beam`船头双束改为船头固定单束及船中背部`dorsal-beam`。背部为remote万向节，持续开火也走原WeaponCycle观察/角速度/惯性，真实射线沿炮口实际角度；只有固定光束进入原船体光束转向分支。旧的active-beam提前返回曾停止炮台瞄准，射线也只读船首，已在原负责位置修正。两个发射口分摊原单份光束预算，原持续/冷却/蓄力、全舰和遭遇倍率保留。
 - 用户追加“不要太快”：背部限速0.13 rad/模拟秒，按当前0.75时间尺度，1×约9.93°/实际秒。不是瞬间锁定，保留延迟、加减速与真实脱靶；成员和NPC共用规则。布局/战斗版本更新，默认旧合束缓存可迁移；手工数据仅在本地开发中继续保留。
 - StarJump公开清单从315分组/391变体增至319/395，本次真实HTTPS GET快照为`043c4246-877b-4ac0-ba9e-e68d43946bd3`，原始SHA见STARJUMP及逐图来源表。新增`skylark`、`marauder`、`hyun`三张原生透明PNG；`maruader`与Marauder图哈希/厂商/fleetview相同，是重复拼写，不重复抽签。已有半人马座原图/条目保留。图库227条，成员抽签池213条。
