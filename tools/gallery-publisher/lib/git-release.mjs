@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import {join,dirname} from 'node:path';
 
 import { assertOnlyManagedGalleryChanged, parseGalleryState } from "./gallery-html.mjs";
 import { assertPreviewUnchanged } from "./preview-state.mjs";
@@ -59,7 +60,7 @@ export function buildReleaseSummary(session, date = new Date()) {
     commitMessage: isDelete
       ? `fix: remove ${itemCount} gallery ${photoWord}`
       : `feat: publish ${itemCount} gallery ${photoWord}`,
-    branch: "main",
+    branch: session.branch || "main",
     remoteBranch: "origin/main",
     project: "gvy-official-site",
     domains: ["https://www.gvyvoyagers.vip", "https://gvyvoyagers.vip"],
@@ -132,7 +133,34 @@ async function verifyDeployment({ session, domains, onUpdate, expectedGallery })
   throw new Error(`推送成功，但 ${DEPLOYMENT_VERIFY_TIMEOUT_MINUTES} 分钟内未完成线上复查：${lastError}`);
 }
 
-export async function publishGallerySession({ root, session, onUpdate, onCommitted, onPushed }) {
+const REQUIRED_CHECKS=['Deployable site on Node 24','Affected tools and browser checks on Node 24'];
+
+export function galleryChecksState(pr, candidate) {
+  if(pr.headRefOid!==candidate)throw Error('相册PR的提交已经改变，已停止发布');
+  if(pr.state==='MERGED')return 'merged';
+  if(pr.state!=='OPEN')throw Error('相册PR已关闭，已停止发布');
+  const checks=pr.statusCheckRollup??[];
+  const failed=checks.find(check=>['FAILURE','CANCELLED','TIMED_OUT','ACTION_REQUIRED','STARTUP_FAILURE'].includes(check.conclusion?.toUpperCase())||['FAILURE','ERROR'].includes(check.state));
+  if(failed)throw Error(`相册PR检查失败：${failed.name??failed.context}；请查看PR中的原始日志，修复后重试`);
+  return REQUIRED_CHECKS.every(name=>checks.some(check=>check.name===name&&check.status==='COMPLETED'&&check.conclusion==='SUCCESS'))?'ready':'pending';
+}
+
+async function readGalleryPr(root, session, githubRun){
+  return JSON.parse((await githubRun('gh',['pr','view',session.prUrl,'--json','state,headRefOid,mergeCommit,statusCheckRollup'],{cwd:root})).stdout);
+}
+
+async function waitForGalleryChecks(root,session,githubRun){
+  const deadline=Date.now()+35*60*1000;
+  while(Date.now()<deadline){
+    const pr=await readGalleryPr(root,session,githubRun);
+    const state=galleryChecksState(pr,session.commitSha);
+    if(state!=='pending')return state;
+    await new Promise(resolve=>setTimeout(resolve,10000));
+  }
+  throw Error(`相册PR检查仍未完成，已保留批次，可稍后重试：${session.prUrl}`);
+}
+
+export async function publishGallerySession({ root, session, onUpdate, onCommitted, onMerged, githubRun=run, verifyDeploymentImpl=verifyDeployment }) {
   if (!session?.verified) throw new Error("必须先生成并通过本地预览");
   if (session.baselineDirty?.length) throw new Error("生成预览前已有未提交改动，正式发布保持锁定");
   assertGalleryOnlyPaths(session.changedFiles || []);
@@ -145,7 +173,7 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
   if (!session.commitSha) await assertPreviewUnchanged(session.previewState, await gitOutput(root, ["rev-parse", "HEAD"]));
 
   const branch = await gitOutput(root, ["branch", "--show-current"]);
-  if (branch !== "main") throw new Error(`当前分支是 ${branch || "未知"}，只允许从 main 发布`);
+  if(!session.isolated || !/^gallery-publisher\/[a-f0-9-]{36}$/.test(branch) || session.branch!==branch)throw Error('旧预览不能直接推送main；请清空未提交的旧批次，在独立相册工作区重新生成预览');
   onUpdate?.("重新运行完整验证");
   await run("npm", ["run", "verify"], { cwd: root });
   onUpdate?.("同步 origin/main");
@@ -153,13 +181,14 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
   let head = await gitOutput(root, ["rev-parse", "HEAD"]);
   let remoteHead = await gitOutput(root, ["rev-parse", "origin/main"]);
   const summary = session.release || buildReleaseSummary(session);
+  const alreadyMerged=session.prUrl && galleryChecksState(await readGalleryPr(root,session,githubRun),session.commitSha)==='merged';
 
   if (session.commitSha) {
     const changedPaths = await listGitChanges(root);
     if (changedPaths.length) throw new Error("发布提交已生成，但工作区又出现改动，已停止重试");
     if (head !== session.commitSha) throw new Error("发布提交已生成，但本地 main 已移动，已停止重试");
     const parent = await gitOutput(root, ["rev-parse", `${session.commitSha}^`]);
-    if (remoteHead !== parent && remoteHead !== session.commitSha) {
+    if (!alreadyMerged && remoteHead !== parent) {
       throw new Error("origin/main 已被其他提交更新，已停止重试");
     }
   } else {
@@ -169,7 +198,7 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     if (!samePathSet(changedPaths, session.changedFiles)) {
       throw new Error("预览后出现了批次之外的文件变化，已停止发布");
     }
-    if (head !== remoteHead) throw new Error("本地 main 与 origin/main 不一致，请先处理同步后再发布");
+    if (head !== remoteHead) throw new Error("正式基线已更新，请清空未提交的本批预览后重新生成；开发工作区不受影响");
 
     onUpdate?.(`建立回滚标签 ${summary.tag}`);
     await run("git", ["tag", summary.tag, "HEAD"], { cwd: root });
@@ -186,12 +215,31 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     await onCommitted?.({ commitSha: head, release: summary });
   }
 
-  remoteHead = await gitOutput(root, ["rev-parse", "origin/main"]);
-  onUpdate?.("推送回滚标签与 main");
-  await run("git", ["push", "origin", summary.tag], { cwd: root });
-  if (remoteHead !== session.commitSha) await run("git", ["push", "origin", "main"], { cwd: root });
-  await onPushed?.({ commitSha: session.commitSha, release: summary });
+  if(!alreadyMerged){
+    onUpdate?.('推送本批相册分支与回滚标签');
+    await run('git',['push','origin',summary.tag],{cwd:root});
+    await run('git',['push','-u','origin',branch],{cwd:root});
+    if(!session.prUrl){
+      const existing=JSON.parse((await githubRun('gh',['pr','list','--head',branch,'--base','main','--state','all','--json','url'],{cwd:root})).stdout);
+      if(existing.length)session.prUrl=existing[0].url;
+      else{
+        const bodyPath=join(root,'tools/gallery-publisher/.runtime/pr-body.md');
+        await mkdir(dirname(bodyPath),{recursive:true});
+        await writeFile(bodyPath,`${summary.commitMessage}\n\n只修改本批团建相册条目与对应图片；本地预览和验证通过。回滚标签：${summary.tag}。等待现有必需检查后普通合并，再复查两个正式域名。\n`);
+        session.prUrl=(await githubRun('gh',['pr','create','--base','main','--head',branch,'--title',summary.commitMessage,'--body-file',bodyPath],{cwd:root})).stdout;
+      }
+      summary.prUrl=session.prUrl;
+      await onCommitted?.({commitSha:session.commitSha,release:summary});
+    }
+    onUpdate?.(`等待相册PR现有必需检查：${session.prUrl}`);
+    const state=await waitForGalleryChecks(root,session,githubRun);
+    if(state!=='merged')await githubRun('gh',['pr','merge',session.prUrl,'--merge','--match-head-commit',session.commitSha],{cwd:root});
+  }
+  const merged=await readGalleryPr(root,session,githubRun);
+  if(galleryChecksState(merged,session.commitSha)!=='merged')throw Error('相册PR尚未完成合并，已保留批次');
+  summary.prUrl=session.prUrl;summary.mergeSha=merged.mergeCommit?.oid;
+  await onMerged?.({ commitSha: session.commitSha, release: summary });
   onUpdate?.("等待 EdgeOne 并复查两个正式域名");
-  await verifyDeployment({ session, domains: summary.domains, onUpdate, expectedGallery });
+  await verifyDeploymentImpl({ session, domains: summary.domains, onUpdate, expectedGallery });
   return { ...summary, commitSha: session.commitSha };
 }

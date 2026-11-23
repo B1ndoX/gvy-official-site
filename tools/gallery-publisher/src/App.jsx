@@ -44,6 +44,7 @@ export default function App() {
   const refresh = useCallback(async () => {
     const next = await fetchStatus();
     setStatus(next);
+    if(next.operation?.status==='error')setError(next.operation.message);
     return next;
   }, []);
 
@@ -52,13 +53,14 @@ export default function App() {
   }, [refresh]);
 
   useEffect(() => {
-    if (!busy) return undefined;
+    if (!busy && status.operation?.status !== 'running') return undefined;
     const timer = window.setInterval(() => refresh().catch(() => {}), 1500);
     return () => window.clearInterval(timer);
-  }, [busy, refresh]);
+  }, [busy, status.operation?.status, refresh]);
 
   const activityMessage = status.operation?.message || status.activity?.[0]?.message || "等待添加照片";
   const repositoryDirty = status.repository?.changes?.length > 0;
+  const working = busy || status.operation?.status === 'running';
 
   const addFiles = useCallback((incoming) => {
     setError("");
@@ -177,24 +179,24 @@ export default function App() {
     <div className="publisher-shell">
       <AppHeader repository={status.repository} onHelp={() => setShowHelp(true)} />
       <StatusStrip gallery={status.gallery} repository={status.repository} />
-      {repositoryDirty && !status.session ? <div className="baseline-warning"><Icon name="info" size={17} />当前仓库已有本地改动：发布器只操作团建相册，因此在工作区恢复干净前不会生成预览。</div> : null}
+      {repositoryDirty && !status.session ? <div className="baseline-warning"><Icon name="info" size={17} />相册工作区有未完成改动，已保留现场；开发工作区的修改不会阻止上传。</div> : null}
       {error ? <div className="error-banner" role="alert"><Icon name="info" size={18} /><span>{error}</span><button type="button" aria-label="关闭错误" onClick={() => setError("")}><Icon name="close" size={17} /></button></div> : null}
       <main className="workspace-layout">
         <section className="main-workspace">
           <div className="gallery-management-bar">
             <div><Icon name="image" size={18} /><span>官网照片管理</span>{status.gallery.duplicateGroups?.length ? <strong>发现 {status.gallery.duplicateGroups.reduce((total, group) => total + group.length - 1, 0)} 张精确重复</strong> : <small>正式官网基准＋本机画面去重已启用</small>}</div>
-            <button type="button" onClick={() => setShowGalleryManager(true)} disabled={busy}><Icon name="trash" size={17} />选择并删除官网照片</button>
+            <button type="button" onClick={() => setShowGalleryManager(true)} disabled={working}><Icon name="trash" size={17} />选择并删除官网照片</button>
           </div>
           {status.session?.verified ? (
             <PreviewPanel gallery={status.gallery} session={status.session} />
           ) : (
-            <DropZone onFiles={addFiles} disabled={busy} />
+            <DropZone onFiles={addFiles} disabled={working} />
           )}
           <PhotoFilmstrip
             photos={photos}
             onRemove={removePhoto}
             onMove={reorderPhoto}
-            disabled={busy || Boolean(status.session)}
+            disabled={working || Boolean(status.session)}
           />
           {!photos.length && status.session?.verified ? null : !photos.length ? (
             <div className="empty-filmstrip"><span>选择照片后将在这里确认本批内容与先后顺序</span></div>
@@ -205,19 +207,19 @@ export default function App() {
       <ActionBar
         photoCount={photos.length}
         session={status.session}
-        busy={busy}
+        busy={working}
         onPreview={handlePreview}
         onClear={clearBatch}
         onPublish={() => setShowPublish(true)}
       />
       <footer className="activity-footer">
-        <span className={busy ? "spinner" : "activity-dot"} />
+        <span className={working ? "spinner" : "activity-dot"} />
         <strong>{activityMessage}</strong>
         {recentActivity.length > 1 ? <span className="activity-history">{recentActivity.slice(1).map((item) => item.message).join(" · ")}</span> : null}
       </footer>
-      {showPublish && status.session ? <PublishModal session={status.session} onClose={() => setShowPublish(false)} onConfirm={confirmPublish} busy={busy} /> : null}
-      {showGalleryManager ? <GalleryManagerModal gallery={status.gallery} session={status.session} busy={busy} onClose={() => setShowGalleryManager(false)} onDelete={handleDeletePreview} /> : null}
-      {duplicateReview ? <DuplicateReviewModal duplicates={duplicateReview} photos={photos} busy={busy} onCancel={() => setDuplicateReview(null)} onConfirm={continueDuplicatePreview} /> : null}
+      {showPublish && status.session ? <PublishModal session={status.session} onClose={() => setShowPublish(false)} onConfirm={confirmPublish} busy={working} /> : null}
+      {showGalleryManager ? <GalleryManagerModal gallery={status.gallery} session={status.session} busy={working} onClose={() => setShowGalleryManager(false)} onDelete={handleDeletePreview} /> : null}
+      {duplicateReview ? <DuplicateReviewModal duplicates={duplicateReview} photos={photos} busy={working} onCancel={() => setDuplicateReview(null)} onConfirm={continueDuplicatePreview} /> : null}
       {showHelp ? <HelpModal onClose={() => setShowHelp(false)} /> : null}
     </div>
   );
