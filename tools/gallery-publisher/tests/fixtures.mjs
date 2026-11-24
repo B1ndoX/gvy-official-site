@@ -51,3 +51,4 @@ export async function withImageGallery(callback) {
     await callback(root, galleryFixture(2));
   } finally { await rm(root, { recursive: true, force: true }); }
 }
+export const galleryVerifyScripts=command=>Object.fromEntries(['verify:edgeone','gallery:publisher:test','gallery:publisher:build'].map(name=>[name,command]));

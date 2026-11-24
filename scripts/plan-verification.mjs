@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { readFile, appendFile, writeFile } from "node:fs/promises";
 import { verificationPlan, hasPassedVerification } from "./lib/verification-plan.mjs";
+import {isManagedGalleryOnlyChange} from '../tools/gallery-publisher/lib/gallery-html.mjs';
 
 const git = (...args) => execFileSync("git", args, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 const sha = (value) => /^[a-f0-9]{40}$/.test(value || "") && !/^0+$/.test(value);
@@ -41,7 +42,15 @@ if (sha(base)) {
   git("fetch", "--no-tags", "--depth=1", "origin", base);
   paths = execFileSync("git", ["diff", "--no-renames", "--name-only", "-z", base, head], { encoding: "utf8" }).split("\0").filter(Boolean);
 } else full = true;
-const plan = verificationPlan(paths, { full, verifiedMerge });
+let managedGallery=false;
+if(!full && !verifiedMerge && paths.includes('index.html')){
+  try{
+    const htmlAt=revision=>execFileSync('git',['show',`${revision}:index.html`],{encoding:'utf8',maxBuffer:8*1024*1024,stdio:['ignore','pipe','pipe']});
+    managedGallery=isManagedGalleryOnlyChange(htmlAt(base),htmlAt(head));
+  }
+  catch(error){console.log(`Gallery-only change could not be proved; normal fail-closed scope applies: ${error.message}`);}
+}
+const plan = verificationPlan(paths, { full, verifiedMerge, managedGallery });
 console.log(JSON.stringify({ head, base, paths, plan }, null, 2));
 await writeFile("verification-plan.json", JSON.stringify(plan, null, 2) + "\n");
 if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, Object.entries({ plan: JSON.stringify(plan), tools: plan.tools, ship: plan.ship, publisher: plan.publisher, media: plan.media, browser: plan.browser }).map(([key, value]) => `${key}=${value}\n`).join(""));

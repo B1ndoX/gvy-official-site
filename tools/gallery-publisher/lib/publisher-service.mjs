@@ -14,6 +14,7 @@ import { createVisualFingerprint, isVisualDuplicate, processGalleryPhoto } from 
 import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
 import { assertPreviewUnchanged, contentHash, fileHash } from "./preview-state.mjs";
 import {isPublisherBranch, openPublisherWorkspace, refreshPublisherWorkspace} from './publisher-workspace.mjs';
+import {verifyGallery} from './verification.mjs';
 
 const STEP_LABELS = [
   "保留原图",
@@ -21,7 +22,7 @@ const STEP_LABELS = [
   "按原图宽度生成 1920 WebP",
   "生成 640×360 缩略图",
   "更新相册与最新批次标记",
-  "运行完整测试与生产构建",
+  "运行基础门禁与相册检查",
 ];
 
 const OFFICIAL_ORIGINS = ["https://www.gvyvoyagers.vip", "https://gvyvoyagers.vip"];
@@ -520,8 +521,8 @@ export class PublisherService {
       previewState.files[this.indexPath] = contentHash(nextHtml);
       steps[4] = "done";
       steps[5] = "running";
-      this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
-      await run("npm", ["run", "verify"], { cwd: this.root });
+      this.setOperation({ steps: [...steps], message: "运行基础站点门禁与相册相关检查" });
+      await verifyGallery(this.root,run);
       await this.checkPreviewState(previewState);
       steps[5] = "done";
 
@@ -634,8 +635,8 @@ export class PublisherService {
       }
       steps[4] = "done";
       steps[5] = "running";
-      this.setOperation({ steps: [...steps], message: "运行完整测试与生产构建" });
-      await run("npm", ["run", "verify"], { cwd: this.root });
+      this.setOperation({ steps: [...steps], message: "运行基础站点门禁与相册相关检查" });
+      await verifyGallery(this.root,run);
       await this.checkPreviewState(previewState);
       steps[5] = "done";
 
@@ -697,7 +698,7 @@ export class PublisherService {
       this.setOperation({ type: "idle", status: "idle", message: "已结束上一批，可继续添加照片", steps: STEP_LABELS.map(() => "pending") });
       return this.getStatus();
     }
-    if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布正式网站继续PR检查与发布");
+    if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布相册继续PR检查与发布");
     this.setOperation({ status: "running", message: "核对预览快照并安全清空本批" });
     try {
       await this.recoverPreview(this.session);
@@ -715,7 +716,7 @@ export class PublisherService {
   async publish() {
     if (!this.session) throw new Error("没有可发布的相册批次");
     if (this.operation.status === "running") throw new Error("已有操作正在进行，请稍候");
-    this.setOperation({ type: "publish", status: "running", message: "开始正式发布", steps: STEP_LABELS.map(() => "done") });
+    this.setOperation({ type: "publish", status: "running", message: "开始发布本批相册", steps: STEP_LABELS.map(() => "done") });
     try {
       const release = await publishGallerySession({
         root: this.root,
@@ -737,7 +738,7 @@ export class PublisherService {
       this.session.deploymentVerified = true;
       this.session.release = release;
       await this.persistSession();
-      this.setOperation({ type: "publish", status: "done", message: "正式网站发布并复查完成" });
+      this.setOperation({ type: "publish", status: "done", message: "相册发布并复查完成" });
       return release;
     } catch (error) {
       const message = this.session?.published

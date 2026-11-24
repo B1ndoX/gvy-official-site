@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {promisify} from 'node:util';
 import test from 'node:test';
-import {galleryFixture} from './fixtures.mjs';
+import {galleryFixture,galleryVerifyScripts} from './fixtures.mjs';
 import {parseGalleryState} from '../lib/gallery-html.mjs';
 import {PublisherService} from '../lib/publisher-service.mjs';
 import {contentHash} from '../lib/preview-state.mjs';
@@ -24,7 +24,7 @@ async function fixture(callback){
   await git(source,'config','user.name','Fixture');await git(source,'config','user.email','fixture@example.invalid');
   await writeFile(join(source,'index.html'),html);
   await writeFile(join(source,'notes.md'),'committed notes');
-  await writeFile(join(source,'package.json'),JSON.stringify({name:'fixture',scripts:{verify:'node -e "process.exit(0)"'}}));
+  await writeFile(join(source,'package.json'),JSON.stringify({name:'fixture',scripts:galleryVerifyScripts('node -e "process.exit(0)"')}));
   const lock=JSON.stringify({name:'fixture',lockfileVersion:3,packages:{'':{name:'fixture'}}});
   await writeFile(join(source,'package-lock.json'),lock);
   await writeFile(join(source,'.gitignore'),'node_modules/\ntools/gallery-publisher/.runtime/\n');

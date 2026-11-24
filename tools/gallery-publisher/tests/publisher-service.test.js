@@ -8,7 +8,7 @@ import test from "node:test";
 
 import { parseGalleryState } from "../lib/gallery-html.mjs";
 import { assertSameDeployedGallery, PublisherService } from "../lib/publisher-service.mjs";
-import { galleryFixture, withImageGallery } from "./fixtures.mjs";
+import { galleryFixture, withImageGallery, galleryVerifyScripts } from "./fixtures.mjs";
 
 const runFile = promisify(execFile);
 
@@ -35,7 +35,7 @@ test("delete preview physically removes selected assets, preserves order, and ro
 
   try {
     await writeFile(join(root, "index.html"), homepage, "utf8");
-    await writeFile(join(root, "package.json"), `${JSON.stringify({ scripts: { verify: "node -e \"process.exit(0)\"" } }, null, 2)}\n`, "utf8");
+    await writeFile(join(root, "package.json"), `${JSON.stringify({ scripts: galleryVerifyScripts("node -e \"process.exit(0)\"") }, null, 2)}\n`, "utf8");
     await writeFile(join(root, ".gitignore"), "tools/gallery-publisher/.runtime/\n", "utf8");
     await Promise.all(selectedPaths.map((path) => copyFixtureAsset(root, path)));
     await runFile("git", ["init", "-b", "main", root]);
@@ -92,7 +92,7 @@ async function withDeleteFixture(numbers, callback, verify = "node -e \"process.
       `assets/gallery/thumbs/team-${String(item.number).padStart(2, "0")}.jpg`,
     ]);
     await writeFile(join(root, "index.html"), homepage);
-    await writeFile(join(root, "package.json"), JSON.stringify({ scripts: { verify } }));
+    await writeFile(join(root, "package.json"), JSON.stringify({ scripts: galleryVerifyScripts(verify) }));
     await writeFile(join(root, ".gitignore"), "tools/gallery-publisher/.runtime/\n");
     await Promise.all(paths.map((path) => copyFixtureAsset(root, path)));
     await runFile("git", ["init", "-b", "main", root]);
@@ -247,7 +247,7 @@ test("a photo removed from the current gallery can be uploaded again without a s
 test("add preview snapshots generated assets and refuses to delete a subsequently edited file", async () => {
   await withImageGallery(async (root, html) => {
     await writeFile(join(root, "index.html"), html);
-    await writeFile(join(root, "package.json"), JSON.stringify({ scripts: { verify: 'node -e "process.exit(0)"' } }));
+    await writeFile(join(root, "package.json"), JSON.stringify({ scripts: galleryVerifyScripts('node -e "process.exit(0)"') }));
     await writeFile(join(root, ".gitignore"), "tools/gallery-publisher/.runtime/\n");
     await runFile("git", ["init", "-b", "main", root]);
     await runFile("git", ["-C", root, "add", "."]);

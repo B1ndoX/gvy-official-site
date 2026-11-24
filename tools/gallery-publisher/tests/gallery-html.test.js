@@ -9,9 +9,40 @@ import {
   findGalleryGridBounds,
   parseGalleryState,
   removeGalleryItems,
+  isManagedGalleryOnlyChange,
 } from "../lib/gallery-html.mjs";
 
 const homepage = galleryFixture();
+
+test('only deterministic append/delete operations prove a gallery-only homepage edit',()=>{
+  const batch=makeBatch(19,2);batch[0].has1920=true;
+  const appended=appendGalleryBatch(homepage,batch);
+  assert.equal(isManagedGalleryOnlyChange(homepage,appended),true);
+  assert.equal(isManagedGalleryOnlyChange(homepage,removeGalleryItems(homepage,[1,4,15])),true);
+  assert.equal(isManagedGalleryOnlyChange(homepage,homepage),false);
+  assert.equal(isManagedGalleryOnlyChange(homepage,'<html>broken</html>'),false);
+});
+
+test('gallery proof rejects edits outside the grid including leading/trailing whitespace',()=>{
+  const appended=appendGalleryBatch(homepage,makeBatch(19,1));
+  for(const html of [appended.replace('GVY fixture','changed heading'),' '+appended,appended+'\n',appended.replace('</html>','<footer>new</footer></html>')]){
+    assert.equal(isManagedGalleryOnlyChange(homepage,html),false);
+  }
+});
+
+test('gallery proof rejects scripts, extra tags and changed retained images inside the managed region',()=>{
+  const appended=appendGalleryBatch(homepage,makeBatch(19,1));
+  for(const html of [appended.replace('</div>','<script>alert(1)</script></div>'),appended.replace('</div>','<iframe src="/member-brawl.html"></iframe></div>'),appended.replace('alt="GVY 团建回忆"','alt="changed"')]){
+    assert.equal(isManagedGalleryOnlyChange(homepage,html),false);
+  }
+});
+
+test('gallery proof rejects noncanonical new image metadata and reordering retained items',()=>{
+  const appended=appendGalleryBatch(homepage,makeBatch(19,1));
+  assert.equal(isManagedGalleryOnlyChange(homepage,appended.replace('width="1600"','width="0"')),false);
+  assert.equal(isManagedGalleryOnlyChange(homepage,appended.replace('team-19.jpg','team-019.jpg')),false);
+  assert.equal(isManagedGalleryOnlyChange(homepage,reorderFirstTwo(removeGalleryItems(homepage,[4]))),false);
+});
 
 function makeBatch(start, count) {
   return Array.from({ length: count }, (_, index) => {

@@ -11,7 +11,7 @@ export function HelpModal({ onClose }) {
           <li>不保存 GitHub、EdgeOne 密钥，复用本机现有 Git 登录。</li>
           <li>预览失败会恢复原页面并删除本批生成文件。</li>
           <li>使用独立相册工作区，开发代码和文档不必先提交或清空。</li>
-          <li>发布先建立回滚标签，只提交本批相册，经现有 PR 检查后合并并复查两个正式域名。</li>
+          <li>只提交本批相册，建立回滚标签，经基础站点门禁和相册检查后合并并复查双域。</li>
         </ul>
         <button className="primary-action compact" type="button" onClick={onClose}>我知道了</button>
       </section>
