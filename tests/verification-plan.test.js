@@ -29,7 +29,8 @@ test('proved gallery markup selects only gallery tools and browser checks while 
  const p=verificationPlan(['index.html','assets/gallery/team-50.png','CHANGELOG.md'],{managedGallery:true});
  assert.equal(p.mode,'affected');assert.equal(p.publisher,true);assert.equal(p.ship,false);assert.equal(p.media,false);assert.deepEqual(p.suites,BROWSER_SUITES.gallery);
  assert.equal(verificationPlan(['index.html'],{managedGallery:false}).mode,'full');
- for(const path of ['assets/cinematic-homepage.css','scripts/plan-verification.mjs','.github/workflows/verify.yml','unclassified.bin'])assert.equal(verificationPlan(['index.html',path],{managedGallery:true}).mode,'full');
+ for(const path of ['assets/cinematic-homepage.css','scripts/plan-verification.mjs','.github/workflows/verify.yml','tools/gallery-publisher/lib/gallery-html.mjs','unclassified.bin'])assert.equal(verificationPlan(['index.html',path],{managedGallery:true}).mode,'full');
+ assert.equal(verificationPlan(['tools/gallery-publisher/lib/gallery-html.mjs']).mode,'full');
 });
 test('the CI entry proves real committed album diffs and rejects mixed edits, injected scripts and EOF-only extras',async()=>{
  const before='\n'+galleryFixture()+'\n';

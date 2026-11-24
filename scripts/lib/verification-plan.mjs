@@ -42,6 +42,7 @@ export function verificationPlan(paths, { full = false, verifiedMerge = false, m
     else if (path.startsWith("games/ship-battle/")) { plan.ship = true; suite("ship"); }
     else if (/^(?:assets\/js\/fleet-members\.js|config\/rsi-member-source\.json|assets\/member-avatars\/[^/]+)$/.test(path)) { suite("ship"); selected.add("production-smoke.spec.js"); }
     else if (/^(?:assets\/fleet-command-brawl\.js|member-brawl\.html|assets\/member-brawl\.css|assets\/arena\/|assets\/js\/member-arena-)/.test(path)) { suite("arena"); suite("ship"); selected.add("production-smoke.spec.js"); }
+    else if (path === 'tools/gallery-publisher/lib/gallery-html.mjs') all('The canonical gallery operations and CI scope proof changed');
     else if (path.startsWith("tools/gallery-publisher/")) { plan.publisher = true; suite("gallery"); }
     else if (/^(?:assets\/gallery\/|assets\/js\/archive-(?:carousel|lightbox)\.js$)/.test(path)) suite("gallery");
     else if (/^(?:assets\/(?:hero-random|operations-motion|game-previews)\/|assets\/js\/(?:hero-video-controller|operation-motion|game-card-previews)\.js$)/.test(path)) { plan.media = true; suite("media"); suite("ship"); }
