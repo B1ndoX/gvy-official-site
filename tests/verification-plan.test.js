@@ -1,10 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {execFileSync,spawnSync} from 'node:child_process';
-import {mkdtemp,writeFile,readFile,rm,chmod} from 'node:fs/promises';
+import {mkdtemp,writeFile,readFile,rm,chmod,mkdir} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
 import {verificationPlan,validatePlan,hasPassedVerification,validateGateResults,REQUIRED_CHECKS,BROWSER_SUITES} from '../scripts/lib/verification-plan.mjs';
+import {galleryFixture} from '../tools/gallery-publisher/tests/fixtures.mjs';
+import {appendGalleryBatch,removeGalleryItems} from '../tools/gallery-publisher/lib/gallery-html.mjs';
 
 const root=resolve(new URL('..',import.meta.url).pathname);
 test('ship changes select game checks and entries, without unrelated media or arena suites',()=>{
@@ -22,6 +24,37 @@ test('recording a routine game change in the development log does not broaden it
  assert.deepEqual(p.suites,BROWSER_SUITES.ship);
  assert.equal(verificationPlan(['CHANGELOG.md']).mode,'docs');
  assert.equal(verificationPlan(['AGENTS.md']).mode,'full');
+});
+test('proved gallery markup selects only gallery tools and browser checks while mixed shared changes stay full',()=>{
+ const p=verificationPlan(['index.html','assets/gallery/team-50.png','CHANGELOG.md'],{managedGallery:true});
+ assert.equal(p.mode,'affected');assert.equal(p.publisher,true);assert.equal(p.ship,false);assert.equal(p.media,false);assert.deepEqual(p.suites,BROWSER_SUITES.gallery);
+ assert.equal(verificationPlan(['index.html'],{managedGallery:false}).mode,'full');
+ for(const path of ['assets/cinematic-homepage.css','scripts/plan-verification.mjs','.github/workflows/verify.yml','unclassified.bin'])assert.equal(verificationPlan(['index.html',path],{managedGallery:true}).mode,'full');
+});
+test('the CI entry proves real committed album diffs and rejects mixed edits, injected scripts and EOF-only extras',async()=>{
+ const before='\n'+galleryFixture()+'\n';
+ const appended=appendGalleryBatch(before,[{number:19,fallbackName:'team-19.png',width:1280,height:720,has1920:false}]);
+ const cases=[
+  {after:appended,mode:'affected'},
+  {after:removeGalleryItems(before,[1,4]),mode:'affected'},
+  {after:appended.replace('GVY fixture','changed navigation'),mode:'full'},
+  {after:appended.replace('</div>','<script>unexpected()</script></div>'),mode:'full'},
+  {after:appended+'\n',mode:'full'},
+ ];
+ for(const sample of cases){
+  const dir=await mkdtemp(join(tmpdir(),'gvy-gallery-scope-'));
+  const git=(...args)=>execFileSync('git',args,{cwd:dir,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
+  try{
+   git('init');git('config','user.name','Scope fixture');git('config','user.email','scope@example.invalid');
+   await writeFile(join(dir,'index.html'),before);git('add','.');git('commit','-m','before');const base=git('rev-parse','HEAD');
+   await writeFile(join(dir,'index.html'),sample.after);await mkdir(join(dir,'assets/gallery'),{recursive:true});await writeFile(join(dir,'assets/gallery/team-19.png'),'scope fixture');
+   git('add','.');git('commit','-m','album candidate');git('remote','add','origin',dir);
+   await writeFile(join(dir,'event.json'),JSON.stringify({pull_request:{base:{sha:base}},inputs:{managedGallery:true}}));
+   execFileSync(process.execPath,[resolve(root,'scripts/plan-verification.mjs')],{cwd:dir,env:{...process.env,GITHUB_EVENT_NAME:'pull_request',GITHUB_REPOSITORY:'fixture/site',GITHUB_EVENT_PATH:join(dir,'event.json')},stdio:'pipe'});
+   const plan=JSON.parse(await readFile(join(dir,'verification-plan.json'),'utf8'));assert.equal(plan.mode,sample.mode);
+   if(sample.mode==='affected'){assert.equal(plan.ship,false);assert.equal(plan.media,false);assert.equal(plan.publisher,true);assert.deepEqual(plan.suites,BROWSER_SUITES.gallery);}
+  }finally{await rm(dir,{recursive:true,force:true});}
+ }
 });
 test('roster updates exercise both host games without upstream queries or full physics regressions',()=>{
  const p=verificationPlan(['assets/js/fleet-members.js','assets/member-avatars/'+'a'.repeat(64)+'.webp']);

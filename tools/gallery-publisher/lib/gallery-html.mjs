@@ -157,3 +157,31 @@ export function createBatchAssetIds(currentHighWatermark, batchSize) {
   }
   return Array.from({ length: batchSize }, (_, index) => currentHighWatermark + index + 1);
 }
+
+// A filename alone cannot prove that an index.html edit is an album update.
+// Reconstruct the complete resulting document with the same bounded publisher
+// operation. This rejects extra markup both outside and inside the gallery.
+export function isManagedGalleryOnlyChange(beforeHtml, afterHtml) {
+  try {
+    if(beforeHtml===afterHtml)return false;
+    const before=parseGalleryState(beforeHtml),after=parseGalleryState(afterHtml);
+    if(after.count>before.count){
+      if(after.count-before.count>100)return false;
+      if(!before.items.every((item,index)=>item.number===after.items[index].number))return false;
+      const batch=after.items.slice(before.count).map(item=>{
+        const image=item.markup.match(/<img\s[^>]*>/i)?.[0]??'';
+        const width=Number(image.match(/\bwidth="(\d+)"/)?.[1]);
+        const height=Number(image.match(/\bheight="(\d+)"/)?.[1]);
+        if(!Number.isSafeInteger(width)||width<1||!Number.isSafeInteger(height)||height<1)throw Error('Invalid photo dimensions');
+        return {...item,width,height,has1920:item.markup.includes(`team-${formatAssetId(item.number)}-1920.webp`)};
+      });
+      return appendGalleryBatch(beforeHtml,batch)===afterHtml;
+    }
+    if(after.count<before.count){
+      const retained=new Set(after.items.map(item=>item.number));
+      const removed=before.items.filter(item=>!retained.has(item.number)).map(item=>item.number);
+      return removeGalleryItems(beforeHtml,removed)===afterHtml;
+    }
+    return false;
+  }catch{return false;}
+}

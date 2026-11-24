@@ -6,15 +6,15 @@ export function ActionBar({ photoCount, session, busy, onPreview, onClear, onPub
     && Boolean(photoCount || session)
     && (!session?.commitSha || session?.published);
   const publishReady = Boolean(session?.verified && session?.publishAllowed && !busy);
-  const publishLabel = session?.published ? session.deploymentVerified ? "已发布正式网站" : "重试线上复查" : "发布正式网站";
+  const publishLabel = session?.published ? session.deploymentVerified ? "相册已发布" : "重试相册复查" : "发布相册";
   const helper = session?.published
-    ? session.deploymentVerified ? "正式网站已发布并完成线上复查" : "相册PR已合并，等待线上复查"
+    ? session.deploymentVerified ? "相册已发布并完成线上复查" : "相册PR已合并，等待线上复查"
     : session?.verified
       ? session.publishAllowed ? "本地预览已验收，可进入发布确认" : "当前预览需要恢复或重新生成，正式发布保持锁定"
       : "完成预览验收后解锁";
   const helperDetail = session?.published
     ? "点击“开始下一批”继续"
-    : session?.verified ? "发布前仍会再次运行完整验证" : "请先生成并检查预览";
+    : session?.verified ? "发布前检查基础门禁与相册范围" : "请先生成并检查预览";
 
   return (
     <div className="action-bar">

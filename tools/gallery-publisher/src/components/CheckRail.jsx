@@ -6,7 +6,7 @@ const labels = [
   "按原图宽度生成 1920 WebP",
   "生成 640×360 缩略图",
   "更新相册与最新批次标记",
-  "运行完整测试与生产构建",
+  "运行基础门禁与相册检查",
 ];
 
 const stateLabel = { pending: "待执行", running: "处理中", done: "完成", error: "失败" };
@@ -29,7 +29,7 @@ export function CheckRail({ operation }) {
           );
         })}
       </div>
-      {operation?.status === "done" ? <p className="build-complete"><Icon name="check" size={17} />生产构建完成</p> : null}
+      {operation?.status === "done" ? <p className="build-complete"><Icon name="check" size={17} />相册检查完成</p> : null}
       {operation?.status === "error" ? <p className="build-error">{operation.message}</p> : null}
     </aside>
   );

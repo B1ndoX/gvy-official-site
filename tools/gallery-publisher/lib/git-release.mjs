@@ -4,6 +4,7 @@ import {join,dirname} from 'node:path';
 
 import { assertOnlyManagedGalleryChanged, parseGalleryState } from "./gallery-html.mjs";
 import { assertPreviewUnchanged } from "./preview-state.mjs";
+import {verifyGallery} from './verification.mjs';
 
 export const DEPLOYMENT_VERIFY_TIMEOUT_MINUTES = 12;
 
@@ -174,8 +175,8 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
 
   const branch = await gitOutput(root, ["branch", "--show-current"]);
   if(!session.isolated || !/^gallery-publisher\/[a-f0-9-]{36}$/.test(branch) || session.branch!==branch)throw Error('旧预览不能直接推送main；请清空未提交的旧批次，在独立相册工作区重新生成预览');
-  onUpdate?.("重新运行完整验证");
-  await run("npm", ["run", "verify"], { cwd: root });
+  onUpdate?.("重新运行基础站点门禁与相册相关检查");
+  await verifyGallery(root,run);
   onUpdate?.("同步 origin/main");
   await run("git", ["fetch", "--prune", "origin"], { cwd: root });
   let head = await gitOutput(root, ["rev-parse", "HEAD"]);

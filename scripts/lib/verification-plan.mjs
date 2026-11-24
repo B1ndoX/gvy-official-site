@@ -27,7 +27,7 @@ export function validatePlan(plan) {
   return plan;
 }
 
-export function verificationPlan(paths, { full = false, verifiedMerge = false } = {}) {
+export function verificationPlan(paths, { full = false, verifiedMerge = false, managedGallery = false } = {}) {
   assert.ok(Array.isArray(paths) && paths.every((path) => typeof path === "string" && path && !path.startsWith("/") && !path.split("/").includes("..")), "invalid changed paths");
   const selected = new Set();
   const plan = { version: 1, mode: "affected", ship: false, publisher: false, media: false, browser: false, tools: false, suites: [], reason: "Tests selected from changed paths" };
@@ -38,7 +38,8 @@ export function verificationPlan(paths, { full = false, verifiedMerge = false } 
   else if (!paths.length) all("Empty comparison is not evidence that verification can be skipped");
   else for (const path of paths) {
     if (documentation(path)) continue;
-    if (path.startsWith("games/ship-battle/")) { plan.ship = true; suite("ship"); }
+    if (path === 'index.html' && managedGallery) { plan.publisher = true; suite('gallery'); }
+    else if (path.startsWith("games/ship-battle/")) { plan.ship = true; suite("ship"); }
     else if (/^(?:assets\/js\/fleet-members\.js|config\/rsi-member-source\.json|assets\/member-avatars\/[^/]+)$/.test(path)) { suite("ship"); selected.add("production-smoke.spec.js"); }
     else if (/^(?:assets\/fleet-command-brawl\.js|member-brawl\.html|assets\/member-brawl\.css|assets\/arena\/|assets\/js\/member-arena-)/.test(path)) { suite("arena"); suite("ship"); selected.add("production-smoke.spec.js"); }
     else if (path.startsWith("tools/gallery-publisher/")) { plan.publisher = true; suite("gallery"); }
@@ -51,6 +52,7 @@ export function verificationPlan(paths, { full = false, verifiedMerge = false } 
     } else all(`Shared, workflow, dependency or unclassified change: ${path}`);
   }
   if (plan.mode !== "full") plan.suites = [...selected].sort();
+  if(plan.mode==='affected' && managedGallery)plan.reason+='; index.html was reconstructed exactly as a gallery publisher operation';
   if (plan.mode === "affected" && paths.every(documentation)) { plan.mode = "docs"; plan.reason = "Only known documentation changed; deployable site checks still run"; }
   plan.browser = plan.suites.length > 0;
   plan.tools = plan.ship || plan.publisher || plan.media || plan.browser;
