@@ -12,12 +12,11 @@ import { PublisherService } from "./lib/publisher-service.mjs";
 const publisherRoot = dirname(fileURLToPath(import.meta.url));
 const root = resolve(publisherRoot, "../..");
 const appDist = join(publisherRoot, "dist");
-const siteDist = join(root, "dist");
 const runtimeDir = join(publisherRoot, ".runtime");
 const host = "127.0.0.1";
 const port = Number(process.env.GVY_PUBLISHER_PORT || 4179);
 const token = randomBytes(24).toString("hex");
-const service = new PublisherService({ root });
+const service = new PublisherService({ root, isolated:true });
 await service.initialize();
 
 const MIME_TYPES = new Map([
@@ -207,7 +206,7 @@ const server = createServer(async (request, response) => {
       return;
     }
     if (url.pathname.startsWith("/preview/")) {
-      const served = await serveFile(response, siteDist, url.pathname.slice("/preview/".length));
+      const served = await serveFile(response, join(service.root,'dist'), url.pathname.slice("/preview/".length));
       if (!served) sendJson(response, 404, { error: "预览资源不存在" });
       return;
     }
@@ -228,7 +227,7 @@ const server = createServer(async (request, response) => {
       return;
     }
     if (url.pathname.startsWith("/site-assets/")) {
-      const served = await serveFile(response, join(root, "assets"), url.pathname.slice("/site-assets/".length));
+      const served = await serveFile(response, join(service.root, "assets"), url.pathname.slice("/site-assets/".length));
       if (!served) sendJson(response, 404, { error: "品牌资源不存在" });
       return;
     }

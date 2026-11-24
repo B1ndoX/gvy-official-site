@@ -13,6 +13,7 @@ import {
 import { createVisualFingerprint, isVisualDuplicate, processGalleryPhoto } from "./process.mjs";
 import { buildReleaseSummary, gitOutput, listGitChanges, publishGallerySession } from "./git-release.mjs";
 import { assertPreviewUnchanged, contentHash, fileHash } from "./preview-state.mjs";
+import {isPublisherBranch, openPublisherWorkspace, refreshPublisherWorkspace} from './publisher-workspace.mjs';
 
 const STEP_LABELS = [
   "保留原图",
@@ -102,8 +103,10 @@ function assertExactChangedFiles(actual, expected, action) {
 }
 
 export class PublisherService {
-  constructor({ root, officialGalleryLoader = null, fetchImpl = globalThis.fetch } = {}) {
+  constructor({ root, officialGalleryLoader = null, fetchImpl = globalThis.fetch, isolated = false } = {}) {
     this.root = resolve(root);
+    this.sourceRoot = this.root;
+    this.isolated = isolated;
     this.runtimeDir = join(this.root, "tools/gallery-publisher/.runtime");
     this.statePath = join(this.runtimeDir, "active-session.json");
     this.indexPath = join(this.root, "index.html");
@@ -125,6 +128,31 @@ export class PublisherService {
     } catch (error) {
       if (error?.code !== "ENOENT") this.log(`无法恢复上次预览：${error.message}`);
     }
+    if(this.isolated && (!this.session || this.session.isolated)){
+      this.root=await openPublisherWorkspace(this.sourceRoot,this.runtimeDir);
+      this.indexPath=join(this.root,'index.html');
+    }
+  }
+
+  async prepareWorkspace() {
+    if(!this.isolated)return;
+    this.setOperation({status:'running',message:'正在准备独立相册工作区'});
+    try{
+      this.root=await openPublisherWorkspace(this.sourceRoot,this.runtimeDir);
+      this.indexPath=join(this.root,'index.html');
+      await refreshPublisherWorkspace(this.root,message=>this.setOperation({message}));
+      const lock=await fileHash(join(this.root,'package-lock.json'));
+      const marker=join(this.runtimeDir,'workspace-dependencies.json');
+      let installed;
+      try{installed=JSON.parse(await readFile(marker,'utf8'));}catch(error){if(error.code!=='ENOENT')throw error;}
+      const hasVite=await stat(join(this.root,'node_modules/vite/package.json')).then(()=>true,()=>false);
+      if(installed?.lock!==lock||!hasVite){
+        this.setOperation({message:'为相册工作区准备依赖；后续依赖未变时直接复用'});
+        await run('npm',['ci','--ignore-scripts'],{cwd:this.root});
+        await writeFile(marker,JSON.stringify({lock})+'\n');
+      }
+      this.setOperation({status:'idle'});
+    }catch(error){this.setOperation({status:'error',message:error.message});throw error;}
   }
 
   log(message) {
@@ -143,7 +171,7 @@ export class PublisherService {
       gitOutput(this.root, ["remote", "get-url", "origin"]).catch(() => ""),
       listGitChanges(this.root).catch(() => []),
     ]);
-    return { branch, remote, connected: Boolean(remote), changes };
+    return { branch, remote, connected: Boolean(remote), changes, isolated:this.isolated && this.root!==this.sourceRoot };
   }
 
   async loadOfficialGalleryState() {
@@ -171,7 +199,7 @@ export class PublisherService {
       throw new Error(`发布器要求工作区先保持干净，检测到 ${changes.length} 个本地改动；不会把其他代码带入相册操作`);
     }
     const branch = await gitOutput(this.root, ["branch", "--show-current"]);
-    if (branch !== "main") throw new Error(`当前分支是 ${branch || "未知"}，发布器只允许在 main 操作团建相册`);
+    if (branch !== "main" && !(this.isolated && isPublisherBranch(branch))) throw new Error(`当前分支不是受支持的相册发布分支，已停止操作`);
     this.setOperation({ message: "正在以两个正式域名当前已部署的团建相册为唯一基准进行校准" });
     const officialGallery = await this.loadOfficialGalleryState();
     assertSameDeployedGallery(localGallery, officialGallery);
@@ -276,8 +304,9 @@ export class PublisherService {
         resultCount: previewParsed.count,
         publishAllowed: this.session.verified
           && this.session.baselineDirty.length === 0
-          && repository.branch === "main"
-          && !this.session.published,
+          && (!this.isolated || this.session.isolated)
+          && (repository.branch === "main" || this.session.isolated && isPublisherBranch(repository.branch))
+          && (!this.session.published || !this.session.deploymentVerified),
         release,
       } : null,
       activity: this.activity,
@@ -431,6 +460,7 @@ export class PublisherService {
     if (!Array.isArray(uploads) || uploads.length < 1) throw new Error("请先选择照片");
     if (uploads.length > 100) throw new Error("单批最多添加 100 张照片");
 
+    await this.prepareWorkspace();
     const originalHtml = await readFile(this.indexPath, "utf8");
     const gallery = parseGalleryState(originalHtml);
     const duplicateSteps = STEP_LABELS.map(() => "pending");
@@ -501,6 +531,8 @@ export class PublisherService {
       const sessionDraft = {
         id,
         type: "add",
+        isolated:this.isolated && this.root!==this.sourceRoot,
+        branch:await gitOutput(this.root,['branch','--show-current']),
         previewState,
         createdAt: new Date().toISOString(),
         backupPath,
@@ -551,6 +583,7 @@ export class PublisherService {
     if (this.session) throw new Error("已有本地预览，请先发布或清空当前批次");
     if (!Array.isArray(numbers) || numbers.length < 1) throw new Error("请先选择要删除的照片");
 
+    await this.prepareWorkspace();
     const originalHtml = await readFile(this.indexPath, "utf8");
     const gallery = parseGalleryState(originalHtml);
     const calibrationSteps = STEP_LABELS.map(() => "pending");
@@ -622,6 +655,8 @@ export class PublisherService {
       const sessionDraft = {
         id,
         type: "delete",
+        isolated:this.isolated && this.root!==this.sourceRoot,
+        branch:await gitOutput(this.root,['branch','--show-current']),
         previewState,
         createdAt: new Date().toISOString(),
         backupPath,
@@ -662,7 +697,7 @@ export class PublisherService {
       this.setOperation({ type: "idle", status: "idle", message: "已结束上一批，可继续添加照片", steps: STEP_LABELS.map(() => "pending") });
       return this.getStatus();
     }
-    if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布正式网站重试推送");
+    if (this.session.commitSha) throw new Error("发布提交已生成，不能清空；请点击发布正式网站继续PR检查与发布");
     this.setOperation({ status: "running", message: "核对预览快照并安全清空本批" });
     try {
       await this.recoverPreview(this.session);
@@ -691,7 +726,7 @@ export class PublisherService {
           this.session.release = preparedRelease;
           await this.persistSession();
         },
-        onPushed: async ({ commitSha, release: pushedRelease }) => {
+        onMerged: async ({ commitSha, release: pushedRelease }) => {
           this.session.commitSha = commitSha;
           this.session.release = pushedRelease;
           this.session.published = true;
@@ -706,7 +741,7 @@ export class PublisherService {
       return release;
     } catch (error) {
       const message = this.session?.published
-        ? `代码已推送，但线上复查未完成：${error.message}`
+        ? `相册PR已合并，但线上复查未完成：${error.message}`
         : error.message;
       this.setOperation({ type: "publish", status: "error", message });
       throw error;

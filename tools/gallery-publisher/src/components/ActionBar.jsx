@@ -5,12 +5,12 @@ export function ActionBar({ photoCount, session, busy, onPreview, onClear, onPub
   const canClear = !busy
     && Boolean(photoCount || session)
     && (!session?.commitSha || session?.published);
-  const publishReady = Boolean(session?.verified && session?.publishAllowed && !session?.published && !busy);
-  const publishLabel = session?.published ? "已发布正式网站" : "发布正式网站";
+  const publishReady = Boolean(session?.verified && session?.publishAllowed && !busy);
+  const publishLabel = session?.published ? session.deploymentVerified ? "已发布正式网站" : "重试线上复查" : "发布正式网站";
   const helper = session?.published
-    ? session.deploymentVerified ? "正式网站已发布并完成线上复查" : "代码已推送，线上复查需要人工确认"
+    ? session.deploymentVerified ? "正式网站已发布并完成线上复查" : "相册PR已合并，等待线上复查"
     : session?.verified
-      ? session.publishAllowed ? "本地预览已验收，可进入发布确认" : "检测到预览前已有本地改动，正式发布保持锁定"
+      ? session.publishAllowed ? "本地预览已验收，可进入发布确认" : "当前预览需要恢复或重新生成，正式发布保持锁定"
       : "完成预览验收后解锁";
   const helperDetail = session?.published
     ? "点击“开始下一批”继续"

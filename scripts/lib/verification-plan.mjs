@@ -8,7 +8,7 @@ export const BROWSER_SUITES = {
   media: ["production-smoke.spec.js", "video-playback.spec.js"],
 };
 const knownSuites = new Set(Object.values(BROWSER_SUITES).flat());
-const documentation = (path) => /^(?:README|ARCHITECTURE|OPERATIONS|上下文)\.md$/.test(path) || /^games\/ship-battle\/(?:README\.md|docs\/.*\.md)$/.test(path);
+const documentation = (path) => /^(?:README|ARCHITECTURE|OPERATIONS|CHANGELOG|上下文)\.md$/.test(path) || /^games\/ship-battle\/(?:README\.md|docs\/.*\.md)$/.test(path);
 
 export function validatePlan(plan) {
   assert.equal(plan.version, 1);

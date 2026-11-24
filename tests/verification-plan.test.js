@@ -4,7 +4,7 @@ import {execFileSync,spawnSync} from 'node:child_process';
 import {mkdtemp,writeFile,readFile,rm,chmod} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {resolve,join} from 'node:path';
-import {verificationPlan,validatePlan,hasPassedVerification,validateGateResults,REQUIRED_CHECKS} from '../scripts/lib/verification-plan.mjs';
+import {verificationPlan,validatePlan,hasPassedVerification,validateGateResults,REQUIRED_CHECKS,BROWSER_SUITES} from '../scripts/lib/verification-plan.mjs';
 
 const root=resolve(new URL('..',import.meta.url).pathname);
 test('ship changes select game checks and entries, without unrelated media or arena suites',()=>{
@@ -15,6 +15,13 @@ test('ship changes select game checks and entries, without unrelated media or ar
 test('known documentation still runs the independent site gate and requires no browser tools',()=>{
  const p=verificationPlan(['README.md','上下文.md','games/ship-battle/docs/TESTING.md']);
  assert.equal(p.mode,'docs');assert.equal(p.tools,false);assert.deepEqual(p.suites,[]);
+});
+test('recording a routine game change in the development log does not broaden it to unrelated long suites',()=>{
+ const p=verificationPlan(['games/ship-battle/src/data/ship-game-values.json','CHANGELOG.md','上下文.md']);
+ assert.equal(p.mode,'affected');assert.equal(p.ship,true);assert.equal(p.publisher,false);assert.equal(p.media,false);
+ assert.deepEqual(p.suites,BROWSER_SUITES.ship);
+ assert.equal(verificationPlan(['CHANGELOG.md']).mode,'docs');
+ assert.equal(verificationPlan(['AGENTS.md']).mode,'full');
 });
 test('roster updates exercise both host games without upstream queries or full physics regressions',()=>{
  const p=verificationPlan(['assets/js/fleet-members.js','assets/member-avatars/'+'a'.repeat(64)+'.webp']);
