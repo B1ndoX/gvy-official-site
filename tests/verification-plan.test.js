@@ -51,7 +51,7 @@ test('the CI entry proves real committed album diffs and rejects mixed edits, in
    await writeFile(join(dir,'index.html'),sample.after);await mkdir(join(dir,'assets/gallery'),{recursive:true});await writeFile(join(dir,'assets/gallery/team-19.png'),'scope fixture');
    git('add','.');git('commit','-m','album candidate');git('remote','add','origin',dir);
    await writeFile(join(dir,'event.json'),JSON.stringify({pull_request:{base:{sha:base}},inputs:{managedGallery:true}}));
-   execFileSync(process.execPath,[resolve(root,'scripts/plan-verification.mjs')],{cwd:dir,env:{...process.env,GITHUB_EVENT_NAME:'pull_request',GITHUB_REPOSITORY:'fixture/site',GITHUB_EVENT_PATH:join(dir,'event.json')},stdio:'pipe'});
+   execFileSync(process.execPath,[resolve(root,'scripts/plan-verification.mjs')],{cwd:dir,env:{...process.env,GITHUB_EVENT_NAME:'pull_request',GITHUB_OUTPUT:'',GITHUB_STEP_SUMMARY:'',GITHUB_REPOSITORY:'fixture/site',GITHUB_EVENT_PATH:join(dir,'event.json')},stdio:'pipe'});
    const plan=JSON.parse(await readFile(join(dir,'verification-plan.json'),'utf8'));assert.equal(plan.mode,sample.mode);
    if(sample.mode==='affected'){assert.equal(plan.ship,false);assert.equal(plan.media,false);assert.equal(plan.publisher,true);assert.deepEqual(plan.suites,BROWSER_SUITES.gallery);}
   }finally{await rm(dir,{recursive:true,force:true});}
@@ -97,7 +97,7 @@ test('git comparison includes a deleted source when it is renamed to documentati
   await writeFile(join(dir,'index.html'),'fixture');git('add','.');git('commit','-m','base');const base=git('rev-parse','HEAD');
   await writeFile(join(dir,'README.md'),'fixture');await rm(join(dir,'index.html'));git('add','-A');git('commit','-m','rename');git('remote','add','origin',dir);
   await writeFile(join(dir,'event.json'),JSON.stringify({pull_request:{base:{sha:base}}}));
-  execFileSync(process.execPath,[resolve(root,'scripts/plan-verification.mjs')],{cwd:dir,env:{...process.env,GITHUB_EVENT_NAME:'pull_request',GITHUB_REPOSITORY:'B1ndoX/gvy-official-site',GITHUB_EVENT_PATH:join(dir,'event.json')},stdio:'pipe'});
+  execFileSync(process.execPath,[resolve(root,'scripts/plan-verification.mjs')],{cwd:dir,env:{...process.env,GITHUB_EVENT_NAME:'pull_request',GITHUB_OUTPUT:'',GITHUB_STEP_SUMMARY:'',GITHUB_REPOSITORY:'B1ndoX/gvy-official-site',GITHUB_EVENT_PATH:join(dir,'event.json')},stdio:'pipe'});
   assert.equal(JSON.parse(await readFile(join(dir,'verification-plan.json'),'utf8')).mode,'full');
  }finally{await rm(dir,{recursive:true,force:true});}
 });
