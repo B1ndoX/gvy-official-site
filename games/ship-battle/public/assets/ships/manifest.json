@@ -31483,8 +31483,8 @@
           "id": "spinal-beam",
           "kind": "beam",
           "role": "main",
-          "x": 0,
-          "y": -0.46,
+          "x": 0.0067,
+          "y": -0.166,
           "facing": 0,
           "arc": 28,
           "range": 2300,
@@ -31812,7 +31812,7 @@
       ],
       "calibrated": false,
       "combatVersion": 22,
-      "turretLayoutVersion": 6,
+      "turretLayoutVersion": 7,
       "engineLayoutVersion": 4
     },
     {

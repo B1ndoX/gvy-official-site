@@ -4,10 +4,11 @@ import manifest from '../public/assets/ships/manifest.json';
 import values from '../src/data/weapon-game-values.json';
 import {BattleEngine,STEP} from '../src/sim/engine';
 import {mountWorld,wrap} from '../src/sim/math';
+import {worldToArtwork} from '../src/sim/weapon-hull';
 import {fixedWeapon,turretControlled} from '../src/sim/weapons';
 import {BATTLE_DURATION,simulationSeconds} from '../src/sim/pacing';
 import {upgradeCombat,type ShipAsset} from '../src/assets/library';
-import type {ShipSpec} from '../src/sim/types';
+import type {Ship,ShipSpec} from '../src/sim/types';
 
 const mauler=data.find(s=>s.id==='mauler')! as ShipSpec;
 function scene(port?:string){
@@ -19,10 +20,24 @@ function scene(port?:string){
 test('Mauler separates the marked nose and dorsal emitters while retaining one original beam power budget',()=>{
  const beams=mauler.mounts.filter(m=>m.kind==='beam');expect(beams).toHaveLength(2);
  const [nose,dorsal]=beams;expect(fixedWeapon(nose)).toBe(true);expect(turretControlled(dorsal)).toBe(true);
- expect(nose.y).toBeLessThan(-.4);expect(Math.abs(dorsal.y)).toBeLessThan(.1);expect(dorsal.arc).toBe(360);
+ expect(nose.y).toBeLessThan(dorsal.y-.08);expect(Math.abs(dorsal.y)).toBeLessThan(.1);expect(dorsal.arc).toBe(360);
  expect(dorsal.turnRate/BATTLE_DURATION*180/Math.PI).toBeLessThanOrEqual(10);
  expect(beams.every(m=>!m.emitters||m.emitters.length===1)).toBe(true);
  expect(beams.reduce((sum,m)=>sum+m.damage,0)).toBeCloseTo(values.weapons['reference-s10-beam'].combat.damage,6);
+});
+test('both beams originate inside the separately marked circular ports at every hull heading',()=>{
+ const asset=manifest.assets.find(a=>a.shipId==='mauler')!;
+ // Native 500x223 StarJump top view: the forward port is the smaller circle
+ // at (167,110), ahead of the dorsal gimbal at (225,110), not the outer tip.
+ const ports=[{id:'spinal-beam',x:167,y:110},{id:'dorsal-beam',x:225,y:110}];
+ for(const heading of [0,.37*Math.PI,-Math.PI/2]){
+  const ship={x:740,y:-180,heading,spec:mauler};
+  for(const port of ports){
+   const mount=mauler.mounts.find(m=>m.id===port.id)!;
+   const pixel=worldToArtwork(mountWorld(ship as Ship,mount),ship,asset);
+   expect(Math.hypot(pixel.x*500-port.x,pixel.y*223-port.y)).toBeLessThan(12);
+  }
+ }
 });
 test.each([false,true])('dorsal beam acquires sideways targets and keeps traversing while firing, without hull yaw or live snapping (boss=%s)',boss=>{
  const e=scene('dorsal-beam'),[owner,target]=e.ships;if(boss)owner.npc='boss';target.x=0;target.y=1000;

@@ -773,7 +773,7 @@
     },
     "mauler": {
       "url": "assets/ships/mauler.png",
-      "basis": "user-marked-nose-and-dorsal-beam-2026-11-23",
+      "basis": "user-corrected-forward-port-and-dorsal-gimbal-2026-11-27",
       "mounts": {
         "turret-1": {
           "x": -0.18018,
@@ -840,8 +840,8 @@
           "y": 0.205411
         },
         "spinal-beam": {
-          "x": 0,
-          "y": -0.46
+          "x": 0.0067,
+          "y": -0.166
         },
         "dorsal-beam": {
           "x": 0.0067,
@@ -849,7 +849,7 @@
           "facing": 0
         }
       },
-      "version": 6
+      "version": 7
     },
     "odin": {
       "url": "assets/ships/odin.png",
