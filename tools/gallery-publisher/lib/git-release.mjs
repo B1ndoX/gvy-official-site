@@ -5,6 +5,7 @@ import {join,dirname} from 'node:path';
 import { assertOnlyManagedGalleryChanged, parseGalleryState } from "./gallery-html.mjs";
 import { assertPreviewUnchanged } from "./preview-state.mjs";
 import {verifyGallery} from './verification.mjs';
+import {githubQuery} from './github-query.mjs';
 
 export const DEPLOYMENT_VERIFY_TIMEOUT_MINUTES = 12;
 
@@ -147,7 +148,7 @@ export function galleryChecksState(pr, candidate) {
 }
 
 async function readGalleryPr(root, session, githubRun){
-  return JSON.parse((await githubRun('gh',['pr','view',session.prUrl,'--json','state,headRefOid,mergeCommit,statusCheckRollup'],{cwd:root})).stdout);
+  return JSON.parse((await githubQuery(['pr','view',session.prUrl,'--json','state,headRefOid,mergeCommit,statusCheckRollup'],{cwd:root,run:githubRun})).stdout);
 }
 
 async function waitForGalleryChecks(root,session,githubRun){
@@ -221,7 +222,7 @@ export async function publishGallerySession({ root, session, onUpdate, onCommitt
     await run('git',['push','origin',summary.tag],{cwd:root});
     await run('git',['push','-u','origin',branch],{cwd:root});
     if(!session.prUrl){
-      const existing=JSON.parse((await githubRun('gh',['pr','list','--head',branch,'--base','main','--state','all','--json','url'],{cwd:root})).stdout);
+      const existing=JSON.parse((await githubQuery(['pr','list','--head',branch,'--base','main','--state','all','--json','url'],{cwd:root,run:githubRun})).stdout);
       if(existing.length)session.prUrl=existing[0].url;
       else{
         const bodyPath=join(root,'tools/gallery-publisher/.runtime/pr-body.md');
