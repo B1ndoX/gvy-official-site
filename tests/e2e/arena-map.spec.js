@@ -140,7 +140,7 @@ test('the rare moving gravity event uses the same bounded pausable scene clock',
 test('an unlimited classic scene begins flat, reveals its source terrain and returns to its floor',async({page})=>{
   // Replay 145s of fixed-step physics; shared CI CPUs need more wall time.
   // Keep every terrain timing assertion rather than skipping simulated frames.
-  test.setTimeout(180000);
+  test.setTimeout(240000);
   await begin(page,{mode:'classic'});
   expect((await state(page)).map.terrainVisible).toBe(false);
   await advanceTo(page,104000);expect((await state(page)).map.terrainVisible).toBe(true);
