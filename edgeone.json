@@ -2,7 +2,7 @@
   "buildCommand": "npm run verify:edgeone",
   "installCommand": "node scripts/check-node.mjs && npm --version && npm ci --ignore-scripts --omit=dev",
   "outputDirectory": "./dist",
-  "nodeVersion": "24.22.1",
+  "nodeVersion": "24.18.0",
   "rewrites": [],
   "headers": [
     {
