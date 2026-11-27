@@ -22,9 +22,9 @@
     "src/data/ship-game-values.json": "f477307174638b2ef332b844d8016fd7763d283f6520f93d3f92f7ae4f8b3d77",
     "src/data/ship-names-zh.json": "2610a8954c2b1c82b9038d002c782a1af48b83a0f6ab6a44298ab0e26e1d4cce",
     "src/data/ship-reference-facts.json": "7b01079382de8204440fc27e85b0bd64371bb5e745badaa0eb6fe61b46a6dbf7",
-    "src/data/ships.json": "077f789ee61ac39006ca4eae2550dcc8f53864e6cd62b0abf9c6ebbf85d26f35",
+    "src/data/ships.json": "694091dd883ec6b39fdfd41e46a849411ccd198f9af5f9fc77d437aa5ab1a15b",
     "src/data/simulation-profile.json": "e6162ce81e74251a6a1f4b30c337201bb36814f6d438ffb258e4540fbb49647d",
-    "src/data/turret-layouts.json": "e1286106cdf906dadea1f4a1c790f6fb6fdc3bfc18bea8b864ae16644cdf3d84",
+    "src/data/turret-layouts.json": "032ab66aee28e9e39316ecf734db4ca0b7e91c3dedae0c1b697d6d040c9e5b02",
     "src/data/weapon-anchor-layouts.json": "19d8eed3118c0c7d827c5f14a5905e4cd087d3b4b7c9a6e9423016335ec5a713",
     "src/data/weapon-behavior-rules.json": "13284d1ca94d7e0f1b85cbb8d97c881b5026d197475d7a4da2431c250b0ae182",
     "src/data/weapon-catalog.json": "56021bf9477c57be6b0f8cbe9e7d5a657cff6cf40a4d71260c25896c2859cd5a",
@@ -233,7 +233,7 @@
     "public/assets/ships/m2-hercules.png": "2ab97b66856358c96be417f47a4961c4ce33e0dc53ebf70e521335395deba500",
     "public/assets/ships/m50.png": "bca8b74c480c71c349e41c2e876b0a78089e73e214064d52b3b0e6f6da42e978",
     "public/assets/ships/m80.png": "bf87ca0f47f6dd3943bfbd906c5e79b057321d08080fed8d41507853c3d03abf",
-    "public/assets/ships/manifest.json": "0fc0b6a1a506aa8464cc622320eb05230117fce794844e8c2e3393928a4d1565",
+    "public/assets/ships/manifest.json": "b72532958dbf255a4daafc28f1c8420d9658ea1cba644f4bbc00e1eaec645559",
     "public/assets/ships/mantis.png": "fd1500ef7f1aebc9934b78ccae0252f6364895fcf0e97e5e6a3e2d958bd47f65",
     "public/assets/ships/marauder.png": "3ef345ae85952bc41381f72a4ed78ffc0f08efac2647b49cc57c7d8fbda58d78",
     "public/assets/ships/mauler.png": "cac5e7ef559ca481e1b8e46d553d7cd3832ca87ae027570dd9c965ad8839b7ae",
@@ -348,11 +348,11 @@
     "assets/WebGLRenderer-BGF3X-aR.js": "ba549a262531e18d0b780a78ae47c07a40e37348659b6a40b03a5902298ba606",
     "assets/WebGPURenderer-D5KqYknv.js": "fa83adb99711729ff00c6db0466376e3806fa024eaa86cfb6ff41f7325325621",
     "assets/browserAll-B-wJDXRl.js": "0d8172c01e44757a61eb0d667ec8faa893246cdb07dc4f26b2edaec6c04b7c64",
-    "assets/index-CZ0LDhdR.js": "4d213c22410473b887f8bad4edadad2d08ea7df0ddea4dbf3efaf50b4879da8a",
+    "assets/index-RpVdllZI.js": "5f2caf0f447ffd7c96744bec75378230fabe1ef4183e68ab35de0b4e268d1833",
     "assets/index-wxSGHrwM.css": "395bf544c71291d2741a2cdbd34bdf1b89cf6f709b66c447b15ec3444af61929",
     "assets/pixi-DL8B6zcD.js": "77a9d966f665951925253374595d319fdfe29e89573a38e7bab0ed85c5f5c5c3",
     "assets/rolldown-runtime-WkwZ5CU-.js": "2629f2ad3cb75a57d98de697127f5af7d777ef572bbcdfa6e3ce8f438cd4527e",
     "assets/webworkerAll-B-wJDXRl.js": "0d8172c01e44757a61eb0d667ec8faa893246cdb07dc4f26b2edaec6c04b7c64",
-    "index.html": "7a362a15ad83b47c3cf50bd2ea35ebe47596768485901e636448f37d937c9dfb"
+    "index.html": "e1b1619a6ea6ee2dcfcc29b53392890f3e31e4d574ee2986e466f4856afdcc97"
   }
 }
