@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { initMemberBrawlDialog } from "../assets/js/member-brawl-dialog.js";
 
-function fixture() {
+function fixture(search = "") {
   const target = () => ({
     listeners: new Map(), attributes: new Map(), dataset: {}, style: { overflow: "", setProperty(k,v) { this[k]=v; }, removeProperty(k) { delete this[k]; } },
     addEventListener(type, listener) { this.listeners.set(type, listener); },
@@ -15,6 +15,7 @@ function fixture() {
   const dialog = target(), frame = target(), viewport = target(), closeButton = target(), minimizeButton=target(), endButton=target(), restoreButton=target(), memberChoice=target(), opener = target(), view = target();
   const callbacks = new Map();let serial=0;
   Object.assign(view, {requestAnimationFrame(callback) { callbacks.set(++serial,callback);return serial; },cancelAnimationFrame(id) { callbacks.delete(id); }});
+  view.location = { search };
   viewport.clientWidth=960;viewport.clientHeight=600;
   dialog.showModal = () => { dialog.open = true;dialog.modal=true; };
   dialog.show = () => { dialog.open = true;dialog.modal=false; };
@@ -44,6 +45,32 @@ test("opening is lazy; minimizing and restoring retain the same game viewport an
   f.viewport.clientWidth=960;f.controller.open({currentTarget:f.restoreButton});f.flush();
   assert.equal(f.dialog.dataset.windowState,"expanded");assert.equal(f.frame.getAttribute("retained-match"),"one");
   assert.equal(f.frame.style.transform,"none");assert.equal(f.frame.inert,false);
+});
+
+test("the dedicated link opens only the chooser once and keeps ordinary visits lazy", () => {
+  for (const search of ["", "?open=ships", "?games=1"]) {
+    const f = fixture(search);
+    assert.equal(f.dialog.dataset.windowState, "closed");
+    assert.equal(f.frame.getAttribute("src"), null);
+    assert.equal(f.root.body.style.overflow, "auto");
+    f.controller.cleanup();
+  }
+  const f = fixture("?open=games");
+  f.flush();
+  assert.equal(f.dialog.dataset.windowState, "expanded");
+  assert.equal(f.dialog.modal, true);
+  assert.equal(f.dialog.dataset.activeGame, "");
+  assert.equal(f.frame.getAttribute("src"), null);
+  assert.equal(f.root.body.style.overflow, "hidden");
+  assert.equal(f.memberChoice.focused, true);
+  f.controller.close();
+  f.view.listeners.get("resize")();
+  f.flush();
+  assert.equal(f.dialog.dataset.windowState, "closed");
+  assert.equal(f.root.body.style.overflow, "auto");
+  f.controller.cleanup();
+  assert.equal(f.observer.disconnected, true);
+  assert.equal(f.view.listeners.size, 0);
 });
 
 test("large close and Escape minimize, while ending the docked window unloads it and permits a new lazy session", () => {
