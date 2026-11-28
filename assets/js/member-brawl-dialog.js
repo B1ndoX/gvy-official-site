@@ -283,6 +283,7 @@ export function initMemberBrawlDialog({
   view?.addEventListener?.("message", onMessage);
   updateGame("");
   setState("closed");
+  if (new URLSearchParams(view?.location?.search || "").get("open") === "games") open();
 
   return {
     open, close, minimize, requestFit,

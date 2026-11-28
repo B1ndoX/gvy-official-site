@@ -36,6 +36,8 @@ CI职责追加：纯模拟由独立Ubuntu单worker执行，macOS负责运行包�
 | 相册位置与播放 | `archive-carousel.js` | 节点与播放按钮 | 第二套轮播、全局拖拽补丁或灯箱反向改位置 |
 | 相册灯箱 | `archive-lightbox.js` | 对话框 UI | 相册拖拽结束直接触发灯箱 |
 | 大乱斗窗口（展开/右下浮窗/结束） | `member-brawl-dialog.js` | 同一个iframe页面 | 首页预载游戏、缩小重开对局、滚动监听模拟fixed浮窗 |
+
+专用入口`/?open=games#fleet-games`由原窗口控制器初始化时打开一次游戏选择；普通首页/仅锚点不自动展开，不选游戏或自动开局，不新增路由监听和计时器。
 | 大乱斗模拟、对局与轮换 | `fleet-command-brawl.js` 的唯一固定步长RAF | 响应式DOM、HUD、本机战绩 | 独立Runner/interval/伤害定时器、点击/拖动角色、聊天或联网加入 |
 | 大乱斗纯规则和源配置 | `member-arena-rules.js`、`member-arena-profile.js` | 唯一模拟 | UI另写一套命中或结算；把Unity世界单位直接当CSS像素 |
 | 大乱斗成员与头像快照 | `scripts/lib/rsi-members.mjs`，由每周RSI Member Sync调用 | iframe的`fleet-members.js`数据脚本与战斗渲染 | 浏览器查询RSI、另一套定时器热换正在进行的对局 |
