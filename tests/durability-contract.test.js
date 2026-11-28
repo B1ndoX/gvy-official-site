@@ -134,6 +134,11 @@ test("EdgeOne catch-all returns the branded document with a real 404 status", as
 });
 
 test("scheduled production monitoring covers live pages, media and expiry alerts", () => {
+  const sparseFiles = monitorWorkflow.match(/sparse-checkout: \|\n([\s\S]*?)\n\s+sparse-checkout-cone-mode:/)?.[1];
+  assert.ok(sparseFiles, "Monitor checkout must declare its source inputs");
+  for (const file of [".node-version", ".nvmrc", "edgeone.json", "package.json", "package-lock.json"]) {
+    assert.ok(sparseFiles.split("\n").some(line => line.trim() === "/" + file), `Node guard input missing: ${file}`);
+  }
   assert.match(packageJson.scripts["monitor:production"], /monitor-production\.mjs/);
   assert.match(monitorWorkflow, /cron:\s*"17 \*\/6 \* \* \*"/);
   assert.match(monitorWorkflow, /scripts\/monitor-production\.mjs/);
